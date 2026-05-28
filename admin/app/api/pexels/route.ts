@@ -4,7 +4,7 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const query = searchParams.get("query");
 
-  const accessKey = process.env.PEXELS_API_KEY || "NhEmLCtLjsAqQNN6QRpJGrRRJ5wGUE5FbaFy0Hl829i9ooV6yC9362SN";
+  const accessKey = process.env.PEXELS_API_KEY;
 
   if (!accessKey) {
     console.error("PEXELS_API_KEY is not set in environment variables");
