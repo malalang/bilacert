@@ -3,6 +3,11 @@ import { createServerClient } from "@supabase/ssr";
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
+type CookieStore = {
+  getAll(): Array<{ name: string; value: string }>;
+  set(name: string, value: string, options?: Record<string, unknown>): void;
+};
+
 export const createClient = async () => {
   if (!supabaseUrl || !supabaseAnonKey) {
     throw new Error(
@@ -10,7 +15,7 @@ export const createClient = async () => {
     );
   }
 
-  let cookieStore;
+  let cookieStore: CookieStore | undefined;
   try {
     const { cookies } = await import("next/headers");
     cookieStore = await cookies();
