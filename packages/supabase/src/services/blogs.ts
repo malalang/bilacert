@@ -1,9 +1,8 @@
-import { createClient as createServerClient } from "../server";
 import { createClient as createBrowserClient } from "../client";
 import type { BlogPost } from "../types";
 
 export async function getAllPublishedBlogSlugs() {
-  const supabase = await createServerClient();
+  const supabase = createBrowserClient();
   const { data, error } = await supabase
     .from("blog_posts")
     .select("slug")
@@ -17,7 +16,7 @@ export async function getAllPublishedBlogSlugs() {
 }
 
 export async function getAllPublishedBlogPosts(): Promise<BlogPost[]> {
-  const supabase = await createServerClient();
+  const supabase = createBrowserClient();
   const { data, error } = await supabase
     .from("blog_posts")
     .select("*")
@@ -34,7 +33,7 @@ export async function getAllPublishedBlogPosts(): Promise<BlogPost[]> {
 export async function getBlogPostBySlug(
   slug: string,
 ): Promise<BlogPost | null> {
-  const supabase = await createServerClient();
+  const supabase = createBrowserClient();
   const { data, error } = await supabase
     .from("blog_posts")
     .select("*")
@@ -52,7 +51,7 @@ export async function getBlogPostsByCategory(
   category: string,
   limit: number = 3,
 ): Promise<BlogPost[]> {
-  const supabase = await createServerClient();
+  const supabase = createBrowserClient();
   const { data, error } = await supabase
     .from("blog_posts")
     .select("*")

@@ -1,3 +1,4 @@
+"use client";
 import { useCallback, useEffect, useState } from "react";
 import type { FormSubmissionPayload } from "../types";
 
@@ -118,3 +119,4 @@ export function useFetchSubmission(submissionId: string | null) {
 
   return { data, isLoading, error, refetch: fetchSubmission };
 }
+
