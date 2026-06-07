@@ -1,0 +1,92 @@
+"use client";
+
+import {
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
+import type { BlogPost } from "@bilacert/supabase";
+import { Loader2 } from "lucide-react";
+import { useState } from "react";
+import { deleteBlog } from "./actions";
+
+interface DeleteBlogDialogProps {
+  isOpen: boolean;
+  onClose: () => void;
+  blog: BlogPost | null;
+  onDeleted?: () => void;
+}
+
+export default function DeleteBlogDialog({
+  isOpen,
+  onClose,
+  blog,
+  onDeleted,
+}: DeleteBlogDialogProps) {
+  const { toast } = useToast();
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const handleDelete = async () => {
+    if (!blog) return;
+
+    setIsDeleting(true);
+    try {
+      const result = await deleteBlog(blog.id);
+
+      if (result.error) {
+        throw new Error(result.error);
+      }
+
+      toast({
+        title: "Blog post deleted",
+        description: `The post "${blog.title}" has been successfully deleted.`,
+      });
+
+      if (onDeleted) {
+        onDeleted();
+      }
+      onClose();
+    } catch (error: any) {
+      toast({
+        variant: "destructive",
+        title: "Error deleting post",
+        description: error.message,
+      });
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
+  return (
+    <AlertDialog open={isOpen} onOpenChange={onClose}>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+          <AlertDialogDescription>
+            This action cannot be undone. This will permanently delete the blog
+            post "{blog?.title}".
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel disabled={isDeleting} onClick={onClose}>
+            Cancel
+          </AlertDialogCancel>
+          <Button
+            variant="destructive"
+            onClick={handleDelete}
+            disabled={isDeleting}
+          >
+            {isDeleting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            Delete
+          </Button>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  );
+}
