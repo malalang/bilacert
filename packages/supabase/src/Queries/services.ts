@@ -1,8 +1,8 @@
-import { createClient as createBrowserClient } from "../client";
+import { createSupabaseBrowserClient } from "../client";
 import type { Service } from "../types";
 
 export async function getPublishedServices(): Promise<Service[]> {
-  const supabase = createBrowserClient();
+  const supabase = createSupabaseBrowserClient();
   const { data, error } = await supabase
     .from("services")
     .select("*")
@@ -18,7 +18,7 @@ export async function getPublishedServices(): Promise<Service[]> {
 }
 
 export async function getFeaturedServices(): Promise<Service[]> {
-  const supabase = createBrowserClient();
+  const supabase = createSupabaseBrowserClient();
   const { data, error } = await supabase
     .from("services")
     .select("*")
@@ -36,7 +36,7 @@ export async function getFeaturedServices(): Promise<Service[]> {
 }
 
 export async function getServiceBySlug(slug: string): Promise<Service | null> {
-  const supabase = createBrowserClient();
+  const supabase = createSupabaseBrowserClient();
   const { data, error } = await supabase
     .from("services")
     .select("*")
@@ -53,7 +53,7 @@ export async function getServiceBySlug(slug: string): Promise<Service | null> {
 export async function getAllPublishedServiceSlugs(): Promise<
   { slug: string }[]
 > {
-  const supabase = createBrowserClient();
+  const supabase = createSupabaseBrowserClient();
   const { data, error } = await supabase
     .from("services")
     .select("slug")

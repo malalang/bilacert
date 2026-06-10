@@ -1,8 +1,8 @@
-import { createServerClient } from "@bilacert/supabase";
-import ContactDetails from "../ContactDetails";
-import { notFound } from "next/navigation";
 import type { Contact } from "@bilacert/supabase";
+import { createServerClient } from "@bilacert/supabase";
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+import ContactDetails from "../ContactDetails";
 
 async function getContact(id: string): Promise<Contact | null> {
   const supabase = await createServerClient();

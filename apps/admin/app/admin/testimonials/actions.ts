@@ -1,8 +1,8 @@
 "use server";
 
 import { createSupabaseAdminClient } from "@bilacert/supabase";
-import { testimonialSchema } from "./schema";
 import { revalidatePath } from "next/cache";
+import { testimonialSchema } from "./schema";
 
 export async function upsertTestimonial(values: unknown) {
   const supabase = createSupabaseAdminClient();

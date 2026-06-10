@@ -1,6 +1,6 @@
 import { Suspense } from "react";
-import ServicesClient from "./ServicesClient";
 import ServicesLoading from "./loading";
+import ServicesClient from "./ServicesClient";
 
 export const metadata = {
   title: "Services | Bilacert Admin Pro",

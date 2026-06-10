@@ -10,12 +10,12 @@ export async function GET(request: Request) {
     console.error("PEXELS_API_KEY is not set in environment variables");
     return NextResponse.json(
       { error: "Pexels API key is not configured" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 
   // If query is provided, search. Otherwise, get curated photos.
-  const url = query 
+  const url = query
     ? `https://api.pexels.com/v1/search?query=${encodeURIComponent(query)}&per_page=21`
     : `https://api.pexels.com/v1/curated?per_page=21`;
 
@@ -30,7 +30,7 @@ export async function GET(request: Request) {
       const errorData = await response.json();
       return NextResponse.json(
         { error: errorData.error || "Failed to fetch from Pexels" },
-        { status: response.status }
+        { status: response.status },
       );
     }
 
@@ -39,7 +39,7 @@ export async function GET(request: Request) {
   } catch (error: any) {
     return NextResponse.json(
       { error: error.message || "Internal server error" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

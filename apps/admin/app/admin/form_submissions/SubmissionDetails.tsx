@@ -1,22 +1,22 @@
 "use client";
 
-import { Badge } from "@/components/ui/badge";
 import type { Submission } from "@bilacert/supabase";
 import { format } from "date-fns";
+import { ArrowLeft, Edit, Phone, Trash2 } from "lucide-react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
+  CardDescription,
   CardHeader,
   CardTitle,
-  CardDescription,
 } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import { ArrowLeft, Edit, Trash2, Phone } from "lucide-react";
-import { useState } from "react";
-import DeleteSubmissionDialog from "./DeleteSubmissionDialog";
-import { useRouter } from "next/navigation";
 import { statusVariantMap } from "./columns";
+import DeleteSubmissionDialog from "./DeleteSubmissionDialog";
 
 interface SubmissionDetailsProps {
   submission: Submission;

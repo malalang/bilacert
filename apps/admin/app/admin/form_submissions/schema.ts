@@ -23,7 +23,7 @@ export const submissionSchema = z.object({
         try {
           JSON.parse(val);
           return true;
-        } catch (e) {
+        } catch (_e) {
           return false;
         }
       },

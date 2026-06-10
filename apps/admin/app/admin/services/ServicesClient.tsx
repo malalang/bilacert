@@ -1,12 +1,12 @@
 "use client";
 
-import AdminPage from "@/components/admin/AdminPage";
-import { useServices, type Service } from "@bilacert/supabase";
-import { Button } from "@/components/ui/button";
+import { type Service, useServices } from "@bilacert/supabase";
 import { MoreHorizontal } from "lucide-react";
-import DeleteServiceDialog from "./DeleteServiceDialog";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import AdminPage from "@/components/admin/AdminPage";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -15,7 +15,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -24,6 +23,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import DeleteServiceDialog from "./DeleteServiceDialog";
 
 const ServiceCard = ({
   service,

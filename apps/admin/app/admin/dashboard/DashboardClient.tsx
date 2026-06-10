@@ -1,18 +1,18 @@
 "use client";
 
+import { Icon } from "@bilacert/shared";
+import { type Submission, useDashboardData } from "@bilacert/supabase";
+import { format, isValid, parseISO } from "date-fns";
 import {
-  DollarSign,
   BarChart as BarChartIcon,
   Clock,
+  DollarSign,
   Users,
 } from "lucide-react";
+import Link from "next/link";
 import StatCard from "@/components/admin/StatCard";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { format, isValid, parseISO } from "date-fns";
-import { useDashboardData, type Submission, type Contact, type Service } from "@bilacert/supabase";
-import { Icon } from "@bilacert/shared";
-import Link from "next/link";
 
 const safeFormatDate = (
   date: string | Date | undefined,

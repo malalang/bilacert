@@ -1,9 +1,10 @@
 "use client";
 
-import { ColumnDef } from "@tanstack/react-table";
-import { Submission } from "@bilacert/supabase";
+import type { Submission } from "@bilacert/supabase";
+import type { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -13,7 +14,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import Link from "next/link";
 import StatusUpdate from "./StatusUpdate";
 
 export const statusVariantMap: {

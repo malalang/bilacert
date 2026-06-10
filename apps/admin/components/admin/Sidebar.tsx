@@ -1,30 +1,30 @@
 "use client";
 
+import { supabase } from "@bilacert/supabase";
+import {
+  BarChart,
+  Briefcase,
+  FileSpreadsheet,
+  FileText,
+  LayoutDashboard,
+  LogOut,
+  MessageSquare,
+  Settings,
+  Users,
+} from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import { Logo } from "@/components/icons";
 import {
   Sidebar,
   SidebarContent,
+  SidebarFooter,
   SidebarHeader,
   SidebarMenu,
-  SidebarMenuItem,
   SidebarMenuButton,
-  SidebarFooter,
+  SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { Logo } from "@/components/icons";
-import {
-  LayoutDashboard,
-  Briefcase,
-  FileText,
-  MessageSquare,
-  LogOut,
-  Settings,
-  Users,
-  FileSpreadsheet,
-  BarChart,
-} from "lucide-react";
-import { supabase } from "@bilacert/supabase";
 import { useToast } from "@/hooks/use-toast";
 
 const navItems = [

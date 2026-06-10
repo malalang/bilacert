@@ -1,8 +1,14 @@
 "use client";
 
-import { useForm, useFieldArray } from "react-hook-form";
+import type { Service } from "@bilacert/supabase";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Loader2, PlusCircle, Trash2 } from "lucide-react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import { useFieldArray, useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Form,
   FormControl,
@@ -12,19 +18,13 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { useToast } from "@/hooks/use-toast";
-import type { Service } from "@bilacert/supabase";
-import { useEffect } from "react";
-import { Loader2, PlusCircle, Trash2 } from "lucide-react";
-import { Textarea } from "@/components/ui/textarea";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
-import { Switch } from "@/components/ui/switch";
 import ImageUpload from "@/components/ui/ImageUpload";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { serviceSchema, ServiceFormValues } from "./schema";
+import { Input } from "@/components/ui/input";
+import { Switch } from "@/components/ui/switch";
+import { Textarea } from "@/components/ui/textarea";
+import { useToast } from "@/hooks/use-toast";
 import { upsertService } from "./actions";
+import { type ServiceFormValues, serviceSchema } from "./schema";
 
 interface ServiceFormProps {
   service?: Service | null;
@@ -212,13 +212,15 @@ export default function ServiceForm({ service }: ServiceFormProps) {
     try {
       const processedValues = {
         ...values,
-        process_steps: values.process_steps.map((step): { title: string; description: string; step: string } => ({
-          title: step.title,
-          description: step.description,
-          step: String(step.step),
-        })),
+        process_steps: values.process_steps.map(
+          (step): { title: string; description: string; step: string } => ({
+            title: step.title,
+            description: step.description,
+            step: String(step.step),
+          }),
+        ),
       };
-      
+
       const result = await upsertService(processedValues);
 
       if (result.error) {

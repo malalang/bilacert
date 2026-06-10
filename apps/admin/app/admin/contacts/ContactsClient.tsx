@@ -1,18 +1,17 @@
 "use client";
 
-import AdminPage from "@/components/admin/AdminPage";
-import { useContacts, type Contact } from "@bilacert/supabase";
-import { Button } from "@/components/ui/button";
+import { type Contact, useContacts } from "@bilacert/supabase";
 import { MoreHorizontal } from "lucide-react";
-import DeleteContactDialog from "./DeleteContactDialog";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import AdminPage from "@/components/admin/AdminPage";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
+  CardFooter,
   CardHeader,
   CardTitle,
-  CardFooter,
 } from "@/components/ui/card";
 import {
   DropdownMenu,
@@ -22,6 +21,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import DeleteContactDialog from "./DeleteContactDialog";
 
 const ContactCard = ({
   contact,

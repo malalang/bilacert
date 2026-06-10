@@ -1,8 +1,8 @@
-export { ServiceHero, HeroStatsBackdrop } from "./ServiceHero";
-export { WhatIsSection } from "./WhatIsSection";
-export { ServicesGrid } from "./ServicesGrid";
+export { CTASection } from "./CTASection";
 export { PricingPlans } from "./PricingPlans";
 export { ProcessSteps } from "./ProcessSteps";
+export { HeroStatsBackdrop, ServiceHero } from "./ServiceHero";
+export { ServicesGrid } from "./ServicesGrid";
 export { SuccessStory } from "./SuccessStory";
-export { CTASection } from "./CTASection";
+export { WhatIsSection } from "./WhatIsSection";
 export { WhyChooseUs } from "./WhyChooseUs";

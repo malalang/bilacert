@@ -1,8 +1,21 @@
-'use client';
+"use client";
 
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Button } from '@/components/ui/button';
+import type { BlogPost } from "@bilacert/supabase";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Loader2 } from "lucide-react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect, useTransition } from "react";
+import { useForm } from "react-hook-form";
+import PexelsImagePicker from "@/components/PexelsImagePicker";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import {
   Form,
   FormControl,
@@ -11,22 +24,15 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Switch } from '@/components/ui/switch';
+} from "@/components/ui/form";
+import ImageUpload from "@/components/ui/ImageUpload";
+import { Input } from "@/components/ui/input";
+import { Switch } from "@/components/ui/switch";
+import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-import type { BlogPost } from "@bilacert/supabase";
-import { useEffect, useTransition } from 'react';
-import { Loader2 } from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import Link from 'next/link';
-import ImageUpload from '@/components/ui/ImageUpload';
-import PexelsImagePicker from '@/components/PexelsImagePicker';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { blogSchema, BlogFormValues } from './schema';
-import { upsertBlog } from './actions';
-import BlogEditor from './BlogEditor';
+import { upsertBlog } from "./actions";
+import BlogEditor from "./BlogEditor";
+import { type BlogFormValues, blogSchema } from "./schema";
 
 interface BlogFormProps {
   blog?: BlogPost | null;
@@ -36,9 +42,9 @@ const slugify = (str: string) =>
   str
     .toLowerCase()
     .trim()
-    .replace(/[^\w\s-]/g, '')
-    .replace(/[\s_-]+/g, '-')
-    .replace(/^-+|-+$/g, '');
+    .replace(/[^\w\s-]/g, "")
+    .replace(/[\s_-]+/g, "-")
+    .replace(/^-+|-+$/g, "");
 
 export default function BlogForm({ blog }: BlogFormProps) {
   const { toast } = useToast();
@@ -48,32 +54,32 @@ export default function BlogForm({ blog }: BlogFormProps) {
   const form = useForm<BlogFormValues>({
     resolver: zodResolver(blogSchema),
     defaultValues: {
-      title: '',
-      slug: '',
-      author_name: 'Bilacert Team',
-      read_time: '5 min read',
-      category: '',
-      tags: '',
-      excerpt: '',
-      content: '',
+      title: "",
+      slug: "",
+      author_name: "Bilacert Team",
+      read_time: "5 min read",
+      category: "",
+      tags: "",
+      excerpt: "",
+      content: "",
       published: false,
-      featured_image: '',
-      thumbnail: '',
+      featured_image: "",
+      thumbnail: "",
       featured: false,
-      seo_title: '',
-      seo_description: '',
-      seo_keywords: '',
+      seo_title: "",
+      seo_description: "",
+      seo_keywords: "",
     },
   });
 
   const { handleSubmit, reset, watch, setValue } = form;
 
-  const title = watch('title');
+  const title = watch("title");
   const isEditing = !!blog;
 
   useEffect(() => {
     if (!isEditing && title) {
-      setValue('slug', slugify(title), { shouldValidate: true });
+      setValue("slug", slugify(title), { shouldValidate: true });
     }
   }, [title, setValue, isEditing]);
 
@@ -81,16 +87,16 @@ export default function BlogForm({ blog }: BlogFormProps) {
     if (blog) {
       reset({
         ...blog,
-        author_name: blog.author_name || 'Bilacert Team',
-        read_time: blog.read_time || '5 min read',
-        tags: blog.tags || '',
-        excerpt: blog.excerpt || '',
-        content: blog.content || '',
-        featured_image: blog.featured_image || '',
-        thumbnail: blog.thumbnail || '',
-        seo_title: blog.seo_title || '',
-        seo_description: blog.seo_description || '',
-        seo_keywords: blog.seo_keywords || '',
+        author_name: blog.author_name || "Bilacert Team",
+        read_time: blog.read_time || "5 min read",
+        tags: blog.tags || "",
+        excerpt: blog.excerpt || "",
+        content: blog.content || "",
+        featured_image: blog.featured_image || "",
+        thumbnail: blog.thumbnail || "",
+        seo_title: blog.seo_title || "",
+        seo_description: blog.seo_description || "",
+        seo_keywords: blog.seo_keywords || "",
       });
     }
   }, [blog, reset]);
@@ -100,15 +106,15 @@ export default function BlogForm({ blog }: BlogFormProps) {
       const result = await upsertBlog(values);
       if (result.error) {
         toast({
-          variant: 'destructive',
-          title: 'Error saving blog post',
+          variant: "destructive",
+          title: "Error saving blog post",
           description: result.error,
         });
       } else {
         toast({
-          title: 'Blog post saved',
+          title: "Blog post saved",
         });
-        router.push('/admin/blogs');
+        router.push("/admin/blogs");
       }
     });
   };
@@ -177,7 +183,9 @@ export default function BlogForm({ blog }: BlogFormProps) {
             <Card>
               <CardHeader>
                 <CardTitle>Media</CardTitle>
-                <CardDescription>Upload local images or pick from Pexels</CardDescription>
+                <CardDescription>
+                  Upload local images or pick from Pexels
+                </CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -192,7 +200,7 @@ export default function BlogForm({ blog }: BlogFormProps) {
                             bucket="blogs"
                             initialUrl={field.value}
                             onUpload={(url) => field.onChange(url)}
-                            onRemove={() => field.onChange('')}
+                            onRemove={() => field.onChange("")}
                           />
                         </FormControl>
                         <FormMessage />
@@ -210,7 +218,7 @@ export default function BlogForm({ blog }: BlogFormProps) {
                             bucket="blogs"
                             initialUrl={field.value}
                             onUpload={(url) => field.onChange(url)}
-                            onRemove={() => field.onChange('')}
+                            onRemove={() => field.onChange("")}
                           />
                         </FormControl>
                         <FormMessage />
@@ -218,31 +226,41 @@ export default function BlogForm({ blog }: BlogFormProps) {
                     )}
                   />
                 </div>
-                
+
                 <div className="border-t pt-6">
-                  <h3 className="text-sm font-medium mb-4">Pexels Image Picker</h3>
+                  <h3 className="text-sm font-medium mb-4">
+                    Pexels Image Picker
+                  </h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-2">
-                      <p className="text-xs text-muted-foreground">Quick pick for Featured Image</p>
-                      <PexelsImagePicker 
-                        onSelect={(url) => setValue('featured_image', url)}
-                        currentImageUrl={watch('featured_image')}
+                      <p className="text-xs text-muted-foreground">
+                        Quick pick for Featured Image
+                      </p>
+                      <PexelsImagePicker
+                        onSelect={(url) => setValue("featured_image", url)}
+                        currentImageUrl={watch("featured_image")}
                         suggestions={[
-                          title, 
-                          watch('category'), 
-                          ...(watch('tags') || '').split(',').map(t => t.trim())
+                          title,
+                          watch("category"),
+                          ...(watch("tags") || "")
+                            .split(",")
+                            .map((t) => t.trim()),
                         ].filter((t): t is string => !!t)}
                       />
                     </div>
                     <div className="space-y-2">
-                      <p className="text-xs text-muted-foreground">Quick pick for Thumbnail</p>
-                      <PexelsImagePicker 
-                        onSelect={(url) => setValue('thumbnail', url)}
-                        currentImageUrl={watch('thumbnail')}
+                      <p className="text-xs text-muted-foreground">
+                        Quick pick for Thumbnail
+                      </p>
+                      <PexelsImagePicker
+                        onSelect={(url) => setValue("thumbnail", url)}
+                        currentImageUrl={watch("thumbnail")}
                         suggestions={[
-                          title, 
-                          watch('category'), 
-                          ...(watch('tags') || '').split(',').map(t => t.trim())
+                          title,
+                          watch("category"),
+                          ...(watch("tags") || "")
+                            .split(",")
+                            .map((t) => t.trim()),
                         ].filter((t): t is string => !!t)}
                       />
                     </div>
@@ -259,9 +277,9 @@ export default function BlogForm({ blog }: BlogFormProps) {
                   <FormLabel>Content</FormLabel>
                   <FormControl>
                     <BlogEditor
-                      featured_image={watch('featured_image')}
-                      onImageSelect={(url) => setValue('featured_image', url)}
-                      value={field.value ?? ''}
+                      featured_image={watch("featured_image")}
+                      onImageSelect={(url) => setValue("featured_image", url)}
+                      value={field.value ?? ""}
                       onChange={field.onChange}
                       title={title}
                     />
@@ -433,7 +451,7 @@ export default function BlogForm({ blog }: BlogFormProps) {
           </Button>
           <Button type="submit" disabled={isPending}>
             {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            {isEditing ? 'Save Changes' : 'Create Post'}
+            {isEditing ? "Save Changes" : "Create Post"}
           </Button>
         </div>
       </form>

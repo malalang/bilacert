@@ -1,10 +1,10 @@
-import type { Metadata } from "next";
-import Link from "next/link";
-import { ArrowRight, CheckCircle, Users, Clock } from "lucide-react";
-import { getPublishedServices } from "@bilacert/supabase";
 import { Icon } from "@bilacert/shared";
-import { Button } from "@/components/ui/button";
+import { getPublishedServices } from "@bilacert/supabase";
+import { ArrowRight, CheckCircle, Clock, Users } from "lucide-react";
+import type { Metadata } from "next";
 import Image from "next/image";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 export const metadata: Metadata = {
   title: "Our Services - Bilacert",

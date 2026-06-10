@@ -1,9 +1,9 @@
 "use server";
 
 import { createSupabaseAdminClient } from "@bilacert/supabase";
-import { blogSchema } from "./schema";
 import { revalidatePath } from "next/cache";
 import { v4 as uuidv4 } from "uuid";
+import { blogSchema } from "./schema";
 
 export async function upsertBlog(values: unknown) {
   const supabase = createSupabaseAdminClient();

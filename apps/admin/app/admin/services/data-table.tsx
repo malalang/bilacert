@@ -1,17 +1,20 @@
 "use client";
 
 import {
-  ColumnDef,
+  type ColumnDef,
+  type ColumnFiltersState,
   flexRender,
   getCoreRowModel,
-  useReactTable,
+  getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
-  SortingState,
-  getFilteredRowModel,
-  ColumnFiltersState,
+  type SortingState,
+  useReactTable,
 } from "@tanstack/react-table";
-
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   Table,
   TableBody,
@@ -20,10 +23,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
-import { useState } from "react";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Input } from "@/components/ui/input";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -90,7 +89,7 @@ export function DataTable<TData, TValue>({
             {isLoading ? (
               Array.from({ length: 5 }).map((_, i) => (
                 <TableRow key={i}>
-                  {columns.map((col, j) => (
+                  {columns.map((_col, j) => (
                     <TableCell key={j}>
                       <Skeleton className="h-6 w-full" />
                     </TableCell>

@@ -1,9 +1,8 @@
 "use server";
 
-import { createSupabaseAdminClient } from "@bilacert/supabase";
-import { contactSchema } from "./schema";
+import { type Contact, createSupabaseAdminClient } from "@bilacert/supabase";
 import { revalidatePath } from "next/cache";
-import { Contact } from "@bilacert/supabase";
+import { contactSchema } from "./schema";
 
 export async function getContacts() {
   const supabase = createSupabaseAdminClient();
@@ -30,7 +29,9 @@ export async function upsertContact(values: unknown, contactId?: string) {
   const { data, error } = await supabase
     .from("contacts")
     .upsert(
-      (contactId ? { ...parsedValues.data, id: contactId } : parsedValues.data) as any,
+      (contactId
+        ? { ...parsedValues.data, id: contactId }
+        : parsedValues.data) as any,
     )
     .select("*")
     .single();

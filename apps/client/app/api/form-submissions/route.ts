@@ -1,6 +1,5 @@
+import { createServerClient, getServiceBySlug } from "@bilacert/supabase";
 import { type NextRequest, NextResponse } from "next/server";
-import { createServerClient } from "@bilacert/supabase";
-import { getServiceBySlug } from "@bilacert/supabase";
 
 export async function POST(request: NextRequest) {
   try {

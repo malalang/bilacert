@@ -1,12 +1,14 @@
+import { Icon } from "@bilacert/shared";
+import {
+  getAllPublishedBlogPosts,
+  getFeaturedServices,
+} from "@bilacert/supabase";
 import { ArrowRight, CheckCircle, Clock, Users } from "lucide-react";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { Icon } from "@bilacert/shared";
 import StructuredData from "@/components/StructuredData";
 import Testimonials from "@/components/Testimonials";
-import { getAllPublishedBlogPosts } from "@bilacert/supabase";
-import { getFeaturedServices } from "@bilacert/supabase";
 
 export const metadata: Metadata = {
   title: "Home",

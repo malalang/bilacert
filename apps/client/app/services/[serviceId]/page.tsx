@@ -1,4 +1,13 @@
-import { type Metadata } from "next";
+import type {
+  PricingPlan,
+  ProcessStep,
+  SuccessStory as TSuccessStory,
+} from "@bilacert/supabase";
+import {
+  getAllPublishedServiceSlugs,
+  getServiceBySlug,
+} from "@bilacert/supabase";
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import {
   CTASection,
@@ -9,15 +18,6 @@ import {
   WhatIsSection,
   WhyChooseUs,
 } from "@/components/service";
-import {
-  getAllPublishedServiceSlugs,
-  getServiceBySlug,
-} from "@bilacert/supabase";
-import type {
-  PricingPlan,
-  ProcessStep,
-  SuccessStory as TSuccessStory,
-} from "@bilacert/supabase";
 
 interface Props {
   params: Promise<{ serviceId: string }>;
@@ -81,7 +81,6 @@ export default async function ServiceDetailPage({ params }: Props) {
         iconName={service.icon || ""}
         imageSrc={service.image || ""}
         processing_time={service.processing_time || ""}
-
         formPath={formPath}
         phone="075 430 4433"
       />

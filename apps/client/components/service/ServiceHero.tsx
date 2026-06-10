@@ -1,7 +1,7 @@
+import { CheckCircle, Shield } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { getIcon } from "@/lib/services-config";
-import { CheckCircle, Shield } from "lucide-react";
 
 interface ServiceHeroProps {
   title: string;

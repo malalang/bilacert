@@ -1,9 +1,8 @@
 "use client";
 
+import { cn } from "@bilacert/shared";
 import * as React from "react";
 import * as RechartsPrimitive from "recharts";
-
-import { cn } from "@bilacert/shared";
 
 // Format: { THEME_NAME: CSS_SELECTOR }
 const THEMES = { light: "", dark: ".dark" } as const;
@@ -188,7 +187,11 @@ const ChartTooltipContent = React.forwardRef<
         <div className="grid gap-1.5">
           {payload.map((item: any, index: number) => {
             const key = `${nameKey || item.name || item.dataKey || "value"}`;
-            const itemConfig = getPayloadConfigFromPayload(config, item as any, key);
+            const itemConfig = getPayloadConfigFromPayload(
+              config,
+              item as any,
+              key,
+            );
             const indicatorColor = color || item.payload.fill || item.color;
 
             return (
@@ -288,7 +291,11 @@ const ChartLegendContent = React.forwardRef<
       >
         {payload.map((item: any) => {
           const key = `${nameKey || item.dataKey || "value"}`;
-          const itemConfig = getPayloadConfigFromPayload(config, item as any, key);
+          const itemConfig = getPayloadConfigFromPayload(
+            config,
+            item as any,
+            key,
+          );
 
           return (
             <div

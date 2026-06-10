@@ -1,8 +1,14 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from "react";
-import { Search, Loader2, Check, ExternalLink, Image as ImageIcon } from "lucide-react";
+import {
+  ExternalLink,
+  Image as ImageIcon,
+  Loader2,
+  Search,
+} from "lucide-react";
 import Image from "next/image";
+import type React from "react";
+import { useCallback, useEffect, useState } from "react";
 
 interface PexelsImage {
   id: number;
@@ -32,7 +38,11 @@ interface PexelsImagePickerProps {
   suggestions?: string[];
 }
 
-const PexelsImagePicker: React.FC<PexelsImagePickerProps> = ({ onSelect, currentImageUrl, suggestions = [] }) => {
+const PexelsImagePicker: React.FC<PexelsImagePickerProps> = ({
+  onSelect,
+  currentImageUrl,
+  suggestions = [],
+}) => {
   const [query, setQuery] = useState("");
   const [images, setImages] = useState<PexelsImage[]>([]);
   const [loading, setLoading] = useState(false);
@@ -48,7 +58,7 @@ const PexelsImagePicker: React.FC<PexelsImagePickerProps> = ({ onSelect, current
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch('/api/pexels');
+      const response = await fetch("/api/pexels");
       if (!response.ok) throw new Error("Failed to fetch curated photos");
       const data = await response.json();
       setImages(data.photos || []);
@@ -59,29 +69,34 @@ const PexelsImagePicker: React.FC<PexelsImagePickerProps> = ({ onSelect, current
     }
   }, []);
 
-  const searchImages = useCallback(async (searchQuery?: string) => {
-    const q = searchQuery || query;
-    if (!q.trim()) {
-      loadInitialPhotos();
-      return;
-    }
-
-    setLoading(true);
-    setError(null);
-
-    try {
-      const response = await fetch(`/api/pexels?query=${encodeURIComponent(q)}`);
-      if (!response.ok) {
-        throw new Error("Failed to fetch images from Pexels");
+  const searchImages = useCallback(
+    async (searchQuery?: string) => {
+      const q = searchQuery || query;
+      if (!q.trim()) {
+        loadInitialPhotos();
+        return;
       }
-      const data = await response.json();
-      setImages(data.photos || []);
-    } catch (err: any) {
-      setError(err.message || "An error occurred while searching");
-    } finally {
-      setLoading(false);
-    }
-  }, [query, loadInitialPhotos]);
+
+      setLoading(true);
+      setError(null);
+
+      try {
+        const response = await fetch(
+          `/api/pexels?query=${encodeURIComponent(q)}`,
+        );
+        if (!response.ok) {
+          throw new Error("Failed to fetch images from Pexels");
+        }
+        const data = await response.json();
+        setImages(data.photos || []);
+      } catch (err: any) {
+        setError(err.message || "An error occurred while searching");
+      } finally {
+        setLoading(false);
+      }
+    },
+    [query, loadInitialPhotos],
+  );
 
   // Fetch curated photos when searching panel is opened
   useEffect(() => {
@@ -108,7 +123,7 @@ const PexelsImagePicker: React.FC<PexelsImagePickerProps> = ({ onSelect, current
     searchImages(suggestion);
   };
 
-  const handleSelect = (image: PexelsImage, size: keyof PexelsImage['src']) => {
+  const handleSelect = (image: PexelsImage, size: keyof PexelsImage["src"]) => {
     const url = image.src[size];
     setSelectedUrl(url);
     onSelect(url);
@@ -122,16 +137,16 @@ const PexelsImagePicker: React.FC<PexelsImagePickerProps> = ({ onSelect, current
           Select from Pexels
         </label>
         {/* Requirement: Prominent link to Pexels */}
-        <a 
-          href="https://www.pexels.com" 
-          target="_blank" 
+        <a
+          href="https://www.pexels.com"
+          target="_blank"
           rel="noopener noreferrer"
           className="text-[10px] text-gray-400 hover:text-emerald-600 flex items-center gap-1"
         >
           Photos provided by Pexels
         </a>
       </div>
-      
+
       {/* Preview Section */}
       <div className="relative aspect-video w-full max-w-md rounded-lg overflow-hidden border-2 border-dashed border-gray-300 bg-gray-50 flex items-center justify-center group">
         {selectedUrl ? (
@@ -141,7 +156,7 @@ const PexelsImagePicker: React.FC<PexelsImagePickerProps> = ({ onSelect, current
               alt="Preview"
               fill
               className="object-cover"
-              unoptimized={selectedUrl.includes('pexels.com')}
+              unoptimized={selectedUrl.includes("pexels.com")}
             />
             <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
               <button
@@ -161,7 +176,9 @@ const PexelsImagePicker: React.FC<PexelsImagePickerProps> = ({ onSelect, current
             className="flex flex-col items-center gap-2 text-gray-500 hover:text-emerald-600 transition-colors"
           >
             <ImageIcon size={48} strokeWidth={1} />
-            <span className="font-medium">Click to select an image from Pexels</span>
+            <span className="font-medium">
+              Click to select an image from Pexels
+            </span>
           </button>
         )}
       </div>
@@ -182,7 +199,10 @@ const PexelsImagePicker: React.FC<PexelsImagePickerProps> = ({ onSelect, current
         <div className="bg-gray-50 p-4 rounded-xl border border-gray-200 space-y-4 animate-in fade-in slide-in-from-top-2 duration-200">
           <div className="flex gap-2">
             <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+              <Search
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+                size={18}
+              />
               <input
                 type="text"
                 value={query}
@@ -198,13 +218,19 @@ const PexelsImagePicker: React.FC<PexelsImagePickerProps> = ({ onSelect, current
               disabled={loading}
               className="bg-emerald-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-emerald-700 disabled:opacity-50 flex items-center gap-2"
             >
-              {loading ? <Loader2 size={18} className="animate-spin" /> : "Search"}
+              {loading ? (
+                <Loader2 size={18} className="animate-spin" />
+              ) : (
+                "Search"
+              )}
             </button>
           </div>
 
           {suggestions.length > 0 && (
             <div className="flex flex-wrap gap-2">
-              <span className="text-[10px] uppercase tracking-wider text-gray-400 font-bold w-full mb-1">Suggestions from tags:</span>
+              <span className="text-[10px] uppercase tracking-wider text-gray-400 font-bold w-full mb-1">
+                Suggestions from tags:
+              </span>
               {suggestions.map((tag) => (
                 <button
                   key={tag}
@@ -226,7 +252,10 @@ const PexelsImagePicker: React.FC<PexelsImagePickerProps> = ({ onSelect, current
 
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
             {images.map((image) => (
-              <div key={image.id} className="group relative bg-white rounded-lg border border-gray-200 overflow-hidden shadow-sm hover:border-emerald-500 transition-colors">
+              <div
+                key={image.id}
+                className="group relative bg-white rounded-lg border border-gray-200 overflow-hidden shadow-sm hover:border-emerald-500 transition-colors"
+              >
                 <div className="relative aspect-square">
                   <Image
                     src={image.src.small}
@@ -240,14 +269,14 @@ const PexelsImagePicker: React.FC<PexelsImagePickerProps> = ({ onSelect, current
                   <div className="flex flex-col gap-1">
                     <button
                       type="button"
-                      onClick={() => handleSelect(image, 'large')}
+                      onClick={() => handleSelect(image, "large")}
                       className="text-[10px] w-full bg-emerald-50 text-emerald-700 py-1 rounded hover:bg-emerald-100 font-bold"
                     >
                       SELECT LARGE
                     </button>
                     <button
                       type="button"
-                      onClick={() => handleSelect(image, 'medium')}
+                      onClick={() => handleSelect(image, "medium")}
                       className="text-[10px] w-full bg-blue-50 text-blue-700 py-1 rounded hover:bg-blue-100 font-bold"
                     >
                       SELECT MEDIUM
@@ -255,7 +284,9 @@ const PexelsImagePicker: React.FC<PexelsImagePickerProps> = ({ onSelect, current
                   </div>
                   <div className="flex items-center justify-between text-[10px] text-gray-500 border-t pt-2">
                     {/* Requirement: Credit photographers with links */}
-                    <span className="truncate max-w-[80px]">By {image.photographer}</span>
+                    <span className="truncate max-w-[80px]">
+                      By {image.photographer}
+                    </span>
                     <div className="flex items-center gap-1.5">
                       <a
                         href={image.url}
@@ -282,16 +313,22 @@ const PexelsImagePicker: React.FC<PexelsImagePickerProps> = ({ onSelect, current
             ))}
             {!loading && images.length === 0 && (
               <div className="col-span-full py-8 text-center text-gray-500">
-                {query ? `No images found for "${query}"` : "No photos available."}
+                {query
+                  ? `No images found for "${query}"`
+                  : "No photos available."}
               </div>
             )}
           </div>
-          
+
           <div className="pt-2 border-t border-gray-100 flex justify-center">
-            <a href="https://www.pexels.com" target="_blank" rel="noopener noreferrer">
-              <Image 
-                src="https://images.pexels.com/lib/api/pexels.png" 
-                alt="Pexels Logo" 
+            <a
+              href="https://www.pexels.com"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Image
+                src="https://images.pexels.com/lib/api/pexels.png"
+                alt="Pexels Logo"
                 width={100}
                 height={24}
                 className="h-6 w-auto opacity-50 hover:opacity-100 transition-opacity"

@@ -1,184 +1,250 @@
-'use client';
+"use client";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { useEffect, useState } from "react";
+import type {
+  BlogPost,
+  Contact,
+  Service,
+  Submission,
+  Testimonial,
+  User,
+} from "@bilacert/supabase";
 import { createBrowserClient } from "@bilacert/supabase";
-import type { BlogPost, Contact, Service, Testimonial, Submission, User } from "@bilacert/supabase";
-import AnalysisLoading from "./loading";
-import { DateRangePicker } from "@/components/ui/DateRangePicker";
-import type { DateRange } from "react-day-picker";
 import { subYears } from "date-fns";
-import { 
-  SubmissionsLineChart, SubmissionsBarChart, ContentBarChart, 
-  BlogViewsChart, SubmissionStatusPieChart, DetailedSubmissionsChart, TurnaroundTimeChart, CombinedActivityChart
+import { useEffect, useState } from "react";
+import type { DateRange } from "react-day-picker";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { DateRangePicker } from "@/components/ui/DateRangePicker";
+import {
+  BlogViewsChart,
+  CombinedActivityChart,
+  ContentBarChart,
+  DetailedSubmissionsChart,
+  SubmissionStatusPieChart,
+  SubmissionsBarChart,
+  SubmissionsLineChart,
+  TurnaroundTimeChart,
 } from "./charts";
+import AnalysisLoading from "./loading";
 
 const supabase = createBrowserClient();
 
 interface ChartData {
-    submissionsByDay: { date: string; count: number }[];
-    submissionsByService: { service_name: string; count: number }[];
-    contentBreakdown: { contentType: string; count: number }[];
-    blogViews: { title: string; views: number }[];
-    submissionStatus: { status: string; count: number }[];
-    detailedSubmissions: { date: string; [key: string]: number | string }[];
-    turnaroundAnalysis: { service_name: string; average_days: number }[];
-    combinedActivity: { date: string; [key: string]: number | string }[];
-    combinedActivityKeys: string[];
-    serviceKeys: string[];
-    statusKeys: string[];
-    totalSubmissions: number;
-    publishedContent: number;
-    totalViews: number;
+  submissionsByDay: { date: string; count: number }[];
+  submissionsByService: { service_name: string; count: number }[];
+  contentBreakdown: { contentType: string; count: number }[];
+  blogViews: { title: string; views: number }[];
+  submissionStatus: { status: string; count: number }[];
+  detailedSubmissions: { date: string; [key: string]: number | string }[];
+  turnaroundAnalysis: { service_name: string; average_days: number }[];
+  combinedActivity: { date: string; [key: string]: number | string }[];
+  combinedActivityKeys: string[];
+  serviceKeys: string[];
+  statusKeys: string[];
+  totalSubmissions: number;
+  publishedContent: number;
+  totalViews: number;
 }
 
-// ...
+async function getAnalyticsData(
+  dateRange: DateRange | undefined,
+): Promise<ChartData> {
+  const queries = [
+    supabase
+      .from("blog_posts")
+      .select(
+        "created_at,published_at,updated_at,category,published,views_count,title",
+      ),
+    supabase.from("contacts").select("submitted_at"),
+    supabase.from("services").select("created_at,updated_at"),
+    supabase.from("testimonials").select("created_at"),
+    supabase
+      .from("form_submissions")
+      .select("created_at,updated_at,completed_at,service_name,status"),
+    supabase.from("users").select("created_at"),
+  ];
 
-async function getAnalyticsData(dateRange: DateRange | undefined): Promise<ChartData> {
-    const from = dateRange?.from?.toISOString() || '';
-    const to = dateRange?.to?.toISOString() || '';
+  const [
+    blogRes,
+    contactRes,
+    serviceRes,
+    testimonialRes,
+    submissionRes,
+    userRes,
+  ] = await Promise.all(queries);
 
-    const queries = [
-        supabase.from("blog_posts").select("created_at,published_at,updated_at,category,published,views_count,title"),
-        supabase.from("contacts").select("submitted_at"),
-        supabase.from("services").select("created_at,updated_at"),
-        supabase.from("testimonials").select("created_at"),
-        supabase.from("form_submissions").select("created_at,updated_at,completed_at,service_name,status"),
-        supabase.from("users").select("created_at"),
-    ];
+  const blogs = (blogRes?.data as BlogPost[]) || [];
+  const contacts = (contactRes?.data as Contact[]) || [];
+  const services = (serviceRes?.data as Service[]) || [];
+  const testimonials = (testimonialRes?.data as Testimonial[]) || [];
+  const submissions = (submissionRes?.data as Submission[]) || [];
+  const users = (userRes?.data as User[]) || [];
 
-    const [blogRes, contactRes, serviceRes, testimonialRes, submissionRes, userRes] = await Promise.all(queries);
+  const activity = new Map<string, { [key: string]: number }>();
+  const activityKeys = new Set<string>();
 
-    const blogs = (blogRes?.data as BlogPost[]) || [];
-    const contacts = (contactRes?.data as Contact[]) || [];
-    const services = (serviceRes?.data as Service[]) || [];
-    const testimonials = (testimonialRes?.data as Testimonial[]) || [];
-    const submissions = (submissionRes?.data as Submission[]) || [];
-    const users = (userRes?.data as User[]) || [];
+  const addToActivity = (dateStr: string | null | undefined, key: string) => {
+    if (!dateStr) return;
+    const activityDate = new Date(dateStr);
+    const date = activityDate.toISOString().split("T")[0];
+    if (!date) return;
+    const dayData = activity.get(date) ?? {};
+    activity.set(date, { ...dayData, [key]: (dayData[key] || 0) + 1 });
+    activityKeys.add(key);
+  };
 
-    const activity = new Map<string, { [key: string]: number }>();
-    const activityKeys = new Set<string>();
+  for (const b of blogs) {
+    addToActivity(b.created_at, "blogs_created");
+    addToActivity(b.published_at, "blogs_published");
+    addToActivity(b.updated_at, "blogs_updated");
+  }
+  for (const c of contacts) addToActivity(c.submitted_at, "contacts_submitted");
+  for (const s of services) {
+    addToActivity(s.created_at, "services_created");
+    addToActivity(s.updated_at, "services_updated");
+  }
+  for (const t of testimonials)
+    addToActivity(t.created_at, "testimonials_created");
+  for (const s of submissions) {
+    addToActivity(s.created_at, "submissions_created");
+    addToActivity(s.updated_at, "submissions_updated");
+  }
+  for (const u of users) addToActivity(u.created_at, "users_created");
 
-    const addToActivity = (dateStr: string | null | undefined, key: string) => {
-        if (!dateStr) return;
-        const activityDate = new Date(dateStr);
-        const date = activityDate.toISOString().split('T')[0];
-        if (!date) return;
-        if (!activity.has(date)) activity.set(date, {});
-        const dayData = activity.get(date)!;
-        dayData[key] = (dayData[key] || 0) + 1;
-        activityKeys.add(key);
-    };
+  const combinedActivity = Array.from(activity.entries())
+    .map(([date, dailyData]) => {
+      const completeDailyData: {
+        date: string;
+        [key: string]: number | string;
+      } = { date };
+      activityKeys.forEach((key) => {
+        completeDailyData[key] = dailyData[key] || 0;
+      });
+      return completeDailyData;
+    })
+    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
-    blogs.forEach(b => {
-        addToActivity(b.created_at, 'blogs_created');
-        addToActivity(b.published_at, 'blogs_published');
-        addToActivity(b.updated_at, 'blogs_updated');
-    });
-    contacts.forEach(c => addToActivity(c.submitted_at, 'contacts_submitted'));
-    services.forEach(s => {
-        addToActivity(s.created_at, 'services_created');
-        addToActivity(s.updated_at, 'services_updated');
-    });
-    testimonials.forEach(t => addToActivity(t.created_at, 'testimonials_created'));
-    submissions.forEach(s => {
-        addToActivity(s.created_at, 'submissions_created');
-        addToActivity(s.updated_at, 'submissions_updated');
-    });
-    users.forEach(u => addToActivity(u.created_at, 'users_created'));
+  const fromDate = dateRange?.from;
+  const toDate = dateRange?.to;
+  const filteredSubmissions = submissions.filter((s) => {
+    const date = new Date(s.created_at);
+    return (!fromDate || date >= fromDate) && (!toDate || date <= toDate);
+  });
+  const filteredBlogs = blogs.filter((b) => {
+    const date = new Date(b.created_at);
+    return (!fromDate || date >= fromDate) && (!toDate || date <= toDate);
+  });
 
-    const combinedActivity = Array.from(activity.entries()).map(([date, dailyData]) => {
-        const completeDailyData: { date: string; [key: string]: number | string } = { date };
-        activityKeys.forEach(key => {
-            completeDailyData[key] = dailyData[key] || 0;
-        });
-        return completeDailyData;
-    }).sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+  const dailyCounts = new Map<string, number>();
+  for (const { created_at } of filteredSubmissions) {
+    if (!created_at) continue;
+    const date = new Date(created_at as string)
+      .toISOString()
+      .split("T")[0] as string;
+    dailyCounts.set(date, (dailyCounts.get(date) || 0) + 1);
+  }
+  const submissionsByDay = Array.from(dailyCounts.entries())
+    .map(([date, count]) => ({ date, count }))
+    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
-    const fromDate = dateRange?.from;
-    const toDate = dateRange?.to;
-    const filteredSubmissions = submissions.filter(s => {
-        const date = new Date(s.created_at);
-        return (!fromDate || date >= fromDate) && (!toDate || date <= toDate);
-    });
-    const filteredBlogs = blogs.filter(b => {
-        const date = new Date(b.created_at);
-        return (!fromDate || date >= fromDate) && (!toDate || date <= toDate);
-    });
+  const serviceCounts = new Map<string, number>();
+  for (const { service_name } of filteredSubmissions) {
+    const aService = (service_name || "Uncategorized") as string;
+    serviceCounts.set(aService, (serviceCounts.get(aService) || 0) + 1);
+  }
+  const submissionsByService = Array.from(serviceCounts.entries()).map(
+    ([service_name, count]) => ({ service_name, count }),
+  );
 
-    const dailyCounts = new Map<string, number>();
-    filteredSubmissions.forEach(({ created_at }) => {
-        if (!created_at) return;
-        const date = (new Date(created_at as string).toISOString().split("T")[0]) as string;
-        dailyCounts.set(date, (dailyCounts.get(date) || 0) + 1);
-    });
-    const submissionsByDay = Array.from(dailyCounts.entries()).map(([date, count]) => ({ date, count })).sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+  const categoryCounts = new Map<string, number>();
+  for (const { category } of filteredBlogs) {
+    const contentType = (category || "Uncategorized") as string;
+    categoryCounts.set(contentType, (categoryCounts.get(contentType) || 0) + 1);
+  }
+  const contentBreakdown = Array.from(categoryCounts.entries()).map(
+    ([contentType, count]) => ({ contentType, count }),
+  );
 
-    const serviceCounts = new Map<string, number>();
-    filteredSubmissions.forEach(({ service_name }) => {
-        const aService = (service_name || "Uncategorized") as string;
-        serviceCounts.set(aService, (serviceCounts.get(aService) || 0) + 1);
-    });
-    const submissionsByService = Array.from(serviceCounts.entries()).map(([service_name, count]) => ({ service_name, count }));
+  const blogViews = filteredBlogs
+    .map(({ title, views_count }) => ({ title, views: views_count || 0 }))
+    .sort((a, b) => b.views - a.views)
+    .slice(0, 10);
 
-    const categoryCounts = new Map<string, number>();
-    for (const { category } of filteredBlogs) {
-        const contentType = (category || "Uncategorized") as string;
-        categoryCounts.set(contentType, (categoryCounts.get(contentType) || 0) + 1);
+  const statusCounts = new Map<string, number>();
+  for (const { status } of filteredSubmissions) {
+    const aStatus = (status || "Unknown") as string;
+    statusCounts.set(aStatus, (statusCounts.get(aStatus) || 0) + 1);
+  }
+  const submissionStatus = Array.from(statusCounts.entries()).map(
+    ([status, count]) => ({ status, count }),
+  );
+
+  const turnaroundData = new Map<
+    string,
+    { total_days: number; count: number }
+  >();
+  for (const s of filteredSubmissions) {
+    if (s.completed_at && s.created_at) {
+      const created = new Date(s.created_at);
+      const completed = new Date(s.completed_at);
+      const diffDays =
+        (completed.getTime() - created.getTime()) / (1000 * 3600 * 24);
+      const service = (s.service_name || "Uncategorized") as string;
+      const data = turnaroundData.get(service) || { total_days: 0, count: 0 };
+      data.total_days += diffDays;
+      data.count += 1;
+      turnaroundData.set(service, data);
     }
-    const contentBreakdown = Array.from(categoryCounts.entries()).map(([contentType, count]) => ({ contentType, count }));
+  }
+  const turnaroundAnalysis = Array.from(turnaroundData.entries()).map(
+    ([service_name, data]) => ({
+      service_name,
+      average_days: parseFloat((data.total_days / data.count).toFixed(2)),
+    }),
+  );
 
-    const blogViews = filteredBlogs.map(({ title, views_count }) => ({ title, views: views_count || 0 })).sort((a, b) => b.views - a.views).slice(0, 10);
+  const allServiceKeys = [
+    ...new Set(
+      filteredSubmissions.map(
+        (s) => (s.service_name || "Uncategorized") as string,
+      ),
+    ),
+  ];
+  const allStatusKeys = [
+    ...new Set(
+      filteredSubmissions.map((s) => (s.status || "Unknown") as string),
+    ),
+  ];
+  const detailedCounts = new Map<string, { [key: string]: number }>();
 
-    const statusCounts = new Map<string, number>();
-    filteredSubmissions.forEach(({ status }) => {
-        const aStatus = (status || "Unknown") as string;
-        statusCounts.set(aStatus, (statusCounts.get(aStatus) || 0) + 1);
-    });
-    const submissionStatus = Array.from(statusCounts.entries()).map(([status, count]) => ({ status, count }));
+  for (const { created_at, service_name, status } of filteredSubmissions) {
+    if (!created_at) continue;
+    const date = new Date(created_at as string)
+      .toISOString()
+      .split("T")[0] as string;
+    if (!detailedCounts.has(date)) {
+      const initial: { [key: string]: number } = { total: 0 };
+      for (const k of allServiceKeys) initial[k] = 0;
+      for (const k of allStatusKeys) initial[k] = 0;
+      detailedCounts.set(date, initial);
+    }
+    const dayData = detailedCounts.get(date)!;
+    dayData.total += 1;
+    dayData[(service_name || "Uncategorized") as string] += 1;
+    dayData[(status || "Unknown") as string] += 1;
+  }
+  const detailedSubmissions = Array.from(detailedCounts.entries())
+    .map(([date, data]) => ({ date, ...data }))
+    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
-    const turnaroundData = new Map<string, { total_days: number, count: number }>();
-    filteredSubmissions.forEach(s => {
-        if (s.completed_at && s.created_at) {
-            const created = new Date(s.created_at);
-            const completed = new Date(s.completed_at);
-            const diffDays = (completed.getTime() - created.getTime()) / (1000 * 3600 * 24);
-            const service = (s.service_name || "Uncategorized") as string;
-            const data = turnaroundData.get(service) || { total_days: 0, count: 0 };
-            data.total_days += diffDays;
-            data.count += 1;
-            turnaroundData.set(service, data);
-        }
-    });
-    const turnaroundAnalysis = Array.from(turnaroundData.entries()).map(([service_name, data]) => ({
-        service_name,
-        average_days: parseFloat((data.total_days / data.count).toFixed(2)),
-    }));
-
-    const allServiceKeys = [...new Set(filteredSubmissions.map(s => (s.service_name || "Uncategorized") as string))];
-    const allStatusKeys = [...new Set(filteredSubmissions.map(s => (s.status || "Unknown") as string))];
-    const detailedCounts = new Map<string, any>();
-
-    filteredSubmissions.forEach(({ created_at, service_name, status }) => {
-        if (!created_at) return;
-        const date = (new Date(created_at as string).toISOString().split("T")[0]) as string;
-        if (!detailedCounts.has(date)) {
-            const initial: { [key: string]: number } = { total: 0 };
-            allServiceKeys.forEach(k => initial[k] = 0);
-            allStatusKeys.forEach(k => initial[k] = 0);
-            detailedCounts.set(date, initial);
-        }
-        const dayData = detailedCounts.get(date);
-        dayData.total += 1;
-        dayData[(service_name || "Uncategorized") as string] += 1;
-        dayData[(status || "Unknown") as string] += 1;
-    });
-    const detailedSubmissions = Array.from(detailedCounts.entries()).map(([date, data]) => ({ date, ...data })).sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
-
-    const publishedContent = filteredBlogs.filter((blog) => blog.published).length;
-    const totalSubmissions = filteredSubmissions.length;
-    const totalViews = filteredBlogs.reduce((acc, { views_count }) => acc + (views_count || 0), 0);
-return {
+  const publishedContent = filteredBlogs.filter(
+    (blog) => blog.published,
+  ).length;
+  const totalSubmissions = filteredSubmissions.length;
+  const totalViews = filteredBlogs.reduce(
+    (acc, { views_count }) => acc + (views_count || 0),
+    0,
+  );
+  return {
     submissionsByDay,
     submissionsByService,
     contentBreakdown,
@@ -193,143 +259,207 @@ return {
     totalSubmissions,
     publishedContent,
     totalViews,
-};
+  };
 }
 export default function AnalysisClient() {
-    const [chartData, setChartData] = useState<ChartData | null>(null);
-    const [loading, setLoading] = useState(true);
-    const [dateRange, setDateRange] = useState<DateRange | undefined>({ from: subYears(new Date(), 1), to: new Date() });
-    const [visibleKeys, setVisibleKeys] = useState<string[]>([]);
+  const [chartData, setChartData] = useState<ChartData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [dateRange, setDateRange] = useState<DateRange | undefined>({
+    from: subYears(new Date(), 1),
+    to: new Date(),
+  });
+  const [visibleKeys, setVisibleKeys] = useState<string[]>([]);
 
-    useEffect(() => {
-        async function fetchData() {
-            setLoading(true);
-            const data = await getAnalyticsData(dateRange);
-            setChartData(data);
-            setLoading(false);
-        }
-        fetchData();
-    }, [dateRange]);
-
-    useEffect(() => {
-        if (chartData?.combinedActivityKeys) {
-            setVisibleKeys(chartData.combinedActivityKeys);
-        }
-    }, [chartData]);
-
-    const handleKeyVisibilityChange = (key: string) => {
-        setVisibleKeys(prev =>
-            prev.includes(key) ? prev.filter(k => k !== key) : [...prev, key]
-        );
-    };
-
-    if (loading || !chartData) {
-        return <AnalysisLoading />;
+  useEffect(() => {
+    async function fetchData() {
+      setLoading(true);
+      const data = await getAnalyticsData(dateRange);
+      setChartData(data);
+      setLoading(false);
     }
+    fetchData();
+  }, [dateRange]);
 
-    const { 
-        submissionsByDay, submissionsByService, contentBreakdown, blogViews, submissionStatus, detailedSubmissions, 
-        turnaroundAnalysis, combinedActivity, combinedActivityKeys, serviceKeys, statusKeys, totalSubmissions, publishedContent, totalViews 
-    } = chartData;
+  useEffect(() => {
+    if (chartData?.combinedActivityKeys) {
+      setVisibleKeys(chartData.combinedActivityKeys);
+    }
+  }, [chartData]);
 
-    return (
-        <div className="space-y-6">
-            <header className="flex justify-between items-start">
-                <div>
-                    <h1 className="text-3xl font-bold">Analysis Dashboard</h1>
-                    <p className="text-muted-foreground">Live insights into submissions and content performance.</p>
-                </div>
-                <DateRangePicker date={dateRange} onDateChange={setDateRange} />
-            </header>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <Card>
-                    <CardHeader><CardTitle>Total Submissions</CardTitle></CardHeader>
-                    <CardContent><p className="text-4xl font-bold">{totalSubmissions}</p></CardContent>
-                </Card>
-                <Card>
-                    <CardHeader><CardTitle>Published Content</CardTitle></CardHeader>
-                    <CardContent><p className="text-4xl font-bold">{publishedContent}</p></CardContent>
-                </Card>
-                <Card>
-                    <CardHeader><CardTitle>Total Views</CardTitle></CardHeader>
-                    <CardContent><p className="text-4xl font-bold">{totalViews}</p></CardContent>
-                </Card>
-            </div>
-
-            <Card>
-                <CardHeader><CardTitle>Platform Activity</CardTitle></CardHeader>
-                <CardContent>
-                    <div className="mb-4 flex flex-wrap items-center gap-x-6 gap-y-2 border-b border-gray-200 pb-4">
-                        {combinedActivityKeys.sort().map(key => (
-                            <div key={key} className="flex items-center">
-                                <input
-                                    id={key}
-                                    type="checkbox"
-                                    checked={visibleKeys.includes(key)}
-                                    onChange={() => handleKeyVisibilityChange(key)}
-                                    className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
-                                />
-                                <label htmlFor={key} className="ml-2 block text-sm text-gray-900">
-                                    {key.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}
-                                </label>
-                            </div>
-                        ))}
-                    </div>
-                    <CombinedActivityChart data={combinedActivity} keys={visibleKeys} />
-                </CardContent>
-            </Card>
-
-            <Card>
-                <CardHeader><CardTitle>Detailed Submissions Breakdown</CardTitle></CardHeader>
-                <CardContent>
-                    <DetailedSubmissionsChart 
-                        data={detailedSubmissions} 
-                        serviceKeys={serviceKeys} 
-                        statusKeys={statusKeys} 
-                    />
-                </CardContent>
-            </Card>
-
-            <Card>
-                <CardHeader><CardTitle>Submissions by Day</CardTitle></CardHeader>
-                <CardContent><SubmissionsLineChart data={submissionsByDay} /></CardContent>
-            </Card>
-
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <Card>
-                    <CardHeader><CardTitle>Submissions by Service</CardTitle></CardHeader>
-                    <CardContent><SubmissionsBarChart data={submissionsByService} /></CardContent>
-                </Card>
-                <Card>
-                    <CardHeader><CardTitle>Content Breakdown by Category</CardTitle></CardHeader>
-                    <CardContent><ContentBarChart data={contentBreakdown} /></CardContent>
-                </Card>
-            </div>
-
-            <Card>
-                <CardHeader><CardTitle>Top 10 Blog Posts by Views</CardTitle></CardHeader>
-                <CardContent><BlogViewsChart data={blogViews} /></CardContent>
-            </Card>
-
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <Card>
-                    <CardHeader><CardTitle>Average Submission Turnaround Time (Days)</CardTitle></CardHeader>
-                    <CardContent>
-                        {turnaroundAnalysis.length > 0 ? (
-                            <TurnaroundTimeChart data={turnaroundAnalysis} />
-                        ) : (
-                            <div className="flex items-center justify-center h-[300px] text-slate-500">
-                                <p>No completed submissions to analyze in the selected date range.</p>
-                            </div>
-                        )}
-                    </CardContent>
-                </Card>
-                <Card>
-                    <CardHeader><CardTitle>Submission Status</CardTitle></CardHeader>
-                    <CardContent><SubmissionStatusPieChart data={submissionStatus} /></CardContent>
-                </Card>
-            </div>
-        </div>
+  const handleKeyVisibilityChange = (key: string) => {
+    setVisibleKeys((prev) =>
+      prev.includes(key) ? prev.filter((k) => k !== key) : [...prev, key],
     );
+  };
+
+  if (loading || !chartData) {
+    return <AnalysisLoading />;
+  }
+
+  const {
+    submissionsByDay,
+    submissionsByService,
+    contentBreakdown,
+    blogViews,
+    submissionStatus,
+    detailedSubmissions,
+    turnaroundAnalysis,
+    combinedActivity,
+    combinedActivityKeys,
+    serviceKeys,
+    statusKeys,
+    totalSubmissions,
+    publishedContent,
+    totalViews,
+  } = chartData;
+
+  return (
+    <div className="space-y-6">
+      <header className="flex justify-between items-start">
+        <div>
+          <h1 className="text-3xl font-bold">Analysis Dashboard</h1>
+          <p className="text-muted-foreground">
+            Live insights into submissions and content performance.
+          </p>
+        </div>
+        <DateRangePicker date={dateRange} onDateChange={setDateRange} />
+      </header>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <Card>
+          <CardHeader>
+            <CardTitle>Total Submissions</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-4xl font-bold">{totalSubmissions}</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle>Published Content</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-4xl font-bold">{publishedContent}</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle>Total Views</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-4xl font-bold">{totalViews}</p>
+          </CardContent>
+        </Card>
+      </div>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Platform Activity</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="mb-4 flex flex-wrap items-center gap-x-6 gap-y-2 border-b border-gray-200 pb-4">
+            {combinedActivityKeys.sort().map((key) => (
+              <div key={key} className="flex items-center">
+                <input
+                  id={key}
+                  type="checkbox"
+                  checked={visibleKeys.includes(key)}
+                  onChange={() => handleKeyVisibilityChange(key)}
+                  className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                />
+                <label
+                  htmlFor={key}
+                  className="ml-2 block text-sm text-gray-900"
+                >
+                  {key
+                    .split("_")
+                    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+                    .join(" ")}
+                </label>
+              </div>
+            ))}
+          </div>
+          <CombinedActivityChart data={combinedActivity} keys={visibleKeys} />
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Detailed Submissions Breakdown</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <DetailedSubmissionsChart
+            data={detailedSubmissions}
+            serviceKeys={serviceKeys}
+            statusKeys={statusKeys}
+          />
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Submissions by Day</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <SubmissionsLineChart data={submissionsByDay} />
+        </CardContent>
+      </Card>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <Card>
+          <CardHeader>
+            <CardTitle>Submissions by Service</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <SubmissionsBarChart data={submissionsByService} />
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle>Content Breakdown by Category</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ContentBarChart data={contentBreakdown} />
+          </CardContent>
+        </Card>
+      </div>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Top 10 Blog Posts by Views</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <BlogViewsChart data={blogViews} />
+        </CardContent>
+      </Card>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <Card>
+          <CardHeader>
+            <CardTitle>Average Submission Turnaround Time (Days)</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {turnaroundAnalysis.length > 0 ? (
+              <TurnaroundTimeChart data={turnaroundAnalysis} />
+            ) : (
+              <div className="flex items-center justify-center h-[300px] text-slate-500">
+                <p>
+                  No completed submissions to analyze in the selected date
+                  range.
+                </p>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle>Submission Status</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <SubmissionStatusPieChart data={submissionStatus} />
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  );
 }

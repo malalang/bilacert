@@ -1,9 +1,11 @@
 "use client";
 
-import { ColumnDef } from "@tanstack/react-table";
-import { Contact } from "@bilacert/supabase";
-import { MoreHorizontal, ArrowUpDown } from "lucide-react";
+import type { Contact } from "@bilacert/supabase";
+import type { ColumnDef } from "@tanstack/react-table";
+import { ArrowUpDown, MoreHorizontal } from "lucide-react";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,8 +14,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Checkbox } from "@/components/ui/checkbox";
-import Link from "next/link";
 
 interface ColumnsOptions {
   onEdit: (contact: Contact) => void;

@@ -1,10 +1,10 @@
 "use client";
 
-import { ColumnDef } from "@tanstack/react-table";
-import { BlogPost } from "@bilacert/supabase";
-import { Badge } from "@/components/ui/badge";
+import type { BlogPost } from "@bilacert/supabase";
+import type { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
 import { MoreHorizontal } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,

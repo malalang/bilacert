@@ -1,6 +1,9 @@
 "use client";
 
+import type { Submission } from "@bilacert/supabase";
+import { Loader2 } from "lucide-react";
 import { useState } from "react";
+import { Badge } from "@/components/ui/badge";
 import {
   Select,
   SelectContent,
@@ -8,12 +11,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
-import type { Submission } from "@bilacert/supabase";
-import { statusVariantMap } from "./columns";
-import { Loader2 } from "lucide-react";
 import { updateSubmissionStatus } from "./actions";
+import { statusVariantMap } from "./columns";
 
 interface StatusUpdateProps {
   submission: Submission;

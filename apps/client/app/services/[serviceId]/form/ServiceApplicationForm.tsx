@@ -1,11 +1,13 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import {
+  type FormSubmissionPayload,
+  type Service,
+  useFormSubmission,
+} from "@bilacert/supabase";
+import { AlertCircle, CheckCircle, Loader, Send } from "lucide-react";
 import { useParams } from "next/navigation";
-import { useFormSubmission } from "@bilacert/supabase";
-
-import { AlertCircle, CheckCircle, Send, Loader } from "lucide-react";
-import { FormSubmissionPayload, Service } from "@bilacert/supabase";
+import { useEffect, useState } from "react";
 
 export default function ServiceApplicationForm() {
   const params = useParams();

@@ -1,22 +1,22 @@
-'use client';
+"use client";
 
-import { Badge } from "@/components/ui/badge";
 import type { BlogPost } from "@bilacert/supabase";
 import { format } from "date-fns";
+import { ArrowLeft, Edit, Trash2 } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
+  CardDescription,
   CardHeader,
   CardTitle,
-  CardDescription,
 } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import { ArrowLeft, Edit, Trash2 } from "lucide-react";
-import { useState } from "react";
 import DeleteBlogDialog from "./DeleteBlogDialog";
-import { useRouter } from "next/navigation";
-import Image from "next/image";
 
 interface BlogDetailsProps {
   blog: BlogPost;
@@ -127,7 +127,7 @@ export default function BlogDetails({ blog }: BlogDetailsProps) {
                   Details
                 </h4>
                 <div className="text-sm">
-                  <strong>Slug:</strong>{' '}
+                  <strong>Slug:</strong>{" "}
                   <span className="font-mono">{blog.slug}</span>
                 </div>
                 {blog.author_name && (
@@ -146,12 +146,12 @@ export default function BlogDetails({ blog }: BlogDetailsProps) {
                   </div>
                 )}
                 <div className="text-sm">
-                  <strong>Created:</strong>{' '}
+                  <strong>Created:</strong>{" "}
                   {format(new Date(blog.created_at), "PPpp")}
                 </div>
                 {blog.updated_at && (
                   <div className="text-sm">
-                    <strong>Updated:</strong>{' '}
+                    <strong>Updated:</strong>{" "}
                     {format(new Date(blog.updated_at), "PPpp")}
                   </div>
                 )}

@@ -1,6 +1,6 @@
 import { Suspense } from "react";
-import TestimonialsClient from "./TestimonialsClient";
 import TestimonialsLoading from "./loading";
+import TestimonialsClient from "./TestimonialsClient";
 
 export const metadata = {
   title: "Testimonials | Bilacert Admin Pro",

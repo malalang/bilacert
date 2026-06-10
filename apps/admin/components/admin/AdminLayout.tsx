@@ -1,12 +1,13 @@
 "use client";
 
-import React, { useEffect } from "react";
-import { usePathname, useRouter } from "next/navigation";
 import { useUser } from "@bilacert/supabase";
-import { SidebarProvider } from "@/components/ui/sidebar";
-import AdminSidebar from "@/components/admin/Sidebar";
-import AdminHeader from "@/components/admin/Header";
 import { Loader2 } from "lucide-react";
+import { usePathname, useRouter } from "next/navigation";
+import type React from "react";
+import { useEffect } from "react";
+import AdminHeader from "@/components/admin/Header";
+import AdminSidebar from "@/components/admin/Sidebar";
+import { SidebarProvider } from "@/components/ui/sidebar";
 
 export default function AdminLayout({
   children,

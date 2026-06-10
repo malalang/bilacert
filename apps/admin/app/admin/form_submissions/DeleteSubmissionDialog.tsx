@@ -1,5 +1,9 @@
 "use client";
 
+import type { Submission } from "@bilacert/supabase";
+import { createBrowserClient } from "@bilacert/supabase";
+import { Loader2 } from "lucide-react";
+import { useState } from "react";
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -11,10 +15,6 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { createBrowserClient } from "@bilacert/supabase";
-import type { Submission } from "@bilacert/supabase";
-import { Loader2 } from "lucide-react";
-import { useState } from "react";
 
 const supabase = createBrowserClient();
 

@@ -1,50 +1,36 @@
-import { createServerClient } from "@supabase/ssr";
+import { type CookieOptions, createServerClient } from "@supabase/ssr";
+import { cookies } from "next/headers";
+import type { Database } from "./supabaseType";
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+export async function createSupabaseServerClient() {
+  const cookieStore = await cookies();
 
-type CookieStore = {
-  getAll(): Array<{ name: string; value: string }>;
-  set(name: string, value: string, options?: Record<string, unknown>): void;
-};
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
-export const createClient = async () => {
   if (!supabaseUrl || !supabaseAnonKey) {
-    throw new Error(
-      "Missing Supabase Environment Variables: NEXT_PUBLIC_SUPABASE_URL or NEXT_PUBLIC_SUPABASE_ANON_KEY",
-    );
+    throw new Error("Supabase URL and/or anonymous key not provided.");
   }
 
-  let cookieStore: CookieStore | undefined;
-  try {
-    const { cookies } = await import("next/headers");
-    cookieStore = await cookies();
-  } catch (e) {
-    // cookies() can only be called inside a request (e.g. Server Component, API Route)
-    // During static generation (build time), it will throw an error.
-  }
-
-  return createServerClient(supabaseUrl, supabaseAnonKey, {
+  return createServerClient<Database>(supabaseUrl, supabaseAnonKey, {
     cookies: {
-      getAll() {
-        return cookieStore ? cookieStore.getAll() : [];
+      get(name: string) {
+        return cookieStore.get(name)?.value;
       },
-      setAll(
-        cookiesToSet: Array<{
-          name: string;
-          value: string;
-          options?: Record<string, any>;
-        }>,
-      ) {
-        if (!cookieStore) return;
+      set(name: string, value: string, options: CookieOptions) {
         try {
-          cookiesToSet.forEach(({ name, value, options }) =>
-            cookieStore.set(name, value, options),
-          );
+          cookieStore.set({ name, value, ...options });
         } catch {
-          // This is expected when called from Server Components
+          // Server Component context
+        }
+      },
+      remove(name: string, options: CookieOptions) {
+        try {
+          cookieStore.set({ name, value: "", ...options });
+        } catch {
+          // Server Component context
         }
       },
     },
   });
-};
+}

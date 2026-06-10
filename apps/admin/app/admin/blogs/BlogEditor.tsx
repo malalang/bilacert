@@ -1,11 +1,10 @@
-'use client';
-import React, { useState, useEffect } from "react";
-import dynamic from "next/dynamic";
+"use client";
 import DOMPurify from "isomorphic-dompurify";
+import dynamic from "next/dynamic";
+import { useEffect, useState } from "react";
 import "react-quill-new/dist/quill.snow.css";
-import { Card, CardHeader } from "@/components/ui/card";
 import Image from "next/image";
-import PexelsImagePicker from "@/components/PexelsImagePicker";
+import { Card, CardHeader } from "@/components/ui/card";
 
 const ReactQuill = dynamic(() => import("react-quill-new"), {
   ssr: false,
@@ -31,7 +30,7 @@ interface BlogEditorProps {
   onChange: (value: string) => void;
   onImageSelect?: (url: string) => void;
   title: string;
-  featured_image: string | null|undefined;
+  featured_image: string | null | undefined;
 }
 
 export default function BlogEditor({

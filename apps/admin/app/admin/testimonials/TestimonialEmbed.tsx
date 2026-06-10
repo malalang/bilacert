@@ -24,7 +24,7 @@ export default function TestimonialEmbed({ postUrl }: TestimonialEmbedProps) {
     if (window.FB) {
       window.FB.XFBML.parse();
     }
-  }, [postUrl]);
+  }, []);
 
   return (
     <div className="p-4">

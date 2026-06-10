@@ -1,26 +1,16 @@
-import { format } from "date-fns";
-import {
-  ArrowLeft,
-  Calendar,
-  Clock,
-  Facebook,
-  Folder,
-  Linkedin,
-  Tag,
-  Twitter,
-  User,
-} from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
-import { notFound } from "next/navigation";
-import { RelatedPosts, StickyShare, TableOfContents } from "@/components/blog";
 import {
   getAllPublishedBlogSlugs,
   getBlogPostBySlug,
   getBlogPostsByCategory,
-
 } from "@bilacert/supabase";
+import { format } from "date-fns";
+import { ArrowLeft, Calendar, Clock, Folder, Tag, User } from "lucide-react";
 import type { Metadata } from "next";
+import Image from "next/image";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import { FaFacebook, FaLinkedin, FaTwitter } from "react-icons/fa";
+import { RelatedPosts, StickyShare, TableOfContents } from "@/components/blog";
 import { ViewTracker } from "@/components/blog/view";
 
 export const revalidate = 0;
@@ -150,9 +140,7 @@ export default async function BlogPostPage({ params }: Props) {
             <TableOfContents content={post.content || ""} />
           </div>
           <div className="w-3/4">
-
             <div className="mt-6 border-t pt-6 max-w-[256] sm:max-w-lg  md:max-w-xl lg:max-w-3xl mx-auto">
-
               <article
                 className="prose prose-slate prose-indigo text-sm
                                        break-words overflow-wrap-anywhere
@@ -208,21 +196,21 @@ export default async function BlogPostPage({ params }: Props) {
                 type="button"
                 className="flex items-center justify-center space-x-2 bg-blue-400 text-white px-4 py-2.5 rounded-lg hover:bg-blue-500 w-full md:w-auto"
               >
-                <Twitter className="h-5 w-5" />
+                <FaTwitter className="h-5 w-5" />
                 <span>Twitter</span>
               </button>
               <button
                 type="button"
                 className="flex items-center justify-center space-x-2 bg-blue-600 text-white px-4 py-2.5 rounded-lg hover:bg-blue-700 w-full md:w-auto"
               >
-                <Linkedin className="h-5 w-5" />
+                <FaLinkedin className="h-5 w-5" />
                 <span>LinkedIn</span>
               </button>
               <button
                 type="button"
                 className="flex items-center justify-center space-x-2 bg-blue-800 text-white px-4 py-2.5 rounded-lg hover:bg-blue-900 w-full md:w-auto"
               >
-                <Facebook className="h-5 w-5" />
+                <FaFacebook className="h-5 w-5" />
                 <span>Facebook</span>
               </button>
             </div>

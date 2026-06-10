@@ -1,19 +1,19 @@
 "use client";
 
 import type { Contact } from "@bilacert/supabase";
+import { ArrowLeft, Edit, Phone, Trash2 } from "lucide-react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
+  CardDescription,
   CardHeader,
   CardTitle,
-  CardDescription,
 } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import { ArrowLeft, Edit, Trash2, Phone } from "lucide-react";
-import { useState } from "react";
 import DeleteContactDialog from "./DeleteContactDialog";
-import { useRouter } from "next/navigation";
 
 interface ContactDetailsProps {
   contact: Contact;

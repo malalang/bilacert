@@ -1,9 +1,9 @@
-import { ArrowRight, Calendar, User, Clock } from "lucide-react";
+import type { BlogPost } from "@bilacert/supabase";
+import { getAllPublishedBlogPosts } from "@bilacert/supabase";
+import { ArrowRight, Calendar, Clock, User } from "lucide-react";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { getAllPublishedBlogPosts } from "@bilacert/supabase";
-import type { BlogPost } from "@bilacert/supabase";
 import { Badge } from "@/components/ui/badge";
 
 export const metadata: Metadata = {
@@ -46,7 +46,10 @@ const BlogCard = ({ post }: { post: BlogPost }) => {
 
       <div className="relative h-48 w-full overflow-hidden">
         <Image
-          src={post.featured_image || `https://picsum.photos/seed/${post.id}/600/400`}
+          src={
+            post.featured_image ||
+            `https://picsum.photos/seed/${post.id}/600/400`
+          }
           alt={post.title}
           fill
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
@@ -69,7 +72,7 @@ const BlogCard = ({ post }: { post: BlogPost }) => {
         <p className="mb-4 text-sm text-gray-600 line-clamp-3 flex-grow leading-relaxed">
           {post.excerpt}
         </p>
-        
+
         <div className="mt-auto pt-4 border-t border-gray-50 flex items-center justify-between text-xs text-gray-500">
           <div className="flex items-center gap-2">
             <Calendar className="h-3.5 w-3.5 text-accent" />
@@ -108,7 +111,9 @@ export default async function BlogPage() {
     return (
       <div className="min-h-screen flex items-center justify-center py-20 bg-secondary-gray">
         <div className="text-center px-4">
-          <h2 className="text-2xl font-bold text-primary mb-2">No blog posts found</h2>
+          <h2 className="text-2xl font-bold text-primary mb-2">
+            No blog posts found
+          </h2>
           <p className="text-gray-600">Check back later for more updates.</p>
         </div>
       </div>
@@ -154,7 +159,10 @@ export default async function BlogPage() {
               <div className="grid grid-cols-1 lg:grid-cols-2">
                 <div className="relative h-64 sm:h-80 md:h-96 lg:h-full min-h-[300px] overflow-hidden">
                   <Image
-                    src={featuredPost.featured_image || `https://picsum.photos/seed/${featuredPost.id}/600/400`}
+                    src={
+                      featuredPost.featured_image ||
+                      `https://picsum.photos/seed/${featuredPost.id}/600/400`
+                    }
                     alt={featuredPost.title}
                     fill
                     sizes="(max-width: 1024px) 100vw, 50vw"
@@ -171,11 +179,14 @@ export default async function BlogPage() {
                   <div className="flex items-center gap-4 mb-6 text-sm text-gray-500">
                     <span className="flex items-center gap-1.5">
                       <Calendar className="h-4 w-4 text-accent" />
-                      {new Date(featuredPost.created_at).toLocaleDateString("en-ZA", {
-                        year: "numeric",
-                        month: "long",
-                        day: "numeric",
-                      })}
+                      {new Date(featuredPost.created_at).toLocaleDateString(
+                        "en-ZA",
+                        {
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
+                        },
+                      )}
                     </span>
                     {featuredPost.read_time && (
                       <>
@@ -187,17 +198,20 @@ export default async function BlogPage() {
                       </>
                     )}
                   </div>
-                  
-                  <Link href={`/blog/${featuredPost.slug}`} className="block group">
+
+                  <Link
+                    href={`/blog/${featuredPost.slug}`}
+                    className="block group"
+                  >
                     <h2 className="text-2xl md:text-4xl font-extrabold text-primary mb-6 leading-tight group-hover:text-accent transition-colors duration-200">
                       {featuredPost.title}
                     </h2>
                   </Link>
-                  
+
                   <p className="text-base md:text-lg text-gray-600 mb-8 leading-relaxed line-clamp-4">
                     {featuredPost.excerpt}
                   </p>
-                  
+
                   <div className="flex flex-wrap items-center justify-between gap-6 mt-auto">
                     <div className="flex items-center gap-3">
                       <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
@@ -207,10 +221,12 @@ export default async function BlogPage() {
                         <p className="text-sm font-bold text-primary">
                           {featuredPost.author_name || "Bilacert Team"}
                         </p>
-                        <p className="text-xs text-gray-500">Compliance Expert</p>
+                        <p className="text-xs text-gray-500">
+                          Compliance Expert
+                        </p>
                       </div>
                     </div>
-                    
+
                     <Link
                       href={`/blog/${featuredPost.slug}`}
                       className="inline-flex items-center bg-accent text-white px-8 py-3 rounded-full font-bold hover:bg-accent-light transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-1"
@@ -235,11 +251,11 @@ export default async function BlogPage() {
                 Latest Articles
               </h2>
               <p className="text-lg text-gray-600">
-                Expert insights and practical guidance to help you navigate South
-                African compliance requirements with ease.
+                Expert insights and practical guidance to help you navigate
+                South African compliance requirements with ease.
               </p>
             </div>
-            
+
             <div className="flex flex-wrap gap-2">
               {categories.slice(0, 5).map((category) => (
                 <button
@@ -273,7 +289,7 @@ export default async function BlogPage() {
         {/* Background Pattern/Overlay */}
         <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/3 w-96 h-96 bg-accent/10 rounded-full blur-3xl" />
         <div className="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/3 w-96 h-96 bg-accent/10 rounded-full blur-3xl" />
-        
+
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
           <Badge className="bg-accent/20 text-accent-light border-accent/30 mb-6 px-4 py-1 border shadow-sm">
             Newsletter
@@ -283,7 +299,8 @@ export default async function BlogPage() {
           </h2>
           <p className="text-lg md:text-xl mb-10 text-gray-300 max-w-2xl mx-auto">
             Subscribe to our newsletter for the latest compliance insights,
-            regulatory updates, and expert guidance delivered straight to your inbox.
+            regulatory updates, and expert guidance delivered straight to your
+            inbox.
           </p>
           <form className="max-w-md mx-auto flex flex-col sm:flex-row gap-4">
             <input

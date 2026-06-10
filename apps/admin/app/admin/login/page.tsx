@@ -1,7 +1,12 @@
 "use client";
 
+import { isSupabaseConfigured, supabase } from "@bilacert/supabase";
+import { Loader2 } from "lucide-react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { supabase, isSupabaseConfigured } from "@bilacert/supabase";
+import SupabaseNotConfigured from "@/components/admin/SupabaseNotConfigured";
+import { Logo } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -13,12 +18,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Logo } from "@/components/icons";
-import { Loader2 } from "lucide-react";
-import Link from "next/link";
 import { useToast } from "@/hooks/use-toast";
-import { useRouter } from "next/navigation";
-import SupabaseNotConfigured from "@/components/admin/SupabaseNotConfigured";
 
 export default function LoginPage() {
   const { toast } = useToast();

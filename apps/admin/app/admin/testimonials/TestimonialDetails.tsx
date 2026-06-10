@@ -1,14 +1,14 @@
 "use client";
 
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import { ArrowLeft, Edit, Trash2 } from "lucide-react";
-import TestimonialEmbed from "./TestimonialEmbed";
-import DeleteTestimonialDialog from "./DeleteTestimonialDialog";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
 import type { Testimonial } from "@bilacert/supabase";
+import { ArrowLeft, Edit, Trash2 } from "lucide-react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import DeleteTestimonialDialog from "./DeleteTestimonialDialog";
+import TestimonialEmbed from "./TestimonialEmbed";
 
 interface TestimonialDetailsProps {
   testimonial: Testimonial;

@@ -1,6 +1,6 @@
-import Link from "next/link";
+import type { BlogPost } from "@bilacert/supabase";
 import Image from "next/image";
-import { BlogPost } from "@bilacert/supabase";
+import Link from "next/link";
 
 interface RelatedPostsProps {
   posts: BlogPost[];

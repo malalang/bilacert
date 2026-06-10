@@ -1,6 +1,8 @@
-import { MetadataRoute } from "next";
-import { getAllPublishedBlogSlugs } from "@bilacert/supabase";
-import { getAllPublishedServiceSlugs } from "@bilacert/supabase";
+import {
+  getAllPublishedBlogSlugs,
+  getAllPublishedServiceSlugs,
+} from "@bilacert/supabase";
+import type { MetadataRoute } from "next";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = "https://bilacert.co.za";

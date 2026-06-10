@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import type { Testimonial } from "@bilacert/supabase";
 import { createBrowserClient } from "@bilacert/supabase";
+import { useEffect, useState } from "react";
 
 declare global {
   interface Window {
@@ -45,7 +45,7 @@ export default function Testimonials() {
       if (window.FB && window.FB.XFBML) {
         window.FB.XFBML.parse();
       } else {
-        window.fbAsyncInit = function () {
+        window.fbAsyncInit = () => {
           if (window.FB) {
             window.FB.init({
               xfbml: true,
@@ -54,7 +54,7 @@ export default function Testimonials() {
             window.FB.XFBML.parse();
           }
         };
-        (function (d, s, id) {
+        ((d, s, id) => {
           var js,
             fjs = d.getElementsByTagName(s)[0];
           if (d.getElementById(id)) return;

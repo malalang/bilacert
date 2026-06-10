@@ -1,5 +1,8 @@
 "use client";
 
+import type { Contact } from "@bilacert/supabase";
+import { Loader2 } from "lucide-react";
+import { useState } from "react";
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -11,9 +14,6 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import type { Contact } from "@bilacert/supabase";
-import { Loader2 } from "lucide-react";
-import { useState } from "react";
 import { deleteContact } from "./actions";
 
 interface DeleteContactDialogProps {

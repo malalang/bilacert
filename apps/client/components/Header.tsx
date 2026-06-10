@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
-import Link from "next/link";
-import { Menu, X, Phone, Mail } from "lucide-react";
+import { Mail, Menu, Phone, X } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
+import { useState } from "react";
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);

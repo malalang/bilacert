@@ -1,17 +1,17 @@
+import type { Service } from "@bilacert/supabase";
 import { createSupabaseAdminClient } from "@bilacert/supabase";
-import ServiceForm from "./ServiceForm";
+import { ArrowLeft } from "lucide-react";
+import Link from "next/link";
 import { notFound } from "next/navigation";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
+  CardDescription,
   CardHeader,
   CardTitle,
-  CardDescription,
 } from "@/components/ui/card";
-import type { Service } from "@bilacert/supabase";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { ArrowLeft } from "lucide-react";
+import ServiceForm from "./ServiceForm";
 
 export const metadata = {
   title: "Edit Service | Bilacert Admin Pro",

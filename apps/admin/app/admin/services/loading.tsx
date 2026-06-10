@@ -1,8 +1,8 @@
 import {
   Card,
   CardContent,
-  CardHeader,
   CardFooter,
+  CardHeader,
 } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 

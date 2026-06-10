@@ -1,4 +1,4 @@
-import { Shield, Users, Clock } from "lucide-react";
+import { Clock, Shield, Users } from "lucide-react";
 
 const benefits = [
   {

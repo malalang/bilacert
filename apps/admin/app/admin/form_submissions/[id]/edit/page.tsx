@@ -1,17 +1,17 @@
+import type { Submission } from "@bilacert/supabase";
 import { supabase } from "@bilacert/supabase";
-import SubmissionForm from "../../SubmissionForm";
+import { ArrowLeft } from "lucide-react";
+import Link from "next/link";
 import { notFound } from "next/navigation";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
+  CardDescription,
   CardHeader,
   CardTitle,
-  CardDescription,
 } from "@/components/ui/card";
-import type { Submission } from "@bilacert/supabase";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { ArrowLeft } from "lucide-react";
+import SubmissionForm from "../../SubmissionForm";
 
 export const metadata = {
   title: "Edit Submission | Bilacert Admin Pro",

@@ -1,11 +1,11 @@
 "use client";
 
+import { type Submission, useSubmissions } from "@bilacert/supabase";
 import { useState } from "react";
-import { useSubmissions, type Submission } from "@bilacert/supabase";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { columns } from "./columns";
-import { DataTable } from "./data-table";
 import DeleteSubmissionDialog from "./DeleteSubmissionDialog";
+import { DataTable } from "./data-table";
 
 export default function SubmissionsClient() {
   const { data: submissions, loading, error } = useSubmissions();

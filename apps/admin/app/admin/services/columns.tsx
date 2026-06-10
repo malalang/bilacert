@@ -1,8 +1,10 @@
 "use client";
 
-import { ColumnDef } from "@tanstack/react-table";
-import { Service } from "@bilacert/supabase";
-import { MoreHorizontal, ArrowUpDown } from "lucide-react";
+import type { Service } from "@bilacert/supabase";
+import type { ColumnDef } from "@tanstack/react-table";
+import { ArrowUpDown, MoreHorizontal } from "lucide-react";
+import Link from "next/link";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -12,8 +14,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import Link from "next/link";
-import { Badge } from "@/components/ui/badge";
 
 interface ColumnsOptions {
   onDelete: (service: Service) => void;
@@ -73,7 +73,7 @@ export const columns = ({ onDelete }: ColumnsOptions): ColumnDef<Service>[] => [
     header: "Pricing (ZAR)",
     cell: ({ row }) => {
       const amount = parseFloat(row.getValue("pricing"));
-      if (isNaN(amount)) return "N/A";
+      if (Number.isNaN(amount)) return "N/A";
       const formatted = new Intl.NumberFormat("en-ZA", {
         style: "currency",
         currency: "ZAR",

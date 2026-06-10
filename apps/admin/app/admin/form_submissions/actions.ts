@@ -1,9 +1,8 @@
 "use server";
 
-import { createSupabaseAdminClient } from "@bilacert/supabase";
-import { submissionSchema } from "./schema";
+import { createSupabaseAdminClient, type Submission } from "@bilacert/supabase";
 import { revalidatePath } from "next/cache";
-import { Submission } from "@bilacert/supabase";
+import { submissionSchema } from "./schema";
 
 export async function upsertSubmission(values: unknown, submissionId: string) {
   const supabase = createSupabaseAdminClient();

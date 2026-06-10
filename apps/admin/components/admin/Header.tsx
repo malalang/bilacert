@@ -1,6 +1,10 @@
 "use client";
 
-import { useUser, createBrowserClient } from "@bilacert/supabase";
+import { createBrowserClient, useUser } from "@bilacert/supabase";
+import { ChevronDown, LogOut, User as UserIcon } from "lucide-react";
+import { usePathname, useRouter } from "next/navigation";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -9,13 +13,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
 import { SidebarTrigger } from "@/components/ui/sidebar";
-import { LogOut, User as UserIcon, ChevronDown } from "lucide-react";
-import { PlaceHolderImages } from "@/lib/placeholder-images";
-import { usePathname, useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
+import { PlaceHolderImages } from "@/lib/placeholder-images";
 
 const supabase = createBrowserClient();
 

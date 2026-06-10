@@ -1,10 +1,9 @@
 "use client";
 
-import { useState, ChangeEvent, FormEvent } from "react";
 import { createBrowserClient } from "@bilacert/supabase";
-import { v4 as uuidv4 } from "uuid";
-
 import Link from "next/link";
+import { type ChangeEvent, type FormEvent, useState } from "react";
+import { v4 as uuidv4 } from "uuid";
 
 // Define the type for the form state
 interface FormData {

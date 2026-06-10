@@ -1,18 +1,17 @@
+import type { BlogPost } from "@bilacert/supabase";
 import { createServerClient } from "@bilacert/supabase";
-import BlogForm from "../../BlogForm";
+import { ArrowLeft } from "lucide-react";
+import Link from "next/link";
 import { notFound } from "next/navigation";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
+  CardDescription,
   CardHeader,
   CardTitle,
-  CardDescription,
 } from "@/components/ui/card";
-import type { BlogPost } from "@bilacert/supabase";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { ArrowLeft } from "lucide-react";
-import BlogEditor from "../../BlogEditor";
+import BlogForm from "../../BlogForm";
 
 export const metadata = {
   title: "Edit Blog Post | Bilacert Admin Pro",
@@ -76,7 +75,7 @@ export default async function EditBlogPage({
           Back to Blogs
         </Link>
       </Button>
-     
+
       <Card>
         <CardHeader>
           <CardTitle>Edit Blog Post</CardTitle>

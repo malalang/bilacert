@@ -1,16 +1,20 @@
 "use client";
 
+import type { Submission } from "@bilacert/supabase";
 import {
-  ColumnDef,
+  type ColumnDef,
   flexRender,
   getCoreRowModel,
-  useReactTable,
   getPaginationRowModel,
   getSortedRowModel,
-  SortingState,
-  Row,
+  type Row,
+  type SortingState,
+  useReactTable,
 } from "@tanstack/react-table";
-
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   Table,
   TableBody,
@@ -19,11 +23,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
-import { useState } from "react";
-import { Skeleton } from "@/components/ui/skeleton";
-import { useRouter } from "next/navigation";
-import type { Submission } from "@bilacert/supabase";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -84,7 +83,7 @@ export function DataTable<TData, TValue>({
             {isLoading ? (
               Array.from({ length: 5 }).map((_, i) => (
                 <TableRow key={i}>
-                  {columns.map((col, j) => (
+                  {columns.map((_col, j) => (
                     <TableCell key={j}>
                       <Skeleton className="h-6 w-full" />
                     </TableCell>

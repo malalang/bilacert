@@ -1,14 +1,14 @@
 "use client";
 
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
+  FormControl,
   FormField,
   FormItem,
   FormLabel,
-  FormControl,
   FormMessage,
 } from "@/components/ui/form";
 import ImageUpload from "@/components/ui/ImageUpload";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function MediaForm({ form }: { form: any }) {
   return (

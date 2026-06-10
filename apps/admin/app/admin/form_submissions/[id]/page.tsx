@@ -1,8 +1,8 @@
-import { supabase } from "@bilacert/supabase";
-import SubmissionDetails from "../SubmissionDetails";
-import { notFound } from "next/navigation";
 import type { Submission } from "@bilacert/supabase";
+import { supabase } from "@bilacert/supabase";
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+import SubmissionDetails from "../SubmissionDetails";
 
 async function getSubmission(id: string): Promise<Submission | null> {
   const { data, error } = await supabase

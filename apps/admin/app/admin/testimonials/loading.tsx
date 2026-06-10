@@ -1,3 +1,5 @@
+import { PlusCircle } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -5,8 +7,6 @@ import {
   CardHeader,
 } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Button } from "@/components/ui/button";
-import { PlusCircle } from "lucide-react";
 
 export default function TestimonialsLoading() {
   return (

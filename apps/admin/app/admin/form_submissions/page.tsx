@@ -1,7 +1,7 @@
 import { Suspense } from "react";
-import SubmissionsClient from "./SubmissionsClient";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import SubmissionsClient from "./SubmissionsClient";
 
 export const metadata = {
   title: "Form Submissions | Bilacert Admin Pro",

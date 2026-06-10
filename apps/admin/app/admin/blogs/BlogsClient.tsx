@@ -1,12 +1,20 @@
 "use client";
 
-import { useState, useMemo } from "react";
-import { useBlogs, type BlogPost } from "@bilacert/supabase";
-import { Button } from "@/components/ui/button";
-import { MoreHorizontal, Calendar, PlusCircle, Search, Filter } from "lucide-react";
-import DeleteBlogDialog from "./DeleteBlogDialog";
-import { Badge } from "@/components/ui/badge";
+import { type BlogPost, useBlogs } from "@bilacert/supabase";
 import { format, isValid, parseISO } from "date-fns";
+import {
+  Calendar,
+  Filter,
+  MoreHorizontal,
+  PlusCircle,
+  Search,
+} from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useMemo, useState } from "react";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -24,9 +32,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import Link from "next/link";
-import Image from "next/image";
-import { useRouter } from "next/navigation";
+import DeleteBlogDialog from "./DeleteBlogDialog";
 
 const safeFormatDate = (
   date: string | Date | undefined,
@@ -145,11 +151,11 @@ const BlogCard = ({
 export default function BlogsClient() {
   const { data: blogs, loading, error, refresh } = useBlogs();
   const router = useRouter();
-  
+
   const [searchQuery, setSearchQuery] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("all");
   const [statusTab, setStatusTab] = useState("all");
-  
+
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [selectedBlog, setSelectedBlog] = useState<BlogPost | null>(null);
 
@@ -163,18 +169,19 @@ export default function BlogsClient() {
 
   const filteredBlogs = useMemo(() => {
     return blogs.filter((blog) => {
-      const matchesSearch = 
+      const matchesSearch =
         blog.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        (blog.excerpt?.toLowerCase().includes(searchQuery.toLowerCase()) ?? false);
-      
-      const matchesCategory = 
+        (blog.excerpt?.toLowerCase().includes(searchQuery.toLowerCase()) ??
+          false);
+
+      const matchesCategory =
         categoryFilter === "all" || blog.category === categoryFilter;
-      
-      const matchesStatus = 
-        statusTab === "all" || 
-        (statusTab === "published" && blog.published) || 
+
+      const matchesStatus =
+        statusTab === "all" ||
+        (statusTab === "published" && blog.published) ||
         (statusTab === "draft" && !blog.published);
-      
+
       return matchesSearch && matchesCategory && matchesStatus;
     });
   }, [blogs, searchQuery, categoryFilter, statusTab]);
@@ -207,7 +214,9 @@ export default function BlogsClient() {
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Blogs</h1>
-          <p className="text-muted-foreground">Manage your blog posts and content.</p>
+          <p className="text-muted-foreground">
+            Manage your blog posts and content.
+          </p>
         </div>
         <Button asChild>
           <Link href="/admin/blogs/new">
@@ -218,7 +227,11 @@ export default function BlogsClient() {
       </div>
 
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-b pb-4">
-        <Tabs defaultValue="all" className="w-full sm:w-auto" onValueChange={setStatusTab}>
+        <Tabs
+          defaultValue="all"
+          className="w-full sm:w-auto"
+          onValueChange={setStatusTab}
+        >
           <TabsList>
             <TabsTrigger value="all">All</TabsTrigger>
             <TabsTrigger value="published">Published</TabsTrigger>
@@ -269,11 +282,12 @@ export default function BlogsClient() {
           </div>
           <h3 className="text-xl font-semibold">No blogs found</h3>
           <p className="text-muted-foreground max-w-xs mx-auto mt-2">
-            We couldn't find any blogs matching your current filters. Try adjusting your search or category.
+            We couldn't find any blogs matching your current filters. Try
+            adjusting your search or category.
           </p>
           {(searchQuery || categoryFilter !== "all" || statusTab !== "all") && (
-            <Button 
-              variant="outline" 
+            <Button
+              variant="outline"
               className="mt-6"
               onClick={() => {
                 setSearchQuery("");
@@ -309,4 +323,3 @@ export default function BlogsClient() {
     </div>
   );
 }
-

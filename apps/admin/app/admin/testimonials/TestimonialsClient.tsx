@@ -1,12 +1,19 @@
 "use client";
 
-import AdminPage from "@/components/admin/AdminPage";
-import { useTestimonials, type Testimonial } from "@bilacert/supabase";
-import { Button } from "@/components/ui/button";
-import { MoreHorizontal } from "lucide-react";
-import DeleteTestimonialDialog from "./DeleteTestimonialDialog";
-import Link from "next/link";
+import { type Testimonial, useTestimonials } from "@bilacert/supabase";
 import { format } from "date-fns";
+import { MoreHorizontal } from "lucide-react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import AdminPage from "@/components/admin/AdminPage";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,15 +22,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import DeleteTestimonialDialog from "./DeleteTestimonialDialog";
 import TestimonialEmbed from "./TestimonialEmbed";
-import { useRouter } from "next/navigation";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 
 const renderTestimonial = (
   testimonial: Testimonial,
@@ -32,7 +32,7 @@ const renderTestimonial = (
 ) => {
   const router = useRouter();
   const date = new Date(testimonial.created_at);
-  const formattedDate = !isNaN(date.getTime())
+  const formattedDate = !Number.isNaN(date.getTime())
     ? format(date, "PP")
     : "Date not available";
   return (

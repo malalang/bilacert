@@ -1,11 +1,10 @@
-'use client';
-
-import * as React from "react";
-import { format } from "date-fns";
-import { Calendar as CalendarIcon } from "lucide-react";
-import { DateRange } from "react-day-picker";
+"use client";
 
 import { cn } from "@bilacert/shared";
+import { format } from "date-fns";
+import { Calendar as CalendarIcon } from "lucide-react";
+import type * as React from "react";
+import type { DateRange } from "react-day-picker";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -19,7 +18,11 @@ interface DateRangePickerProps extends React.HTMLAttributes<HTMLDivElement> {
   onDateChange: (date: DateRange | undefined) => void;
 }
 
-export function DateRangePicker({ date, onDateChange, className }: DateRangePickerProps) {
+export function DateRangePicker({
+  date,
+  onDateChange,
+  className,
+}: DateRangePickerProps) {
   return (
     <div className={cn("grid gap-2", className)}>
       <Popover>

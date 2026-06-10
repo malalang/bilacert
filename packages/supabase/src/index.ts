@@ -1,9 +1,10 @@
-export { createClient as createBrowserClient, supabase, isSupabaseConfigured } from "./client";
-export { createClient as createServerClient } from "./server";
+export { createSupabaseBrowserClient, createBrowserClient, supabase, isSupabaseConfigured } from "./client";
+export { createSupabaseServerClient, createServerClient } from "./server";
 export { createSupabaseAdminClient } from "./admin";
 export * from "./types";
-export * from "./services/blogs";
-export * from "./services/services";
+export * from "./Queries/blogs";
+export * from "./Queries/services";
+export * from "./Mutations/blogs";
 export * from "./hooks/useBlogs";
 export * from "./hooks/useContacts";
 export * from "./hooks/useServices";

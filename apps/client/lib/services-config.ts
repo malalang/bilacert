@@ -4,12 +4,12 @@ import {
   Clock,
   FileText,
   Headphones,
+  type LucideIcon,
   Radio,
   Shield,
   Ship,
   Users,
   Zap,
-  type LucideIcon,
 } from "lucide-react";
 
 export interface HeroStat {

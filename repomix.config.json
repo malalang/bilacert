@@ -4,7 +4,7 @@
     "maxFileSize": 52428800
   },
   "output": {
-    "filePath": "bilacert-context.md",
+    "filePath": "context.md",
     "style": "markdown",
     "parsableStyle": false,
     "fileSummary": true,
