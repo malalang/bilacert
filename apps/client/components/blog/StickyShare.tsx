@@ -4,13 +4,22 @@ export function StickyShare() {
   return (
     <div className="fixed left-0 top-1/2 -translate-y-1/2 z-50">
       <div className="flex flex-col space-y-2">
-        <button className="p-3 bg-blue-400 text-white hover:bg-blue-500">
+        <button
+          type="button"
+          className="p-3 bg-blue-400 text-white hover:bg-blue-500"
+        >
           <FaTwitter className="h-5 w-5" />
         </button>
-        <button className="p-3 bg-blue-600 text-white hover:bg-blue-700">
+        <button
+          type="button"
+          className="p-3 bg-blue-600 text-white hover:bg-blue-700"
+        >
           <FaLinkedin className="h-5 w-5" />
         </button>
-        <button className="p-3 bg-blue-800 text-white hover:bg-blue-900">
+        <button
+          type="button"
+          className="p-3 bg-blue-800 text-white hover:bg-blue-900"
+        >
           <FaFacebook className="h-5 w-5" />
         </button>
       </div>

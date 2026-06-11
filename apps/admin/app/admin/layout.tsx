@@ -17,14 +17,12 @@ export default function AdminLayout({
 }) {
   const pathname = usePathname();
   const router = useRouter();
-
-  if (pathname !== "/admin/login" && !isSupabaseConfigured) {
-    return <SupabaseNotConfigured />;
-  }
-
   const { user, loading } = useUser();
 
   useEffect(() => {
+    if (!isSupabaseConfigured) {
+      return;
+    }
     if (!loading) {
       if (!user && pathname !== "/admin/login") {
         router.push("/admin/login");
@@ -34,6 +32,10 @@ export default function AdminLayout({
       }
     }
   }, [user, loading, pathname, router]);
+
+  if (pathname !== "/admin/login" && !isSupabaseConfigured) {
+    return <SupabaseNotConfigured />;
+  }
 
   if (loading && pathname !== "/admin/login") {
     return (

@@ -18,8 +18,17 @@
     "enabled": true,
     "rules": {
       "recommended": true,
+      "performance": {
+        "noImgElement": "off"
+      },
       "suspicious": {
+        "noArrayIndexKey": "off",
+        "noExplicitAny": "off",
+        "noImplicitAnyLet": "off",
         "noUnknownAtRules": "off"
+      },
+      "security": {
+        "noDangerouslySetInnerHtml": "off"
       }
     },
     "domains": {

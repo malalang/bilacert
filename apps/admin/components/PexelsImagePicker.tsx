@@ -133,9 +133,9 @@ const PexelsImagePicker: React.FC<PexelsImagePickerProps> = ({
   return (
     <div className="space-y-4 mb-6">
       <div className="flex items-center justify-between">
-        <label className="block text-sm font-medium text-gray-700">
+        <span className="block text-sm font-medium text-gray-700">
           Select from Pexels
-        </label>
+        </span>
         {/* Requirement: Prominent link to Pexels */}
         <a
           href="https://www.pexels.com"

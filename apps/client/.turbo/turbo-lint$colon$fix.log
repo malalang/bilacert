@@ -1,0 +1,428 @@
+
+> @bilacert/client@0.1.0 lint:fix F:\projects\bilacert\apps\client
+> biome check --write .
+
+components\Testimonials.tsx:45:11 lint/complexity/useOptionalChain  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━━━
+
+  ! Change to an optional chain.
+  
+    43 │   useEffect(() => {
+    44 │     if (testimonials.length > 0) {
+  > 45 │       if (window.FB && window.FB.XFBML) {
+       │           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    46 │         window.FB.XFBML.parse();
+    47 │       } else {
+  
+  i Unsafe fix: Change to an optional chain.
+  
+     43  43 │     useEffect(() => {
+     44  44 │       if (testimonials.length > 0) {
+     45     │ - ······if·(window.FB·&&·window.FB.XFBML)·{
+         45 │ + ······if·(window.FB?.XFBML)·{
+     46  46 │           window.FB.XFBML.parse();
+     47  47 │         } else {
+  
+
+components\Testimonials.tsx:64:15 lint/complexity/useOptionalChain  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━━━
+
+  ! Change to an optional chain.
+  
+    62 │           js.id = id;
+    63 │           js.src = "https://connect.facebook.net/en_US/sdk.js";
+  > 64 │           if (fjs && fjs.parentNode) {
+       │               ^^^^^^^^^^^^^^^^^^^^^
+    65 │             fjs.parentNode.insertBefore(js, fjs);
+    66 │           } else {
+  
+  i Unsafe fix: Change to an optional chain.
+  
+     62  62 │             js.id = id;
+     63  63 │             js.src = "https://connect.facebook.net/en_US/sdk.js";
+     64     │ - ··········if·(fjs·&&·fjs.parentNode)·{
+         64 │ + ··········if·(fjs?.parentNode)·{
+     65  65 │               fjs.parentNode.insertBefore(js, fjs);
+     66  66 │             } else {
+  
+
+components\blog\AboutAuthor.tsx:1:8 lint/correctness/noUnusedImports  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━
+
+  ! This import is unused.
+  
+  > 1 │ import Image from "next/image";
+      │        ^^^^^
+    2 │ 
+    3 │ interface AboutAuthorProps {
+  
+  i Unused imports might be the result of an incomplete refactoring.
+  
+  i Unsafe fix: Remove the unused imports.
+  
+    1 │ import·Image·from·"next/image";
+      │ -------------------------------
+
+components\service\ServiceHero.tsx:73:9 lint/correctness/noUnusedVariables  FIXABLE  ━━━━━━━━━━━━━━━
+
+  ! This variable CheckCircleIcon is unused.
+  
+    72 │ export function HeroStatsBackdrop({ processing_time }: HeroStatsBackdropProps) {
+  > 73 │   const CheckCircleIcon = getIcon("CheckCircle");
+       │         ^^^^^^^^^^^^^^^
+    74 │ 
+    75 │   return (
+  
+  i Unused variables are often the result of an incomplete refactoring, typos, or other sources of bugs.
+  
+  i Unsafe fix: If this is intentional, prepend CheckCircleIcon with an underscore.
+  
+     71  71 │   
+     72  72 │   export function HeroStatsBackdrop({ processing_time }: HeroStatsBackdropProps) {
+     73     │ - ··const·CheckCircleIcon·=·getIcon("CheckCircle");
+         73 │ + ··const·_CheckCircleIcon·=·getIcon("CheckCircle");
+     74  74 │   
+     75  75 │     return (
+  
+
+app\blog\[slug]\page.tsx:156:17 lint/security/noDangerouslySetInnerHtml ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Avoid passing content using the dangerouslySetInnerHTML prop.
+  
+    154 │           [&>ul]:list-disc [&>ul]:ml-6 [&>ul]:my-4
+    155 │           [&>img]:rounded-lg"
+  > 156 │                 dangerouslySetInnerHTML={{
+        │                 ^^^^^^^^^^^^^^^^^^^^^^^
+    157 │                   __html:
+    158 │                     post.content ||
+  
+  ! Setting content using code can expose users to cross-site scripting (XSS) attacks
+  
+
+components\StructuredData.tsx:105:7 lint/security/noDangerouslySetInnerHtml ━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Avoid passing content using the dangerouslySetInnerHTML prop.
+  
+    103 │       id={`structured-data-${type.toLowerCase()}`}
+    104 │       type="application/ld+json"
+  > 105 │       dangerouslySetInnerHTML={{
+        │       ^^^^^^^^^^^^^^^^^^^^^^^
+    106 │         __html: JSON.stringify(getStructuredData(), null, 2),
+    107 │       }}
+  
+  ! Setting content using code can expose users to cross-site scripting (XSS) attacks
+  
+
+components\Testimonials.tsx:58:15 lint/suspicious/noImplicitAnyLet ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × This variable implicitly has the any type.
+  
+    56 │         };
+    57 │         ((d, s, id) => {
+  > 58 │           var js,
+       │               ^^
+    59 │             fjs = d.getElementsByTagName(s)[0];
+    60 │           if (d.getElementById(id)) return;
+  
+  i Variable declarations without type annotation and initialization implicitly have the any type. Declare a type or initialize the variable with some value.
+  
+
+components\WhatsAppButton.tsx:16:5 lint/a11y/useButtonType ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Provide an explicit type prop for the button element.
+  
+    15 │   return (
+  > 16 │     <button
+       │     ^^^^^^^
+  > 17 │       onClick={handleWhatsAppClick}
+  > 18 │       className="fixed bottom-6 right-6 bg-green-500 hover:bg-green-600 text-white p-4 rounded-full shadow-lg transition-all duration-300 transform hover:scale-110 z-50"
+  > 19 │       aria-label="Chat with us on WhatsApp"
+  > 20 │     >
+       │     ^
+    21 │       <FaWhatsapp className="h-6 w-6" />
+    22 │     </button>
+  
+  i The default type of a button is submit, which causes the submission of a form when placed inside a `form` element. This is likely not the behaviour that you want inside a React application.
+  
+  i Allowed button types are: submit, button or reset
+  
+
+components\blog\StickyShare.tsx:7:9 lint/a11y/useButtonType ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Provide an explicit type prop for the button element.
+  
+    5 │     <div className="fixed left-0 top-1/2 -translate-y-1/2 z-50">
+    6 │       <div className="flex flex-col space-y-2">
+  > 7 │         <button className="p-3 bg-blue-400 text-white hover:bg-blue-500">
+      │         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    8 │           <FaTwitter className="h-5 w-5" />
+    9 │         </button>
+  
+  i The default type of a button is submit, which causes the submission of a form when placed inside a `form` element. This is likely not the behaviour that you want inside a React application.
+  
+  i Allowed button types are: submit, button or reset
+  
+
+components\blog\StickyShare.tsx:10:9 lint/a11y/useButtonType ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Provide an explicit type prop for the button element.
+  
+     8 │           <FaTwitter className="h-5 w-5" />
+     9 │         </button>
+  > 10 │         <button className="p-3 bg-blue-600 text-white hover:bg-blue-700">
+       │         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    11 │           <FaLinkedin className="h-5 w-5" />
+    12 │         </button>
+  
+  i The default type of a button is submit, which causes the submission of a form when placed inside a `form` element. This is likely not the behaviour that you want inside a React application.
+  
+  i Allowed button types are: submit, button or reset
+  
+
+components\blog\StickyShare.tsx:13:9 lint/a11y/useButtonType ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Provide an explicit type prop for the button element.
+  
+    11 │           <FaLinkedin className="h-5 w-5" />
+    12 │         </button>
+  > 13 │         <button className="p-3 bg-blue-800 text-white hover:bg-blue-900">
+       │         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    14 │           <FaFacebook className="h-5 w-5" />
+    15 │         </button>
+  
+  i The default type of a button is submit, which causes the submission of a form when placed inside a `form` element. This is likely not the behaviour that you want inside a React application.
+  
+  i Allowed button types are: submit, button or reset
+  
+
+components\blog\TableOfContents.tsx:17:3 lint/correctness/useExhaustiveDependencies  FIXABLE  ━━━━━━━━━━
+
+  × This hook specifies more dependencies than necessary: content
+  
+    15 │   const [headings, setHeadings] = useState<Heading[]>([]);
+    16 │ 
+  > 17 │   useEffect(() => {
+       │   ^^^^^^^^^
+    18 │     // Note: HTML only goes up to h6! I left h7 in case you have custom styling,
+    19 │     // but standard HTML stops at <h6>.
+  
+  i Outer scope values aren't valid dependencies because mutating them doesn't re-render the component.
+  
+    36 │     setHeadings(newHeadings);
+  > 37 │   }, [content]);
+       │       ^^^^^^^
+    38 │ 
+    39 │   return (
+  
+  i Unsafe fix: Remove the extra dependencies from the list.
+  
+    37 │ ··},·[content]);
+       │       -------   
+
+components\service\PricingPlans.tsx:38:20 lint/suspicious/noArrayIndexKey ━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Avoid using the index of an array as key property in an element.
+  
+    36 │           {plans.map((plan, index) => (
+    37 │             <div
+  > 38 │               key={index}
+       │                    ^^^^^
+    39 │               className={`bg-white p-8 rounded-xl shadow-sm relative ${
+    40 │                 plan.popular ? "ring-2 ring-accent" : ""
+  
+  i This is the source of the key value.
+  
+    35 │         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+  > 36 │           {plans.map((plan, index) => (
+       │                             ^^^^^
+    37 │             <div
+    38 │               key={index}
+  
+  i The order of the items may change, and this also affects performances and component state.
+  
+  i Check the React documentation. 
+  
+
+components\service\PricingPlans.tsx:60:26 lint/suspicious/noArrayIndexKey ━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Avoid using the index of an array as key property in an element.
+  
+    58 │                 {plan.features.map((feature, featureIndex) => (
+    59 │                   <li
+  > 60 │                     key={featureIndex}
+       │                          ^^^^^^^^^^^^
+    61 │                     className="flex items-center text-sm text-gray-600"
+    62 │                   >
+  
+  i This is the source of the key value.
+  
+    56 │               </div>
+    57 │               <ul className="space-y-3 mb-8">
+  > 58 │                 {plan.features.map((feature, featureIndex) => (
+       │                                              ^^^^^^^^^^^^
+    59 │                   <li
+    60 │                     key={featureIndex}
+  
+  i The order of the items may change, and this also affects performances and component state.
+  
+  i Check the React documentation. 
+  
+
+components\service\ProcessSteps.tsx:30:23 lint/suspicious/noArrayIndexKey ━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Avoid using the index of an array as key property in an element.
+  
+    28 │         <div className="grid grid-cols-1 md:grid-cols-5 gap-8">
+    29 │           {steps.map((step, index) => (
+  > 30 │             <div key={index} className="text-center">
+       │                       ^^^^^
+    31 │               <div className="bg-primary text-white w-16 h-16 rounded-full flex items-center justify-center font-bold text-xl mx-auto mb-4">
+    32 │                 {step.step}
+  
+  i This is the source of the key value.
+  
+    28 │         <div className="grid grid-cols-1 md:grid-cols-5 gap-8">
+  > 29 │           {steps.map((step, index) => (
+       │                             ^^^^^
+    30 │             <div key={index} className="text-center">
+    31 │               <div className="bg-primary text-white w-16 h-16 rounded-full flex items-center justify-center font-bold text-xl mx-auto mb-4">
+  
+  i The order of the items may change, and this also affects performances and component state.
+  
+  i Check the React documentation. 
+  
+
+components\service\ServicesGrid.tsx:34:25 lint/suspicious/noArrayIndexKey ━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Avoid using the index of an array as key property in an element.
+  
+    32 │             const Icon = getIcon(item.icon);
+    33 │             return (
+  > 34 │               <div key={index} className="bg-white p-6 rounded-xl shadow-sm">
+       │                         ^^^^^
+    35 │                 <div className="bg-accent/10 w-12 h-12 rounded-lg flex items-center justify-center mb-4">
+    36 │                   <Icon className="h-6 w-6 text-accent" />
+  
+  i This is the source of the key value.
+  
+    30 │         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+  > 31 │           {items.map((item, index) => {
+       │                             ^^^^^
+    32 │             const Icon = getIcon(item.icon);
+    33 │             return (
+  
+  i The order of the items may change, and this also affects performances and component state.
+  
+  i Check the React documentation. 
+  
+
+components\service\WhatIsSection.tsx:36:27 lint/suspicious/noArrayIndexKey ━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Avoid using the index of an array as key property in an element.
+  
+    34 │             <div className="space-y-4">
+    35 │               {checkpoints.map((checkpoint, index) => (
+  > 36 │                 <div key={index} className="flex items-center space-x-3">
+       │                           ^^^^^
+    37 │                   <CheckCircleIcon className="h-5 w-5 text-accent" />
+    38 │                   <span className="text-gray-700">{checkpoint}</span>
+  
+  i This is the source of the key value.
+  
+    33 │             <p className="text-lg text-gray-600 mb-8">{secondParagraph}</p>
+    34 │             <div className="space-y-4">
+  > 35 │               {checkpoints.map((checkpoint, index) => (
+       │                                             ^^^^^
+    36 │                 <div key={index} className="flex items-center space-x-3">
+    37 │                   <CheckCircleIcon className="h-5 w-5 text-accent" />
+  
+  i The order of the items may change, and this also affects performances and component state.
+  
+  i Check the React documentation. 
+  
+
+components\service\WhatIsSection.tsx:54:33 lint/suspicious/noArrayIndexKey ━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Avoid using the index of an array as key property in an element.
+  
+    52 │                     const Icon = getIcon(type.icon);
+    53 │                     return (
+  > 54 │                       <div key={index} className="flex items-start space-x-4">
+       │                                 ^^^^^
+    55 │                         <div className="bg-accent p-2 rounded-lg">
+    56 │                           <Icon className="h-6 w-6 text-white" />
+  
+  i This is the source of the key value.
+  
+    49 │                 </h3>
+    50 │                 <div className="space-y-6">
+  > 51 │                   {licenseTypes.map((type, index) => {
+       │                                            ^^^^^
+    52 │                     const Icon = getIcon(type.icon);
+    53 │                     return (
+  
+  i The order of the items may change, and this also affects performances and component state.
+  
+  i Check the React documentation. 
+  
+
+components\service\WhatIsSection.tsx:80:33 lint/suspicious/noArrayIndexKey ━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Avoid using the index of an array as key property in an element.
+  
+    78 │                     const Icon = getIcon(benefit.icon);
+    79 │                     return (
+  > 80 │                       <div key={index} className="flex items-start space-x-4">
+       │                                 ^^^^^
+    81 │                         <div className="bg-accent p-2 rounded-lg">
+    82 │                           <Icon className="h-6 w-6 text-white" />
+  
+  i This is the source of the key value.
+  
+    75 │                 </h3>
+    76 │                 <div className="space-y-6">
+  > 77 │                   {benefits.map((benefit, index) => {
+       │                                           ^^^^^
+    78 │                     const Icon = getIcon(benefit.icon);
+    79 │                     return (
+  
+  i The order of the items may change, and this also affects performances and component state.
+  
+  i Check the React documentation. 
+  
+
+components\service\WhyChooseUs.tsx:40:23 lint/suspicious/noArrayIndexKey ━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Avoid using the index of an array as key property in an element.
+  
+    38 │         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+    39 │           {benefits.map((item, index) => (
+  > 40 │             <div key={index} className="text-center">
+       │                       ^^^^^
+    41 │               <div className="bg-accent/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
+Skipped 5 suggested fixes.
+If you wish to apply the suggested (unsafe) fixes, use the command biome check --write --unsafe
+
+The number of diagnostics exceeds the limit allowed. Use --max-diagnostics to increase it.
+    42 │                 <div className="text-accent">{item.icon}</div>
+  
+  i This is the source of the key value.
+  
+Diagnostics not shown: 9.
+Checked 57 files in 739ms. No fixes applied.
+Found 19 errors.
+Found 10 warnings.
+    38 │         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+  > 39 │           {benefits.map((item, index) => (
+       │                                ^^^^^
+    40 │             <div key={index} className="text-center">
+    41 │               <div className="bg-accent/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
+  
+  i The order of the items may change, and this also affects performances and component state.
+  
+  i Check the React documentation. 
+  
+
+check ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Some errors were emitted while applying fixes.
+  
+
+ ELIFECYCLE  Command failed with exit code 1.

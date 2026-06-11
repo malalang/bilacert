@@ -11,7 +11,7 @@ interface TableOfContentsProps {
   content: string;
 }
 
-export function TableOfContents({ content }: TableOfContentsProps) {
+export function TableOfContents({ content: _content }: TableOfContentsProps) {
   const [headings, setHeadings] = useState<Heading[]>([]);
 
   useEffect(() => {
@@ -34,7 +34,7 @@ export function TableOfContents({ content }: TableOfContentsProps) {
     });
 
     setHeadings(newHeadings);
-  }, [content]);
+  }, []);
 
   return (
     /* Added 'hidden md:block' here */

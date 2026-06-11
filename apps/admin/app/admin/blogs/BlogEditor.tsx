@@ -36,7 +36,7 @@ interface BlogEditorProps {
 export default function BlogEditor({
   value,
   onChange,
-  onImageSelect,
+  onImageSelect: _onImageSelect,
   title,
   featured_image,
 }: BlogEditorProps) {

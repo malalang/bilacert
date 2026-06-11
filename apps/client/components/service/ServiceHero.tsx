@@ -70,7 +70,7 @@ interface HeroStatsBackdropProps {
 }
 
 export function HeroStatsBackdrop({ processing_time }: HeroStatsBackdropProps) {
-  const CheckCircleIcon = getIcon("CheckCircle");
+  const _CheckCircleIcon = getIcon("CheckCircle");
 
   return (
     <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8">

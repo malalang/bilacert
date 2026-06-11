@@ -1,0 +1,846 @@
+
+> @bilacert/client@0.1.0 build F:\projects\bilacert\apps\client
+> next build
+
+▲ Next.js 16.2.7 (Turbopack)
+- Environments: .env
+
+  Creating an optimized production build ...
+
+> Build error occurred
+Error: Turbopack build failed with 28 errors:
+./packages/supabase/src/server.ts:2:1
+You're importing a module that depends on "next/headers". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+    Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  [90m1 |[0m [36mimport[0m { [36mtype[0m [33mCookieOptions[0m, createServerClient } [36mfrom[0m [32m"@supabase/ssr"[0m;
+[31m[1m>[0m [90m2 |[0m [36mimport[0m { cookies } [36mfrom[0m [32m"next/headers"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m3 |[0m [36mimport[0m [36mtype[0m { [33mDatabase[0m } [36mfrom[0m [32m"./supabaseType"[0m;
+  [90m4 |[0m
+  [90m5 |[0m [36mexport[0m [36masync[0m [36mfunction[0m createSupabaseServerClient() {
+
+Ecmascript file had an error
+
+Import traces:
+  App Route:
+    ./packages/supabase/src/server.ts
+    ./apps/client/app/api/form-submissions/route.ts
+
+  Server Component:
+    ./packages/supabase/src/server.ts
+    ./packages/supabase/src/index.ts
+    ./apps/client/app/services/[serviceId]/page.tsx
+
+  Client Component Browser:
+    ./packages/supabase/src/server.ts [Client Component Browser]
+    ./packages/supabase/src/index.ts [Client Component Browser]
+    ./apps/client/app/forms/nrcs-loa-applications/page.tsx [Client Component Browser]
+    ./apps/client/app/forms/nrcs-loa-applications/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./packages/supabase/src/server.ts [Client Component SSR]
+    ./packages/supabase/src/index.ts [Client Component SSR]
+    ./apps/client/app/forms/nrcs-loa-applications/page.tsx [Client Component SSR]
+    ./apps/client/app/forms/nrcs-loa-applications/page.tsx [Server Component]
+
+
+./apps/client/app/forms/radio-dealer-licensing/page.tsx:3:1
+Export createBrowserClient doesn't exist in target module
+  [90m1 |[0m [32m"use client"[0m;
+  [90m2 |[0m
+[31m[1m>[0m [90m3 |[0m [36mimport[0m { createBrowserClient } [36mfrom[0m [32m"@bilacert/supabase"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m4 |[0m [36mimport[0m [33mLink[0m [36mfrom[0m [32m"next/link"[0m;
+  [90m5 |[0m [36mimport[0m { [36mtype[0m [33mChangeEvent[0m, [36mtype[0m [33mFormEvent[0m, useState } [36mfrom[0m [32m"react"[0m;
+  [90m6 |[0m [36mimport[0m { v4 [36mas[0m uuidv4 } [36mfrom[0m [32m"uuid"[0m;
+
+The export createBrowserClient was not found in module [project]/packages/supabase/src/client.ts [app-client] (ecmascript).
+Did you mean to import createSupabaseBrowserClient?
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import traces:
+  Client Component Browser:
+    ./apps/client/app/forms/radio-dealer-licensing/page.tsx [Client Component Browser]
+    ./apps/client/app/forms/radio-dealer-licensing/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./apps/client/app/forms/radio-dealer-licensing/page.tsx [Client Component SSR]
+    ./apps/client/app/forms/radio-dealer-licensing/page.tsx [Server Component]
+
+
+./apps/client/app/forms/radio-dealer-licensing/page.tsx:3:1
+Export createBrowserClient doesn't exist in target module
+  [90m1 |[0m [32m"use client"[0m;
+  [90m2 |[0m
+[31m[1m>[0m [90m3 |[0m [36mimport[0m { createBrowserClient } [36mfrom[0m [32m"@bilacert/supabase"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m4 |[0m [36mimport[0m [33mLink[0m [36mfrom[0m [32m"next/link"[0m;
+  [90m5 |[0m [36mimport[0m { [36mtype[0m [33mChangeEvent[0m, [36mtype[0m [33mFormEvent[0m, useState } [36mfrom[0m [32m"react"[0m;
+  [90m6 |[0m [36mimport[0m { v4 [36mas[0m uuidv4 } [36mfrom[0m [32m"uuid"[0m;
+
+The export createBrowserClient was not found in module [project]/packages/supabase/src/client.ts [app-ssr] (ecmascript).
+Did you mean to import createSupabaseBrowserClient?
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import traces:
+  Client Component Browser:
+    ./apps/client/app/forms/radio-dealer-licensing/page.tsx [Client Component Browser]
+    ./apps/client/app/forms/radio-dealer-licensing/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./apps/client/app/forms/radio-dealer-licensing/page.tsx [Client Component SSR]
+    ./apps/client/app/forms/radio-dealer-licensing/page.tsx [Server Component]
+
+
+./apps/client/app/forms/ski-boat-vhf-licensing/page.tsx:3:1
+Export createBrowserClient doesn't exist in target module
+  [90m1 |[0m [32m"use client"[0m;
+  [90m2 |[0m
+[31m[1m>[0m [90m3 |[0m [36mimport[0m { createBrowserClient } [36mfrom[0m [32m"@bilacert/supabase"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m4 |[0m [36mimport[0m [33mLink[0m [36mfrom[0m [32m"next/link"[0m;
+  [90m5 |[0m [36mimport[0m { [36mtype[0m [33mChangeEvent[0m, [36mtype[0m [33mFormEvent[0m, useState } [36mfrom[0m [32m"react"[0m;
+  [90m6 |[0m [36mimport[0m { v4 [36mas[0m uuidv4 } [36mfrom[0m [32m"uuid"[0m;
+
+The export createBrowserClient was not found in module [project]/packages/supabase/src/client.ts [app-client] (ecmascript).
+Did you mean to import createSupabaseBrowserClient?
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import traces:
+  Client Component Browser:
+    ./apps/client/app/forms/ski-boat-vhf-licensing/page.tsx [Client Component Browser]
+    ./apps/client/app/forms/ski-boat-vhf-licensing/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./apps/client/app/forms/ski-boat-vhf-licensing/page.tsx [Client Component SSR]
+    ./apps/client/app/forms/ski-boat-vhf-licensing/page.tsx [Server Component]
+
+
+./apps/client/app/forms/ski-boat-vhf-licensing/page.tsx:3:1
+Export createBrowserClient doesn't exist in target module
+  [90m1 |[0m [32m"use client"[0m;
+  [90m2 |[0m
+[31m[1m>[0m [90m3 |[0m [36mimport[0m { createBrowserClient } [36mfrom[0m [32m"@bilacert/supabase"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m4 |[0m [36mimport[0m [33mLink[0m [36mfrom[0m [32m"next/link"[0m;
+  [90m5 |[0m [36mimport[0m { [36mtype[0m [33mChangeEvent[0m, [36mtype[0m [33mFormEvent[0m, useState } [36mfrom[0m [32m"react"[0m;
+  [90m6 |[0m [36mimport[0m { v4 [36mas[0m uuidv4 } [36mfrom[0m [32m"uuid"[0m;
+
+The export createBrowserClient was not found in module [project]/packages/supabase/src/client.ts [app-ssr] (ecmascript).
+Did you mean to import createSupabaseBrowserClient?
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import traces:
+  Client Component Browser:
+    ./apps/client/app/forms/ski-boat-vhf-licensing/page.tsx [Client Component Browser]
+    ./apps/client/app/forms/ski-boat-vhf-licensing/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./apps/client/app/forms/ski-boat-vhf-licensing/page.tsx [Client Component SSR]
+    ./apps/client/app/forms/ski-boat-vhf-licensing/page.tsx [Server Component]
+
+
+./apps/client/components/Testimonials.tsx:4:1
+Export createBrowserClient doesn't exist in target module
+  [90m2 |[0m
+  [90m3 |[0m [36mimport[0m [36mtype[0m { [33mTestimonial[0m } [36mfrom[0m [32m"@bilacert/supabase"[0m;
+[31m[1m>[0m [90m4 |[0m [36mimport[0m { createBrowserClient } [36mfrom[0m [32m"@bilacert/supabase"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m5 |[0m [36mimport[0m { useEffect, useState } [36mfrom[0m [32m"react"[0m;
+  [90m6 |[0m declare global {
+  [90m7 |[0m   [36minterface[0m [33mWindow[0m {
+
+The export createBrowserClient was not found in module [project]/packages/supabase/src/client.ts [app-client] (ecmascript).
+Did you mean to import createSupabaseBrowserClient?
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import trace:
+  Server Component:
+    ./apps/client/components/Testimonials.tsx
+    ./apps/client/app/page.tsx
+
+
+./apps/client/components/Testimonials.tsx:4:1
+Export createBrowserClient doesn't exist in target module
+  [90m2 |[0m
+  [90m3 |[0m [36mimport[0m [36mtype[0m { [33mTestimonial[0m } [36mfrom[0m [32m"@bilacert/supabase"[0m;
+[31m[1m>[0m [90m4 |[0m [36mimport[0m { createBrowserClient } [36mfrom[0m [32m"@bilacert/supabase"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m5 |[0m [36mimport[0m { useEffect, useState } [36mfrom[0m [32m"react"[0m;
+  [90m6 |[0m
+  [90m7 |[0m declare global {
+
+The export createBrowserClient was not found in module [project]/packages/supabase/src/client.ts [app-ssr] (ecmascript).
+Did you mean to import createSupabaseBrowserClient?
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import trace:
+  Server Component:
+    ./apps/client/components/Testimonials.tsx
+    ./apps/client/app/page.tsx
+
+
+./packages/supabase/src/index.ts:1:1
+Export createBrowserClient doesn't exist in target module
+[31m[1m>[0m [90m1 |[0m ...reateSupabaseBrowserClient, createBrowserClient, supabase, isSupabaseConfigured } [36mfrom[0m [32m"...[0m
+  [90m  |[0m    [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m2 |[0m ...reateSupabaseServerClient, createServerClient } [36mfrom[0m [32m"./server"[0m;
+  [90m3 |[0m ...reateSupabaseAdminClient } [36mfrom[0m [32m"./admin"[0m;
+  [90m4 |[0m ...[36mrom[0m [32m"./types"[0m;
+
+The export createBrowserClient was not found in module [project]/packages/supabase/src/client.ts [app-client] (ecmascript).
+Did you mean to import createSupabaseBrowserClient?
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import traces:
+  App Route:
+    ./packages/supabase/src/index.ts
+    ./apps/client/app/api/form-submissions/route.ts
+
+  Server Component:
+    ./packages/supabase/src/index.ts
+    ./apps/client/app/services/[serviceId]/page.tsx
+
+  Client Component Browser:
+    ./packages/supabase/src/index.ts [Client Component Browser]
+    ./apps/client/app/forms/nrcs-loa-applications/page.tsx [Client Component Browser]
+    ./apps/client/app/forms/nrcs-loa-applications/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./packages/supabase/src/index.ts [Client Component SSR]
+    ./apps/client/app/forms/nrcs-loa-applications/page.tsx [Client Component SSR]
+    ./apps/client/app/forms/nrcs-loa-applications/page.tsx [Server Component]
+
+
+./packages/supabase/src/index.ts:1:1
+Export createBrowserClient doesn't exist in target module
+[31m[1m>[0m [90m1 |[0m ...reateSupabaseBrowserClient, createBrowserClient, supabase, isSupabaseConfigured } [36mfrom[0m [32m"...[0m
+  [90m  |[0m    [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m2 |[0m ...reateSupabaseServerClient, createServerClient } [36mfrom[0m [32m"./server"[0m;
+  [90m3 |[0m ...reateSupabaseAdminClient } [36mfrom[0m [32m"./admin"[0m;
+  [90m4 |[0m ...[36mrom[0m [32m"./types"[0m;
+
+The export createBrowserClient was not found in module [project]/packages/supabase/src/client.ts [app-ssr] (ecmascript).
+Did you mean to import createSupabaseBrowserClient?
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import traces:
+  App Route:
+    ./packages/supabase/src/index.ts
+    ./apps/client/app/api/form-submissions/route.ts
+
+  Server Component:
+    ./packages/supabase/src/index.ts
+    ./apps/client/app/services/[serviceId]/page.tsx
+
+  Client Component Browser:
+    ./packages/supabase/src/index.ts [Client Component Browser]
+    ./apps/client/app/forms/nrcs-loa-applications/page.tsx [Client Component Browser]
+    ./apps/client/app/forms/nrcs-loa-applications/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./packages/supabase/src/index.ts [Client Component SSR]
+    ./apps/client/app/forms/nrcs-loa-applications/page.tsx [Client Component SSR]
+    ./apps/client/app/forms/nrcs-loa-applications/page.tsx [Server Component]
+
+
+./apps/client/app/api/contacts/route.ts:1:1
+Export createServerClient doesn't exist in target module
+[31m[1m>[0m [90m1 |[0m [36mimport[0m { createServerClient } [36mfrom[0m [32m"@bilacert/supabase"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m2 |[0m [36mimport[0m { [36mtype[0m [33mNextRequest[0m, [33mNextResponse[0m } [36mfrom[0m [32m"next/server"[0m;
+  [90m3 |[0m
+  [90m4 |[0m [36mexport[0m [36masync[0m [36mfunction[0m [33mPOST[0m(request: [33mNextRequest[0m) {
+
+The export createServerClient was not found in module [project]/packages/supabase/src/server.ts [app-route] (ecmascript).
+Did you mean to import createSupabaseServerClient?
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+
+./apps/client/app/api/form-submissions/route.ts:1:1
+Export createServerClient doesn't exist in target module
+[31m[1m>[0m [90m1 |[0m [36mimport[0m { createServerClient, getServiceBySlug } [36mfrom[0m [32m"@bilacert/supabase"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m2 |[0m [36mimport[0m { [36mtype[0m [33mNextRequest[0m, [33mNextResponse[0m } [36mfrom[0m [32m"next/server"[0m;
+  [90m3 |[0m
+  [90m4 |[0m [36mexport[0m [36masync[0m [36mfunction[0m [33mPOST[0m(request: [33mNextRequest[0m) {
+
+The export createServerClient was not found in module [project]/packages/supabase/src/server.ts [app-route] (ecmascript).
+Did you mean to import createSupabaseServerClient?
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+
+./packages/supabase/src/index.ts:2:1
+Export createServerClient doesn't exist in target module
+  [90m1 |[0m [36mexport[0m { createSupabaseBrowserClient, createBrowserClient, supabase, isSupabaseConfigured }.[36m..[0m
+[31m[1m>[0m [90m2 |[0m [36mexport[0m { createSupabaseServerClient, createServerClient } [36mfrom[0m [32m"./server"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m3 |[0m [36mexport[0m { createSupabaseAdminClient } [36mfrom[0m [32m"./admin"[0m;
+  [90m4 |[0m [36mexport[0m * [36mfrom[0m [32m"./types"[0m;
+  [90m5 |[0m [36mexport[0m * [36mfrom[0m [32m"./Queries/blogs"[0m;
+
+The export createServerClient was not found in module [project]/packages/supabase/src/server.ts [app-route] (ecmascript).
+Did you mean to import createSupabaseServerClient?
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import traces:
+  App Route:
+    ./packages/supabase/src/index.ts
+    ./apps/client/app/api/form-submissions/route.ts
+
+  Server Component:
+    ./packages/supabase/src/index.ts
+    ./apps/client/app/services/[serviceId]/page.tsx
+
+  Client Component Browser:
+    ./packages/supabase/src/index.ts [Client Component Browser]
+    ./apps/client/app/forms/nrcs-loa-applications/page.tsx [Client Component Browser]
+    ./apps/client/app/forms/nrcs-loa-applications/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./packages/supabase/src/index.ts [Client Component SSR]
+    ./apps/client/app/forms/nrcs-loa-applications/page.tsx [Client Component SSR]
+    ./apps/client/app/forms/nrcs-loa-applications/page.tsx [Server Component]
+
+
+./packages/supabase/src/hooks/useDataFetching.ts:5:1
+Export isSupabaseConfigured doesn't exist in target module
+  [90m3 |[0m [36mimport[0m { c [36mas[0m _c } [36mfrom[0m [32m"react/compiler-runtime"[0m;
+  [90m4 |[0m [36mimport[0m { useState, useEffect, useCallback } [36mfrom[0m [32m"react"[0m;
+[31m[1m>[0m [90m5 |[0m [36mimport[0m { supabase, isSupabaseConfigured } [36mfrom[0m [32m"../client"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m6 |[0m [36mexport[0m [36mfunction[0m useDataFetching(tableName, t0, t1) {
+  [90m7 |[0m   [36mconst[0m $ = _c([35m14[0m);
+  [90m8 |[0m   [36mconst[0m selectQuery = t0 === [36mundefined[0m ? [32m"*"[0m : t0;
+
+The export isSupabaseConfigured was not found in module [project]/packages/supabase/src/client.ts [app-client] (ecmascript).
+Did you mean to import createSupabaseBrowserClient?
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import traces:
+  App Route:
+    ./packages/supabase/src/hooks/useDataFetching.ts
+    ./packages/supabase/src/index.ts
+    ./apps/client/app/api/form-submissions/route.ts
+
+  Server Component:
+    ./packages/supabase/src/hooks/useDataFetching.ts
+    ./packages/supabase/src/index.ts
+    ./apps/client/app/services/[serviceId]/page.tsx
+
+  Client Component Browser:
+    ./packages/supabase/src/hooks/useDataFetching.ts [Client Component Browser]
+    ./packages/supabase/src/hooks/useDataFetching.ts [App Route]
+    ./packages/supabase/src/index.ts [App Route]
+    ./apps/client/app/api/contacts/route.ts [App Route]
+
+  Client Component SSR:
+    ./packages/supabase/src/hooks/useDataFetching.ts [Client Component SSR]
+    ./packages/supabase/src/hooks/useDataFetching.ts [App Route]
+    ./packages/supabase/src/index.ts [App Route]
+    ./apps/client/app/api/contacts/route.ts [App Route]
+
+
+./packages/supabase/src/hooks/useDataFetching.ts:4:1
+Export isSupabaseConfigured doesn't exist in target module
+  [90m2 |[0m
+  [90m3 |[0m [36mimport[0m { useState, useEffect, useCallback } [36mfrom[0m [32m"react"[0m;
+[31m[1m>[0m [90m4 |[0m [36mimport[0m { supabase, isSupabaseConfigured } [36mfrom[0m [32m"../client"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m5 |[0m
+  [90m6 |[0m [36mexport[0m [36mfunction[0m useDataFetching<[33mT[0m>(
+  [90m7 |[0m   tableName: string,
+
+The export isSupabaseConfigured was not found in module [project]/packages/supabase/src/client.ts [app-ssr] (ecmascript).
+Did you mean to import createSupabaseBrowserClient?
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import traces:
+  App Route:
+    ./packages/supabase/src/hooks/useDataFetching.ts
+    ./packages/supabase/src/index.ts
+    ./apps/client/app/api/form-submissions/route.ts
+
+  Server Component:
+    ./packages/supabase/src/hooks/useDataFetching.ts
+    ./packages/supabase/src/index.ts
+    ./apps/client/app/services/[serviceId]/page.tsx
+
+  Client Component Browser:
+    ./packages/supabase/src/hooks/useDataFetching.ts [Client Component Browser]
+    ./packages/supabase/src/hooks/useDataFetching.ts [App Route]
+    ./packages/supabase/src/index.ts [App Route]
+    ./apps/client/app/api/contacts/route.ts [App Route]
+
+  Client Component SSR:
+    ./packages/supabase/src/hooks/useDataFetching.ts [Client Component SSR]
+    ./packages/supabase/src/hooks/useDataFetching.ts [App Route]
+    ./packages/supabase/src/index.ts [App Route]
+    ./apps/client/app/api/contacts/route.ts [App Route]
+
+
+./packages/supabase/src/hooks/useUser.ts:6:1
+Export isSupabaseConfigured doesn't exist in target module
+  [90m4 |[0m [36mimport[0m { useEffect, useState } [36mfrom[0m [32m"react"[0m;
+  [90m5 |[0m [36mimport[0m [36mtype[0m { [33mUser[0m, [33mSession[0m } [36mfrom[0m [32m"@supabase/supabase-js"[0m;
+[31m[1m>[0m [90m6 |[0m [36mimport[0m { supabase, isSupabaseConfigured } [36mfrom[0m [32m"../client"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m7 |[0m [36mexport[0m [36mfunction[0m useUser() {
+  [90m8 |[0m   [36mconst[0m $ = _c([35m5[0m);
+  [90m9 |[0m   [36mconst[0m [user, setUser] = useState([36mnull[0m);
+
+The export isSupabaseConfigured was not found in module [project]/packages/supabase/src/client.ts [app-client] (ecmascript).
+Did you mean to import createSupabaseBrowserClient?
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import traces:
+  App Route:
+    ./packages/supabase/src/hooks/useUser.ts
+    ./packages/supabase/src/index.ts
+    ./apps/client/app/api/form-submissions/route.ts
+
+  Server Component:
+    ./packages/supabase/src/hooks/useUser.ts
+    ./packages/supabase/src/index.ts
+    ./apps/client/app/services/[serviceId]/page.tsx
+
+  Client Component Browser:
+    ./packages/supabase/src/hooks/useUser.ts [Client Component Browser]
+    ./packages/supabase/src/hooks/useUser.ts [App Route]
+    ./packages/supabase/src/index.ts [App Route]
+    ./apps/client/app/api/contacts/route.ts [App Route]
+
+  Client Component SSR:
+    ./packages/supabase/src/hooks/useUser.ts [Client Component SSR]
+    ./packages/supabase/src/hooks/useUser.ts [App Route]
+    ./packages/supabase/src/index.ts [App Route]
+    ./apps/client/app/api/contacts/route.ts [App Route]
+
+
+./packages/supabase/src/hooks/useUser.ts:5:1
+Export isSupabaseConfigured doesn't exist in target module
+  [90m3 |[0m [36mimport[0m { useEffect, useState } [36mfrom[0m [32m"react"[0m;
+  [90m4 |[0m [36mimport[0m [36mtype[0m { [33mUser[0m, [33mSession[0m } [36mfrom[0m [32m"@supabase/supabase-js"[0m;
+[31m[1m>[0m [90m5 |[0m [36mimport[0m { supabase, isSupabaseConfigured } [36mfrom[0m [32m"../client"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m6 |[0m
+  [90m7 |[0m [36mexport[0m [36mfunction[0m useUser() {
+  [90m8 |[0m   [36mconst[0m [user, setUser] = useState<[33mUser[0m | [36mnull[0m>([36mnull[0m);
+
+The export isSupabaseConfigured was not found in module [project]/packages/supabase/src/client.ts [app-ssr] (ecmascript).
+Did you mean to import createSupabaseBrowserClient?
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import traces:
+  App Route:
+    ./packages/supabase/src/hooks/useUser.ts
+    ./packages/supabase/src/index.ts
+    ./apps/client/app/api/form-submissions/route.ts
+
+  Server Component:
+    ./packages/supabase/src/hooks/useUser.ts
+    ./packages/supabase/src/index.ts
+    ./apps/client/app/services/[serviceId]/page.tsx
+
+  Client Component Browser:
+    ./packages/supabase/src/hooks/useUser.ts [Client Component Browser]
+    ./packages/supabase/src/hooks/useUser.ts [App Route]
+    ./packages/supabase/src/index.ts [App Route]
+    ./apps/client/app/api/contacts/route.ts [App Route]
+
+  Client Component SSR:
+    ./packages/supabase/src/hooks/useUser.ts [Client Component SSR]
+    ./packages/supabase/src/hooks/useUser.ts [App Route]
+    ./packages/supabase/src/index.ts [App Route]
+    ./apps/client/app/api/contacts/route.ts [App Route]
+
+
+./apps/client/app/forms/icasa-type-approvals/page.tsx:3:1
+Export supabase doesn't exist in target module
+  [90m1 |[0m [32m"use client"[0m;
+  [90m2 |[0m
+[31m[1m>[0m [90m3 |[0m [36mimport[0m { supabase } [36mfrom[0m [32m"@bilacert/supabase"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m4 |[0m [36mimport[0m [33mImage[0m [36mfrom[0m [32m"next/image"[0m;
+  [90m5 |[0m [36mimport[0m [33mLink[0m [36mfrom[0m [32m"next/link"[0m;
+  [90m6 |[0m [36mimport[0m { [36mtype[0m [33mChangeEvent[0m, [36mtype[0m [33mFormEvent[0m, useState } [36mfrom[0m [32m"react"[0m;
+
+The export supabase was not found in module [project]/packages/supabase/src/client.ts [app-client] (ecmascript).
+Did you mean to import createSupabaseBrowserClient?
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import traces:
+  Client Component Browser:
+    ./apps/client/app/forms/icasa-type-approvals/page.tsx [Client Component Browser]
+    ./apps/client/app/forms/icasa-type-approvals/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./apps/client/app/forms/icasa-type-approvals/page.tsx [Client Component SSR]
+    ./apps/client/app/forms/icasa-type-approvals/page.tsx [Server Component]
+
+
+./apps/client/app/forms/icasa-type-approvals/page.tsx:3:1
+Export supabase doesn't exist in target module
+  [90m1 |[0m [32m"use client"[0m;
+  [90m2 |[0m
+[31m[1m>[0m [90m3 |[0m [36mimport[0m { supabase } [36mfrom[0m [32m"@bilacert/supabase"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m4 |[0m [36mimport[0m [33mImage[0m [36mfrom[0m [32m"next/image"[0m;
+  [90m5 |[0m [36mimport[0m [33mLink[0m [36mfrom[0m [32m"next/link"[0m;
+  [90m6 |[0m [36mimport[0m { [36mtype[0m [33mChangeEvent[0m, [36mtype[0m [33mFormEvent[0m, useState } [36mfrom[0m [32m"react"[0m;
+
+The export supabase was not found in module [project]/packages/supabase/src/client.ts [app-ssr] (ecmascript).
+Did you mean to import createSupabaseBrowserClient?
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import traces:
+  Client Component Browser:
+    ./apps/client/app/forms/icasa-type-approvals/page.tsx [Client Component Browser]
+    ./apps/client/app/forms/icasa-type-approvals/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./apps/client/app/forms/icasa-type-approvals/page.tsx [Client Component SSR]
+    ./apps/client/app/forms/icasa-type-approvals/page.tsx [Server Component]
+
+
+./apps/client/app/forms/license-exemptions/page.tsx:3:1
+Export supabase doesn't exist in target module
+  [90m1 |[0m [32m"use client"[0m;
+  [90m2 |[0m
+[31m[1m>[0m [90m3 |[0m [36mimport[0m { supabase } [36mfrom[0m [32m"@bilacert/supabase"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m4 |[0m [36mimport[0m [33mImage[0m [36mfrom[0m [32m"next/image"[0m;
+  [90m5 |[0m [36mimport[0m [33mLink[0m [36mfrom[0m [32m"next/link"[0m;
+  [90m6 |[0m [36mimport[0m { [36mtype[0m [33mChangeEvent[0m, [36mtype[0m [33mFormEvent[0m, useState } [36mfrom[0m [32m"react"[0m;
+
+The export supabase was not found in module [project]/packages/supabase/src/client.ts [app-client] (ecmascript).
+Did you mean to import createSupabaseBrowserClient?
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import traces:
+  Client Component Browser:
+    ./apps/client/app/forms/license-exemptions/page.tsx [Client Component Browser]
+    ./apps/client/app/forms/license-exemptions/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./apps/client/app/forms/license-exemptions/page.tsx [Client Component SSR]
+    ./apps/client/app/forms/license-exemptions/page.tsx [Server Component]
+
+
+./apps/client/app/forms/license-exemptions/page.tsx:3:1
+Export supabase doesn't exist in target module
+  [90m1 |[0m [32m"use client"[0m;
+  [90m2 |[0m
+[31m[1m>[0m [90m3 |[0m [36mimport[0m { supabase } [36mfrom[0m [32m"@bilacert/supabase"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m4 |[0m [36mimport[0m [33mImage[0m [36mfrom[0m [32m"next/image"[0m;
+  [90m5 |[0m [36mimport[0m [33mLink[0m [36mfrom[0m [32m"next/link"[0m;
+  [90m6 |[0m [36mimport[0m { [36mtype[0m [33mChangeEvent[0m, [36mtype[0m [33mFormEvent[0m, useState } [36mfrom[0m [32m"react"[0m;
+
+The export supabase was not found in module [project]/packages/supabase/src/client.ts [app-ssr] (ecmascript).
+Did you mean to import createSupabaseBrowserClient?
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import traces:
+  Client Component Browser:
+    ./apps/client/app/forms/license-exemptions/page.tsx [Client Component Browser]
+    ./apps/client/app/forms/license-exemptions/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./apps/client/app/forms/license-exemptions/page.tsx [Client Component SSR]
+    ./apps/client/app/forms/license-exemptions/page.tsx [Server Component]
+
+
+./apps/client/app/forms/nrcs-loa-applications/page.tsx:3:1
+Export supabase doesn't exist in target module
+  [90m1 |[0m [32m"use client"[0m;
+  [90m2 |[0m
+[31m[1m>[0m [90m3 |[0m [36mimport[0m { supabase } [36mfrom[0m [32m"@bilacert/supabase"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m4 |[0m [36mimport[0m [33mImage[0m [36mfrom[0m [32m"next/image"[0m;
+  [90m5 |[0m [36mimport[0m [33mLink[0m [36mfrom[0m [32m"next/link"[0m;
+  [90m6 |[0m [36mimport[0m { [36mtype[0m [33mChangeEvent[0m, [36mtype[0m [33mFormEvent[0m, useState } [36mfrom[0m [32m"react"[0m;
+
+The export supabase was not found in module [project]/packages/supabase/src/client.ts [app-client] (ecmascript).
+Did you mean to import createSupabaseBrowserClient?
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import traces:
+  Client Component Browser:
+    ./apps/client/app/forms/nrcs-loa-applications/page.tsx [Client Component Browser]
+    ./apps/client/app/forms/nrcs-loa-applications/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./apps/client/app/forms/nrcs-loa-applications/page.tsx [Client Component SSR]
+    ./apps/client/app/forms/nrcs-loa-applications/page.tsx [Server Component]
+
+
+./apps/client/app/forms/nrcs-loa-applications/page.tsx:3:1
+Export supabase doesn't exist in target module
+  [90m1 |[0m [32m"use client"[0m;
+  [90m2 |[0m
+[31m[1m>[0m [90m3 |[0m [36mimport[0m { supabase } [36mfrom[0m [32m"@bilacert/supabase"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m4 |[0m [36mimport[0m [33mImage[0m [36mfrom[0m [32m"next/image"[0m;
+  [90m5 |[0m [36mimport[0m [33mLink[0m [36mfrom[0m [32m"next/link"[0m;
+  [90m6 |[0m [36mimport[0m { [36mtype[0m [33mChangeEvent[0m, [36mtype[0m [33mFormEvent[0m, useState } [36mfrom[0m [32m"react"[0m;
+
+The export supabase was not found in module [project]/packages/supabase/src/client.ts [app-ssr] (ecmascript).
+Did you mean to import createSupabaseBrowserClient?
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import traces:
+  Client Component Browser:
+    ./apps/client/app/forms/nrcs-loa-applications/page.tsx [Client Component Browser]
+    ./apps/client/app/forms/nrcs-loa-applications/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./apps/client/app/forms/nrcs-loa-applications/page.tsx [Client Component SSR]
+    ./apps/client/app/forms/nrcs-loa-applications/page.tsx [Server Component]
+
+
+./packages/supabase/src/hooks/useDataFetching.ts:5:1
+Export supabase doesn't exist in target module
+  [90m3 |[0m [36mimport[0m { c [36mas[0m _c } [36mfrom[0m [32m"react/compiler-runtime"[0m;
+  [90m4 |[0m [36mimport[0m { useState, useEffect, useCallback } [36mfrom[0m [32m"react"[0m;
+[31m[1m>[0m [90m5 |[0m [36mimport[0m { supabase, isSupabaseConfigured } [36mfrom[0m [32m"../client"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m6 |[0m [36mexport[0m [36mfunction[0m useDataFetching(tableName, t0, t1) {
+  [90m7 |[0m   [36mconst[0m $ = _c([35m14[0m);
+  [90m8 |[0m   [36mconst[0m selectQuery = t0 === [36mundefined[0m ? [32m"*"[0m : t0;
+
+The export supabase was not found in module [project]/packages/supabase/src/client.ts [app-client] (ecmascript).
+Did you mean to import createSupabaseBrowserClient?
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import traces:
+  App Route:
+    ./packages/supabase/src/hooks/useDataFetching.ts
+    ./packages/supabase/src/index.ts
+    ./apps/client/app/api/form-submissions/route.ts
+
+  Server Component:
+    ./packages/supabase/src/hooks/useDataFetching.ts
+    ./packages/supabase/src/index.ts
+    ./apps/client/app/services/[serviceId]/page.tsx
+
+  Client Component Browser:
+    ./packages/supabase/src/hooks/useDataFetching.ts [Client Component Browser]
+    ./packages/supabase/src/hooks/useDataFetching.ts [App Route]
+    ./packages/supabase/src/index.ts [App Route]
+    ./apps/client/app/api/contacts/route.ts [App Route]
+
+  Client Component SSR:
+    ./packages/supabase/src/hooks/useDataFetching.ts [Client Component SSR]
+    ./packages/supabase/src/hooks/useDataFetching.ts [App Route]
+    ./packages/supabase/src/index.ts [App Route]
+    ./apps/client/app/api/contacts/route.ts [App Route]
+
+
+./packages/supabase/src/hooks/useDataFetching.ts:4:1
+Export supabase doesn't exist in target module
+  [90m2 |[0m
+  [90m3 |[0m [36mimport[0m { useState, useEffect, useCallback } [36mfrom[0m [32m"react"[0m;
+[31m[1m>[0m [90m4 |[0m [36mimport[0m { supabase, isSupabaseConfigured } [36mfrom[0m [32m"../client"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m5 |[0m
+  [90m6 |[0m [36mexport[0m [36mfunction[0m useDataFetching<[33mT[0m>(
+  [90m7 |[0m   tableName: string,
+
+The export supabase was not found in module [project]/packages/supabase/src/client.ts [app-ssr] (ecmascript).
+Did you mean to import createSupabaseBrowserClient?
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import traces:
+  App Route:
+    ./packages/supabase/src/hooks/useDataFetching.ts
+    ./packages/supabase/src/index.ts
+    ./apps/client/app/api/form-submissions/route.ts
+
+  Server Component:
+    ./packages/supabase/src/hooks/useDataFetching.ts
+    ./packages/supabase/src/index.ts
+    ./apps/client/app/services/[serviceId]/page.tsx
+
+  Client Component Browser:
+    ./packages/supabase/src/hooks/useDataFetching.ts [Client Component Browser]
+    ./packages/supabase/src/hooks/useDataFetching.ts [App Route]
+    ./packages/supabase/src/index.ts [App Route]
+    ./apps/client/app/api/contacts/route.ts [App Route]
+
+  Client Component SSR:
+    ./packages/supabase/src/hooks/useDataFetching.ts [Client Component SSR]
+    ./packages/supabase/src/hooks/useDataFetching.ts [App Route]
+    ./packages/supabase/src/index.ts [App Route]
+    ./apps/client/app/api/contacts/route.ts [App Route]
+
+
+./packages/supabase/src/hooks/useUser.ts:6:1
+Export supabase doesn't exist in target module
+  [90m4 |[0m [36mimport[0m { useEffect, useState } [36mfrom[0m [32m"react"[0m;
+  [90m5 |[0m [36mimport[0m [36mtype[0m { [33mUser[0m, [33mSession[0m } [36mfrom[0m [32m"@supabase/supabase-js"[0m;
+[31m[1m>[0m [90m6 |[0m [36mimport[0m { supabase, isSupabaseConfigured } [36mfrom[0m [32m"../client"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m7 |[0m [36mexport[0m [36mfunction[0m useUser() {
+  [90m8 |[0m   [36mconst[0m $ = _c([35m5[0m);
+  [90m9 |[0m   [36mconst[0m [user, setUser] = useState([36mnull[0m);
+
+The export supabase was not found in module [project]/packages/supabase/src/client.ts [app-client] (ecmascript).
+Did you mean to import createSupabaseBrowserClient?
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import traces:
+  App Route:
+    ./packages/supabase/src/hooks/useUser.ts
+    ./packages/supabase/src/index.ts
+    ./apps/client/app/api/form-submissions/route.ts
+
+  Server Component:
+    ./packages/supabase/src/hooks/useUser.ts
+    ./packages/supabase/src/index.ts
+    ./apps/client/app/services/[serviceId]/page.tsx
+
+  Client Component Browser:
+    ./packages/supabase/src/hooks/useUser.ts [Client Component Browser]
+    ./packages/supabase/src/hooks/useUser.ts [App Route]
+    ./packages/supabase/src/index.ts [App Route]
+    ./apps/client/app/api/contacts/route.ts [App Route]
+
+  Client Component SSR:
+    ./packages/supabase/src/hooks/useUser.ts [Client Component SSR]
+    ./packages/supabase/src/hooks/useUser.ts [App Route]
+    ./packages/supabase/src/index.ts [App Route]
+    ./apps/client/app/api/contacts/route.ts [App Route]
+
+
+./packages/supabase/src/hooks/useUser.ts:5:1
+Export supabase doesn't exist in target module
+  [90m3 |[0m [36mimport[0m { useEffect, useState } [36mfrom[0m [32m"react"[0m;
+  [90m4 |[0m [36mimport[0m [36mtype[0m { [33mUser[0m, [33mSession[0m } [36mfrom[0m [32m"@supabase/supabase-js"[0m;
+[31m[1m>[0m [90m5 |[0m [36mimport[0m { supabase, isSupabaseConfigured } [36mfrom[0m [32m"../client"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m6 |[0m
+  [90m7 |[0m [36mexport[0m [36mfunction[0m useUser() {
+  [90m8 |[0m   [36mconst[0m [user, setUser] = useState<[33mUser[0m | [36mnull[0m>([36mnull[0m);
+
+The export supabase was not found in module [project]/packages/supabase/src/client.ts [app-ssr] (ecmascript).
+Did you mean to import createSupabaseBrowserClient?
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import traces:
+  App Route:
+    ./packages/supabase/src/hooks/useUser.ts
+    ./packages/supabase/src/index.ts
+    ./apps/client/app/api/form-submissions/route.ts
+
+  Server Component:
+    ./packages/supabase/src/hooks/useUser.ts
+    ./packages/supabase/src/index.ts
+    ./apps/client/app/services/[serviceId]/page.tsx
+
+  Client Component Browser:
+    ./packages/supabase/src/hooks/useUser.ts [Client Component Browser]
+    ./packages/supabase/src/hooks/useUser.ts [App Route]
+    ./packages/supabase/src/index.ts [App Route]
+    ./apps/client/app/api/contacts/route.ts [App Route]
+
+  Client Component SSR:
+    ./packages/supabase/src/hooks/useUser.ts [Client Component SSR]
+    ./packages/supabase/src/hooks/useUser.ts [App Route]
+    ./packages/supabase/src/index.ts [App Route]
+    ./apps/client/app/api/contacts/route.ts [App Route]
+
+
+./packages/supabase/src/index.ts:1:1
+Export supabase doesn't exist in target module
+[31m[1m>[0m [90m1 |[0m ...reateSupabaseBrowserClient, createBrowserClient, supabase, isSupabaseConfigured } [36mfrom[0m [32m"...[0m
+  [90m  |[0m    [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m2 |[0m ...reateSupabaseServerClient, createServerClient } [36mfrom[0m [32m"./server"[0m;
+  [90m3 |[0m ...reateSupabaseAdminClient } [36mfrom[0m [32m"./admin"[0m;
+  [90m4 |[0m ...[36mrom[0m [32m"./types"[0m;
+
+The export supabase was not found in module [project]/packages/supabase/src/client.ts [app-client] (ecmascript).
+Did you mean to import createSupabaseBrowserClient?
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import traces:
+  App Route:
+    ./packages/supabase/src/index.ts
+    ./apps/client/app/api/form-submissions/route.ts
+
+  Server Component:
+    ./packages/supabase/src/index.ts
+    ./apps/client/app/services/[serviceId]/page.tsx
+
+  Client Component Browser:
+    ./packages/supabase/src/index.ts [Client Component Browser]
+    ./apps/client/app/forms/nrcs-loa-applications/page.tsx [Client Component Browser]
+    ./apps/client/app/forms/nrcs-loa-applications/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./packages/supabase/src/index.ts [Client Component SSR]
+    ./apps/client/app/forms/nrcs-loa-applications/page.tsx [Client Component SSR]
+    ./apps/client/app/forms/nrcs-loa-applications/page.tsx [Server Component]
+
+
+./packages/supabase/src/index.ts:1:1
+Export supabase doesn't exist in target module
+[31m[1m>[0m [90m1 |[0m ...reateSupabaseBrowserClient, createBrowserClient, supabase, isSupabaseConfigured } [36mfrom[0m [32m"...[0m
+  [90m  |[0m    [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m2 |[0m ...reateSupabaseServerClient, createServerClient } [36mfrom[0m [32m"./server"[0m;
+  [90m3 |[0m ...reateSupabaseAdminClient } [36mfrom[0m [32m"./admin"[0m;
+  [90m4 |[0m ...[36mrom[0m [32m"./types"[0m;
+
+The export supabase was not found in module [project]/packages/supabase/src/client.ts [app-ssr] (ecmascript).
+Did you mean to import createSupabaseBrowserClient?
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import traces:
+  App Route:
+    ./packages/supabase/src/index.ts
+    ./apps/client/app/api/form-submissions/route.ts
+
+  Server Component:
+    ./packages/supabase/src/index.ts
+    ./apps/client/app/services/[serviceId]/page.tsx
+
+  Client Component Browser:
+    ./packages/supabase/src/index.ts [Client Component Browser]
+    ./apps/client/app/forms/nrcs-loa-applications/page.tsx [Client Component Browser]
+    ./apps/client/app/forms/nrcs-loa-applications/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./packages/supabase/src/index.ts [Client Component SSR]
+    ./apps/client/app/forms/nrcs-loa-applications/page.tsx [Client Component SSR]
+    ./apps/client/app/forms/nrcs-loa-applications/page.tsx [Server Component]
+
+
+    at <unknown> (./packages/supabase/src/server.ts:2:1)
+    at <unknown> (./apps/client/app/forms/radio-dealer-licensing/page.tsx:3:1)
+    at <unknown> (./apps/client/app/forms/radio-dealer-licensing/page.tsx:3:1)
+    at <unknown> (./apps/client/app/forms/ski-boat-vhf-licensing/page.tsx:3:1)
+    at <unknown> (./apps/client/app/forms/ski-boat-vhf-licensing/page.tsx:3:1)
+    at <unknown> (./apps/client/components/Testimonials.tsx:4:1)
+    at <unknown> (./apps/client/components/Testimonials.tsx:4:1)
+    at <unknown> (./packages/supabase/src/index.ts:1:1)
+    at <unknown> (./packages/supabase/src/index.ts:1:1)
+    at <unknown> (./apps/client/app/api/contacts/route.ts:1:1)
+    at <unknown> (./apps/client/app/api/form-submissions/route.ts:1:1)
+    at <unknown> (./packages/supabase/src/index.ts:2:1)
+    at <unknown> (./packages/supabase/src/hooks/useDataFetching.ts:5:1)
+    at <unknown> (./packages/supabase/src/hooks/useDataFetching.ts:4:1)
+    at <unknown> (./packages/supabase/src/hooks/useUser.ts:6:1)
+    at <unknown> (./packages/supabase/src/hooks/useUser.ts:5:1)
+    at <unknown> (./apps/client/app/forms/icasa-type-approvals/page.tsx:3:1)
+    at <unknown> (./apps/client/app/forms/icasa-type-approvals/page.tsx:3:1)
+    at <unknown> (./apps/client/app/forms/license-exemptions/page.tsx:3:1)
+    at <unknown> (./apps/client/app/forms/license-exemptions/page.tsx:3:1)
+    at <unknown> (./apps/client/app/forms/nrcs-loa-applications/page.tsx:3:1)
+    at <unknown> (./apps/client/app/forms/nrcs-loa-applications/page.tsx:3:1)
+    at <unknown> (./packages/supabase/src/hooks/useDataFetching.ts:5:1)
+    at <unknown> (./packages/supabase/src/hooks/useDataFetching.ts:4:1)
+    at <unknown> (./packages/supabase/src/hooks/useUser.ts:6:1)
+    at <unknown> (./packages/supabase/src/hooks/useUser.ts:5:1)
+    at <unknown> (./packages/supabase/src/index.ts:1:1)
+    at <unknown> (./packages/supabase/src/index.ts:1:1)
+ ELIFECYCLE  Command failed with exit code 1.

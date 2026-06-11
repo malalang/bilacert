@@ -42,7 +42,7 @@ export default function Testimonials() {
 
   useEffect(() => {
     if (testimonials.length > 0) {
-      if (window.FB && window.FB.XFBML) {
+      if (window.FB?.XFBML) {
         window.FB.XFBML.parse();
       } else {
         window.fbAsyncInit = () => {
@@ -61,7 +61,7 @@ export default function Testimonials() {
           js = d.createElement(s) as HTMLScriptElement;
           js.id = id;
           js.src = "https://connect.facebook.net/en_US/sdk.js";
-          if (fjs && fjs.parentNode) {
+          if (fjs?.parentNode) {
             fjs.parentNode.insertBefore(js, fjs);
           } else {
             d.head.appendChild(js);

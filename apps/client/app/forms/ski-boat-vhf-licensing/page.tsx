@@ -46,7 +46,7 @@ export default function SkiBoatVhfLicensingForm() {
     setFormError(null);
 
     try {
-      const { data, error } = await supabase
+      const { error } = await supabase
         .from("form_submissions")
         .insert([
           { id: uuidv4(), ...formData, created_at: new Date().toISOString() },
@@ -65,7 +65,7 @@ export default function SkiBoatVhfLicensingForm() {
         serviceType: "Ski Boat VHF Licensing",
         message: "",
       });
-    } catch (error: any) {
+    } catch (error) {
       console.error("Error submitting form:", error);
       setSubmissionStatus("error");
       setFormError(
