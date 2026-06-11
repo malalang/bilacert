@@ -48,11 +48,19 @@ export default function LicenseExemptionsForm() {
     setFormError(null);
 
     try {
-      const { error } = await supabase
-        .from("form_submissions")
-        .insert([
-          { id: uuidv4(), ...formData, created_at: new Date().toISOString() },
-        ]);
+      const { error } = await supabase.from("form_submissions").insert([
+        {
+          id: uuidv4(),
+          form_type: "license-exemptions",
+          service_name: formData.serviceType,
+          full_name: formData.fullName,
+          email: formData.email,
+          phone: formData.phone,
+          company: formData.companyName,
+          details: { message: formData.message },
+          created_at: new Date().toISOString(),
+        },
+      ]);
 
       if (error) {
         throw error;
