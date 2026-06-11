@@ -21,7 +21,6 @@ async function getContact(id: string): Promise<Contact | null> {
     name: data.name,
     email: data.email,
     phone: data.phone,
-    company: data.company,
     message: data.message,
     submitted_at: data.submitted_at,
   } as Contact;
