@@ -1,5 +1,5 @@
 import { createSupabaseBrowserClient } from "../client";
-import type { Service } from "../types";
+import type { Service } from "@bilacert/shared/types";
 
 export async function getPublishedServices(): Promise<Service[]> {
   const supabase = createSupabaseBrowserClient();

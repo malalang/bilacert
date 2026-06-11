@@ -1,5 +1,5 @@
+import type { Submission } from "@bilacert/shared/types";
 import { createSupabaseBrowserClient } from "@bilacert/supabase/client";
-import type { Submission } from "@bilacert/supabase/types";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";

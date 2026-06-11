@@ -1,6 +1,6 @@
 "use client";
 
-import type { Contact } from "@bilacert/supabase/types";
+import type { Contact } from "@bilacert/shared/types";
 import type { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 import Link from "next/link";

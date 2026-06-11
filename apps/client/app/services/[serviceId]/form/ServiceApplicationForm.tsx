@@ -1,7 +1,7 @@
 "use client";
 
+import type { FormSubmissionPayload, Service } from "@bilacert/shared/types";
 import { useFormSubmission } from "@bilacert/supabase/hooks/useFormSubmission";
-import type { FormSubmissionPayload, Service } from "@bilacert/supabase/types";
 import { AlertCircle, CheckCircle, Loader, Send } from "lucide-react";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";

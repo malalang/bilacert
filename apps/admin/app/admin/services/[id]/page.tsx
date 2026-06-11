@@ -1,5 +1,5 @@
+import type { Service } from "@bilacert/shared/types";
 import { createSupabaseBrowserClient } from "@bilacert/supabase/client";
-import type { Service } from "@bilacert/supabase/types";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import ServiceDetails from "./ServiceDetails";

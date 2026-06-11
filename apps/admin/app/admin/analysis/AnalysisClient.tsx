@@ -1,6 +1,5 @@
 "use client";
 
-import { createSupabaseBrowserClient } from "@bilacert/supabase/client";
 import type {
   BlogPost,
   Contact,
@@ -8,7 +7,8 @@ import type {
   Submission,
   Testimonial,
   User,
-} from "@bilacert/supabase/types";
+} from "@bilacert/shared/types";
+import { createSupabaseBrowserClient } from "@bilacert/supabase/client";
 import { subYears } from "date-fns";
 import { useEffect, useState } from "react";
 import type { DateRange } from "react-day-picker";

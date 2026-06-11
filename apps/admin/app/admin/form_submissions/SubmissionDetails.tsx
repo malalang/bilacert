@@ -1,6 +1,6 @@
 "use client";
 
-import type { Submission } from "@bilacert/supabase/types";
+import type { Submission } from "@bilacert/shared/types";
 import { format } from "date-fns";
 import { ArrowLeft, Edit, Phone, Trash2 } from "lucide-react";
 import Link from "next/link";

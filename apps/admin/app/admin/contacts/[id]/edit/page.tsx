@@ -1,5 +1,5 @@
+import type { Contact } from "@bilacert/shared/types";
 import { createSupabaseServerClient } from "@bilacert/supabase/server";
-import type { Contact } from "@bilacert/supabase/types";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";

@@ -1,7 +1,7 @@
 import type {
   FormSubmissionPayload,
   Testimonial,
-} from "@bilacert/supabase/types";
+} from "@bilacert/shared/types";
 import { createBrowserClient } from "@supabase/ssr";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;

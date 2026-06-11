@@ -1,6 +1,6 @@
 "use client";
 
-import type { Contact } from "@bilacert/supabase/types";
+import type { Contact } from "@bilacert/shared/types";
 import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";

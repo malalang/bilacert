@@ -6,7 +6,7 @@ import type {
   ProcessStep,
   Service,
   SuccessStory,
-} from "@bilacert/supabase/types";
+} from "@bilacert/shared/types";
 import { format } from "date-fns";
 import { ArrowLeft, CheckCircle, Edit, Trash2 } from "lucide-react";
 import Image from "next/image";

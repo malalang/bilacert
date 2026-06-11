@@ -430,6 +430,9 @@ importers:
 
   packages/supabase:
     dependencies:
+      '@bilacert/shared':
+        specifier: workspace:*
+        version: link:../shared
       '@supabase/ssr':
         specifier: 'catalog:'
         version: 0.10.3(@supabase/supabase-js@2.107.0)

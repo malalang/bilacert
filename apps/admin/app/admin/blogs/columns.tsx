@@ -1,6 +1,6 @@
 "use client";
 
-import type { BlogPost } from "@bilacert/supabase/types";
+import type { BlogPost } from "@bilacert/shared/types";
 import type { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
 import { MoreHorizontal } from "lucide-react";

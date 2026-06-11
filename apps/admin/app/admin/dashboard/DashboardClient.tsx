@@ -1,8 +1,8 @@
 "use client";
 
 import { Icon } from "@bilacert/shared/Icon";
+import type { Submission } from "@bilacert/shared/types";
 import { useDashboardData } from "@bilacert/supabase/hooks/useDashboardData";
-import type { Submission } from "@bilacert/supabase/types";
 import { format, isValid, parseISO } from "date-fns";
 import {
   BarChart as BarChartIcon,

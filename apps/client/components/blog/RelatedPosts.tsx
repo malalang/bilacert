@@ -1,4 +1,4 @@
-import type { BlogPost } from "@bilacert/supabase/types";
+import type { BlogPost } from "@bilacert/shared/types";
 import Image from "next/image";
 import Link from "next/link";
 

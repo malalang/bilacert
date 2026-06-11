@@ -1,7 +1,7 @@
 "use client";
 
+import type { Submission } from "@bilacert/shared/types";
 import { useSubmissions } from "@bilacert/supabase/hooks/useSubmissions";
-import type { Submission } from "@bilacert/supabase/types";
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { columns } from "./columns";

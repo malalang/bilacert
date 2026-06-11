@@ -1,6 +1,6 @@
 "use client";
 
-import type { BlogPost } from "@bilacert/supabase/types";
+import type { BlogPost } from "@bilacert/shared/types";
 import { Loader2 } from "lucide-react";
 import { useState } from "react";
 import {

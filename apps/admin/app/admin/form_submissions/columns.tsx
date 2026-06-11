@@ -1,6 +1,6 @@
 "use client";
 
-import type { Submission } from "@bilacert/supabase/types";
+import type { Submission } from "@bilacert/shared/types";
 import type { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";

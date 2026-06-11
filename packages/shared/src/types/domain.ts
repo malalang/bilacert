@@ -17,7 +17,7 @@ export interface FormSubmissionPayload {
   serviceId?: string;
   message: string;
   industry?: string;
-  details?: Record<string, any>;
+  details?: Record<string, unknown>;
   service_name?: string;
 }
 
@@ -62,12 +62,12 @@ export interface Submission {
   phone?: string;
   company?: string;
   industry?: string;
-  details?: any; // jsonb
+  details?: unknown;
   internal_notes?: string;
   assigned_to?: string;
-  created_at: string; // timestamp
-  updated_at: string; // timestamp
-  completed_at?: string; // timestamp
+  created_at: string;
+  updated_at: string;
+  completed_at?: string;
 }
 
 export interface Service {

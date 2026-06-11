@@ -1,7 +1,7 @@
 "use client";
 
+import type { Testimonial } from "@bilacert/shared/types";
 import { createSupabaseBrowserClient } from "@bilacert/supabase/client";
-import type { Testimonial } from "@bilacert/supabase/types";
 import { useEffect, useState } from "react";
 
 type TestimonialEmbed = Pick<Testimonial, "id" | "post_url">;

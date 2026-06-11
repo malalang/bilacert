@@ -7,13 +7,13 @@
     "./server": "./src/server.ts",
     "./admin": "./src/admin.ts",
     "./middleware": "./src/middleware.ts",
-    "./types": "./src/types.ts",
     "./supabaseType": "./src/supabaseType.ts",
     "./Queries/*": "./src/Queries/*.ts",
     "./Mutations/*": "./src/Mutations/*.ts",
     "./hooks/*": "./src/hooks/*.ts"
   },
   "dependencies": {
+    "@bilacert/shared": "workspace:*",
     "@supabase/ssr": "catalog:",
     "@supabase/supabase-js": "catalog:",
     "typescript": "catalog:" 

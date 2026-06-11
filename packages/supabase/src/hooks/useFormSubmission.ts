@@ -1,6 +1,6 @@
 "use client";
 import { useCallback, useEffect, useState } from "react";
-import type { FormSubmissionPayload } from "../types";
+import type { FormSubmissionPayload } from "@bilacert/shared/types";
 
 export interface FormSubmissionResponse {
   success: boolean;
