@@ -1,7 +1,7 @@
 "use client";
 
 import type { Service } from "@bilacert/supabase/types";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -40,7 +40,7 @@ export default function ServiceForm({ service }: ServiceFormProps) {
   const isEditing = !!service;
 
   const form = useForm<ServiceFormValues>({
-    resolver: zodResolver(serviceSchema),
+    resolver: standardSchemaResolver(serviceSchema),
     defaultValues: {
       title: "",
       slug: "",
