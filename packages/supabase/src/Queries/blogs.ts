@@ -1,5 +1,35 @@
 import { createSupabaseBrowserClient } from "../client";
+import type { Database } from "../supabaseType";
 import type { BlogPost } from "../types";
+
+type BlogPostRow = Database["public"]["Tables"]["blog_posts"]["Row"];
+
+function normalizeBlogPost(row: BlogPostRow): BlogPost {
+  return {
+    id: row.id,
+    title: row.title,
+    slug: row.slug,
+    excerpt: row.excerpt ?? undefined,
+    content: row.content,
+    category: row.category ?? undefined,
+    tags: row.tags ?? undefined,
+    read_time: row.read_time ?? undefined,
+    seo_title: row.seo_title ?? undefined,
+    seo_description: row.seo_description ?? undefined,
+    seo_keywords: row.seo_keywords ?? undefined,
+    featured_image: row.featured_image ?? undefined,
+    thumbnail: row.thumbnail ?? undefined,
+    published: row.published ?? false,
+    published_at: row.published_at ?? undefined,
+    featured: row.featured ?? false,
+    author_id: row.author_id ?? undefined,
+    author_name: row.author_name ?? undefined,
+    views_count: row.views_count ?? 0,
+    created_at:
+      row.created_at ?? row.published_at ?? new Date(0).toISOString(),
+    updated_at: row.updated_at ?? undefined,
+  };
+}
 
 export async function getAllPublishedBlogSlugs() {
   const supabase = createSupabaseBrowserClient();
@@ -12,7 +42,7 @@ export async function getAllPublishedBlogSlugs() {
     throw new Error(error.message);
   }
 
-  return data;
+  return data.map(normalizeBlogPost);
 }
 
 export async function getAllPublishedBlogPosts(): Promise<BlogPost[]> {
@@ -27,7 +57,7 @@ export async function getAllPublishedBlogPosts(): Promise<BlogPost[]> {
     throw new Error(error.message);
   }
 
-  return data;
+  return normalizeBlogPost(data);
 }
 
 export async function getBlogPostBySlug(
@@ -44,7 +74,7 @@ export async function getBlogPostBySlug(
     return null;
   }
 
-  return data;
+  return data.map(normalizeBlogPost);
 }
 
 export async function getBlogPostsByCategory(
