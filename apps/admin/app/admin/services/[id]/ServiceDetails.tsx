@@ -1,12 +1,12 @@
 "use client";
 
-import { Icon } from "@bilacert/shared";
+import { Icon } from "@bilacert/shared/Icon";
 import type {
   PricingPlan,
   ProcessStep,
   Service,
   SuccessStory,
-} from "@bilacert/supabase";
+} from "@bilacert/supabase/types";
 import { format } from "date-fns";
 import { ArrowLeft, CheckCircle, Edit, Trash2 } from "lucide-react";
 import Image from "next/image";

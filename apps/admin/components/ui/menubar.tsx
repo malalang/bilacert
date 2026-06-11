@@ -1,6 +1,6 @@
 "use client";
 
-import { cn } from "@bilacert/shared";
+import { cn } from "@bilacert/shared/cn";
 import * as MenubarPrimitive from "@radix-ui/react-menubar";
 import { Check, ChevronRight, Circle } from "lucide-react";
 import * as React from "react";

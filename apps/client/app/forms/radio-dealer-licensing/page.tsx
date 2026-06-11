@@ -1,6 +1,6 @@
 "use client";
 
-import { createBrowserClient } from "@bilacert/supabase";
+import { createSupabaseBrowserClient } from "@bilacert/supabase/client";
 import Link from "next/link";
 import { type ChangeEvent, type FormEvent, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
@@ -19,7 +19,7 @@ interface FormData {
 type SubmissionStatus = "idle" | "submitting" | "success" | "error";
 
 export default function RadioDealerLicensingForm() {
-  const supabase = createBrowserClient();
+  const supabase = createSupabaseBrowserClient();
   const [formData, setFormData] = useState<FormData>({
     fullName: "",
     email: "",

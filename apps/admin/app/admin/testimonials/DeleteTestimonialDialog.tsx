@@ -1,6 +1,6 @@
 "use client";
 
-import type { Testimonial } from "@bilacert/supabase";
+import type { Testimonial } from "@bilacert/supabase/types";
 import { Loader2 } from "lucide-react";
 import { useState } from "react";
 import {

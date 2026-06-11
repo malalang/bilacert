@@ -1,6 +1,6 @@
 "use client";
 
-import { useFormSubmission } from "@bilacert/supabase";
+import { useFormSubmission } from "@bilacert/supabase/hooks/useFormSubmission";
 import {
   AlertCircle,
   CheckCircle,

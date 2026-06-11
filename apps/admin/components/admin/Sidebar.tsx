@@ -1,6 +1,6 @@
 "use client";
 
-import { supabase } from "@bilacert/supabase";
+import { supabase } from "@bilacert/supabase/client";
 import {
   BarChart,
   Briefcase,

@@ -1,6 +1,7 @@
 "use server";
 
-import { createSupabaseAdminClient, type Submission } from "@bilacert/supabase";
+import { createSupabaseAdminClient } from "@bilacert/supabase/admin";
+import type { Submission } from "@bilacert/supabase/types";
 import { revalidatePath } from "next/cache";
 import { submissionSchema } from "./schema";
 

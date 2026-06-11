@@ -1,6 +1,7 @@
 "use client";
 
-import { type Contact, useContacts } from "@bilacert/supabase";
+import { useContacts } from "@bilacert/supabase/hooks/useContacts";
+import type { Contact } from "@bilacert/supabase/types";
 import { MoreHorizontal } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";

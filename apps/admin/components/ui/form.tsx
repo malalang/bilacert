@@ -1,6 +1,6 @@
 "use client";
 
-import { cn } from "@bilacert/shared";
+import { cn } from "@bilacert/shared/cn";
 import type * as LabelPrimitive from "@radix-ui/react-label";
 import { Slot } from "@radix-ui/react-slot";
 import * as React from "react";

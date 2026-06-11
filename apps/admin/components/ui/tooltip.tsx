@@ -1,6 +1,6 @@
 "use client";
 
-import { cn } from "@bilacert/shared";
+import { cn } from "@bilacert/shared/cn";
 import * as TooltipPrimitive from "@radix-ui/react-tooltip";
 import * as React from "react";
 

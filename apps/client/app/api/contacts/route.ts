@@ -1,4 +1,4 @@
-import { createServerClient } from "@bilacert/supabase";
+import { createSupabaseServerClient } from "@bilacert/supabase/server";
 import { type NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
@@ -13,7 +13,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const supabase = await createServerClient();
+    const supabase = await createSupabaseServerClient();
 
     const { data, error } = await supabase
       .from("contacts")

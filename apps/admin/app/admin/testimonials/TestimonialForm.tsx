@@ -1,6 +1,6 @@
 "use client";
 
-import type { Testimonial } from "@bilacert/supabase";
+import type { Testimonial } from "@bilacert/supabase/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";

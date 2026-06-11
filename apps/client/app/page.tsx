@@ -1,8 +1,6 @@
-import { Icon } from "@bilacert/shared";
-import {
-  getAllPublishedBlogPosts,
-  getFeaturedServices,
-} from "@bilacert/supabase";
+import { Icon } from "@bilacert/shared/Icon";
+import { getAllPublishedBlogPosts } from "@bilacert/supabase/Queries/blogs";
+import { getFeaturedServices } from "@bilacert/supabase/Queries/services";
 import { ArrowRight, CheckCircle, Clock, Users } from "lucide-react";
 import type { Metadata } from "next";
 import Image from "next/image";

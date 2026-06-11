@@ -1,6 +1,6 @@
 "use server";
 
-import { createSupabaseAdminClient } from "@bilacert/supabase";
+import { createSupabaseAdminClient } from "@bilacert/supabase/admin";
 import { revalidatePath } from "next/cache";
 import { serviceSchema } from "./schema";
 

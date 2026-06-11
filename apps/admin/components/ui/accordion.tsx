@@ -1,6 +1,6 @@
 "use client";
 
-import { cn } from "@bilacert/shared";
+import { cn } from "@bilacert/shared/cn";
 import * as AccordionPrimitive from "@radix-ui/react-accordion";
 import { ChevronDown } from "lucide-react";
 import * as React from "react";

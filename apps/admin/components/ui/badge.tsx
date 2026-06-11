@@ -1,4 +1,4 @@
-import { cn } from "@bilacert/shared";
+import { cn } from "@bilacert/shared/cn";
 import { cva, type VariantProps } from "class-variance-authority";
 import type * as React from "react";
 

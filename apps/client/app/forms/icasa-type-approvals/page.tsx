@@ -1,6 +1,6 @@
 "use client";
 
-import { supabase } from "@bilacert/supabase";
+import { supabase } from "@bilacert/supabase/client";
 import Image from "next/image";
 import Link from "next/link";
 import { type ChangeEvent, type FormEvent, useState } from "react";

@@ -1,6 +1,7 @@
 "use server";
 
-import { type Contact, createSupabaseAdminClient } from "@bilacert/supabase";
+import { createSupabaseAdminClient } from "@bilacert/supabase/admin";
+import type { Contact } from "@bilacert/supabase/types";
 import { revalidatePath } from "next/cache";
 import { contactSchema } from "./schema";
 

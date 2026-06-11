@@ -1,5 +1,5 @@
-import { Icon } from "@bilacert/shared";
-import { getPublishedServices } from "@bilacert/supabase";
+import { Icon } from "@bilacert/shared/Icon";
+import { getPublishedServices } from "@bilacert/supabase/Queries/services";
 import { ArrowRight, CheckCircle, Clock, Users } from "lucide-react";
 import type { Metadata } from "next";
 import Image from "next/image";

@@ -1,6 +1,6 @@
 "use client";
 
-import { cn } from "@bilacert/shared";
+import { cn } from "@bilacert/shared/cn";
 import * as PopoverPrimitive from "@radix-ui/react-popover";
 import * as React from "react";
 

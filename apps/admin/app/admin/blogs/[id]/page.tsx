@@ -1,5 +1,5 @@
-import type { BlogPost } from "@bilacert/supabase";
-import { createServerClient } from "@bilacert/supabase";
+import { createServerClient } from "@bilacert/supabase/server";
+import type { BlogPost } from "@bilacert/supabase/types";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import BlogDetails from "../BlogDetails";

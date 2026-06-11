@@ -1,5 +1,5 @@
-import type { BlogPost } from "@bilacert/supabase";
-import { createServerClient } from "@bilacert/supabase";
+import { createServerClient } from "@bilacert/supabase/server";
+import type { BlogPost } from "@bilacert/supabase/types";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";

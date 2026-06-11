@@ -1,6 +1,6 @@
 "use client";
 
-import { useUser } from "@bilacert/supabase";
+import { useUser } from "@bilacert/supabase/hooks/useUser";
 import { Loader2 } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import type React from "react";

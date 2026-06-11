@@ -1,6 +1,6 @@
 "use client";
 
-import type { Submission } from "@bilacert/supabase";
+import type { Submission } from "@bilacert/supabase/types";
 import {
   type ColumnDef,
   flexRender,

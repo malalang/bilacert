@@ -1,4 +1,4 @@
-import { cn } from "@bilacert/shared";
+import { cn } from "@bilacert/shared/cn";
 import * as React from "react";
 
 const Table = React.forwardRef<

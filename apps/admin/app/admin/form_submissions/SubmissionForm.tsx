@@ -1,6 +1,6 @@
 "use client";
 
-import type { Submission } from "@bilacert/supabase";
+import type { Submission } from "@bilacert/supabase/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";

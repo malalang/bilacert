@@ -1,6 +1,7 @@
 "use client";
 
-import { type Service, useServices } from "@bilacert/supabase";
+import { useServices } from "@bilacert/supabase/hooks/useServices";
+import type { Service } from "@bilacert/supabase/types";
 import { MoreHorizontal } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";

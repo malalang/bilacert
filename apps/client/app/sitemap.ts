@@ -1,7 +1,5 @@
-import {
-  getAllPublishedBlogSlugs,
-  getAllPublishedServiceSlugs,
-} from "@bilacert/supabase";
+import { getAllPublishedBlogSlugs } from "@bilacert/supabase/Queries/blogs";
+import { getAllPublishedServiceSlugs } from "@bilacert/supabase/Queries/services";
 import type { MetadataRoute } from "next";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {

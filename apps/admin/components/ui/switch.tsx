@@ -1,6 +1,6 @@
 "use client";
 
-import { cn } from "@bilacert/shared";
+import { cn } from "@bilacert/shared/cn";
 import * as SwitchPrimitives from "@radix-ui/react-switch";
 import * as React from "react";
 

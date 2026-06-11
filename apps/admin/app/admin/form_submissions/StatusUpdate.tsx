@@ -1,6 +1,6 @@
 "use client";
 
-import type { Submission } from "@bilacert/supabase";
+import type { Submission } from "@bilacert/supabase/types";
 import { Loader2 } from "lucide-react";
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";

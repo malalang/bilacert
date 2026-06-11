@@ -1,6 +1,7 @@
 "use client";
 
-import { createBrowserClient, useUser } from "@bilacert/supabase";
+import { createSupabaseBrowserClient } from "@bilacert/supabase/client";
+import { useUser } from "@bilacert/supabase/hooks/useUser";
 import { ChevronDown, LogOut, User as UserIcon } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -17,7 +18,7 @@ import { SidebarTrigger } from "@/components/ui/sidebar";
 import { useToast } from "@/hooks/use-toast";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 
-const supabase = createBrowserClient();
+const supabase = createSupabaseBrowserClient();
 
 function getTitleFromPathname(pathname: string): string {
   const segment = pathname.split("/").pop() || "dashboard";

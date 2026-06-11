@@ -1,6 +1,6 @@
 "use client";
 
-import { cn } from "@bilacert/shared";
+import { cn } from "@bilacert/shared/cn";
 import * as AvatarPrimitive from "@radix-ui/react-avatar";
 import * as React from "react";
 

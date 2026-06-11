@@ -1,6 +1,6 @@
 "use client";
 
-import type { Contact } from "@bilacert/supabase";
+import type { Contact } from "@bilacert/supabase/types";
 import { Loader2 } from "lucide-react";
 import { useState } from "react";
 import {

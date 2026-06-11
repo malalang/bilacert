@@ -1,6 +1,6 @@
 "use client";
 
-import { cn } from "@bilacert/shared";
+import { cn } from "@bilacert/shared/cn";
 import * as ProgressPrimitive from "@radix-ui/react-progress";
 import * as React from "react";
 

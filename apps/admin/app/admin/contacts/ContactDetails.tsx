@@ -1,6 +1,6 @@
 "use client";
 
-import type { Contact } from "@bilacert/supabase";
+import type { Contact } from "@bilacert/supabase/types";
 import { ArrowLeft, Edit, Phone, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";

@@ -1,5 +1,5 @@
-import type { Submission } from "@bilacert/supabase";
-import { supabase } from "@bilacert/supabase";
+import { supabase } from "@bilacert/supabase/client";
+import type { Submission } from "@bilacert/supabase/types";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import SubmissionDetails from "../SubmissionDetails";

@@ -1,12 +1,12 @@
+import {
+  getAllPublishedServiceSlugs,
+  getServiceBySlug,
+} from "@bilacert/supabase/Queries/services";
 import type {
   PricingPlan,
   ProcessStep,
   SuccessStory as TSuccessStory,
-} from "@bilacert/supabase";
-import {
-  getAllPublishedServiceSlugs,
-  getServiceBySlug,
-} from "@bilacert/supabase";
+} from "@bilacert/supabase/types";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import {

@@ -1,5 +1,5 @@
-import type { BlogPost } from "@bilacert/supabase";
-import { getAllPublishedBlogPosts } from "@bilacert/supabase";
+import { getAllPublishedBlogPosts } from "@bilacert/supabase/Queries/blogs";
+import type { BlogPost } from "@bilacert/supabase/types";
 import { ArrowRight, Calendar, Clock, User } from "lucide-react";
 import type { Metadata } from "next";
 import Image from "next/image";

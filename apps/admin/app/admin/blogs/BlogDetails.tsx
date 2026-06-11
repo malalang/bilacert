@@ -1,6 +1,6 @@
 "use client";
 
-import type { BlogPost } from "@bilacert/supabase";
+import type { BlogPost } from "@bilacert/supabase/types";
 import { format } from "date-fns";
 import { ArrowLeft, Edit, Trash2 } from "lucide-react";
 import Image from "next/image";

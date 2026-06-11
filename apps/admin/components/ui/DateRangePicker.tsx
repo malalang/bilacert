@@ -1,6 +1,6 @@
 "use client";
 
-import { cn } from "@bilacert/shared";
+import { cn } from "@bilacert/shared/cn";
 import { format } from "date-fns";
 import { Calendar as CalendarIcon } from "lucide-react";
 import type * as React from "react";

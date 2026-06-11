@@ -1,6 +1,6 @@
 "use client";
 
-import { cn } from "@bilacert/shared";
+import { cn } from "@bilacert/shared/cn";
 import * as TabsPrimitive from "@radix-ui/react-tabs";
 import * as React from "react";
 

@@ -1,4 +1,5 @@
-import { createServerClient, getServiceBySlug } from "@bilacert/supabase";
+import { getServiceBySlug } from "@bilacert/supabase/Queries/services";
+import { createSupabaseServerClient } from "@bilacert/supabase/server";
 import { type NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
@@ -25,7 +26,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Create Supabase client
-    const supabase = await createServerClient();
+    const supabase = await createSupabaseServerClient();
 
     // Insert form submission
     const { data, error } = await supabase
@@ -81,7 +82,7 @@ export async function GET(request: NextRequest) {
     const submissionId = searchParams.get("submissionId");
     const serviceId = searchParams.get("serviceId");
 
-    const supabase = await createServerClient();
+    const supabase = await createSupabaseServerClient();
 
     if (serviceId) {
       const service = await getServiceBySlug(serviceId);

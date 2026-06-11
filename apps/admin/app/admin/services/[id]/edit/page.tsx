@@ -1,5 +1,5 @@
-import type { Service } from "@bilacert/supabase";
-import { createSupabaseAdminClient } from "@bilacert/supabase";
+import { createSupabaseAdminClient } from "@bilacert/supabase/admin";
+import type { Service } from "@bilacert/supabase/types";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";

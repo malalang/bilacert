@@ -2,8 +2,17 @@
   "name": "@bilacert/supabase",
   "version": "0.0.0",
   "private": true,
-  "main": "./src/index.ts",
-  "types": "./src/index.ts",
+  "exports": {
+    "./client": "./src/client.ts",
+    "./server": "./src/server.ts",
+    "./admin": "./src/admin.ts",
+    "./middleware": "./src/middleware.ts",
+    "./types": "./src/types.ts",
+    "./supabaseType": "./src/supabaseType.ts",
+    "./Queries/*": "./src/Queries/*.ts",
+    "./Mutations/*": "./src/Mutations/*.ts",
+    "./hooks/*": "./src/hooks/*.ts"
+  },
   "dependencies": {
     "@supabase/ssr": "catalog:",
     "@supabase/supabase-js": "catalog:",

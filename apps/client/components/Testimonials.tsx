@@ -1,7 +1,7 @@
 "use client";
 
-import type { Testimonial } from "@bilacert/supabase";
-import { createBrowserClient } from "@bilacert/supabase";
+import { createSupabaseBrowserClient } from "@bilacert/supabase/client";
+import type { Testimonial } from "@bilacert/supabase/types";
 import { useEffect, useState } from "react";
 
 declare global {
@@ -18,7 +18,7 @@ declare global {
 
 export default function Testimonials() {
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
-  const supabase = createBrowserClient();
+  const supabase = createSupabaseBrowserClient();
 
   useEffect(() => {
     const fetchTestimonials = async () => {

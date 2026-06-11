@@ -1,6 +1,6 @@
 "use client";
 
-import { cn } from "@bilacert/shared";
+import { cn } from "@bilacert/shared/cn";
 import * as SeparatorPrimitive from "@radix-ui/react-separator";
 import * as React from "react";
 

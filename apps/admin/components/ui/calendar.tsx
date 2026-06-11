@@ -1,6 +1,6 @@
 "use client";
 
-import { cn } from "@bilacert/shared";
+import { cn } from "@bilacert/shared/cn";
 import type * as React from "react";
 import { DayPicker } from "react-day-picker";
 import { buttonVariants } from "@/components/ui/button";

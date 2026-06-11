@@ -1,6 +1,7 @@
 "use client";
 
-import { type Testimonial, useTestimonials } from "@bilacert/supabase";
+import { useTestimonials } from "@bilacert/supabase/hooks/useTestimonials";
+import type { Testimonial } from "@bilacert/supabase/types";
 import { format } from "date-fns";
 import { MoreHorizontal } from "lucide-react";
 import Link from "next/link";

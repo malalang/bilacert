@@ -2,7 +2,7 @@ import {
   getAllPublishedBlogSlugs,
   getBlogPostBySlug,
   getBlogPostsByCategory,
-} from "@bilacert/supabase";
+} from "@bilacert/supabase/Queries/blogs";
 import { format } from "date-fns";
 import { ArrowLeft, Calendar, Clock, Folder, Tag, User } from "lucide-react";
 import type { Metadata } from "next";

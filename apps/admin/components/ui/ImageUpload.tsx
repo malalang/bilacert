@@ -1,6 +1,6 @@
 "use client";
 
-import { supabase } from "@bilacert/supabase";
+import { supabase } from "@bilacert/supabase/client";
 import { Loader2, Upload, X } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";

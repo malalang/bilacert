@@ -1,6 +1,7 @@
 "use client";
 
-import { type BlogPost, useBlogs } from "@bilacert/supabase";
+import { useBlogs } from "@bilacert/supabase/hooks/useBlogs";
+import type { BlogPost } from "@bilacert/supabase/types";
 import { format, isValid, parseISO } from "date-fns";
 import {
   Calendar,
