@@ -1,7 +1,7 @@
 "use client";
 
 import type { Contact } from "@bilacert/supabase/types";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -33,7 +33,7 @@ export default function ContactForm({ contact }: ContactFormProps) {
   const { toast } = useToast();
   const router = useRouter();
   const form = useForm<ContactFormValues>({
-    resolver: zodResolver(contactSchema),
+    resolver: standardSchemaResolver(contactSchema),
     defaultValues: {
       name: "",
       email: "",

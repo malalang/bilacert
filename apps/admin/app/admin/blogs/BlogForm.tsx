@@ -1,7 +1,7 @@
 "use client";
 
 import type { BlogPost } from "@bilacert/supabase/types";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -52,7 +52,7 @@ export default function BlogForm({ blog }: BlogFormProps) {
   const [isPending, startTransition] = useTransition();
 
   const form = useForm<BlogFormValues>({
-    resolver: zodResolver(blogSchema),
+    resolver: standardSchemaResolver(blogSchema),
     defaultValues: {
       title: "",
       slug: "",

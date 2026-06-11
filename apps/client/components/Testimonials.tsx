@@ -4,6 +4,8 @@ import { createSupabaseBrowserClient } from "@bilacert/supabase/client";
 import type { Testimonial } from "@bilacert/supabase/types";
 import { useEffect, useState } from "react";
 
+type TestimonialEmbed = Pick<Testimonial, "id" | "post_url">;
+
 declare global {
   interface Window {
     FB?: {
@@ -17,14 +19,14 @@ declare global {
 }
 
 export default function Testimonials() {
-  const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
+  const [testimonials, setTestimonials] = useState<TestimonialEmbed[]>([]);
   const supabase = createSupabaseBrowserClient();
 
   useEffect(() => {
     const fetchTestimonials = async () => {
       const { data, error } = await supabase
         .from("testimonials")
-        .select("*")
+        .select("id, post_url")
         .order("created_at", { ascending: false });
 
       if (error) {

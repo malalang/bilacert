@@ -1,7 +1,7 @@
 "use client";
 
 import type { Submission } from "@bilacert/supabase/types";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -40,7 +40,7 @@ export default function SubmissionForm({ submission }: SubmissionFormProps) {
   const { toast } = useToast();
   const router = useRouter();
   const form = useForm<SubmissionFormValues>({
-    resolver: zodResolver(submissionSchema),
+    resolver: standardSchemaResolver(submissionSchema),
     defaultValues: {
       full_name: "",
       email: "",
