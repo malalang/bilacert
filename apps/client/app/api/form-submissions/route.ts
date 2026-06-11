@@ -107,7 +107,7 @@ export async function GET(request: NextRequest) {
       const { data: userProfile } = await supabase
         .from("users")
         .select("role")
-        .eq("auth_id", user.id)
+        .eq("id", user.id)
         .single();
 
       if (userProfile?.role !== "admin") {

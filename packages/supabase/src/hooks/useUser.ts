@@ -2,7 +2,10 @@
 
 import { useEffect, useState } from "react";
 import type { User, Session } from "@supabase/supabase-js";
-import { supabase, isSupabaseConfigured } from "../client";
+import {
+  createSupabaseBrowserClient,
+  isSupabaseConfigured,
+} from "../client";
 
 export function useUser() {
   const [user, setUser] = useState<User | null>(null);
@@ -14,6 +17,7 @@ export function useUser() {
       return;
     }
 
+    const supabase = createSupabaseBrowserClient();
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event: string, session: Session | null) => {

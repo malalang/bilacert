@@ -1,7 +1,10 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { supabase, isSupabaseConfigured } from "../client";
+import {
+  createSupabaseBrowserClient,
+  isSupabaseConfigured,
+} from "../client";
 
 export function useDataFetching<T>(
   tableName: string,
@@ -18,6 +21,7 @@ export function useDataFetching<T>(
       return;
     }
 
+    const supabase = createSupabaseBrowserClient();
     setLoading(true);
     const { data: fetchedData, error: fetchError } = await supabase
       .from(tableName)
@@ -37,6 +41,11 @@ export function useDataFetching<T>(
   useEffect(() => {
     fetchData();
 
+    if (!isSupabaseConfigured) {
+      return;
+    }
+
+    const supabase = createSupabaseBrowserClient();
     const channel = supabase
       .channel(`${tableName}-realtime`)
       .on(

@@ -1,6 +1,9 @@
 "use client";
 
-import { isSupabaseConfigured, createSupabaseBrowserClient } from "@bilacert/supabase/client";
+import {
+  createSupabaseBrowserClient,
+  isSupabaseConfigured,
+} from "@bilacert/supabase/client";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
