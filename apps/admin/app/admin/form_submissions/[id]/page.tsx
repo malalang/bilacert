@@ -1,8 +1,10 @@
-import { supabase } from "@bilacert/supabase/client";
+import { createSupabaseBrowserClient } from "@bilacert/supabase/client";
 import type { Submission } from "@bilacert/supabase/types";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import SubmissionDetails from "../SubmissionDetails";
+
+const supabase = createSupabaseBrowserClient();
 
 async function getSubmission(id: string): Promise<Submission | null> {
   const { data, error } = await supabase

@@ -1,4 +1,4 @@
-import { createServerClient } from "@bilacert/supabase/server";
+import { createSupabaseServerClient } from "@bilacert/supabase/server";
 import type { Contact } from "@bilacert/supabase/types";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
@@ -19,7 +19,7 @@ export const metadata = {
 };
 
 async function getContact(id: string): Promise<Contact | null> {
-  const supabase = await createServerClient();
+  const supabase = await createSupabaseServerClient();
   const { data, error } = await supabase
     .from("contacts")
     .select("*")

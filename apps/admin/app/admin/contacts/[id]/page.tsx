@@ -1,11 +1,11 @@
-import { createServerClient } from "@bilacert/supabase/server";
+import { createSupabaseServerClient } from "@bilacert/supabase/server";
 import type { Contact } from "@bilacert/supabase/types";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import ContactDetails from "../ContactDetails";
 
 async function getContact(id: string): Promise<Contact | null> {
-  const supabase = await createServerClient();
+  const supabase = await createSupabaseServerClient();
   const { data, error } = await supabase
     .from("contacts")
     .select("*")

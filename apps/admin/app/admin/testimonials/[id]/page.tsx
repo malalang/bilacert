@@ -1,8 +1,10 @@
-import { supabase } from "@bilacert/supabase/client";
+import { createSupabaseBrowserClient } from "@bilacert/supabase/client";
 import type { Testimonial } from "@bilacert/supabase/types";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import TestimonialDetails from "../TestimonialDetails";
+
+const supabase = createSupabaseBrowserClient();
 
 async function getTestimonial(id: string): Promise<Testimonial | null> {
   const { data, error } = await supabase

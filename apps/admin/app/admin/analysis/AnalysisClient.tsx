@@ -1,6 +1,6 @@
 "use client";
 
-import { createBrowserClient } from "@bilacert/supabase/client";
+import { createSupabaseBrowserClient } from "@bilacert/supabase/client";
 import type {
   BlogPost,
   Contact,
@@ -26,7 +26,7 @@ import {
 } from "./charts";
 import AnalysisLoading from "./loading";
 
-const supabase = createBrowserClient();
+const supabase = createSupabaseBrowserClient();
 
 interface ChartData {
   submissionsByDay: { date: string; count: number }[];

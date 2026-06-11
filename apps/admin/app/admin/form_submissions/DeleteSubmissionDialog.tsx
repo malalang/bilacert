@@ -1,6 +1,6 @@
 "use client";
 
-import { createBrowserClient } from "@bilacert/supabase/client";
+import { createSupabaseBrowserClient } from "@bilacert/supabase/client";
 import type { Submission } from "@bilacert/supabase/types";
 import { Loader2 } from "lucide-react";
 import { useState } from "react";
@@ -16,7 +16,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 
-const supabase = createBrowserClient();
+const supabase = createSupabaseBrowserClient();
 
 interface DeleteSubmissionDialogProps {
   isOpen: boolean;

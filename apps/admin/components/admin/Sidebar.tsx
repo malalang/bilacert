@@ -1,6 +1,6 @@
 "use client";
 
-import { supabase } from "@bilacert/supabase/client";
+import { createSupabaseBrowserClient } from "@bilacert/supabase/client";
 import {
   BarChart,
   Briefcase,
@@ -26,6 +26,8 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { useToast } from "@/hooks/use-toast";
+
+const supabase = createSupabaseBrowserClient();
 
 const navItems = [
   { href: "/admin/dashboard", icon: LayoutDashboard, label: "Dashboard" },

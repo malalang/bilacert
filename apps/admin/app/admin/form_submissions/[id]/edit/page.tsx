@@ -1,4 +1,4 @@
-import { supabase } from "@bilacert/supabase/client";
+import { createSupabaseBrowserClient } from "@bilacert/supabase/client";
 import type { Submission } from "@bilacert/supabase/types";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
@@ -12,6 +12,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import SubmissionForm from "../../SubmissionForm";
+
+const supabase = createSupabaseBrowserClient();
 
 export const metadata = {
   title: "Edit Submission | Bilacert Admin Pro",

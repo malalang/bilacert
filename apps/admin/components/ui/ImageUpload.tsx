@@ -1,11 +1,13 @@
 "use client";
 
-import { supabase } from "@bilacert/supabase/client";
+import { createSupabaseBrowserClient } from "@bilacert/supabase/client";
 import { Loader2, Upload, X } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "./button";
+
+const supabase = createSupabaseBrowserClient();
 
 interface ImageUploadProps {
   bucket: string;

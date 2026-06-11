@@ -1,6 +1,6 @@
 "use client";
 
-import { isSupabaseConfigured, supabase } from "@bilacert/supabase/client";
+import { isSupabaseConfigured, createSupabaseBrowserClient } from "@bilacert/supabase/client";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -19,6 +19,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
+
+const supabase = createSupabaseBrowserClient();
 
 export default function LoginPage() {
   const { toast } = useToast();

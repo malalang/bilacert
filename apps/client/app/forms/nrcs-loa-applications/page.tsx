@@ -1,10 +1,12 @@
 "use client";
 
-import { supabase } from "@bilacert/supabase/client";
+import { createSupabaseBrowserClient } from "@bilacert/supabase/client";
 import Image from "next/image";
 import Link from "next/link";
 import { type ChangeEvent, type FormEvent, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
+
+const supabase = createSupabaseBrowserClient();
 
 // Define the type for the form state
 interface FormData {

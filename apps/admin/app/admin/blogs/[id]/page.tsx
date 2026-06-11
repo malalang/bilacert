@@ -1,11 +1,11 @@
-import { createServerClient } from "@bilacert/supabase/server";
+import { createSupabaseServerClient } from "@bilacert/supabase/server";
 import type { BlogPost } from "@bilacert/supabase/types";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import BlogDetails from "../BlogDetails";
 
 async function getBlog(id: string): Promise<BlogPost | null> {
-  const supabase = await createServerClient();
+  const supabase = await createSupabaseServerClient();
   const { data, error } = await supabase
     .from("blog_posts")
     .select("*")
