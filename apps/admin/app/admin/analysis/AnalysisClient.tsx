@@ -214,7 +214,10 @@ async function getAnalyticsData(
       filteredSubmissions.map((s) => (s.status || "Unknown") as string),
     ),
   ];
-  const detailedCounts = new Map<string, { [key: string]: number }>();
+  const detailedCounts = new Map<
+    string,
+    { total: number } & Record<string, number>
+  >();
 
   for (const { created_at, service_name, status } of filteredSubmissions) {
     if (!created_at) continue;
@@ -222,15 +225,15 @@ async function getAnalyticsData(
       .toISOString()
       .split("T")[0] as string;
     if (!detailedCounts.has(date)) {
-      const initial: { [key: string]: number } = { total: 0 };
+      const initial: { total: number } & Record<string, number> = { total: 0 };
       for (const k of allServiceKeys) initial[k] = 0;
       for (const k of allStatusKeys) initial[k] = 0;
       detailedCounts.set(date, initial);
     }
     const dayData = detailedCounts.get(date)!;
     dayData.total += 1;
-    dayData[(service_name || "Uncategorized") as string] += 1;
-    dayData[(status || "Unknown") as string] += 1;
+    dayData[(service_name || "Uncategorized") as string]! += 1;
+    dayData[(status || "Unknown") as string]! += 1;
   }
   const detailedSubmissions = Array.from(detailedCounts.entries())
     .map(([date, data]) => ({ date, ...data }))
