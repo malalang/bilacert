@@ -3,10 +3,6 @@ import type {
   ProcessStep,
   SuccessStory as TSuccessStory,
 } from "@bilacert/shared/types";
-import {
-  getAllPublishedServiceSlugs,
-  getServiceBySlug,
-} from "@bilacert/supabase/Queries/services";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import {
@@ -18,19 +14,20 @@ import {
   WhatIsSection,
   WhyChooseUs,
 } from "@/components/service";
+import { getCachedServiceBySlug, getCachedServiceSlugs } from "../../_lib/data";
 
 interface Props {
   params: Promise<{ serviceId: string }>;
 }
 
 export async function generateStaticParams() {
-  const slugs = await getAllPublishedServiceSlugs();
+  const slugs = await getCachedServiceSlugs();
   return slugs.map((item) => ({ serviceId: item.slug }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { serviceId } = await params;
-  const service = await getServiceBySlug(serviceId);
+  const service = await getCachedServiceBySlug(serviceId);
 
   if (!service) {
     return {
@@ -65,7 +62,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function ServiceDetailPage({ params }: Props) {
   const { serviceId } = await params;
-  const service = await getServiceBySlug(serviceId);
+  const service = await getCachedServiceBySlug(serviceId);
 
   if (!service) {
     notFound();

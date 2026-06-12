@@ -2,7 +2,12 @@
 
 import type { Contact } from "@bilacert/shared/types";
 import { createSupabaseAdminClient } from "@bilacert/supabase/admin";
+import {
+  deleteContact as deleteContactMutation,
+  upsertContact as upsertContactMutation,
+} from "@bilacert/supabase/Mutations/contacts";
 import { revalidatePath } from "next/cache";
+import { triggerRevalidation } from "@/lib/revalidation";
 import { contactSchema } from "./schema";
 
 export async function getContacts() {
@@ -20,45 +25,40 @@ export async function getContacts() {
 }
 
 export async function upsertContact(values: unknown, contactId?: string) {
-  const supabase = createSupabaseAdminClient();
   const parsedValues = contactSchema.safeParse(values);
 
   if (!parsedValues.success) {
     return { error: parsedValues.error.message };
   }
 
-  const { data, error } = await supabase
-    .from("contacts")
-    .upsert(
-      (contactId
-        ? { ...parsedValues.data, id: contactId }
-        : parsedValues.data) as any,
-    )
-    .select("*")
-    .single();
-
-  if (error) {
-    return { error: `Database error: ${error.message}` };
+  let data: Contact;
+  try {
+    const result = await upsertContactMutation(
+      contactId ? { ...parsedValues.data, id: contactId } : parsedValues.data,
+    );
+    data = result.data as Contact;
+    await triggerRevalidation(result.revalidate);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Unknown error";
+    return { error: `Database error: ${message}` };
   }
 
   revalidatePath("/admin/contacts");
-  revalidatePath(`/admin/contacts/${(data as Contact).id}`);
+  revalidatePath(`/admin/contacts/${data.id}`);
 
   return {
-    data: data,
+    data,
     message: `Contact ${contactId ? "updated" : "created"} successfully!`,
   };
 }
 
 export async function deleteContact(contactId: string) {
-  const supabase = createSupabaseAdminClient();
-  const { error } = await supabase
-    .from("contacts")
-    .delete()
-    .eq("id", contactId);
-
-  if (error) {
-    return { error: `Database error: ${error.message}` };
+  try {
+    const result = await deleteContactMutation(contactId);
+    await triggerRevalidation(result.revalidate);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Unknown error";
+    return { error: `Database error: ${message}` };
   }
 
   revalidatePath("/admin/contacts");

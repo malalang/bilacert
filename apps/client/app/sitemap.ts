@@ -1,6 +1,8 @@
-import { getAllPublishedBlogSlugs } from "@bilacert/supabase/Queries/blogs";
-import { getAllPublishedServiceSlugs } from "@bilacert/supabase/Queries/services";
 import type { MetadataRoute } from "next";
+import {
+  getCachedPublishedBlogSlugs,
+  getCachedServiceSlugs,
+} from "./_lib/data";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = "https://bilacert.co.za";
@@ -47,7 +49,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   ];
 
   // Dynamic service pages
-  const serviceSlugs = await getAllPublishedServiceSlugs();
+  const serviceSlugs = await getCachedServiceSlugs();
   const servicePages = serviceSlugs.map(({ slug }) => ({
     url: `${baseUrl}/services/${slug}`,
     lastModified: currentDate,
@@ -56,7 +58,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }));
 
   // Dynamic blog posts
-  const blogSlugs = await getAllPublishedBlogSlugs();
+  const blogSlugs = await getCachedPublishedBlogSlugs();
   const blogPosts = blogSlugs.map(({ slug }) => ({
     url: `${baseUrl}/blog/${slug}`,
     lastModified: currentDate,

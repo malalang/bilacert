@@ -1,10 +1,10 @@
 import { Icon } from "@bilacert/shared/Icon";
-import { getPublishedServices } from "@bilacert/supabase/Queries/services";
 import { ArrowRight, CheckCircle, Clock, Users } from "lucide-react";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { getCachedServices } from "../_lib/data";
 
 export const metadata: Metadata = {
   title: "Our Services - Bilacert",
@@ -32,7 +32,7 @@ export const metadata: Metadata = {
 };
 
 export default async function ServicesPage() {
-  const services = await getPublishedServices();
+  const services = await getCachedServices();
 
   const whyChooseUs = [
     {

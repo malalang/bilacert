@@ -1,11 +1,14 @@
 "use server";
 
-import { createSupabaseAdminClient } from "@bilacert/supabase/admin";
+import {
+  deleteService as deleteServiceMutation,
+  upsertService as upsertServiceMutation,
+} from "@bilacert/supabase/Mutations/services";
 import { revalidatePath } from "next/cache";
+import { triggerRevalidation } from "@/lib/revalidation";
 import { serviceSchema } from "./schema";
 
 export async function upsertService(values: unknown) {
-  const supabase = createSupabaseAdminClient();
   const parsedValues = serviceSchema.safeParse(values);
 
   if (!parsedValues.success) {
@@ -16,36 +19,31 @@ export async function upsertService(values: unknown) {
 
   const dataToUpsert = id ? { ...rest, id } : rest;
 
-  const { error } = await supabase
-    .from("services")
-    .upsert(dataToUpsert)
-    .select("*")
-    .single();
-
-  if (error) {
-    return { error: `Database error: ${error.message}` };
+  try {
+    const result = await upsertServiceMutation(
+      dataToUpsert as Parameters<typeof upsertServiceMutation>[0],
+    );
+    await triggerRevalidation(result.revalidate);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Unknown error";
+    return { error: `Database error: ${message}` };
   }
 
   revalidatePath("/admin/services");
-  revalidatePath("/services");
 
   return { error: null };
 }
 
 export async function deleteService(serviceId: string) {
-  const supabase = createSupabaseAdminClient();
-
-  const { error } = await supabase
-    .from("services")
-    .delete()
-    .eq("id", serviceId);
-
-  if (error) {
-    return { error: `Database error: ${error.message}` };
+  try {
+    const result = await deleteServiceMutation(serviceId);
+    await triggerRevalidation(result.revalidate);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Unknown error";
+    return { error: `Database error: ${message}` };
   }
 
   revalidatePath("/admin/services");
-  revalidatePath("/services");
 
   return { error: null };
 }

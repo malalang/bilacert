@@ -1,8 +1,3 @@
-import {
-  getAllPublishedBlogSlugs,
-  getBlogPostBySlug,
-  getBlogPostsByCategory,
-} from "@bilacert/supabase/Queries/blogs";
 import { format } from "date-fns";
 import { ArrowLeft, Calendar, Clock, Folder, Tag, User } from "lucide-react";
 import type { Metadata } from "next";
@@ -12,11 +7,14 @@ import { notFound } from "next/navigation";
 import { FaFacebook, FaLinkedin, FaTwitter } from "react-icons/fa";
 import { RelatedPosts, StickyShare, TableOfContents } from "@/components/blog";
 import { ViewTracker } from "@/components/blog/view";
-
-export const revalidate = 0;
+import {
+  getCachedBlogBySlug,
+  getCachedBlogPostsByCategory,
+  getCachedPublishedBlogSlugs,
+} from "../../_lib/data";
 
 export async function generateStaticParams() {
-  const slugs = await getAllPublishedBlogSlugs();
+  const slugs = await getCachedPublishedBlogSlugs();
   return slugs.map((item) => ({ slug: item.slug }));
 }
 
@@ -28,7 +26,7 @@ interface Props {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const post = await getBlogPostBySlug(slug);
+  const post = await getCachedBlogBySlug(slug);
 
   if (!post) {
     return {
@@ -61,14 +59,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function BlogPostPage({ params }: Props) {
   const { slug } = await params;
-  const post = await getBlogPostBySlug(slug);
+  const post = await getCachedBlogBySlug(slug);
 
   if (!post) {
     notFound();
   }
 
   const relatedPosts = post.category
-    ? await getBlogPostsByCategory(post.category, 3)
+    ? await getCachedBlogPostsByCategory(post.category, 3)
     : [];
 
   return (

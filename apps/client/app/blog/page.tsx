@@ -1,10 +1,10 @@
 import type { BlogPost } from "@bilacert/shared/types";
-import { getAllPublishedBlogPosts } from "@bilacert/supabase/Queries/blogs";
 import { ArrowRight, Calendar, Clock, User } from "lucide-react";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
+import { getCachedPublishedBlogs } from "../_lib/data";
 
 export const metadata: Metadata = {
   title: "Blog",
@@ -105,7 +105,7 @@ export default async function BlogPage() {
     "Marine Compliance",
   ];
 
-  const blogPosts = await getAllPublishedBlogPosts();
+  const blogPosts = await getCachedPublishedBlogs();
 
   if (blogPosts.length === 0) {
     return (

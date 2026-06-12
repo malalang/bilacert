@@ -1,12 +1,12 @@
 "use server";
 
 import type { Submission } from "@bilacert/shared/types";
-import { createSupabaseAdminClient } from "@bilacert/supabase/admin";
+import { updateFormSubmission } from "@bilacert/supabase/Mutations/formSubmissions";
 import { revalidatePath } from "next/cache";
+import { triggerRevalidation } from "@/lib/revalidation";
 import { submissionSchema } from "./schema";
 
 export async function upsertSubmission(values: unknown, submissionId: string) {
-  const supabase = createSupabaseAdminClient();
   const parsedValues = submissionSchema.safeParse(values);
 
   if (!parsedValues.success) {
@@ -29,22 +29,21 @@ export async function upsertSubmission(values: unknown, submissionId: string) {
     updated_at: new Date().toISOString(),
   };
 
-  const { data, error } = await supabase
-    .from("form_submissions")
-    .update(submissionData)
-    .eq("id", submissionId)
-    .select("*")
-    .single();
-
-  if (error) {
-    return { error: `Database error: ${error.message}` };
+  let data: Submission;
+  try {
+    const result = await updateFormSubmission(submissionId, submissionData);
+    data = result.data as Submission;
+    await triggerRevalidation(result.revalidate);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Unknown error";
+    return { error: `Database error: ${message}` };
   }
 
   revalidatePath("/admin/form_submissions");
-  revalidatePath(`/admin/form_submissions/${(data as Submission).id}`);
+  revalidatePath(`/admin/form_submissions/${data.id}`);
 
   return {
-    data: data,
+    data,
     message: `Submission updated successfully!`,
   };
 }
@@ -53,24 +52,24 @@ export async function updateSubmissionStatus(
   submissionId: string,
   status: Submission["status"],
 ) {
-  const supabase = createSupabaseAdminClient();
-
-  const { data, error } = await supabase
-    .from("form_submissions")
-    .update({ status: status, updated_at: new Date().toISOString() })
-    .eq("id", submissionId)
-    .select("*")
-    .single();
-
-  if (error) {
-    return { error: `Database error: ${error.message}` };
+  let data: Submission;
+  try {
+    const result = await updateFormSubmission(submissionId, {
+      status,
+      updated_at: new Date().toISOString(),
+    });
+    data = result.data as Submission;
+    await triggerRevalidation(result.revalidate);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Unknown error";
+    return { error: `Database error: ${message}` };
   }
 
   revalidatePath("/admin/form_submissions");
-  revalidatePath(`/admin/form_submissions/${(data as Submission).id}`);
+  revalidatePath(`/admin/form_submissions/${data.id}`);
 
   return {
-    data: data,
+    data,
     message: "Status updated successfully",
   };
 }

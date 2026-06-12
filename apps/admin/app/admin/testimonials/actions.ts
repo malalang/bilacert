@@ -1,11 +1,14 @@
 "use server";
 
-import { createSupabaseAdminClient } from "@bilacert/supabase/admin";
+import {
+  deleteTestimonial as deleteTestimonialMutation,
+  upsertTestimonial as upsertTestimonialMutation,
+} from "@bilacert/supabase/Mutations/testimonials";
 import { revalidatePath } from "next/cache";
+import { triggerRevalidation } from "@/lib/revalidation";
 import { testimonialSchema } from "./schema";
 
 export async function upsertTestimonial(values: unknown) {
-  const supabase = createSupabaseAdminClient();
   const parsedValues = testimonialSchema.safeParse(values);
 
   if (!parsedValues.success) {
@@ -16,14 +19,12 @@ export async function upsertTestimonial(values: unknown) {
 
   const dataToUpsert = id ? { ...rest, id } : rest;
 
-  const { error } = await supabase
-    .from("testimonials")
-    .upsert(dataToUpsert)
-    .select("*")
-    .single();
-
-  if (error) {
-    return { error: `Database error: ${error.message}` };
+  try {
+    const result = await upsertTestimonialMutation(dataToUpsert);
+    await triggerRevalidation(result.revalidate);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Unknown error";
+    return { error: `Database error: ${message}` };
   }
 
   revalidatePath("/admin/testimonials");
@@ -32,15 +33,12 @@ export async function upsertTestimonial(values: unknown) {
 }
 
 export async function deleteTestimonial(testimonialId: string) {
-  const supabase = createSupabaseAdminClient();
-
-  const { error } = await supabase
-    .from("testimonials")
-    .delete()
-    .eq("id", testimonialId);
-
-  if (error) {
-    return { error: `Database error: ${error.message}` };
+  try {
+    const result = await deleteTestimonialMutation(testimonialId);
+    await triggerRevalidation(result.revalidate);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Unknown error";
+    return { error: `Database error: ${message}` };
   }
 
   revalidatePath("/admin/testimonials");
