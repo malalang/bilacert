@@ -24,8 +24,8 @@ export async function upsertSubmission(values: unknown, submissionId: string) {
     details: parsedValues.data.details
       ? JSON.parse(parsedValues.data.details)
       : null,
-    notes: parsedValues.data.notes,
-    contact_owner: parsedValues.data.contact_owner || null,
+    internal_notes: parsedValues.data.notes,
+    assigned_to: parsedValues.data.contact_owner || null,
     updated_at: new Date().toISOString(),
   };
 

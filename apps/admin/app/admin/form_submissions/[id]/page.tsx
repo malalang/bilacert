@@ -29,20 +29,21 @@ async function getSubmission(id: string): Promise<Submission | null> {
     company: data.company,
     industry: data.industry,
     details: data.details,
-    notes: data.notes,
-    contact_owner: data.contact_owner,
+    internal_notes: data.internal_notes,
+    assigned_to: data.assigned_to,
     created_at: data.created_at,
     updated_at: data.updated_at,
-    submission_date: data.submission_date,
+    completed_at: data.completed_at,
   } as Submission;
 }
 
 export async function generateMetadata({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }): Promise<Metadata> {
-  const submission = await getSubmission(params.id);
+  const { id } = await params;
+  const submission = await getSubmission(id);
   if (!submission) {
     return {
       title: "Submission Not Found",
