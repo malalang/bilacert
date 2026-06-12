@@ -52,7 +52,7 @@ export type FormType =
   | "ski-boat-vhf";
 
 export interface Submission {
-  id?: string;
+  id: string;
   form_type: FormType;
   status: SubmissionStatus;
   service_id?: string;
