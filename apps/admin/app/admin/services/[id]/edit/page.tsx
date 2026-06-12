@@ -1,5 +1,6 @@
 import type { Service } from "@bilacert/shared/types";
 import { createSupabaseAdminClient } from "@bilacert/supabase/admin";
+import { normalizeService } from "@bilacert/supabase/Queries/services";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -31,7 +32,7 @@ async function getService(id: string): Promise<Service | null> {
     return null;
   }
 
-  return data as Service;
+  return data ? normalizeService(data) : null;
 }
 
 export default async function EditServicePage({

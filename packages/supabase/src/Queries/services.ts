@@ -4,7 +4,7 @@ import type { Database } from "../supabaseType";
 
 type ServiceRow = Database["public"]["Tables"]["services"]["Row"];
 
-function normalizeService(row: ServiceRow): Service {
+export function normalizeService(row: ServiceRow): Service {
   return {
     id: row.id,
     title: row.title,
