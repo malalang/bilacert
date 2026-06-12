@@ -5,9 +5,12 @@ import {
   createSupabaseBrowserClient,
   isSupabaseConfigured,
 } from "../client";
+import type { Database } from "../supabaseType";
+
+type PublicTableName = keyof Database["public"]["Tables"] & string;
 
 export function useDataFetching<T>(
-  tableName: string,
+  tableName: PublicTableName,
   selectQuery: string = "*",
   orderBy: string = "created_at",
 ) {
@@ -32,7 +35,7 @@ export function useDataFetching<T>(
       setError(fetchError as unknown as Error);
       setData([]);
     } else {
-      setData((fetchedData as T[]) || []);
+      setData((fetchedData as unknown as T[]) || []);
       setError(null);
     }
     setLoading(false);
