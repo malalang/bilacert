@@ -30,11 +30,11 @@ function normalizeService(row: ServiceRow): Service {
     seo_description: row.seo_description ?? undefined,
     seo_keywords: row.seo_keywords ?? undefined,
     pricing_plans:
-      (row.pricing_plans as Service["pricing_plans"]) ?? undefined,
+      (row.pricing_plans as unknown as Service["pricing_plans"]) ?? undefined,
     process_steps:
-      (row.process_steps as Service["process_steps"]) ?? undefined,
+      (row.process_steps as unknown as Service["process_steps"]) ?? undefined,
     success_story:
-      (row.success_story as Service["success_story"]) ?? undefined,
+      (row.success_story as unknown as Service["success_story"]) ?? undefined,
     updated_at: row.updated_at ?? undefined,
   };
 }

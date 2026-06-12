@@ -44,8 +44,10 @@ export default function SubmissionDetails({
     router.refresh();
   };
 
-  const renderJson = (data: any) => {
-    if (!data) return <p className="text-sm text-card-foreground">Not set.</p>;
+  const renderJson = (data: unknown) => {
+    if (data == null) {
+      return <p className="text-sm text-card-foreground">Not set.</p>;
+    }
     return (
       <div className="prose prose-sm dark:prose-invert mt-1 text-card-foreground text-sm whitespace-pre-wrap">
         <pre className="bg-muted/50 p-2 rounded-md">
@@ -197,7 +199,7 @@ export default function SubmissionDetails({
               </div>
             </div>
 
-            {submission.details && (
+            {submission.details != null && (
               <div className="mt-6 border-t pt-6">
                 <h3 className="text-lg font-medium mb-4">Submission Details</h3>
                 {renderJson(submission.details)}
