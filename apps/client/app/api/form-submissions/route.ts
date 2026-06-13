@@ -33,10 +33,10 @@ export async function POST(request: NextRequest) {
       .from("form_submissions")
       .insert([
         {
-          form_type: formType,
-          service_id: serviceId || null,
-          service_name: serviceName || null,
-          full_name: fullName,
+          formType,
+          serviceId: serviceId || null,
+          serviceName: serviceName || null,
+          fullName,
           email,
           phone: phone || null,
           company: company || null,
