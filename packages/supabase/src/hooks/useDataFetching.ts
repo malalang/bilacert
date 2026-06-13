@@ -55,7 +55,7 @@ export function useDataFetching<T>(
           fetchData();
         },
       )
-      .subscribe((status: string, err?: Error) => {
+      .subscribe((_status: string, err?: Error) => {
         if (err) {
           console.error("Supabase subscription error:", err);
         }
