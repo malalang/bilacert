@@ -289,7 +289,7 @@ export default function AnalysisClient() {
     }
   }, [chartData]);
 
-  const handleKeyVisibilityChange = (key: string) => {
+  const _handleKeyVisibilityChange = (key: string) => {
     setVisibleKeys((prev) =>
       prev.includes(key) ? prev.filter((k) => k !== key) : [...prev, key],
     );
@@ -308,7 +308,6 @@ export default function AnalysisClient() {
     detailedSubmissions,
     turnaroundAnalysis,
     combinedActivity,
-    combinedActivityKeys,
     serviceKeys,
     statusKeys,
     totalSubmissions,
