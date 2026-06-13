@@ -160,8 +160,8 @@ export default function DashboardClient() {
                         </p>
                         <p className="text-xs text-muted-foreground mt-1">
                           {activity.type === "submission"
-                            ? (activity as Submission).service_name ||
-                              (activity as Submission).service_name
+                            ? (activity as Submission).serviceName ||
+                              (activity as Submission).serviceName
                             : "Contact Form"}
                         </p>
                       </div>
