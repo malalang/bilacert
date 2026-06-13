@@ -22,7 +22,7 @@ async function getContact(id: string): Promise<Contact | null> {
     email: data.email,
     phone: data.phone,
     message: data.message,
-    submitted_at: data.submitted_at,
+    submittedAt: data.submittedAt,
   } as Contact;
 }
 
