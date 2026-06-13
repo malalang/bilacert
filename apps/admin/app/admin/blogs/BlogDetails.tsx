@@ -64,9 +64,9 @@ export default function BlogDetails({ blog }: BlogDetailsProps) {
           </div>
         </div>
 
-        {(blog.featured_image || blog.thumbnail) && (
+        {(blog.featuredImage || blog.thumbnail) && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {blog.featured_image && (
+            {blog.featuredImage && (
               <Card>
                 <CardHeader>
                   <CardTitle className="text-lg">Featured Image</CardTitle>
@@ -74,7 +74,7 @@ export default function BlogDetails({ blog }: BlogDetailsProps) {
                 <CardContent>
                   <div className="relative aspect-video w-full max-w-lg overflow-hidden rounded-lg">
                     <Image
-                      src={blog.featured_image}
+                      src={blog.featuredImage}
                       alt="Featured Image"
                       fill
                       className="object-cover"
@@ -130,14 +130,14 @@ export default function BlogDetails({ blog }: BlogDetailsProps) {
                   <strong>Slug:</strong>{" "}
                   <span className="font-mono">{blog.slug}</span>
                 </div>
-                {blog.author_name && (
+                {blog.authorName && (
                   <div className="text-sm">
-                    <strong>Author:</strong> {blog.author_name}
+                    <strong>Author:</strong> {blog.authorName}
                   </div>
                 )}
-                {blog.read_time && (
+                {blog.readTime && (
                   <div className="text-sm">
-                    <strong>Read Time:</strong> {blog.read_time}
+                    <strong>Read Time:</strong> {blog.readTime}
                   </div>
                 )}
                 {blog.tags && (
@@ -147,12 +147,12 @@ export default function BlogDetails({ blog }: BlogDetailsProps) {
                 )}
                 <div className="text-sm">
                   <strong>Created:</strong>{" "}
-                  {format(new Date(blog.created_at), "PPpp")}
+                  {format(new Date(blog.createdAt), "PPpp")}
                 </div>
-                {blog.updated_at && (
+                {blog.updatedAt && (
                   <div className="text-sm">
                     <strong>Updated:</strong>{" "}
-                    {format(new Date(blog.updated_at), "PPpp")}
+                    {format(new Date(blog.updatedAt), "PPpp")}
                   </div>
                 )}
               </div>
@@ -160,19 +160,19 @@ export default function BlogDetails({ blog }: BlogDetailsProps) {
                 <h4 className="text-sm font-medium text-muted-foreground">
                   SEO
                 </h4>
-                {blog.seo_title && (
+                {blog.seoTitle && (
                   <div className="text-sm">
-                    <strong>Title:</strong> {blog.seo_title}
+                    <strong>Title:</strong> {blog.seoTitle}
                   </div>
                 )}
-                {blog.seo_description && (
+                {blog.seoDescription && (
                   <div className="text-sm">
-                    <strong>Description:</strong> {blog.seo_description}
+                    <strong>Description:</strong> {blog.seoDescription}
                   </div>
                 )}
-                {blog.seo_keywords && (
+                {blog.seoKeywords && (
                   <div className="text-sm">
-                    <strong>Keywords:</strong> {blog.seo_keywords}
+                    <strong>Keywords:</strong> {blog.seoKeywords}
                   </div>
                 )}
               </div>
