@@ -60,7 +60,7 @@ export default function ServiceApplicationForm() {
     const payload: FormSubmissionPayload = {
       formType: "service-inquiry",
       serviceId: service.id, // Use the fetched UUID
-      service_name: serviceSlug, // Use the service slug
+      serviceName: serviceSlug, // Use the service slug
       fullName: formData.fullName,
       email: formData.email,
       phone: formData.phone,
