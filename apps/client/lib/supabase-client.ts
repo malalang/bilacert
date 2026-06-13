@@ -49,7 +49,10 @@ export async function getSubmissionByEmail(
   serviceType?: string,
 ) {
   try {
-    let query = supabase.from("form_submissions").select("*").eq("email", email);
+    let query = supabase
+      .from("form_submissions")
+      .select("*")
+      .eq("email", email);
 
     if (serviceType) {
       query = query.eq("formType", serviceType);
