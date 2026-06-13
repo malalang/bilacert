@@ -430,12 +430,10 @@ export default function AnalysisClient() {
           <CardTitle>Combined Activity</CardTitle>
         </CardHeader>
         <CardContent>
-          <CombinedActivityChart
-            data={combinedActivity}
-            visibleKeys={visibleKeys}
-            onKeyVisibilityChange={handleKeyVisibilityChange}
-            availableKeys={combinedActivityKeys}
-          />
+         <CombinedActivityChart
+  data={combinedActivity}
+  keys={visibleKeys}
+/>
         </CardContent>
       </Card>
     </div>
