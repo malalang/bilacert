@@ -11,6 +11,7 @@ import {
   getPublishedServices,
   getServiceBySlug,
 } from "@bilacert/supabase/Queries/services";
+import { getPublishedTestimonials } from "@bilacert/supabase/Queries/testimonials";
 import { unstable_cache } from "next/cache";
 
 export const getCachedPublishedBlogs = unstable_cache(
@@ -59,3 +60,9 @@ export const getCachedServiceBySlug = (slug: string) =>
   unstable_cache(() => getServiceBySlug(slug), ["published-service", slug], {
     tags: [CACHE_TAGS.services, CACHE_TAGS.service(slug)],
   })();
+
+export const getCachedTestimonials = unstable_cache(
+  getPublishedTestimonials,
+  ["published-testimonials"],
+  { tags: [CACHE_TAGS.testimonials] },
+);

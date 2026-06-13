@@ -1,12 +1,12 @@
 import { createSupabaseAdminClient } from "../admin";
 import { CACHE_PATHS, CACHE_TAGS, mutationResult } from "../cache";
-import { createSupabaseBrowserClient } from "../client";
+import { createSupabaseServerClient } from "../server";
 import type { Database } from "../supabaseType";
 
 type BlogInsert = Database["public"]["Tables"]["blog_posts"]["Insert"];
 
 export async function incrementBlogPostViews(slug: string): Promise<void> {
-  const supabase = createSupabaseBrowserClient();
+  const supabase = await createSupabaseServerClient();
   const { error } = await supabase.rpc("increment_views", { post_slug: slug });
 
   if (error) {

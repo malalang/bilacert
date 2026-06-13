@@ -13,6 +13,7 @@ export async function POST(request: NextRequest) {
       email,
       phone,
       company,
+      companyName,
       industry,
       details,
     } = body;
@@ -39,7 +40,7 @@ export async function POST(request: NextRequest) {
           fullName,
           email,
           phone: phone || null,
-          company: company || null,
+          company: company || companyName || null,
           industry: industry || null,
           details: details || null,
           status: "pending",
