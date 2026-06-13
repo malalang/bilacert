@@ -115,7 +115,7 @@ const BlogCard = ({
       <div className="relative h-48 w-full">
         <Image
           src={
-            blog.featured_image ||
+            blog.featuredImage ||
             `https://picsum.photos/seed/${blog.id}/600/400`
           }
           alt={blog.title}
@@ -141,7 +141,7 @@ const BlogCard = ({
           </Badge>
           <div className="flex items-center gap-2">
             <Calendar className="h-4 w-4" />
-            <span>{safeFormatDate(blog.created_at, "PP")}</span>
+            <span>{safeFormatDate(blog.createdAt, "PP")}</span>
           </div>
         </div>
       </div>
