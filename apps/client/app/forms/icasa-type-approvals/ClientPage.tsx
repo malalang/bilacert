@@ -51,14 +51,14 @@ export default function IcasasForm() {
       const { error } = await supabase.from("form_submissions").insert([
         {
           id: uuidv4(),
-          form_type: "icasa-type-approvals",
-          service_name: formData.serviceType,
-          full_name: formData.fullName,
+          formType: "icasa-type-approvals",
+          serviceName: formData.serviceType,
+          fullName: formData.fullName,
           email: formData.email,
           phone: formData.phone,
           company: formData.companyName,
           details: { message: formData.message },
-          created_at: new Date().toISOString(),
+          createdAt: new Date().toISOString(),
         },
       ]);
 
