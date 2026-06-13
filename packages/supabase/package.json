@@ -17,7 +17,7 @@
     "@bilacert/shared": "workspace:*",
     "@supabase/ssr": "catalog:",
     "@supabase/supabase-js": "catalog:",
-    "typescript": "catalog:" 
+    "typescript": "catalog:"
   },
   "scripts": {
     "supabase:types": "supabase gen types typescript --local > src/supabaseType.ts"

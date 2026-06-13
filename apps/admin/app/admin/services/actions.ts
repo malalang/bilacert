@@ -44,9 +44,7 @@ export async function upsertService(values: unknown) {
   };
 
   try {
-    const result = await upsertServiceMutation(
-      dataToUpsert as any,
-    );
+    const result = await upsertServiceMutation(dataToUpsert as any);
     await triggerRevalidation(result.revalidate);
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unknown error";

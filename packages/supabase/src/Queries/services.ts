@@ -1,5 +1,5 @@
-import { createSupabaseBrowserClient } from "../client";
 import type { Service } from "@bilacert/shared/types";
+import { createSupabaseBrowserClient } from "../client";
 import type { Database } from "../supabaseType";
 
 type ServiceRow = Database["public"]["Tables"]["services"]["Row"];

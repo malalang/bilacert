@@ -2,8 +2,7 @@ import { createSupabaseAdminClient } from "../admin";
 import { CACHE_PATHS, CACHE_TAGS, mutationResult } from "../cache";
 import type { Database } from "../supabaseType";
 
-type TestimonialInsert =
-  Database["public"]["Tables"]["testimonials"]["Insert"];
+type TestimonialInsert = Database["public"]["Tables"]["testimonials"]["Insert"];
 
 export async function upsertTestimonial(data: TestimonialInsert) {
   const supabase = createSupabaseAdminClient();

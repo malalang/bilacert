@@ -12,7 +12,10 @@ import { ServiceHero } from "@/components/service/ServiceHero";
 import { SuccessStory } from "@/components/service/SuccessStory";
 import { WhatIsSection } from "@/components/service/WhatIsSection";
 import { WhyChooseUs } from "@/components/service/WhyChooseUs";
-import { getCachedServiceBySlug, getCachedServiceSlugs } from "../../_lib/cached-public-data";
+import {
+  getCachedServiceBySlug,
+  getCachedServiceSlugs,
+} from "../../_lib/cached-public-data";
 
 interface Props {
   params: Promise<{ serviceId: string }>;

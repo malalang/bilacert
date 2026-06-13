@@ -17,7 +17,7 @@ export async function upsertBlog(values: unknown) {
   }
 
   const { id, ...rest } = parsedValues.data;
-  
+
   // Map form values to DB schema camelCase
   const dataToUpsert = {
     id: id || uuidv4(),
