@@ -5,13 +5,15 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { FaFacebook, FaLinkedin, FaTwitter } from "react-icons/fa";
-import { RelatedPosts, StickyShare, TableOfContents } from "@/components/blog";
+import { RelatedPosts } from "@/components/blog/RelatedPosts";
+import { StickyShare } from "@/components/blog/StickyShare";
+import { TableOfContents } from "@/components/blog/TableOfContents";
 import { ViewTracker } from "@/components/blog/view";
 import {
   getCachedBlogBySlug,
   getCachedBlogPostsByCategory,
   getCachedPublishedBlogSlugs,
-} from "../../_lib/data";
+} from "../../_lib/cached-public-data";
 
 export async function generateStaticParams() {
   const slugs = await getCachedPublishedBlogSlugs();
@@ -35,9 +37,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 
   return {
-    title: post.seo_title || `${post.title} - Bilacert`,
-    description: post.seo_description || post.excerpt,
-    keywords: post.seo_keywords || [
+    title: post.seoTitle || `${post.title} - Bilacert`,
+    description: post.seoDescription || post.excerpt,
+    keywords: post.seoKeywords || [
       post.title.toLowerCase(),
       ...(post.category?.split(", ").map((c: string) => c.toLowerCase()) || []),
       "blog",
@@ -45,11 +47,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       "South Africa",
     ],
     openGraph: {
-      title: post.seo_title || post.title,
-      description: post.seo_description || post.excerpt,
+      title: post.seoTitle || post.title,
+      description: post.seoDescription || post.excerpt,
       url: `https://bilacert.co.za/blog/${slug}`,
       type: "article",
-      images: post.featured_image ? [{ url: post.featured_image }] : [],
+      images: post.featuredImage ? [{ url: post.featuredImage }] : [],
     },
     alternates: {
       canonical: `https://bilacert.co.za/blog/${slug}`,
@@ -104,27 +106,27 @@ export default async function BlogPostPage({ params }: Props) {
             <div className="flex items-center justify-center space-x-6 text-gray-600">
               <div className="flex items-center space-x-2">
                 <User className="h-5 w-5" />
-                <span>{post.author_name}</span>
+                <span>{post.authorName}</span>
               </div>
               <div className="flex items-center space-x-2">
                 <Calendar className="h-5 w-5" />
                 <span>
-                  {post.created_at && format(new Date(post.created_at), "PP")}
+                  {post.createdAt && format(new Date(post.createdAt), "PP")}
                 </span>
               </div>
               <div className="flex items-center space-x-2">
                 <Clock className="h-5 w-5" />
-                <span>{post.read_time}</span>
+                <span>{post.readTime}</span>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {post.featured_image && (
+      {post.featuredImage && (
         <div className="relative h-64 md:h-96 max-w-5xl mx-auto my-8 rounded-lg overflow-hidden">
           <Image
-            src={post.featured_image}
+            src={post.featuredImage}
             alt={post.title}
             fill
             className="object-cover"

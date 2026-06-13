@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 import {
   getCachedPublishedBlogSlugs,
   getCachedServiceSlugs,
-} from "./_lib/data";
+} from "./_lib/cached-public-data";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = "https://bilacert.co.za";

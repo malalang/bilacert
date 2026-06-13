@@ -15,9 +15,33 @@ export async function upsertService(values: unknown) {
     return { error: parsedValues.error.message };
   }
 
-  const { id, ...rest } = parsedValues.data;
+  const {
+    id,
+    shortDescription,
+    orderIndex,
+    processingTime,
+    seoTitle,
+    seoDescription,
+    seoKeywords,
+    pricingPlans,
+    processSteps,
+    successStory,
+    ...rest
+  } = parsedValues.data;
 
-  const dataToUpsert = id ? { ...rest, id } : rest;
+  const dataToUpsert = {
+    ...rest,
+    id,
+    short_description: shortDescription,
+    order_index: orderIndex,
+    processing_time: processingTime,
+    seo_title: seoTitle,
+    seo_description: seoDescription,
+    seo_keywords: seoKeywords,
+    pricing_plans: pricingPlans,
+    process_steps: processSteps,
+    success_story: successStory,
+  };
 
   try {
     const result = await upsertServiceMutation(

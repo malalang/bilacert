@@ -5,16 +5,14 @@ import type {
 } from "@bilacert/shared/types";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import {
-  CTASection,
-  PricingPlans,
-  ProcessSteps,
-  ServiceHero,
-  SuccessStory,
-  WhatIsSection,
-  WhyChooseUs,
-} from "@/components/service";
-import { getCachedServiceBySlug, getCachedServiceSlugs } from "../../_lib/data";
+import { CTASection } from "@/components/service/CTASection";
+import { PricingPlans } from "@/components/service/PricingPlans";
+import { ProcessSteps } from "@/components/service/ProcessSteps";
+import { ServiceHero } from "@/components/service/ServiceHero";
+import { SuccessStory } from "@/components/service/SuccessStory";
+import { WhatIsSection } from "@/components/service/WhatIsSection";
+import { WhyChooseUs } from "@/components/service/WhyChooseUs";
+import { getCachedServiceBySlug, getCachedServiceSlugs } from "../../_lib/cached-public-data";
 
 interface Props {
   params: Promise<{ serviceId: string }>;
@@ -36,9 +34,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 
   return {
-    title: service.seo_title || `${service.title} - Bilacert`,
-    description: service.seo_description || service.description,
-    keywords: service.seo_keywords || [
+    title: service.seoTitle || `${service.title} - Bilacert`,
+    description: service.seoDescription || service.description,
+    keywords: service.seoKeywords || [
       service.title.toLowerCase(),
       ...(service.category?.split(", ").map((c: string) => c.toLowerCase()) ||
         []),
@@ -48,8 +46,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       "South Africa",
     ],
     openGraph: {
-      title: service.seo_title || service.title,
-      description: service.seo_description || service.short_description,
+      title: service.seoTitle || service.title,
+      description: service.seoDescription || service.shortDescription,
       url: `https://bilacert.co.za/services/${serviceId}`,
       type: "website",
       images: service.image ? [{ url: service.image }] : [],
@@ -74,10 +72,10 @@ export default async function ServiceDetailPage({ params }: Props) {
     <div className="min-h-screen">
       <ServiceHero
         title={service.title}
-        subtitle={service.short_description || ""}
+        subtitle={service.shortDescription || ""}
         iconName={service.icon || ""}
         imageSrc={service.image || ""}
-        processing_time={service.processing_time || ""}
+        processing_time={service.processingTime || ""}
         formPath={formPath}
         phone="075 430 4433"
       />
@@ -93,21 +91,21 @@ export default async function ServiceDetailPage({ params }: Props) {
 
       <WhyChooseUs />
 
-      {service.process_steps && (
+      {service.processSteps && (
         <ProcessSteps
           title="Our Process"
           subtitle="A streamlined approach to get you certified."
-          steps={(service.process_steps as unknown as ProcessStep[]).map(
+          steps={(service.processSteps as unknown as ProcessStep[]).map(
             (step) => ({ ...step, step: step.step.toString() }),
           )}
         />
       )}
 
-      {service.pricing_plans && (
+      {service.pricingPlans && (
         <PricingPlans
           title="Pricing Plans"
           subtitle="Choose the best plan for your needs."
-          plans={(service.pricing_plans as unknown as PricingPlan[]).map(
+          plans={(service.pricingPlans as unknown as PricingPlan[]).map(
             (plan) => ({
               ...plan,
               title: plan.name,
@@ -119,8 +117,8 @@ export default async function ServiceDetailPage({ params }: Props) {
         />
       )}
 
-      {service.success_story && (
-        <SuccessStory {...(service.success_story as TSuccessStory)} />
+      {service.successStory && (
+        <SuccessStory {...(service.successStory as TSuccessStory)} />
       )}
 
       <CTASection

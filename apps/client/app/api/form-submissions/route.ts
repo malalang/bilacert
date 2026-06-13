@@ -8,7 +8,7 @@ export async function POST(request: NextRequest) {
     const {
       formType,
       serviceId,
-      service_name,
+      serviceName,
       fullName,
       email,
       phone,
@@ -35,7 +35,7 @@ export async function POST(request: NextRequest) {
         {
           form_type: formType,
           service_id: serviceId || null,
-          service_name: service_name || null,
+          service_name: serviceName || null,
           full_name: fullName,
           email,
           phone: phone || null,

@@ -19,9 +19,9 @@ export function RelatedPosts({ posts }: RelatedPostsProps) {
               className="block group"
             >
               <div className="relative h-48 rounded-lg overflow-hidden mb-4">
-                {post.featured_image && (
+                {post.featuredImage && (
                   <Image
-                    src={post.featured_image}
+                    src={post.featuredImage}
                     alt={post.title}
                     layout="fill"
                     className="object-cover"

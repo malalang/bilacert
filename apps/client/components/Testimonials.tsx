@@ -4,7 +4,7 @@ import type { Testimonial } from "@bilacert/shared/types";
 import { createSupabaseBrowserClient } from "@bilacert/supabase/client";
 import { useEffect, useState } from "react";
 
-type TestimonialEmbed = Pick<Testimonial, "id" | "post_url">;
+type TestimonialEmbed = Pick<Testimonial, "id" | "postUrl">;
 
 declare global {
   interface Window {
@@ -35,7 +35,11 @@ export default function Testimonials() {
       }
 
       if (data) {
-        setTestimonials(data);
+        const normalized = data.map((t: any) => ({
+          id: t.id,
+          postUrl: t.post_url,
+        }));
+        setTestimonials(normalized);
       }
     };
 
@@ -95,12 +99,12 @@ export default function Testimonials() {
             <div
               key={t.id}
               className="fb-post bg-white rounded-xl overflow-hidden"
-              data-href={t.post_url}
+              data-href={t.postUrl}
               data-width="500"
               data-show-text="true"
             >
-              <blockquote cite={t.post_url} className="fb-xfbml-parse-ignore">
-                <a href={t.post_url}>Post</a>
+              <blockquote cite={t.postUrl} className="fb-xfbml-parse-ignore">
+                <a href={t.postUrl}>Post</a>
               </blockquote>
             </div>
           ))}

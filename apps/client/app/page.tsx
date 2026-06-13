@@ -8,7 +8,7 @@ import Testimonials from "@/components/Testimonials";
 import {
   getCachedFeaturedServices,
   getCachedPublishedBlogs,
-} from "./_lib/data";
+} from "./_lib/cached-public-data";
 
 export const metadata: Metadata = {
   title: "Home",
@@ -235,7 +235,7 @@ export default async function HomePage() {
                 className="bg-white p-6 rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 transform hover:-translate-y-2"
               >
                 <div className="text-sm text-gray-500 mb-2">
-                  {new Date(post.created_at).toLocaleDateString("en-ZA", {
+                  {new Date(post.createdAt).toLocaleDateString("en-ZA", {
                     year: "numeric",
                     month: "long",
                     day: "numeric",

@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { getCachedServices } from "../_lib/data";
+import { getCachedServices } from "../_lib/cached-public-data";
 
 export const metadata: Metadata = {
   title: "Our Services - Bilacert",

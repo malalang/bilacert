@@ -16,7 +16,7 @@
     "next": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
-    "react-icons": "^5.5.0",
+    "react-icons": "catalog:",
     "lucide-react": "catalog:",
     "tailwind-merge": "catalog:",
     "@supabase/supabase-js": "catalog:",
@@ -30,7 +30,7 @@
     "class-variance-authority": "catalog:",
     "clsx": "catalog:",
     "date-fns": "catalog:",
-    "uuid": "^13.0.0"
+    "uuid": "catalog:"
   },
   "devDependencies": {
     "@bilacert/typescript-config": "workspace:*",

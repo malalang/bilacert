@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
-import { getCachedPublishedBlogs } from "../_lib/data";
+import { getCachedPublishedBlogs } from "../_lib/cached-public-data";
 
 export const metadata: Metadata = {
   title: "Blog",
@@ -47,7 +47,7 @@ const BlogCard = ({ post }: { post: BlogPost }) => {
       <div className="relative h-48 w-full overflow-hidden">
         <Image
           src={
-            post.featured_image ||
+            post.featuredImage ||
             `https://picsum.photos/seed/${post.id}/600/400`
           }
           alt={post.title}
@@ -77,7 +77,7 @@ const BlogCard = ({ post }: { post: BlogPost }) => {
           <div className="flex items-center gap-2">
             <Calendar className="h-3.5 w-3.5 text-accent" />
             <span>
-              {new Date(post.created_at).toLocaleDateString("en-ZA", {
+              {new Date(post.createdAt).toLocaleDateString("en-ZA", {
                 month: "short",
                 day: "numeric",
                 year: "numeric",
@@ -160,7 +160,7 @@ export default async function BlogPage() {
                 <div className="relative h-64 sm:h-80 md:h-96 lg:h-full min-h-[300px] overflow-hidden">
                   <Image
                     src={
-                      featuredPost.featured_image ||
+                      featuredPost.featuredImage ||
                       `https://picsum.photos/seed/${featuredPost.id}/600/400`
                     }
                     alt={featuredPost.title}
@@ -179,7 +179,7 @@ export default async function BlogPage() {
                   <div className="flex items-center gap-4 mb-6 text-sm text-gray-500">
                     <span className="flex items-center gap-1.5">
                       <Calendar className="h-4 w-4 text-accent" />
-                      {new Date(featuredPost.created_at).toLocaleDateString(
+                      {new Date(featuredPost.createdAt).toLocaleDateString(
                         "en-ZA",
                         {
                           year: "numeric",
@@ -188,12 +188,12 @@ export default async function BlogPage() {
                         },
                       )}
                     </span>
-                    {featuredPost.read_time && (
+                    {featuredPost.readTime && (
                       <>
                         <span className="w-1.5 h-1.5 rounded-full bg-gray-300" />
                         <span className="flex items-center gap-1.5">
                           <Clock className="h-4 w-4 text-accent" />
-                          {featuredPost.read_time}
+                          {featuredPost.readTime}
                         </span>
                       </>
                     )}
@@ -219,7 +219,7 @@ export default async function BlogPage() {
                       </div>
                       <div>
                         <p className="text-sm font-bold text-primary">
-                          {featuredPost.author_name || "Bilacert Team"}
+                          {featuredPost.authorName || "Bilacert Team"}
                         </p>
                         <p className="text-xs text-gray-500">
                           Compliance Expert

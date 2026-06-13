@@ -51,23 +51,23 @@ export default function ServiceForm({ service }: ServiceFormProps) {
       href: "",
       category: "",
       description: "",
-      short_description: "",
+      shortDescription: "",
       icon: "",
-      order_index: 0,
+      orderIndex: 0,
       content: "",
       features: "",
       requirements: "",
       includes: "",
       published: false,
       featured: false,
-      processing_time: "",
+      processingTime: "",
       pricing: 0,
       image: "",
       thumbnail: "",
-      seo_title: "",
-      seo_description: "",
-      seo_keywords: "",
-      pricing_plans: [
+      seoTitle: "",
+      seoDescription: "",
+      seoKeywords: "",
+      pricingPlans: [
         {
           title: "Basic",
           description: "",
@@ -90,8 +90,8 @@ export default function ServiceForm({ service }: ServiceFormProps) {
           popular: false,
         },
       ],
-      process_steps: [],
-      success_story: { scenario: "", challenge: "", solution: "", result: "" },
+      processSteps: [],
+      successStory: { scenario: "", challenge: "", solution: "", result: "" },
     },
   });
 
@@ -110,12 +110,12 @@ export default function ServiceForm({ service }: ServiceFormProps) {
     remove: removeProcessStep,
   } = useFieldArray({
     control,
-    name: "process_steps",
+    name: "processSteps",
   });
 
   const { fields: pricingPlanFields } = useFieldArray({
     control,
-    name: "pricing_plans",
+    name: "pricingPlans",
   });
 
   const title = watch("title");
@@ -171,9 +171,9 @@ export default function ServiceForm({ service }: ServiceFormProps) {
         href: service.href || "",
         category: service.category || "",
         description: service.description || "",
-        short_description: service.short_description || "",
+        shortDescription: service.short_description || "",
         icon: service.icon || "",
-        order_index: service.order_index || 0,
+        orderIndex: service.order_index || 0,
         content: service.content || "",
         features: Array.isArray(service.features)
           ? service.features.join("\n")
@@ -186,19 +186,19 @@ export default function ServiceForm({ service }: ServiceFormProps) {
           : "",
         published: service.published || false,
         featured: service.featured || false,
-        processing_time: service.processing_time || "",
+        processingTime: service.processing_time || "",
         pricing: service.pricing || 0,
         image: service.image || "",
         thumbnail: service.thumbnail || "",
-        seo_title: service.seo_title || "",
-        seo_description: service.seo_description || "",
-        seo_keywords: service.seo_keywords || "",
-        pricing_plans: populatedPlans,
-        process_steps: (service.process_steps || []).map((p) => ({
+        seoTitle: service.seo_title || "",
+        seoDescription: service.seo_description || "",
+        seoKeywords: service.seo_keywords || "",
+        pricingPlans: populatedPlans,
+        processSteps: (service.process_steps || []).map((p) => ({
           ...p,
           step: String(p.step),
         })),
-        success_story: service.success_story || {
+        successStory: service.success_story || {
           scenario: "",
           challenge: "",
           solution: "",
@@ -212,7 +212,7 @@ export default function ServiceForm({ service }: ServiceFormProps) {
     try {
       const processedValues = {
         ...values,
-        process_steps: values.process_steps.map(
+        processSteps: values.processSteps.map(
           (step): { title: string; description: string; step: string } => ({
             title: step.title,
             description: step.description,
@@ -305,7 +305,7 @@ export default function ServiceForm({ service }: ServiceFormProps) {
                 />
                 <FormField
                   control={form.control}
-                  name="short_description"
+                  name="shortDescription"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Short Description</FormLabel>
@@ -393,7 +393,7 @@ export default function ServiceForm({ service }: ServiceFormProps) {
                       <CardContent className="space-y-4">
                         <FormField
                           control={form.control}
-                          name={`pricing_plans.${index}.title`}
+                          name={`pricingPlans.${index}.title`}
                           render={({ field }) => (
                             <FormItem>
                               <FormLabel>Plan Title</FormLabel>
@@ -406,7 +406,7 @@ export default function ServiceForm({ service }: ServiceFormProps) {
                         />
                         <FormField
                           control={form.control}
-                          name={`pricing_plans.${index}.description`}
+                          name={`pricingPlans.${index}.description`}
                           render={({ field }) => (
                             <FormItem>
                               <FormLabel>Plan Description</FormLabel>
@@ -419,7 +419,7 @@ export default function ServiceForm({ service }: ServiceFormProps) {
                         />
                         <FormField
                           control={form.control}
-                          name={`pricing_plans.${index}.price`}
+                          name={`pricingPlans.${index}.price`}
                           render={({ field }) => (
                             <FormItem>
                               <FormLabel>Price</FormLabel>
@@ -432,7 +432,7 @@ export default function ServiceForm({ service }: ServiceFormProps) {
                         />
                         <FormField
                           control={form.control}
-                          name={`pricing_plans.${index}.features`}
+                          name={`pricingPlans.${index}.features`}
                           render={({ field }) => (
                             <FormItem>
                               <FormLabel>Features (one per line)</FormLabel>
@@ -445,7 +445,7 @@ export default function ServiceForm({ service }: ServiceFormProps) {
                         />
                         <FormField
                           control={form.control}
-                          name={`pricing_plans.${index}.popular`}
+                          name={`pricingPlans.${index}.popular`}
                           render={({ field }) => (
                             <FormItem className="flex flex-row items-center justify-between rounded-lg border bg-card p-4">
                               <div className="space-y-0.5">
@@ -485,7 +485,7 @@ export default function ServiceForm({ service }: ServiceFormProps) {
                     <div className="grid gap-2 flex-grow">
                       <FormField
                         control={form.control}
-                        name={`process_steps.${index}.step`}
+                        name={`processSteps.${index}.step`}
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel>Step Number</FormLabel>
@@ -498,7 +498,7 @@ export default function ServiceForm({ service }: ServiceFormProps) {
                       />
                       <FormField
                         control={form.control}
-                        name={`process_steps.${index}.title`}
+                        name={`processSteps.${index}.title`}
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel>Step Title</FormLabel>
@@ -511,7 +511,7 @@ export default function ServiceForm({ service }: ServiceFormProps) {
                       />
                       <FormField
                         control={form.control}
-                        name={`process_steps.${index}.description`}
+                        name={`processSteps.${index}.description`}
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel>Step Description</FormLabel>
@@ -557,7 +557,7 @@ export default function ServiceForm({ service }: ServiceFormProps) {
               <CardContent className="space-y-4">
                 <FormField
                   control={form.control}
-                  name="success_story.scenario"
+                  name="successStory.scenario"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Scenario</FormLabel>
@@ -569,7 +569,7 @@ export default function ServiceForm({ service }: ServiceFormProps) {
                 />
                 <FormField
                   control={form.control}
-                  name="success_story.challenge"
+                  name="successStory.challenge"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Challenge</FormLabel>
@@ -581,7 +581,7 @@ export default function ServiceForm({ service }: ServiceFormProps) {
                 />
                 <FormField
                   control={form.control}
-                  name="success_story.solution"
+                  name="successStory.solution"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Solution</FormLabel>
@@ -593,7 +593,7 @@ export default function ServiceForm({ service }: ServiceFormProps) {
                 />
                 <FormField
                   control={form.control}
-                  name="success_story.result"
+                  name="successStory.result"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Result</FormLabel>
@@ -687,7 +687,7 @@ export default function ServiceForm({ service }: ServiceFormProps) {
                 />
                 <FormField
                   control={form.control}
-                  name="order_index"
+                  name="orderIndex"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Order Index</FormLabel>
@@ -700,7 +700,7 @@ export default function ServiceForm({ service }: ServiceFormProps) {
                 />
                 <FormField
                   control={form.control}
-                  name="processing_time"
+                  name="processingTime"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Processing Time</FormLabel>
@@ -734,7 +734,7 @@ export default function ServiceForm({ service }: ServiceFormProps) {
               <CardContent className="space-y-4">
                 <FormField
                   control={form.control}
-                  name="seo_title"
+                  name="seoTitle"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>SEO Title</FormLabel>
@@ -747,7 +747,7 @@ export default function ServiceForm({ service }: ServiceFormProps) {
                 />
                 <FormField
                   control={form.control}
-                  name="seo_description"
+                  name="seoDescription"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>SEO Description</FormLabel>
@@ -760,7 +760,7 @@ export default function ServiceForm({ service }: ServiceFormProps) {
                 />
                 <FormField
                   control={form.control}
-                  name="seo_keywords"
+                  name="seoKeywords"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>SEO Keywords</FormLabel>
