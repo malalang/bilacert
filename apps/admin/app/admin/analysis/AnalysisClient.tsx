@@ -52,15 +52,15 @@ async function getAnalyticsData(
     supabase
       .from("blog_posts")
       .select(
-        "created_at,published_at,updated_at,category,published,views_count,title",
+        "createdAt,publishedAt,updatedAt,category,published,viewsCount,title",
       ),
-    supabase.from("contacts").select("submitted_at"),
-    supabase.from("services").select("created_at,updated_at"),
-    supabase.from("testimonials").select("created_at"),
+    supabase.from("contacts").select("submittedAt"),
+    supabase.from("services").select("createdAt,updatedAt"),
+    supabase.from("testimonials").select("createdAt"),
     supabase
       .from("form_submissions")
-      .select("created_at,updated_at,completed_at,service_name,status"),
-    supabase.from("users").select("created_at"),
+      .select("createdAt,updatedAt,completedAt,serviceName,status"),
+    supabase.from("users").select("createdAt"),
   ];
 
   const [
@@ -93,22 +93,22 @@ async function getAnalyticsData(
   };
 
   for (const b of blogs) {
-    addToActivity(b.created_at, "blogs_created");
-    addToActivity(b.published_at, "blogs_published");
-    addToActivity(b.updated_at, "blogs_updated");
+    addToActivity(b.createdAt, "blogs_created");
+    addToActivity(b.publishedAt, "blogs_published");
+    addToActivity(b.updatedAt, "blogs_updated");
   }
-  for (const c of contacts) addToActivity(c.submitted_at, "contacts_submitted");
+  for (const c of contacts) addToActivity(c.submittedAt, "contacts_submitted");
   for (const s of services) {
-    addToActivity(s.created_at, "services_created");
-    addToActivity(s.updated_at, "services_updated");
+    addToActivity(s.createdAt, "services_created");
+    addToActivity(s.updatedAt, "services_updated");
   }
   for (const t of testimonials)
-    addToActivity(t.created_at, "testimonials_created");
+    addToActivity(t.createdAt, "testimonials_created");
   for (const s of submissions) {
-    addToActivity(s.created_at, "submissions_created");
-    addToActivity(s.updated_at, "submissions_updated");
+    addToActivity(s.createdAt, "submissions_created");
+    addToActivity(s.updatedAt, "submissions_updated");
   }
-  for (const u of users) addToActivity(u.created_at, "users_created");
+  for (const u of users) addToActivity(u.createdAt, "users_created");
 
   const combinedActivity = Array.from(activity.entries())
     .map(([date, dailyData]) => {
@@ -126,18 +126,18 @@ async function getAnalyticsData(
   const fromDate = dateRange?.from;
   const toDate = dateRange?.to;
   const filteredSubmissions = submissions.filter((s) => {
-    const date = new Date(s.created_at);
+    const date = new Date(s.createdAt);
     return (!fromDate || date >= fromDate) && (!toDate || date <= toDate);
   });
   const filteredBlogs = blogs.filter((b) => {
-    const date = new Date(b.created_at);
+    const date = new Date(b.createdAt);
     return (!fromDate || date >= fromDate) && (!toDate || date <= toDate);
   });
 
   const dailyCounts = new Map<string, number>();
-  for (const { created_at } of filteredSubmissions) {
-    if (!created_at) continue;
-    const date = new Date(created_at as string)
+  for (const { createdAt } of filteredSubmissions) {
+    if (!createdAt) continue;
+    const date = new Date(createdAt as string)
       .toISOString()
       .split("T")[0] as string;
     dailyCounts.set(date, (dailyCounts.get(date) || 0) + 1);
@@ -147,8 +147,8 @@ async function getAnalyticsData(
     .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
   const serviceCounts = new Map<string, number>();
-  for (const { service_name } of filteredSubmissions) {
-    const aService = (service_name || "Uncategorized") as string;
+  for (const { serviceName } of filteredSubmissions) {
+    const aService = (serviceName || "Uncategorized") as string;
     serviceCounts.set(aService, (serviceCounts.get(aService) || 0) + 1);
   }
   const submissionsByService = Array.from(serviceCounts.entries()).map(
@@ -165,7 +165,7 @@ async function getAnalyticsData(
   );
 
   const blogViews = filteredBlogs
-    .map(({ title, views_count }) => ({ title, views: views_count || 0 }))
+    .map(({ title, viewsCount }) => ({ title, views: viewsCount || 0 }))
     .sort((a, b) => b.views - a.views)
     .slice(0, 10);
 
@@ -183,12 +183,12 @@ async function getAnalyticsData(
     { total_days: number; count: number }
   >();
   for (const s of filteredSubmissions) {
-    if (s.completed_at && s.created_at) {
-      const created = new Date(s.created_at);
-      const completed = new Date(s.completed_at);
+    if (s.completedAt && s.createdAt) {
+      const created = new Date(s.createdAt);
+      const completed = new Date(s.completedAt);
       const diffDays =
         (completed.getTime() - created.getTime()) / (1000 * 3600 * 24);
-      const service = (s.service_name || "Uncategorized") as string;
+      const service = (s.serviceName || "Uncategorized") as string;
       const data = turnaroundData.get(service) || { total_days: 0, count: 0 };
       data.total_days += diffDays;
       data.count += 1;
@@ -205,7 +205,7 @@ async function getAnalyticsData(
   const allServiceKeys = [
     ...new Set(
       filteredSubmissions.map(
-        (s) => (s.service_name || "Uncategorized") as string,
+        (s) => (s.serviceName || "Uncategorized") as string,
       ),
     ),
   ];
@@ -219,9 +219,9 @@ async function getAnalyticsData(
     { total: number } & Record<string, number>
   >();
 
-  for (const { created_at, service_name, status } of filteredSubmissions) {
-    if (!created_at) continue;
-    const date = new Date(created_at as string)
+  for (const { createdAt, serviceName, status } of filteredSubmissions) {
+    if (!createdAt) continue;
+    const date = new Date(createdAt as string)
       .toISOString()
       .split("T")[0] as string;
     if (!detailedCounts.has(date)) {
@@ -232,7 +232,7 @@ async function getAnalyticsData(
     }
     const dayData = detailedCounts.get(date)!;
     dayData.total += 1;
-    dayData[(service_name || "Uncategorized") as string]! += 1;
+    dayData[(serviceName || "Uncategorized") as string]! += 1;
     dayData[(status || "Unknown") as string]! += 1;
   }
   const detailedSubmissions = Array.from(detailedCounts.entries())
@@ -244,7 +244,7 @@ async function getAnalyticsData(
   ).length;
   const totalSubmissions = filteredSubmissions.length;
   const totalViews = filteredBlogs.reduce(
-    (acc, { views_count }) => acc + (views_count || 0),
+    (acc, { viewsCount }) => acc + (viewsCount || 0),
     0,
   );
   return {
@@ -355,40 +355,66 @@ export default function AnalysisClient() {
         </Card>
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Platform Activity</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="mb-4 flex flex-wrap items-center gap-x-6 gap-y-2 border-b border-gray-200 pb-4">
-            {combinedActivityKeys.sort().map((key) => (
-              <div key={key} className="flex items-center">
-                <input
-                  id={key}
-                  type="checkbox"
-                  checked={visibleKeys.includes(key)}
-                  onChange={() => handleKeyVisibilityChange(key)}
-                  className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
-                />
-                <label
-                  htmlFor={key}
-                  className="ml-2 block text-sm text-gray-900"
-                >
-                  {key
-                    .split("_")
-                    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-                    .join(" ")}
-                </label>
-              </div>
-            ))}
-          </div>
-          <CombinedActivityChart data={combinedActivity} keys={visibleKeys} />
-        </CardContent>
-      </Card>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <Card>
+          <CardHeader>
+            <CardTitle>Submissions Over Time</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <SubmissionsLineChart data={submissionsByDay} />
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle>Submissions by Service</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <SubmissionsBarChart data={submissionsByService} />
+          </CardContent>
+        </Card>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <Card>
+          <CardHeader>
+            <CardTitle>Content Breakdown</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ContentBarChart data={contentBreakdown} />
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle>Blog Views</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <BlogViewsChart data={blogViews} />
+          </CardContent>
+        </Card>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <Card>
+          <CardHeader>
+            <CardTitle>Submission Status</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <SubmissionStatusPieChart data={submissionStatus} />
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle>Turnaround Time</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <TurnaroundTimeChart data={turnaroundAnalysis} />
+          </CardContent>
+        </Card>
+      </div>
 
       <Card>
         <CardHeader>
-          <CardTitle>Detailed Submissions Breakdown</CardTitle>
+          <CardTitle>Detailed Submissions</CardTitle>
         </CardHeader>
         <CardContent>
           <DetailedSubmissionsChart
@@ -401,68 +427,17 @@ export default function AnalysisClient() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Submissions by Day</CardTitle>
+          <CardTitle>Combined Activity</CardTitle>
         </CardHeader>
         <CardContent>
-          <SubmissionsLineChart data={submissionsByDay} />
+          <CombinedActivityChart
+            data={combinedActivity}
+            visibleKeys={visibleKeys}
+            onKeyVisibilityChange={handleKeyVisibilityChange}
+            availableKeys={combinedActivityKeys}
+          />
         </CardContent>
       </Card>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card>
-          <CardHeader>
-            <CardTitle>Submissions by Service</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <SubmissionsBarChart data={submissionsByService} />
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle>Content Breakdown by Category</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <ContentBarChart data={contentBreakdown} />
-          </CardContent>
-        </Card>
-      </div>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Top 10 Blog Posts by Views</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <BlogViewsChart data={blogViews} />
-        </CardContent>
-      </Card>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card>
-          <CardHeader>
-            <CardTitle>Average Submission Turnaround Time (Days)</CardTitle>
-          </CardHeader>
-          <CardContent>
-            {turnaroundAnalysis.length > 0 ? (
-              <TurnaroundTimeChart data={turnaroundAnalysis} />
-            ) : (
-              <div className="flex items-center justify-center h-[300px] text-slate-500">
-                <p>
-                  No completed submissions to analyze in the selected date
-                  range.
-                </p>
-              </div>
-            )}
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle>Submission Status</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <SubmissionStatusPieChart data={submissionStatus} />
-          </CardContent>
-        </Card>
-      </div>
     </div>
   );
 }
