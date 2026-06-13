@@ -32,7 +32,7 @@ const renderTestimonial = (
   onDelete: (testimonial: Testimonial) => void,
 ) => {
   const router = useRouter();
-  const date = new Date(testimonial.created_at);
+  const date = new Date(testimonial.createdAt);
   const formattedDate = !Number.isNaN(date.getTime())
     ? format(date, "PP")
     : "Date not available";
@@ -98,7 +98,7 @@ const renderTestimonial = (
           </div>
         </CardHeader>
         <CardContent className="flex-grow p-0 overflow-hidden">
-          <TestimonialEmbed postUrl={testimonial.post_url} />
+          <TestimonialEmbed postUrl={testimonial.postUrl} />
         </CardContent>
       </Card>
     </div>

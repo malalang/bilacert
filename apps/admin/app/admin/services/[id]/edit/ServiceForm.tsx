@@ -47,23 +47,23 @@ export default function ServiceForm({ service }: ServiceFormProps) {
       href: "",
       category: "",
       description: "",
-      short_description: "",
+      shortDescription: "",
       icon: "",
-      order_index: 0,
+      orderIndex: 0,
       content: "",
       features: "",
       requirements: "",
       includes: "",
       published: false,
       featured: false,
-      processing_time: "",
+      processingTime: "",
       pricing: 0,
       image: "",
       thumbnail: "",
-      seo_title: "",
-      seo_description: "",
-      seo_keywords: "",
-      pricing_plans: [
+      seoTitle: "",
+      seoDescription: "",
+      seoKeywords: "",
+      pricingPlans: [
         {
           title: "Basic",
           description: "",
@@ -86,8 +86,8 @@ export default function ServiceForm({ service }: ServiceFormProps) {
           popular: false,
         },
       ],
-      process_steps: [],
-      success_story: { scenario: "", challenge: "", solution: "", result: "" },
+      processSteps: [],
+      successStory: { scenario: "", challenge: "", solution: "", result: "" },
     },
   });
 
@@ -135,7 +135,7 @@ export default function ServiceForm({ service }: ServiceFormProps) {
         },
       ];
 
-      const servicePricingPlans = (service.pricing_plans || []).map((p) => ({
+      const servicePricingPlans = (service.pricingPlans || []).map((p) => ({
         ...p,
         features: Array.isArray(p.features)
           ? p.features.join("\n")
@@ -152,9 +152,9 @@ export default function ServiceForm({ service }: ServiceFormProps) {
         href: service.href || "",
         category: service.category || "",
         description: service.description || "",
-        short_description: service.short_description || "",
+        shortDescription: service.shortDescription || "",
         icon: service.icon || "",
-        order_index: service.order_index || 0,
+        orderIndex: service.orderIndex || 0,
         content: service.content || "",
         features: Array.isArray(service.features)
           ? service.features.join("\n")
@@ -167,19 +167,19 @@ export default function ServiceForm({ service }: ServiceFormProps) {
           : "",
         published: service.published || false,
         featured: service.featured || false,
-        processing_time: service.processing_time || "",
+        processingTime: service.processingTime || "",
         pricing: service.pricing || 0,
         image: service.image || "",
         thumbnail: service.thumbnail || "",
-        seo_title: service.seo_title || "",
-        seo_description: service.seo_description || "",
-        seo_keywords: service.seo_keywords || "",
-        pricing_plans: populatedPlans,
-        process_steps: (service.process_steps || []).map((p) => ({
+        seoTitle: service.seoTitle || "",
+        seoDescription: service.seoDescription || "",
+        seoKeywords: service.seoKeywords || "",
+        pricingPlans: populatedPlans,
+        processSteps: (service.processSteps || []).map((p) => ({
           ...p,
           step: String(p.step),
         })),
-        success_story: service.success_story || {
+        successStory: service.successStory || {
           scenario: "",
           challenge: "",
           solution: "",
@@ -193,7 +193,7 @@ export default function ServiceForm({ service }: ServiceFormProps) {
     try {
       const processedValues = {
         ...values,
-        process_steps: values.process_steps.map(
+        processSteps: values.processSteps.map(
           (step): { title: string; description: string; step: string } => ({
             title: step.title,
             description: step.description,

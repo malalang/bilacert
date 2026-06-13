@@ -26,8 +26,8 @@ export default function Testimonials() {
     const fetchTestimonials = async () => {
       const { data, error } = await supabase
         .from("testimonials")
-        .select("id, post_url")
-        .order("created_at", { ascending: false });
+        .select("id, postUrl")
+        .order("createdAt", { ascending: false });
 
       if (error) {
         console.error("Error fetching testimonials:", error);
@@ -37,10 +37,11 @@ export default function Testimonials() {
       if (data) {
         const normalized = data.map((t: any) => ({
           id: t.id,
-          postUrl: t.post_url,
+          postUrl: t.postUrl,
         }));
         setTestimonials(normalized);
       }
+
     };
 
     fetchTestimonials();

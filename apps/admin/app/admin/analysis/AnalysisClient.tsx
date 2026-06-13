@@ -30,12 +30,12 @@ const supabase = createSupabaseBrowserClient();
 
 interface ChartData {
   submissionsByDay: { date: string; count: number }[];
-  submissionsByService: { service_name: string; count: number }[];
+  submissionsByService: { serviceName: string; count: number }[];
   contentBreakdown: { contentType: string; count: number }[];
   blogViews: { title: string; views: number }[];
   submissionStatus: { status: string; count: number }[];
   detailedSubmissions: { date: string; [key: string]: number | string }[];
-  turnaroundAnalysis: { service_name: string; average_days: number }[];
+  turnaroundAnalysis: { serviceName: string; averageDays: number }[];
   combinedActivity: { date: string; [key: string]: number | string }[];
   combinedActivityKeys: string[];
   serviceKeys: string[];
@@ -152,7 +152,7 @@ async function getAnalyticsData(
     serviceCounts.set(aService, (serviceCounts.get(aService) || 0) + 1);
   }
   const submissionsByService = Array.from(serviceCounts.entries()).map(
-    ([service_name, count]) => ({ service_name, count }),
+    ([serviceName, count]) => ({ serviceName, count }),
   );
 
   const categoryCounts = new Map<string, number>();
@@ -180,7 +180,7 @@ async function getAnalyticsData(
 
   const turnaroundData = new Map<
     string,
-    { total_days: number; count: number }
+    { totalDays: number; count: number }
   >();
   for (const s of filteredSubmissions) {
     if (s.completedAt && s.createdAt) {
@@ -189,16 +189,16 @@ async function getAnalyticsData(
       const diffDays =
         (completed.getTime() - created.getTime()) / (1000 * 3600 * 24);
       const service = (s.serviceName || "Uncategorized") as string;
-      const data = turnaroundData.get(service) || { total_days: 0, count: 0 };
-      data.total_days += diffDays;
+      const data = turnaroundData.get(service) || { totalDays: 0, count: 0 };
+      data.totalDays += diffDays;
       data.count += 1;
       turnaroundData.set(service, data);
     }
   }
   const turnaroundAnalysis = Array.from(turnaroundData.entries()).map(
-    ([service_name, data]) => ({
-      service_name,
-      average_days: parseFloat((data.total_days / data.count).toFixed(2)),
+    ([serviceName, data]) => ({
+      serviceName,
+      averageDays: parseFloat((data.totalDays / data.count).toFixed(2)),
     }),
   );
 

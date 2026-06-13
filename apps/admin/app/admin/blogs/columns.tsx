@@ -36,7 +36,7 @@ export const columns = ({
     ),
   },
   {
-    accessorKey: "author_name",
+    accessorKey: "authorName",
     header: "Author",
   },
   {

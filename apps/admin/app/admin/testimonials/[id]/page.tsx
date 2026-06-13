@@ -19,8 +19,8 @@ async function getTestimonial(id: string): Promise<Testimonial | null> {
 
   return {
     id: data.id,
-    post_url: data.post_url,
-    created_at: data.created_at,
+    postUrl: data.postUrl,
+    createdAt: data.createdAt,
   } as Testimonial;
 }
 
@@ -36,7 +36,7 @@ export async function generateMetadata({
     };
   }
   return {
-    title: `Testimonial from ${new Date(testimonial.created_at).toLocaleDateString()} | Bilacert Admin Pro`,
+    title: `Testimonial from ${new Date(testimonial.createdAt).toLocaleDateString()} | Bilacert Admin Pro`,
   };
 }
 

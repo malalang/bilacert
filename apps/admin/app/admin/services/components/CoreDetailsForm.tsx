@@ -72,7 +72,7 @@ export default function CoreDetailsForm({ form }: { form: any }) {
         />
         <FormField
           control={form.control}
-          name="short_description"
+          name="shortDescription"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Short Description</FormLabel>

@@ -58,7 +58,7 @@ export default function TestimonialDetails({
 
         <Card>
           <CardContent className="h-[calc(100vh-20rem)] overflow-y-auto p-0">
-            <TestimonialEmbed postUrl={testimonial.post_url} />
+            <TestimonialEmbed postUrl={testimonial.postUrl} />
           </CardContent>
         </Card>
       </div>

@@ -35,7 +35,7 @@ export function useDashboardData() {
         ?.filter((s) => s.status === "archived")
         .reduce((acc, submission) => {
           const service = services?.find(
-            (s) => s.slug === submission.service_name,
+            (s) => s.slug === submission.serviceName,
           );
           return acc + (service?.pricing || 0);
         }, 0) ?? 0;
@@ -48,7 +48,7 @@ export function useDashboardData() {
     return services
       .map((service) => {
         const count = submissions.filter(
-          (s) => s.service_name === service.slug,
+          (s) => s.serviceName === service.slug,
         ).length;
         return { ...service, submissions: count };
       })
@@ -61,20 +61,20 @@ export function useDashboardData() {
       ...submissions.map((s) => ({
         ...s,
         type: "submission" as const,
-        date: s.created_at,
-        name: s.full_name,
+        date: s.createdAt,
+        name: s.fullName,
         id: s.id,
         email: s.email,
-        service_name: s.service_name,
+        serviceName: s.serviceName,
       })),
       ...contacts.map((c) => ({
         ...c,
         type: "contact" as const,
-        date: c.submitted_at,
+        date: c.submittedAt,
         name: c.name,
         id: c.id,
         email: c.email,
-        service_name: "Contact Form",
+        serviceName: "Contact Form",
       })),
     ];
     return combined

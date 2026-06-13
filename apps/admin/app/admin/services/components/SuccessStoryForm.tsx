@@ -18,7 +18,7 @@ export default function SuccessStoryForm({ form }: { form: any }) {
       <CardContent className="space-y-4">
         <FormField
           control={form.control}
-          name="success_story.scenario"
+          name="successStory.scenario"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Scenario</FormLabel>
@@ -30,7 +30,7 @@ export default function SuccessStoryForm({ form }: { form: any }) {
         />
         <FormField
           control={form.control}
-          name="success_story.challenge"
+          name="successStory.challenge"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Challenge</FormLabel>
@@ -42,7 +42,7 @@ export default function SuccessStoryForm({ form }: { form: any }) {
         />
         <FormField
           control={form.control}
-          name="success_story.solution"
+          name="successStory.solution"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Solution</FormLabel>
@@ -54,7 +54,7 @@ export default function SuccessStoryForm({ form }: { form: any }) {
         />
         <FormField
           control={form.control}
-          name="success_story.result"
+          name="successStory.result"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Result</FormLabel>

@@ -78,7 +78,7 @@ export default async function ServiceDetailPage({ params }: Props) {
         subtitle={service.shortDescription || ""}
         iconName={service.icon || ""}
         imageSrc={service.image || ""}
-        processing_time={service.processingTime || ""}
+        processingTime={service.processingTime || ""}
         formPath={formPath}
         phone="075 430 4433"
       />

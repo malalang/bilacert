@@ -20,7 +20,7 @@ export default function SeoForm({ form }: { form: any }) {
       <CardContent className="space-y-4">
         <FormField
           control={form.control}
-          name="seo_title"
+          name="seoTitle"
           render={({ field }) => (
             <FormItem>
               <FormLabel>SEO Title</FormLabel>
@@ -33,7 +33,7 @@ export default function SeoForm({ form }: { form: any }) {
         />
         <FormField
           control={form.control}
-          name="seo_description"
+          name="seoDescription"
           render={({ field }) => (
             <FormItem>
               <FormLabel>SEO Description</FormLabel>
@@ -46,7 +46,7 @@ export default function SeoForm({ form }: { form: any }) {
         />
         <FormField
           control={form.control}
-          name="seo_keywords"
+          name="seoKeywords"
           render={({ field }) => (
             <FormItem>
               <FormLabel>SEO Keywords</FormLabel>

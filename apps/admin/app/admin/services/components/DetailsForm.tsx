@@ -45,7 +45,7 @@ export default function DetailsForm({ form }: { form: any }) {
         />
         <FormField
           control={form.control}
-          name="order_index"
+          name="orderIndex"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Order Index</FormLabel>
@@ -58,7 +58,7 @@ export default function DetailsForm({ form }: { form: any }) {
         />
         <FormField
           control={form.control}
-          name="processing_time"
+          name="processingTime"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Processing Time</FormLabel>

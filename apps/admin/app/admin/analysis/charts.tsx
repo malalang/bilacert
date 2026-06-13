@@ -115,12 +115,12 @@ export const SubmissionsLineChart = ({
 export const SubmissionsBarChart = ({
   data = [],
 }: {
-  data?: { service_name: string; count: number }[];
+  data?: { serviceName: string; count: number }[];
 }) => (
   <ResponsiveContainer width="100%" height={300}>
     <BarChart data={data}>
       <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
-      <XAxis dataKey="service_name" stroke="#888" fontSize={12} />
+      <XAxis dataKey="serviceName" stroke="#888" fontSize={12} />
       <YAxis stroke="#888" fontSize={12} />
       <Tooltip content={<CustomTooltip />} />
       <Bar
@@ -131,7 +131,7 @@ export const SubmissionsBarChart = ({
       >
         {data.map((_entry, index) => (
           <Cell
-            key={`cell-${_entry.service_name}`}
+            key={`cell-${_entry.serviceName}`}
             fill={COLORS[index % COLORS.length]}
           />
         ))}
@@ -202,14 +202,14 @@ export const BlogViewsChart = ({
 export const TurnaroundTimeChart = ({
   data = [],
 }: {
-  data?: { service_name: string; average_days: number }[];
+  data?: { serviceName: string; averageDays: number }[];
 }) => (
   <ResponsiveContainer width="100%" height={300}>
     <BarChart data={data} layout="vertical">
       <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
       <XAxis type="number" stroke="#888" fontSize={12} />
       <YAxis
-        dataKey="service_name"
+        dataKey="serviceName"
         type="category"
         width={150}
         stroke="#888"
@@ -217,14 +217,14 @@ export const TurnaroundTimeChart = ({
       />
       <Tooltip content={<CustomTooltip />} />
       <Bar
-        dataKey="average_days"
+        dataKey="averageDays"
         name="Avg. Days"
         fill="#a234b6"
         radius={[0, 4, 4, 0]}
       >
         {data.map((_entry, index) => (
           <Cell
-            key={`cell-${_entry.service_name}`}
+            key={`cell-${_entry.serviceName}`}
             fill={COLORS[index % COLORS.length]}
           />
         ))}

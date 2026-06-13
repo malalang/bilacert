@@ -17,7 +17,7 @@ import { Textarea } from "@/components/ui/textarea";
 export default function ProcessStepsForm({ form }: { form: any }) {
   const { fields, append, remove } = useFieldArray({
     control: form.control,
-    name: "process_steps",
+    name: "processSteps",
   });
 
   return (
@@ -34,7 +34,7 @@ export default function ProcessStepsForm({ form }: { form: any }) {
             <div className="grid gap-2 flex-grow">
               <FormField
                 control={form.control}
-                name={`process_steps.${index}.step`}
+                name={`processSteps.${index}.step`}
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Step Number</FormLabel>
@@ -47,7 +47,7 @@ export default function ProcessStepsForm({ form }: { form: any }) {
               />
               <FormField
                 control={form.control}
-                name={`process_steps.${index}.title`}
+                name={`processSteps.${index}.title`}
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Step Title</FormLabel>
@@ -60,7 +60,7 @@ export default function ProcessStepsForm({ form }: { form: any }) {
               />
               <FormField
                 control={form.control}
-                name={`process_steps.${index}.description`}
+                name={`processSteps.${index}.description`}
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Step Description</FormLabel>

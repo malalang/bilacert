@@ -48,7 +48,7 @@ export default function DeleteSubmissionDialog({
 
       toast({
         title: "Submission deleted",
-        description: `The submission from "${submission.full_name}" has been successfully deleted.`,
+        description: `The submission from "${submission.fullName}" has been successfully deleted.`,
       });
       if (onDeleted) {
         onDeleted();
@@ -73,7 +73,7 @@ export default function DeleteSubmissionDialog({
           <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
           <AlertDialogDescription>
             This action cannot be undone. This will permanently delete the
-            submission from "{submission?.full_name}".
+            submission from "{submission?.fullName}".
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>

@@ -105,7 +105,7 @@ const ServiceCard = ({
             {service.featured && <Badge variant="outline">Featured</Badge>}
           </div>
           <p className="text-sm text-muted-foreground line-clamp-3">
-            {service.short_description}
+            {service.shortDescription}
           </p>
         </CardContent>
         <CardFooter>

@@ -21,16 +21,14 @@ export async function submitForm(
 
   try {
     const { data: submission, error } = await supabase
-      .from("submissions")
+      .from("form_submissions")
       .insert({
-        service_type: serviceType,
-        name: fullName,
+        formType: serviceType,
+        fullName: fullName,
         email: email,
         phone: phone || null,
-        message: message,
-        service_data: serviceData || {},
-        user_agent:
-          typeof navigator !== "undefined" ? navigator.userAgent : null,
+        details: { message, ...serviceData } || {},
+        status: "pending",
       })
       .select();
 
@@ -51,13 +49,13 @@ export async function getSubmissionByEmail(
   serviceType?: string,
 ) {
   try {
-    let query = supabase.from("submissions").select("*").eq("email", email);
+    let query = supabase.from("form_submissions").select("*").eq("email", email);
 
     if (serviceType) {
-      query = query.eq("service_type", serviceType);
+      query = query.eq("formType", serviceType);
     }
 
-    const { data, error } = await query.order("created_at", {
+    const { data, error } = await query.order("createdAt", {
       ascending: false,
     });
 
@@ -74,8 +72,7 @@ export async function getTestimonials(): Promise<Testimonial[]> {
     const { data, error } = await supabase
       .from("testimonials")
       .select("*")
-      .eq("verified", true)
-      .order("created_at", { ascending: false })
+      .order("createdAt", { ascending: false })
       .limit(10);
 
     if (error) throw error;

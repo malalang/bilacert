@@ -36,7 +36,7 @@ export default function TestimonialForm({ testimonial }: TestimonialFormProps) {
   const form = useForm<TestimonialFormValues>({
     resolver: standardSchemaResolver(testimonialSchema),
     defaultValues: {
-      post_url: "",
+      postUrl: "",
     },
   });
 
@@ -49,11 +49,11 @@ export default function TestimonialForm({ testimonial }: TestimonialFormProps) {
   useEffect(() => {
     if (testimonial) {
       reset({
-        post_url: testimonial.post_url,
+        postUrl: testimonial.postUrl,
       });
     } else {
       reset({
-        post_url: "",
+        postUrl: "",
       });
     }
   }, [testimonial, reset]);
@@ -85,7 +85,7 @@ export default function TestimonialForm({ testimonial }: TestimonialFormProps) {
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         <FormField
           control={form.control}
-          name="post_url"
+          name="postUrl"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Facebook Post URL</FormLabel>

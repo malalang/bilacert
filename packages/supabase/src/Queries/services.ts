@@ -12,30 +12,30 @@ export function normalizeService(row: ServiceRow): Service {
     href: row.href,
     category: row.category ?? undefined,
     description: row.description ?? undefined,
-    shortDescription: row.short_description ?? undefined,
+    shortDescription: row.shortDescription ?? undefined,
     icon: row.icon ?? undefined,
-    orderIndex: row.order_index ?? undefined,
+    orderIndex: row.orderIndex ?? undefined,
     content: row.content ?? undefined,
     features: row.features ?? undefined,
     requirements: row.requirements ?? undefined,
     includes: row.includes ?? undefined,
     published: row.published ?? false,
     featured: row.featured ?? false,
-    createdAt: row.created_at ?? new Date(0).toISOString(),
-    processingTime: row.processing_time ?? undefined,
+    createdAt: row.createdAt ?? new Date(0).toISOString(),
+    processingTime: row.processingTime ?? undefined,
     pricing: row.pricing ?? undefined,
     image: row.image ?? undefined,
     thumbnail: row.thumbnail ?? undefined,
-    seoTitle: row.seo_title ?? undefined,
-    seoDescription: row.seo_description ?? undefined,
-    seoKeywords: row.seo_keywords ?? undefined,
+    seoTitle: row.seoTitle ?? undefined,
+    seoDescription: row.seoDescription ?? undefined,
+    seoKeywords: row.seoKeywords ?? undefined,
     pricingPlans:
-      (row.pricing_plans as unknown as Service["pricingPlans"]) ?? undefined,
+      (row.pricingPlans as unknown as Service["pricingPlans"]) ?? undefined,
     processSteps:
-      (row.process_steps as unknown as Service["processSteps"]) ?? undefined,
+      (row.processSteps as unknown as Service["processSteps"]) ?? undefined,
     successStory:
-      (row.success_story as unknown as Service["successStory"]) ?? undefined,
-    updatedAt: row.updated_at ?? undefined,
+      (row.successStory as unknown as Service["successStory"]) ?? undefined,
+    updatedAt: row.updatedAt ?? undefined,
   };
 }
 
@@ -45,7 +45,7 @@ export async function getPublishedServices(): Promise<Service[]> {
     .from("services")
     .select("*")
     .eq("published", true)
-    .order("order_index", { ascending: true });
+    .order("orderIndex", { ascending: true });
 
   if (error) {
     console.error("Error fetching services:", error);
@@ -62,7 +62,7 @@ export async function getFeaturedServices(): Promise<Service[]> {
     .select("*")
     .eq("published", true)
     .eq("featured", true)
-    .order("order_index", { ascending: true })
+    .order("orderIndex", { ascending: true })
     .limit(4);
 
   if (error) {

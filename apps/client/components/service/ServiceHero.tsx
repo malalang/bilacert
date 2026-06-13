@@ -8,7 +8,7 @@ interface ServiceHeroProps {
   subtitle: string;
   iconName: string;
   imageSrc: string;
-  processing_time: string;
+  processingTime: string;
   formPath: string;
   phone: string;
 }
@@ -18,7 +18,7 @@ export function ServiceHero({
   subtitle,
   iconName,
   imageSrc,
-  processing_time,
+  processingTime,
   formPath,
   phone,
 }: ServiceHeroProps) {
@@ -58,7 +58,7 @@ export function ServiceHero({
               </Link>
             </div>
           </div>
-          <HeroStatsBackdrop processing_time={processing_time} />
+          <HeroStatsBackdrop processingTime={processingTime} />
         </div>
       </div>
     </section>
@@ -66,10 +66,10 @@ export function ServiceHero({
 }
 
 interface HeroStatsBackdropProps {
-  processing_time: string;
+  processingTime: string;
 }
 
-export function HeroStatsBackdrop({ processing_time }: HeroStatsBackdropProps) {
+export function HeroStatsBackdrop({ processingTime }: HeroStatsBackdropProps) {
   const _CheckCircleIcon = getIcon("CheckCircle");
 
   return (
@@ -80,7 +80,7 @@ export function HeroStatsBackdrop({ processing_time }: HeroStatsBackdropProps) {
             <CheckCircle className="h-6 w-6 text-white" />
           </div>
           <div>
-            <h3 className="font-semibold">{processing_time}</h3>
+            <h3 className="font-semibold">{processingTime}</h3>
             <p className="text-gray-300">Standard processing time</p>
           </div>
         </div>

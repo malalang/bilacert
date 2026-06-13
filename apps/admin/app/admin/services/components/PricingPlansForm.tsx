@@ -17,7 +17,7 @@ import { Textarea } from "@/components/ui/textarea";
 export default function PricingPlansForm({ form }: { form: any }) {
   const { fields: pricingPlanFields } = useFieldArray({
     control: form.control,
-    name: "pricing_plans",
+    name: "pricingPlans",
   });
 
   return (
@@ -35,7 +35,7 @@ export default function PricingPlansForm({ form }: { form: any }) {
               <CardContent className="space-y-4">
                 <FormField
                   control={form.control}
-                  name={`pricing_plans.${index}.title`}
+                  name={`pricingPlans.${index}.title`}
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Plan Title</FormLabel>
@@ -48,7 +48,7 @@ export default function PricingPlansForm({ form }: { form: any }) {
                 />
                 <FormField
                   control={form.control}
-                  name={`pricing_plans.${index}.description`}
+                  name={`pricingPlans.${index}.description`}
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Plan Description</FormLabel>
@@ -61,7 +61,7 @@ export default function PricingPlansForm({ form }: { form: any }) {
                 />
                 <FormField
                   control={form.control}
-                  name={`pricing_plans.${index}.price`}
+                  name={`pricingPlans.${index}.price`}
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Price</FormLabel>
@@ -74,7 +74,7 @@ export default function PricingPlansForm({ form }: { form: any }) {
                 />
                 <FormField
                   control={form.control}
-                  name={`pricing_plans.${index}.features`}
+                  name={`pricingPlans.${index}.features`}
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Features (one per line)</FormLabel>
@@ -87,7 +87,7 @@ export default function PricingPlansForm({ form }: { form: any }) {
                 />
                 <FormField
                   control={form.control}
-                  name={`pricing_plans.${index}.popular`}
+                  name={`pricingPlans.${index}.popular`}
                   render={({ field }) => (
                     <FormItem className="flex flex-row items-center justify-between rounded-lg border bg-card p-4">
                       <div className="space-y-0.5">

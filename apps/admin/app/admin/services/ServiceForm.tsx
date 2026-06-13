@@ -154,7 +154,7 @@ export default function ServiceForm({ service }: ServiceFormProps) {
         },
       ];
 
-      const servicePricingPlans = (service.pricing_plans || []).map((p) => ({
+      const servicePricingPlans = (service.pricingPlans || []).map((p) => ({
         ...p,
         features: Array.isArray(p.features)
           ? p.features.join("\n")
@@ -171,9 +171,9 @@ export default function ServiceForm({ service }: ServiceFormProps) {
         href: service.href || "",
         category: service.category || "",
         description: service.description || "",
-        shortDescription: service.short_description || "",
+        shortDescription: service.shortDescription || "",
         icon: service.icon || "",
-        orderIndex: service.order_index || 0,
+        orderIndex: service.orderIndex || 0,
         content: service.content || "",
         features: Array.isArray(service.features)
           ? service.features.join("\n")
@@ -186,19 +186,19 @@ export default function ServiceForm({ service }: ServiceFormProps) {
           : "",
         published: service.published || false,
         featured: service.featured || false,
-        processingTime: service.processing_time || "",
+        processingTime: service.processingTime || "",
         pricing: service.pricing || 0,
         image: service.image || "",
         thumbnail: service.thumbnail || "",
-        seoTitle: service.seo_title || "",
-        seoDescription: service.seo_description || "",
-        seoKeywords: service.seo_keywords || "",
+        seoTitle: service.seoTitle || "",
+        seoDescription: service.seoDescription || "",
+        seoKeywords: service.seoKeywords || "",
         pricingPlans: populatedPlans,
-        processSteps: (service.process_steps || []).map((p) => ({
+        processSteps: (service.processSteps || []).map((p) => ({
           ...p,
           step: String(p.step),
         })),
-        successStory: service.success_story || {
+        successStory: service.successStory || {
           scenario: "",
           challenge: "",
           solution: "",

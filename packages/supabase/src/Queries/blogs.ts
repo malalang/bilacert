@@ -50,7 +50,7 @@ export async function getAllPublishedBlogPosts(): Promise<BlogPost[]> {
     .from("blog_posts")
     .select("*")
     .eq("published", true)
-    .order("created_at", { ascending: false });
+    .order("createdAt", { ascending: false });
 
   if (error) {
     throw new Error(error.message);

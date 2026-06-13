@@ -1867,805 +1867,6 @@ export default function FAQPage() {
 }
 ````
 
-## File: apps/client/app/forms/class-ecs-ecns-licensing/ClientPage.tsx
-````typescript
-"use client";
-
-import Image from "next/image";
-import Link from "next/link";
-import { type ChangeEvent, type FormEvent, useState } from "react";
-import { v4 as uuidv4 } from "uuid";
-import { supabase } from "@/lib/supabase-client";
-
-// Define the type for the form state
-interface FormData {
-  fullName: string;
-  email: string;
-  phone: string;
-  companyName: string;
-  serviceType: string;
-  message: string;
-}
-
-// Define the type for the submission status
-type SubmissionStatus = "idle" | "submitting" | "success" | "error";
-
-export default function ClassEcsEcnsLicensingPage() {
-  const [formData, setFormData] = useState<FormData>({
-    fullName: "",
-    email: "",
-    phone: "",
-    companyName: "",
-    serviceType: "Class ECS/ECNS Licensing",
-    message: "",
-  });
-
-  const [submissionStatus, setSubmissionStatus] =
-    useState<SubmissionStatus>("idle");
-  const [formError, setFormError] = useState<string | null>(null);
-
-  const handleInputChange = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({ ...prevData, [name]: value }));
-  };
-
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setSubmissionStatus("submitting");
-    setFormError(null);
-
-    try {
-      const { error } = await supabase.from("form_submissions").insert([
-        {
-          id: uuidv4(),
-          form_type: "class-ecs-ecns",
-          service_name: formData.serviceType,
-          full_name: formData.fullName,
-          email: formData.email,
-          phone: formData.phone,
-          company: formData.companyName,
-          details: { message: formData.message },
-          created_at: new Date().toISOString(),
-        },
-      ]);
-
-      if (error) {
-        throw error;
-      }
-
-      setSubmissionStatus("success");
-      setFormData({
-        fullName: "",
-        email: "",
-        phone: "",
-        companyName: "",
-        serviceType: "Class ECS/ECNS Licensing",
-        message: "",
-      });
-    } catch (error) {
-      console.error("Error submitting form:", error);
-      setSubmissionStatus("error");
-      setFormError(
-        "There was an error submitting your form. Please try again.",
-      );
-    }
-  };
-
-  return (
-    <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-      <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <Link href="/">
-          <Image
-            className="mx-auto h-12 w-auto"
-            src="/logo.png"
-            alt="Bilacert"
-            width={100}
-            height={100}
-          />
-        </Link>
-        <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-          Class ECS/ECNS Licensing Application
-        </h2>
-        <p className="mt-2 text-center text-sm text-gray-600">
-          Fill out the form below to begin the process.
-        </p>
-      </div>
-
-      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-xl">
-        <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-          {submissionStatus === "success" ? (
-            <div className="text-center">
-              <h3 className="text-2xl font-bold text-green-600 mb-4">
-                Submission Successful!
-              </h3>
-              <p className="text-gray-700">
-                Thank you for your application. We will review your information
-                and get back to you shortly.
-              </p>
-              <Link
-                href="/"
-                className="mt-6 inline-block bg-primary text-white font-bold py-2 px-4 rounded hover:bg-primary-dark transition-colors"
-              >
-                Back to Home
-              </Link>
-            </div>
-          ) : (
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div>
-                <label
-                  htmlFor="fullName"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Full Name
-                </label>
-                <div className="mt-1">
-                  <input
-                    type="text"
-                    name="fullName"
-                    id="fullName"
-                    required
-                    value={formData.fullName}
-                    onChange={handleInputChange}
-                    className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label
-                  htmlFor="email"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Email address
-                </label>
-                <div className="mt-1">
-                  <input
-                    id="email"
-                    name="email"
-                    type="email"
-                    autoComplete="email"
-                    required
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label
-                  htmlFor="phone"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Phone Number
-                </label>
-                <div className="mt-1">
-                  <input
-                    type="tel"
-                    name="phone"
-                    id="phone"
-                    value={formData.phone}
-                    onChange={handleInputChange}
-                    className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label
-                  htmlFor="companyName"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Company Name (optional)
-                </label>
-                <div className="mt-1">
-                  <input
-                    type="text"
-                    name="companyName"
-                    id="companyName"
-                    value={formData.companyName}
-                    onChange={handleInputChange}
-                    className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label
-                  htmlFor="message"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Additional Information
-                </label>
-                <div className="mt-1">
-                  <textarea
-                    id="message"
-                    name="message"
-                    rows={4}
-                    value={formData.message}
-                    onChange={handleInputChange}
-                    className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
-                  ></textarea>
-                </div>
-              </div>
-
-              {formError && (
-                <div className="rounded-md bg-red-50 p-4">
-                  <div className="flex">
-                    <div className="flex-shrink-0">
-                      <svg
-                        className="h-5 w-5 text-red-400"
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                        aria-hidden="true"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                    </div>
-                    <div className="ml-3">
-                      <p className="text-sm font-medium text-red-800">
-                        {formError}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              <div>
-                <button
-                  type="submit"
-                  disabled={submissionStatus === "submitting"}
-                  className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50"
-                >
-                  {submissionStatus === "submitting"
-                    ? "Submitting..."
-                    : "Submit Application"}
-                </button>
-              </div>
-            </form>
-          )}
-        </div>
-      </div>
-    </div>
-  );
-}
-````
-
-## File: apps/client/app/forms/radio-dealer-licensing/ClientPage.tsx
-````typescript
-"use client";
-
-import { createSupabaseBrowserClient } from "@bilacert/supabase/client";
-import Link from "next/link";
-import { type ChangeEvent, type FormEvent, useState } from "react";
-import { v4 as uuidv4 } from "uuid";
-
-// Define the type for the form state
-interface FormData {
-  fullName: string;
-  email: string;
-  phone: string;
-  companyName: string;
-  serviceType: string;
-  message: string;
-}
-
-// Define the type for the submission status
-type SubmissionStatus = "idle" | "submitting" | "success" | "error";
-
-export default function RadioDealerLicensingForm() {
-  const supabase = createSupabaseBrowserClient();
-  const [formData, setFormData] = useState<FormData>({
-    fullName: "",
-    email: "",
-    phone: "",
-    companyName: "",
-    serviceType: "Radio Dealer Licensing",
-    message: "",
-  });
-
-  const [submissionStatus, setSubmissionStatus] =
-    useState<SubmissionStatus>("idle");
-  const [formError, setFormError] = useState<string | null>(null);
-
-  const handleInputChange = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({ ...prevData, [name]: value }));
-  };
-
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setSubmissionStatus("submitting");
-    setFormError(null);
-
-    try {
-      const { error } = await supabase.from("form_submissions").insert([
-        {
-          id: uuidv4(),
-          form_type: "radio-dealer",
-          service_name: formData.serviceType,
-          full_name: formData.fullName,
-          email: formData.email,
-          phone: formData.phone,
-          company: formData.companyName,
-          details: { message: formData.message },
-          created_at: new Date().toISOString(),
-        },
-      ]);
-
-      if (error) {
-        throw error;
-      }
-
-      setSubmissionStatus("success");
-      setFormData({
-        fullName: "",
-        email: "",
-        phone: "",
-        companyName: "",
-        serviceType: "Radio Dealer Licensing",
-        message: "",
-      });
-    } catch (error) {
-      console.error("Error submitting form:", error);
-      setSubmissionStatus("error");
-      setFormError(
-        "There was an error submitting your form. Please try again.",
-      );
-    }
-  };
-
-  return (
-    <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-      <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <Link href="/">
-          <img className="mx-auto h-12 w-auto" src="/logo.png" alt="Bilacert" />
-        </Link>
-        <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-          Radio Dealer Licensing Application
-        </h2>
-        <p className="mt-2 text-center text-sm text-gray-600">
-          Fill out the form below to begin the process.
-        </p>
-      </div>
-
-      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-xl">
-        <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-          {submissionStatus === "success" ? (
-            <div className="text-center">
-              <h3 className="text-2xl font-bold text-green-600 mb-4">
-                Submission Successful!
-              </h3>
-              <p className="text-gray-700">
-                Thank you for your application. We will review your information
-                and get back to you shortly.
-              </p>
-              <Link href="/">
-                <span className="mt-6 inline-block bg-primary text-white font-bold py-2 px-4 rounded hover:bg-primary-dark transition-colors">
-                  Back to Home
-                </span>
-              </Link>
-            </div>
-          ) : (
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div>
-                <label
-                  htmlFor="fullName"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Full Name
-                </label>
-                <div className="mt-1">
-                  <input
-                    type="text"
-                    name="fullName"
-                    id="fullName"
-                    required
-                    value={formData.fullName}
-                    onChange={handleInputChange}
-                    className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label
-                  htmlFor="email"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Email address
-                </label>
-                <div className="mt-1">
-                  <input
-                    id="email"
-                    name="email"
-                    type="email"
-                    autoComplete="email"
-                    required
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label
-                  htmlFor="phone"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Phone Number
-                </label>
-                <div className="mt-1">
-                  <input
-                    type="tel"
-                    name="phone"
-                    id="phone"
-                    value={formData.phone}
-                    onChange={handleInputChange}
-                    className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label
-                  htmlFor="companyName"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Company Name (optional)
-                </label>
-                <div className="mt-1">
-                  <input
-                    type="text"
-                    name="companyName"
-                    id="companyName"
-                    value={formData.companyName}
-                    onChange={handleInputChange}
-                    className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label
-                  htmlFor="message"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Additional Information
-                </label>
-                <div className="mt-1">
-                  <textarea
-                    id="message"
-                    name="message"
-                    rows={4}
-                    value={formData.message}
-                    onChange={handleInputChange}
-                    className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
-                  ></textarea>
-                </div>
-              </div>
-
-              {formError && (
-                <div className="rounded-md bg-red-50 p-4">
-                  <div className="flex">
-                    <div className="flex-shrink-0">
-                      <svg
-                        className="h-5 w-5 text-red-400"
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                        aria-hidden="true"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                    </div>
-                    <div className="ml-3">
-                      <p className="text-sm font-medium text-red-800">
-                        {formError}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              <div>
-                <button
-                  type="submit"
-                  disabled={submissionStatus === "submitting"}
-                  className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50"
-                >
-                  {submissionStatus === "submitting"
-                    ? "Submitting..."
-                    : "Submit Application"}
-                </button>
-              </div>
-            </form>
-          )}
-        </div>
-      </div>
-    </div>
-  );
-}
-````
-
-## File: apps/client/app/forms/ski-boat-vhf-licensing/ClientPage.tsx
-````typescript
-"use client";
-
-import { createSupabaseBrowserClient } from "@bilacert/supabase/client";
-import Link from "next/link";
-import { type ChangeEvent, type FormEvent, useState } from "react";
-import { v4 as uuidv4 } from "uuid";
-
-// Define the type for the form state
-interface FormData {
-  fullName: string;
-  email: string;
-  phone: string;
-  companyName: string;
-  serviceType: string;
-  message: string;
-}
-
-// Define the type for the submission status
-type SubmissionStatus = "idle" | "submitting" | "success" | "error";
-
-export default function SkiBoatVhfLicensingForm() {
-  const supabase = createSupabaseBrowserClient();
-  const [formData, setFormData] = useState<FormData>({
-    fullName: "",
-    email: "",
-    phone: "",
-    companyName: "",
-    serviceType: "Ski Boat VHF Licensing",
-    message: "",
-  });
-
-  const [submissionStatus, setSubmissionStatus] =
-    useState<SubmissionStatus>("idle");
-  const [formError, setFormError] = useState<string | null>(null);
-
-  const handleInputChange = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({ ...prevData, [name]: value }));
-  };
-
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setSubmissionStatus("submitting");
-    setFormError(null);
-
-    try {
-      const { error } = await supabase.from("form_submissions").insert([
-        {
-          id: uuidv4(),
-          form_type: "ski-boat-vhf",
-          service_name: formData.serviceType,
-          full_name: formData.fullName,
-          email: formData.email,
-          phone: formData.phone,
-          company: formData.companyName,
-          details: { message: formData.message },
-          created_at: new Date().toISOString(),
-        },
-      ]);
-
-      if (error) {
-        throw error;
-      }
-
-      setSubmissionStatus("success");
-      setFormData({
-        fullName: "",
-        email: "",
-        phone: "",
-        companyName: "",
-        serviceType: "Ski Boat VHF Licensing",
-        message: "",
-      });
-    } catch (error) {
-      console.error("Error submitting form:", error);
-      setSubmissionStatus("error");
-      setFormError(
-        "There was an error submitting your form. Please try again.",
-      );
-    }
-  };
-
-  return (
-    <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-      <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <Link href="/">
-          <img className="mx-auto h-12 w-auto" src="/logo.png" alt="Bilacert" />
-        </Link>
-        <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-          Ski Boat VHF Licensing Application
-        </h2>
-        <p className="mt-2 text-center text-sm text-gray-600">
-          Fill out the form below to begin the process.
-        </p>
-      </div>
-
-      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-xl">
-        <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-          {submissionStatus === "success" ? (
-            <div className="text-center">
-              <h3 className="text-2xl font-bold text-green-600 mb-4">
-                Submission Successful!
-              </h3>
-              <p className="text-gray-700">
-                Thank you for your application. We will review your information
-                and get back to you shortly.
-              </p>
-              <Link href="/">
-                <span className="mt-6 inline-block bg-primary text-white font-bold py-2 px-4 rounded hover:bg-primary-dark transition-colors">
-                  Back to Home
-                </span>
-              </Link>
-            </div>
-          ) : (
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div>
-                <label
-                  htmlFor="fullName"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Full Name
-                </label>
-                <div className="mt-1">
-                  <input
-                    type="text"
-                    name="fullName"
-                    id="fullName"
-                    required
-                    value={formData.fullName}
-                    onChange={handleInputChange}
-                    className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label
-                  htmlFor="email"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Email address
-                </label>
-                <div className="mt-1">
-                  <input
-                    id="email"
-                    name="email"
-                    type="email"
-                    autoComplete="email"
-                    required
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label
-                  htmlFor="phone"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Phone Number
-                </label>
-                <div className="mt-1">
-                  <input
-                    type="tel"
-                    name="phone"
-                    id="phone"
-                    value={formData.phone}
-                    onChange={handleInputChange}
-                    className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label
-                  htmlFor="companyName"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Company Name (optional)
-                </label>
-                <div className="mt-1">
-                  <input
-                    type="text"
-                    name="companyName"
-                    id="companyName"
-                    value={formData.companyName}
-                    onChange={handleInputChange}
-                    className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label
-                  htmlFor="message"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Additional Information
-                </label>
-                <div className="mt-1">
-                  <textarea
-                    id="message"
-                    name="message"
-                    rows={4}
-                    value={formData.message}
-                    onChange={handleInputChange}
-                    className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
-                  ></textarea>
-                </div>
-              </div>
-
-              {formError && (
-                <div className="rounded-md bg-red-50 p-4">
-                  <div className="flex">
-                    <div className="flex-shrink-0">
-                      <svg
-                        className="h-5 w-5 text-red-400"
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                        aria-hidden="true"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                    </div>
-                    <div className="ml-3">
-                      <p className="text-sm font-medium text-red-800">
-                        {formError}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              <div>
-                <button
-                  type="submit"
-                  disabled={submissionStatus === "submitting"}
-                  className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50"
-                >
-                  {submissionStatus === "submitting"
-                    ? "Submitting..."
-                    : "Submit Application"}
-                </button>
-              </div>
-            </form>
-          )}
-        </div>
-      </div>
-    </div>
-  );
-}
-````
-
 ## File: apps/client/app/globals.css
 ````css
 @import "tailwindcss";
@@ -4871,93 +4072,6 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 }
 ````
 
-## File: packages/shared/src/components/Icon.tsx
-````typescript
-"use client";
-
-import {
-  Shield,
-  CheckSquare,
-  FileText,
-  Radio,
-  Sailboat,
-  Package,
-  LayoutDashboard,
-  Briefcase,
-  MessageSquare,
-  Users,
-  FileSpreadsheet,
-  type LucideProps,
-  type LucideIcon,
-  HelpCircle,
-  Settings,
-  User,
-  CreditCard,
-  DollarSign,
-  BarChart,
-  Clock,
-  Book,
-  Check,
-  Award,
-  Headphones,
-  Ship,
-} from "lucide-react";
-
-export const iconMap: { [key: string]: LucideIcon } = {
-  Shield,
-  CheckSquare,
-  FileText,
-  Radio,
-  Sailboat,
-  Ship,
-  Package,
-  LayoutDashboard,
-  Briefcase,
-  MessageSquare,
-  Users,
-  FileSpreadsheet,
-  Settings,
-  User,
-  CreditCard,
-  DollarSign,
-  BarChart,
-  Clock,
-  Book,
-  Check,
-  Award,
-  Headphones,
-};
-
-interface IconProps extends LucideProps {
-  name: string;
-}
-
-export const Icon = ({ name, ...props }: IconProps) => {
-  if (!name) {
-    return <HelpCircle {...props} />;
-  }
-  const LucideIcon = iconMap[name.charAt(0).toUpperCase() + name.slice(1)];
-
-  if (!LucideIcon) {
-    return <HelpCircle {...props} />; // A default fallback icon for unknown names
-  }
-
-  return <LucideIcon {...props} />;
-};
-
-export default Icon;
-````
-
-## File: packages/shared/src/utils/cn.ts
-````typescript
-import { clsx, type ClassValue } from "clsx";
-import { twMerge } from "tailwind-merge";
-
-export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
-}
-````
-
 ## File: packages/shared/tsconfig.json
 ````json
 {
@@ -5191,259 +4305,6 @@ export function mutationResult<T>(
 }
 ````
 
-## File: packages/supabase/src/hooks/useAnalyticsData.ts
-````typescript
-"use client";
-
-import { useSubmissions } from "./useSubmissions";
-import { useServices } from "./useServices";
-import { useBlogs } from "./useBlogs";
-import { useMemo } from "react";
-import { format, startOfDay, isValid } from "date-fns";
-
-export function useAnalyticsData() {
-  const {
-    data: submissions,
-    loading: submissionsLoading,
-    error: submissionsError,
-  } = useSubmissions();
-  const {
-    data: services,
-    loading: servicesLoading,
-    error: servicesError,
-  } = useServices();
-  const { data: blogs, loading: blogsLoading, error: blogsError } = useBlogs();
-
-  const loading = submissionsLoading || servicesLoading || blogsLoading;
-  const error = submissionsError || servicesError || blogsError;
-
-  const totalSubmissions = useMemo(() => {
-    if (!submissions || !services) return [];
-    return submissions.map((submission) => {
-      const service = services.find((s) => s.slug === submission.service_name);
-      const serviceName = service ? service.title : "Unknown Service";
-      const submitterName = submission.full_name || "Anonymous";
-      return `${submitterName} - ${serviceName}`;
-    });
-  }, [submissions, services]);
-
-  const totalRevenue = useMemo(() => {
-    if (!submissions || !services) return 0;
-    return submissions
-      .filter((s) => s.status === "archived")
-      .reduce((acc, submission) => {
-        const service = services.find(
-          (s) => s.slug === submission.service_name,
-        );
-        return acc + (service?.pricing || 0);
-      }, 0);
-  }, [submissions, services]);
-
-  const revenueSubmissions = useMemo(() => {
-    if (!submissions || !services) return [];
-    return submissions
-      .filter((s) => s.status === "archived")
-      .map((submission) => {
-        const service = services.find(
-          (s) => s.slug === submission.service_name,
-        );
-        const serviceName = service ? service.title : "Unknown Service";
-        const submitterName = submission.full_name || "Anonymous";
-        return `${submitterName} - ${serviceName}`;
-      });
-  }, [submissions, services]);
-
-  const newApplications = useMemo(() => {
-    if (!submissions) return [];
-    return submissions.filter((s) => s.status === "pending");
-  }, [submissions]);
-
-  const submissionsByDay = useMemo(() => {
-    if (!submissions) return [];
-    const counts = submissions.reduce(
-      (acc, submission) => {
-        if (submission.created_at) {
-          const date = new Date(submission.created_at);
-          if (isValid(date)) {
-            const day = format(startOfDay(date), "yyyy-MM-dd");
-            acc[day] = (acc[day] || 0) + 1;
-          }
-        }
-        return acc;
-      },
-      {} as Record<string, number>,
-    );
-
-    return Object.entries(counts)
-      .map(([day, count]) => ({ day, count }))
-      .sort((a, b) => new Date(a.day).getTime() - new Date(b.day).getTime());
-  }, [submissions]);
-
-  const submissionsByService = useMemo(() => {
-    if (!submissions) return [];
-    const counts = submissions.reduce(
-      (acc, submission) => {
-        const serviceName = submission.service_name || "Unknown";
-        acc[serviceName] = (acc[serviceName] || 0) + 1;
-        return acc;
-      },
-      {} as Record<string, number>,
-    );
-
-    return Object.entries(counts).map(([name, count]) => ({ name, count }));
-  }, [submissions]);
-
-  return {
-    submissions,
-    services,
-    blogs,
-    totalSubmissions,
-    totalRevenue,
-    revenueSubmissions,
-    newApplications,
-    submissionsByDay,
-    submissionsByService,
-    loading,
-    error,
-  };
-}
-````
-
-## File: packages/supabase/src/hooks/useDashboardData.ts
-````typescript
-"use client";
-
-import { useSubmissions } from "./useSubmissions";
-import { useContacts } from "./useContacts";
-import { useServices } from "./useServices";
-import { useMemo } from "react";
-
-export function useDashboardData() {
-  const {
-    data: submissions,
-    loading: submissionsLoading,
-    error: submissionsError,
-  } = useSubmissions();
-  const {
-    data: contacts,
-    loading: contactsLoading,
-    error: contactsError,
-  } = useContacts();
-  const {
-    data: services,
-    loading: servicesLoading,
-    error: servicesError,
-  } = useServices();
-
-  const loading = submissionsLoading || contactsLoading || servicesLoading;
-  const error = submissionsError || contactsError || servicesError;
-
-  const stats = useMemo(() => {
-    const totalSubmissions = submissions?.length ?? 0;
-    const newApplications =
-      submissions?.filter((s) => s.status === "pending").length ?? 0;
-    const totalContacts = contacts?.length ?? 0;
-    const totalRevenue =
-      submissions
-        ?.filter((s) => s.status === "archived")
-        .reduce((acc, submission) => {
-          const service = services?.find(
-            (s) => s.slug === submission.service_name,
-          );
-          return acc + (service?.pricing || 0);
-        }, 0) ?? 0;
-
-    return { totalSubmissions, newApplications, totalContacts, totalRevenue };
-  }, [submissions, contacts, services]);
-
-  const submissionsByService = useMemo(() => {
-    if (!submissions || !services) return [];
-    return services
-      .map((service) => {
-        const count = submissions.filter(
-          (s) => s.service_name === service.slug,
-        ).length;
-        return { ...service, submissions: count };
-      })
-      .filter((service) => service.submissions > 0);
-  }, [submissions, services]);
-
-  const recentActivity = useMemo(() => {
-    if (!submissions || !contacts) return [];
-    const combined = [
-      ...submissions.map((s) => ({
-        ...s,
-        type: "submission" as const,
-        date: s.created_at,
-        name: s.full_name,
-        id: s.id,
-        email: s.email,
-        service_name: s.service_name,
-      })),
-      ...contacts.map((c) => ({
-        ...c,
-        type: "contact" as const,
-        date: c.submitted_at,
-        name: c.name,
-        id: c.id,
-        email: c.email,
-        service_name: "Contact Form",
-      })),
-    ];
-    return combined
-      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-      .slice(0, 5);
-  }, [submissions, contacts]);
-
-  return { loading, error, stats, submissionsByService, recentActivity };
-}
-````
-
-## File: packages/supabase/src/middleware.ts
-````typescript
-import { createServerClient } from "@supabase/ssr";
-import { type NextRequest, NextResponse } from "next/server";
-import type { Database } from "./supabaseType";
-
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-
-export const createClient = (request: NextRequest) => {
-  let supabaseResponse = NextResponse.next({
-    request: {
-      headers: request.headers,
-    },
-  });
-
-  const supabase = createServerClient<Database>(
-    supabaseUrl!,
-    supabaseKey!,
-    {
-      cookies: {
-        getAll() {
-          return request.cookies.getAll();
-        },
-        setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value }) =>
-            request.cookies.set(name, value),
-          );
-
-          supabaseResponse = NextResponse.next({
-            request,
-          });
-
-          cookiesToSet.forEach(({ name, value, options }) =>
-            supabaseResponse.cookies.set(name, value, options),
-          );
-        },
-      },
-    },
-  );
-
-  return supabaseResponse;
-};
-````
-
 ## File: packages/supabase/src/Mutations/contacts.ts
 ````typescript
 import { createSupabaseAdminClient } from "../admin";
@@ -5475,36 +4336,6 @@ export async function deleteContact(id: string) {
 
   return mutationResult(undefined, {
     tags: [CACHE_TAGS.contacts],
-    mode: "immediate",
-  });
-}
-````
-
-## File: packages/supabase/src/Mutations/formSubmissions.ts
-````typescript
-import { createSupabaseAdminClient } from "../admin";
-import { CACHE_TAGS, mutationResult } from "../cache";
-import type { Database } from "../supabaseType";
-
-type SubmissionUpdate =
-  Database["public"]["Tables"]["form_submissions"]["Update"];
-
-export async function updateFormSubmission(
-  id: string,
-  data: SubmissionUpdate,
-) {
-  const supabase = createSupabaseAdminClient();
-  const { data: submission, error } = await supabase
-    .from("form_submissions")
-    .update(data)
-    .eq("id", id)
-    .select("*")
-    .single();
-
-  if (error) throw new Error(error.message);
-
-  return mutationResult(submission, {
-    tags: [CACHE_TAGS.formSubmissions],
     mode: "immediate",
   });
 }
@@ -5562,45 +4393,6 @@ export async function deleteService(id: string) {
       CACHE_PATHS.services,
       ...(existing?.slug ? [CACHE_PATHS.service(existing.slug)] : []),
     ],
-    mode: "immediate",
-  });
-}
-````
-
-## File: packages/supabase/src/Mutations/testimonials.ts
-````typescript
-import { createSupabaseAdminClient } from "../admin";
-import { CACHE_PATHS, CACHE_TAGS, mutationResult } from "../cache";
-import type { Database } from "../supabaseType";
-
-type TestimonialInsert =
-  Database["public"]["Tables"]["testimonials"]["Insert"];
-
-export async function upsertTestimonial(data: TestimonialInsert) {
-  const supabase = createSupabaseAdminClient();
-  const { data: testimonial, error } = await supabase
-    .from("testimonials")
-    .upsert(data)
-    .select("*")
-    .single();
-
-  if (error) throw new Error(error.message);
-
-  return mutationResult(testimonial, {
-    tags: [CACHE_TAGS.testimonials],
-    paths: [CACHE_PATHS.home],
-    mode: "immediate",
-  });
-}
-
-export async function deleteTestimonial(id: string) {
-  const supabase = createSupabaseAdminClient();
-  const { error } = await supabase.from("testimonials").delete().eq("id", id);
-  if (error) throw new Error(error.message);
-
-  return mutationResult(undefined, {
-    tags: [CACHE_TAGS.testimonials],
-    paths: [CACHE_PATHS.home],
     mode: "immediate",
   });
 }
@@ -6281,44 +5073,6 @@ export default function FormSubmissionsPage() {
     </div>
   );
 }
-````
-
-## File: apps/admin/app/admin/form_submissions/schema.ts
-````typescript
-import * as z from "zod";
-
-export const submissionSchema = z.object({
-  full_name: z.string().min(1, "Full name is required"),
-  email: z.string().email(),
-  phone: z.string().optional(),
-  company: z.string().optional(),
-  industry: z.string().optional(),
-  service_name: z.string().optional(),
-  status: z.enum([
-    "pending",
-    "in-progress",
-    "completed",
-    "rejected",
-    "archived",
-  ]),
-  details: z
-    .string()
-    .optional()
-    .refine(
-      (val) => {
-        if (!val || val.trim() === "") return true;
-        try {
-          JSON.parse(val);
-          return true;
-        } catch (_e) {
-          return false;
-        }
-      },
-      { message: "Details must be a valid JSON object." },
-    ),
-  notes: z.string().optional(),
-  contact_owner: z.string().optional(),
-});
 ````
 
 ## File: apps/admin/app/admin/services/components/CoreDetailsForm.tsx
@@ -7760,60 +6514,6 @@ export async function GET(request: Request) {
 }
 ````
 
-## File: apps/admin/biome.json
-````json
-{
-  "$schema": "https://biomejs.dev/schemas/2.2.0/schema.json",
-  "vcs": {
-    "enabled": true,
-    "clientKind": "git",
-    "useIgnoreFile": true
-  },
-  "files": {
-    "ignoreUnknown": true,
-    "includes": ["**", "!node_modules", "!.next", "!dist", "!build"]
-  },
-  "formatter": {
-    "enabled": true,
-    "indentStyle": "space",
-    "indentWidth": 2
-  },
-  "linter": {
-    "enabled": true,
-    "rules": {
-      "recommended": true,
-      "style": {
-        "noNonNullAssertion": "off"
-      },
-      "suspicious": {
-        "noArrayIndexKey": "off",
-        "noDocumentCookie": "off",
-        "noExplicitAny": "off",
-        "noUnknownAtRules": "off"
-      },
-      "a11y": {
-        "noSvgWithoutTitle": "off",
-        "useSemanticElements": "off"
-      },
-      "security": {
-        "noDangerouslySetInnerHtml": "off"
-      }
-    },
-    "domains": {
-      "next": "recommended",
-      "react": "recommended"
-    }
-  },
-  "assist": {
-    "actions": {
-      "source": {
-        "organizeImports": "on"
-      }
-    }
-  }
-}
-````
-
 ## File: apps/admin/components/admin/AdminPage.tsx
 ````typescript
 "use client";
@@ -8643,6 +7343,277 @@ export default function ContactForm({
 }
 ````
 
+## File: apps/client/app/forms/class-ecs-ecns-licensing/ClientPage.tsx
+````typescript
+"use client";
+
+import Image from "next/image";
+import Link from "next/link";
+import { type ChangeEvent, type FormEvent, useState } from "react";
+import { v4 as uuidv4 } from "uuid";
+import { supabase } from "@/lib/supabase-client";
+
+// Define the type for the form state
+interface FormData {
+  fullName: string;
+  email: string;
+  phone: string;
+  companyName: string;
+  serviceType: string;
+  message: string;
+}
+
+// Define the type for the submission status
+type SubmissionStatus = "idle" | "submitting" | "success" | "error";
+
+export default function ClassEcsEcnsLicensingPage() {
+  const [formData, setFormData] = useState<FormData>({
+    fullName: "",
+    email: "",
+    phone: "",
+    companyName: "",
+    serviceType: "Class ECS/ECNS Licensing",
+    message: "",
+  });
+
+  const [submissionStatus, setSubmissionStatus] =
+    useState<SubmissionStatus>("idle");
+  const [formError, setFormError] = useState<string | null>(null);
+
+  const handleInputChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({ ...prevData, [name]: value }));
+  };
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setSubmissionStatus("submitting");
+    setFormError(null);
+
+    try {
+      const { error } = await supabase.from("form_submissions").insert([
+        {
+          id: uuidv4(),
+          formType: "class-ecs-ecns",
+          serviceName: formData.serviceType,
+          fullName: formData.fullName,
+          email: formData.email,
+          phone: formData.phone,
+          company: formData.companyName,
+          details: { message: formData.message },
+          createdAt: new Date().toISOString(),
+        },
+      ]);
+
+      if (error) {
+        throw error;
+      }
+
+      setSubmissionStatus("success");
+      setFormData({
+        fullName: "",
+        email: "",
+        phone: "",
+        companyName: "",
+        serviceType: "Class ECS/ECNS Licensing",
+        message: "",
+      });
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      setSubmissionStatus("error");
+      setFormError(
+        "There was an error submitting your form. Please try again.",
+      );
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+      <div className="sm:mx-auto sm:w-full sm:max-w-md">
+        <Link href="/">
+          <Image
+            className="mx-auto h-12 w-auto"
+            src="/logo.png"
+            alt="Bilacert"
+            width={100}
+            height={100}
+          />
+        </Link>
+        <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+          Class ECS/ECNS Licensing Application
+        </h2>
+        <p className="mt-2 text-center text-sm text-gray-600">
+          Fill out the form below to begin the process.
+        </p>
+      </div>
+
+      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-xl">
+        <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+          {submissionStatus === "success" ? (
+            <div className="text-center">
+              <h3 className="text-2xl font-bold text-green-600 mb-4">
+                Submission Successful!
+              </h3>
+              <p className="text-gray-700">
+                Thank you for your application. We will review your information
+                and get back to you shortly.
+              </p>
+              <Link
+                href="/"
+                className="mt-6 inline-block bg-primary text-white font-bold py-2 px-4 rounded hover:bg-primary-dark transition-colors"
+              >
+                Back to Home
+              </Link>
+            </div>
+          ) : (
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div>
+                <label
+                  htmlFor="fullName"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Full Name
+                </label>
+                <div className="mt-1">
+                  <input
+                    type="text"
+                    name="fullName"
+                    id="fullName"
+                    required
+                    value={formData.fullName}
+                    onChange={handleInputChange}
+                    className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label
+                  htmlFor="email"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Email address
+                </label>
+                <div className="mt-1">
+                  <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    autoComplete="email"
+                    required
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label
+                  htmlFor="phone"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Phone Number
+                </label>
+                <div className="mt-1">
+                  <input
+                    type="tel"
+                    name="phone"
+                    id="phone"
+                    value={formData.phone}
+                    onChange={handleInputChange}
+                    className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label
+                  htmlFor="companyName"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Company Name (optional)
+                </label>
+                <div className="mt-1">
+                  <input
+                    type="text"
+                    name="companyName"
+                    id="companyName"
+                    value={formData.companyName}
+                    onChange={handleInputChange}
+                    className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label
+                  htmlFor="message"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Additional Information
+                </label>
+                <div className="mt-1">
+                  <textarea
+                    id="message"
+                    name="message"
+                    rows={4}
+                    value={formData.message}
+                    onChange={handleInputChange}
+                    className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
+                  ></textarea>
+                </div>
+              </div>
+
+              {formError && (
+                <div className="rounded-md bg-red-50 p-4">
+                  <div className="flex">
+                    <div className="flex-shrink-0">
+                      <svg
+                        className="h-5 w-5 text-red-400"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                        aria-hidden="true"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                    </div>
+                    <div className="ml-3">
+                      <p className="text-sm font-medium text-red-800">
+                        {formError}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              <div>
+                <button
+                  type="submit"
+                  disabled={submissionStatus === "submitting"}
+                  className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50"
+                >
+                  {submissionStatus === "submitting"
+                    ? "Submitting..."
+                    : "Submit Application"}
+                </button>
+              </div>
+            </form>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+````
+
 ## File: apps/client/app/forms/icasa-type-approvals/ClientPage.tsx
 ````typescript
 "use client";
@@ -9462,6 +8433,534 @@ export default function NrcsLoaForm() {
 }
 ````
 
+## File: apps/client/app/forms/radio-dealer-licensing/ClientPage.tsx
+````typescript
+"use client";
+
+import { createSupabaseBrowserClient } from "@bilacert/supabase/client";
+import Link from "next/link";
+import { type ChangeEvent, type FormEvent, useState } from "react";
+import { v4 as uuidv4 } from "uuid";
+
+// Define the type for the form state
+interface FormData {
+  fullName: string;
+  email: string;
+  phone: string;
+  companyName: string;
+  serviceType: string;
+  message: string;
+}
+
+// Define the type for the submission status
+type SubmissionStatus = "idle" | "submitting" | "success" | "error";
+
+export default function RadioDealerLicensingForm() {
+  const supabase = createSupabaseBrowserClient();
+  const [formData, setFormData] = useState<FormData>({
+    fullName: "",
+    email: "",
+    phone: "",
+    companyName: "",
+    serviceType: "Radio Dealer Licensing",
+    message: "",
+  });
+
+  const [submissionStatus, setSubmissionStatus] =
+    useState<SubmissionStatus>("idle");
+  const [formError, setFormError] = useState<string | null>(null);
+
+  const handleInputChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({ ...prevData, [name]: value }));
+  };
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setSubmissionStatus("submitting");
+    setFormError(null);
+
+    try {
+      const { error } = await supabase.from("form_submissions").insert([
+        {
+          id: uuidv4(),
+          formType: "radio-dealer",
+          serviceName: formData.serviceType,
+          fullName: formData.fullName,
+          email: formData.email,
+          phone: formData.phone,
+          company: formData.companyName,
+          details: { message: formData.message },
+          createdAt: new Date().toISOString(),
+        },
+      ]);
+
+      if (error) {
+        throw error;
+      }
+
+      setSubmissionStatus("success");
+      setFormData({
+        fullName: "",
+        email: "",
+        phone: "",
+        companyName: "",
+        serviceType: "Radio Dealer Licensing",
+        message: "",
+      });
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      setSubmissionStatus("error");
+      setFormError(
+        "There was an error submitting your form. Please try again.",
+      );
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+      <div className="sm:mx-auto sm:w-full sm:max-w-md">
+        <Link href="/">
+          <img className="mx-auto h-12 w-auto" src="/logo.png" alt="Bilacert" />
+        </Link>
+        <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+          Radio Dealer Licensing Application
+        </h2>
+        <p className="mt-2 text-center text-sm text-gray-600">
+          Fill out the form below to begin the process.
+        </p>
+      </div>
+
+      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-xl">
+        <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+          {submissionStatus === "success" ? (
+            <div className="text-center">
+              <h3 className="text-2xl font-bold text-green-600 mb-4">
+                Submission Successful!
+              </h3>
+              <p className="text-gray-700">
+                Thank you for your application. We will review your information
+                and get back to you shortly.
+              </p>
+              <Link href="/">
+                <span className="mt-6 inline-block bg-primary text-white font-bold py-2 px-4 rounded hover:bg-primary-dark transition-colors">
+                  Back to Home
+                </span>
+              </Link>
+            </div>
+          ) : (
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div>
+                <label
+                  htmlFor="fullName"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Full Name
+                </label>
+                <div className="mt-1">
+                  <input
+                    type="text"
+                    name="fullName"
+                    id="fullName"
+                    required
+                    value={formData.fullName}
+                    onChange={handleInputChange}
+                    className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label
+                  htmlFor="email"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Email address
+                </label>
+                <div className="mt-1">
+                  <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    autoComplete="email"
+                    required
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label
+                  htmlFor="phone"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Phone Number
+                </label>
+                <div className="mt-1">
+                  <input
+                    type="tel"
+                    name="phone"
+                    id="phone"
+                    value={formData.phone}
+                    onChange={handleInputChange}
+                    className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label
+                  htmlFor="companyName"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Company Name (optional)
+                </label>
+                <div className="mt-1">
+                  <input
+                    type="text"
+                    name="companyName"
+                    id="companyName"
+                    value={formData.companyName}
+                    onChange={handleInputChange}
+                    className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label
+                  htmlFor="message"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Additional Information
+                </label>
+                <div className="mt-1">
+                  <textarea
+                    id="message"
+                    name="message"
+                    rows={4}
+                    value={formData.message}
+                    onChange={handleInputChange}
+                    className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
+                  ></textarea>
+                </div>
+              </div>
+
+              {formError && (
+                <div className="rounded-md bg-red-50 p-4">
+                  <div className="flex">
+                    <div className="flex-shrink-0">
+                      <svg
+                        className="h-5 w-5 text-red-400"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                        aria-hidden="true"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                    </div>
+                    <div className="ml-3">
+                      <p className="text-sm font-medium text-red-800">
+                        {formError}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              <div>
+                <button
+                  type="submit"
+                  disabled={submissionStatus === "submitting"}
+                  className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50"
+                >
+                  {submissionStatus === "submitting"
+                    ? "Submitting..."
+                    : "Submit Application"}
+                </button>
+              </div>
+            </form>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+````
+
+## File: apps/client/app/forms/ski-boat-vhf-licensing/ClientPage.tsx
+````typescript
+"use client";
+
+import { createSupabaseBrowserClient } from "@bilacert/supabase/client";
+import Link from "next/link";
+import { type ChangeEvent, type FormEvent, useState } from "react";
+import { v4 as uuidv4 } from "uuid";
+
+// Define the type for the form state
+interface FormData {
+  fullName: string;
+  email: string;
+  phone: string;
+  companyName: string;
+  serviceType: string;
+  message: string;
+}
+
+// Define the type for the submission status
+type SubmissionStatus = "idle" | "submitting" | "success" | "error";
+
+export default function SkiBoatVhfLicensingForm() {
+  const supabase = createSupabaseBrowserClient();
+  const [formData, setFormData] = useState<FormData>({
+    fullName: "",
+    email: "",
+    phone: "",
+    companyName: "",
+    serviceType: "Ski Boat VHF Licensing",
+    message: "",
+  });
+
+  const [submissionStatus, setSubmissionStatus] =
+    useState<SubmissionStatus>("idle");
+  const [formError, setFormError] = useState<string | null>(null);
+
+  const handleInputChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({ ...prevData, [name]: value }));
+  };
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setSubmissionStatus("submitting");
+    setFormError(null);
+
+    try {
+      const { error } = await supabase.from("form_submissions").insert([
+        {
+          id: uuidv4(),
+          formType: "ski-boat-vhf",
+          serviceName: formData.serviceType,
+          fullName: formData.fullName,
+          email: formData.email,
+          phone: formData.phone,
+          company: formData.companyName,
+          details: { message: formData.message },
+          createdAt: new Date().toISOString(),
+        },
+      ]);
+
+      if (error) {
+        throw error;
+      }
+
+      setSubmissionStatus("success");
+      setFormData({
+        fullName: "",
+        email: "",
+        phone: "",
+        companyName: "",
+        serviceType: "Ski Boat VHF Licensing",
+        message: "",
+      });
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      setSubmissionStatus("error");
+      setFormError(
+        "There was an error submitting your form. Please try again.",
+      );
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+      <div className="sm:mx-auto sm:w-full sm:max-w-md">
+        <Link href="/">
+          <img className="mx-auto h-12 w-auto" src="/logo.png" alt="Bilacert" />
+        </Link>
+        <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+          Ski Boat VHF Licensing Application
+        </h2>
+        <p className="mt-2 text-center text-sm text-gray-600">
+          Fill out the form below to begin the process.
+        </p>
+      </div>
+
+      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-xl">
+        <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+          {submissionStatus === "success" ? (
+            <div className="text-center">
+              <h3 className="text-2xl font-bold text-green-600 mb-4">
+                Submission Successful!
+              </h3>
+              <p className="text-gray-700">
+                Thank you for your application. We will review your information
+                and get back to you shortly.
+              </p>
+              <Link href="/">
+                <span className="mt-6 inline-block bg-primary text-white font-bold py-2 px-4 rounded hover:bg-primary-dark transition-colors">
+                  Back to Home
+                </span>
+              </Link>
+            </div>
+          ) : (
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div>
+                <label
+                  htmlFor="fullName"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Full Name
+                </label>
+                <div className="mt-1">
+                  <input
+                    type="text"
+                    name="fullName"
+                    id="fullName"
+                    required
+                    value={formData.fullName}
+                    onChange={handleInputChange}
+                    className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label
+                  htmlFor="email"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Email address
+                </label>
+                <div className="mt-1">
+                  <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    autoComplete="email"
+                    required
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label
+                  htmlFor="phone"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Phone Number
+                </label>
+                <div className="mt-1">
+                  <input
+                    type="tel"
+                    name="phone"
+                    id="phone"
+                    value={formData.phone}
+                    onChange={handleInputChange}
+                    className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label
+                  htmlFor="companyName"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Company Name (optional)
+                </label>
+                <div className="mt-1">
+                  <input
+                    type="text"
+                    name="companyName"
+                    id="companyName"
+                    value={formData.companyName}
+                    onChange={handleInputChange}
+                    className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label
+                  htmlFor="message"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Additional Information
+                </label>
+                <div className="mt-1">
+                  <textarea
+                    id="message"
+                    name="message"
+                    rows={4}
+                    value={formData.message}
+                    onChange={handleInputChange}
+                    className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
+                  ></textarea>
+                </div>
+              </div>
+
+              {formError && (
+                <div className="rounded-md bg-red-50 p-4">
+                  <div className="flex">
+                    <div className="flex-shrink-0">
+                      <svg
+                        className="h-5 w-5 text-red-400"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                        aria-hidden="true"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                    </div>
+                    <div className="ml-3">
+                      <p className="text-sm font-medium text-red-800">
+                        {formError}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              <div>
+                <button
+                  type="submit"
+                  disabled={submissionStatus === "submitting"}
+                  className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50"
+                >
+                  {submissionStatus === "submitting"
+                    ? "Submitting..."
+                    : "Submit Application"}
+                </button>
+              </div>
+            </form>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+````
+
 ## File: apps/client/app/layout.tsx
 ````typescript
 import { Analytics } from "@vercel/analytics/next";
@@ -9583,56 +9082,6 @@ export default function robots(): MetadataRoute.Robots {
     },
     sitemap: "https://bilacert.co.za/sitemap.xml",
   };
-}
-````
-
-## File: apps/client/biome.json
-````json
-{
-  "$schema": "https://biomejs.dev/schemas/2.2.0/schema.json",
-  "vcs": {
-    "enabled": true,
-    "clientKind": "git",
-    "useIgnoreFile": true
-  },
-  "files": {
-    "ignoreUnknown": true,
-    "includes": ["**", "!node_modules", "!.next", "!dist", "!build"]
-  },
-  "formatter": {
-    "enabled": true,
-    "indentStyle": "space",
-    "indentWidth": 2
-  },
-  "linter": {
-    "enabled": true,
-    "rules": {
-      "recommended": true,
-      "performance": {
-        "noImgElement": "off"
-      },
-      "suspicious": {
-        "noArrayIndexKey": "off",
-        "noExplicitAny": "off",
-        "noImplicitAnyLet": "off",
-        "noUnknownAtRules": "off"
-      },
-      "security": {
-        "noDangerouslySetInnerHtml": "off"
-      }
-    },
-    "domains": {
-      "next": "recommended",
-      "react": "recommended"
-    }
-  },
-  "assist": {
-    "actions": {
-      "source": {
-        "organizeImports": "on"
-      }
-    }
-  }
 }
 ````
 
@@ -11044,315 +10493,363 @@ const nextConfig: NextConfig = {
 export default nextConfig;
 ````
 
-## File: biome.json
-````json
-{
-  "$schema": "https://biomejs.dev/schemas/2.2.0/schema.json",
-  "vcs": {
-    "enabled": true,
-    "clientKind": "git",
-    "useIgnoreFile": true
-  },
-  "files": {
-    "ignoreUnknown": true,
-    "includes": [
-      "**",
-      "!**/node_modules/**",
-      "!**/.next/**",
-      "!**/dist/**",
-      "!**/build/**"
-    ]
-  },
-  "formatter": {
-    "enabled": true,
-    "indentStyle": "space",
-    "indentWidth": 2
-  },
-  "linter": {
-    "enabled": true,
-    "rules": {
-      "recommended": true,
-      "a11y": {
-        "noAriaHiddenOnFocusable": "off",
-        "noLabelWithoutControl": "off",
-        "noStaticElementInteractions": "off",
-        "noSvgWithoutTitle": "off",
-        "useButtonType": "off",
-        "useKeyWithClickEvents": "off",
-        "useMediaCaption": "off",
-        "useSemanticElements": "off"
-      },
-      "correctness": {
-        "noInvalidUseBeforeDeclaration": "off",
-        "useExhaustiveDependencies": "off"
-      },
-      "performance": {
-        "noImgElement": "off"
-      },
-      "security": {
-        "noDangerouslySetInnerHtml": "off"
-      },
-      "style": {
-        "noNonNullAssertion": "off"
-      },
-      "suspicious": {
-        "noArrayIndexKey": "off",
-        "noAssignInExpressions": "off",
-        "noExplicitAny": "off",
-        "noImplicitAnyLet": "off",
-        "useIterableCallbackReturn": "off",
-        "noUnknownAtRules": "off"
-      }
-    },
-    "domains": {
-      "next": "recommended",
-      "react": "recommended"
-    }
-  },
-  "assist": {
-    "actions": {
-      "source": {
-        "organizeImports": "on"
-      }
-    }
-  }
-}
-````
-
-## File: packages/supabase/src/admin.ts
-````typescript
-import { createClient } from "@supabase/supabase-js";
-import type { Database } from "./supabaseType";
-
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-
-export const createSupabaseAdminClient = () => {
-  return createClient<Database>(supabaseUrl, supabaseServiceRoleKey, {
-    auth: {
-      autoRefreshToken: false,
-      persistSession: false,
-    },
-  });
-};
-````
-
-## File: packages/supabase/src/hooks/useBlogs.ts
+## File: packages/shared/src/components/Icon.tsx
 ````typescript
 "use client";
 
-import { useDataFetching } from "./useDataFetching";
-import type { BlogPost } from "@bilacert/shared/types";
-
-export function useBlogs() {
-  return useDataFetching<BlogPost>("blog_posts");
-}
-````
-
-## File: packages/supabase/src/hooks/useContacts.ts
-````typescript
-"use client";
-
-import { useDataFetching } from "./useDataFetching";
-import type { Contact } from "@bilacert/shared/types";
-
-export function useContacts() {
-  return useDataFetching<Contact>("contacts", "*", "submitted_at");
-}
-````
-
-## File: packages/supabase/src/hooks/useServices.ts
-````typescript
-"use client";
-
-import { useDataFetching } from "./useDataFetching";
-import type { Service } from "@bilacert/shared/types";
-
-export function useServices() {
-  return useDataFetching<Service>("services");
-}
-````
-
-## File: packages/supabase/src/hooks/useSubmissions.ts
-````typescript
-"use client";
-
-import { useDataFetching } from "./useDataFetching";
-import type { Submission } from "@bilacert/shared/types";
-
-export function useSubmissions() {
-  return useDataFetching<Submission>("form_submissions");
-}
-````
-
-## File: packages/supabase/src/hooks/useTestimonials.ts
-````typescript
-"use client";
-
-import { useDataFetching } from "./useDataFetching";
-import type { Testimonial } from "@bilacert/shared/types";
-
-export function useTestimonials() {
-  return useDataFetching<Testimonial>("testimonials");
-}
-````
-
-## File: packages/supabase/src/hooks/useUser.ts
-````typescript
-"use client";
-
-import { useEffect, useState } from "react";
-import type { User, Session } from "@supabase/supabase-js";
 import {
-  createSupabaseBrowserClient,
-  isSupabaseConfigured,
-} from "../client";
+  Award,
+  BarChart,
+  Book,
+  Briefcase,
+  Check,
+  CheckSquare,
+  Clock,
+  CreditCard,
+  DollarSign,
+  FileSpreadsheet,
+  FileText,
+  Headphones,
+  HelpCircle,
+  LayoutDashboard,
+  type LucideIcon,
+  type LucideProps,
+  MessageSquare,
+  Package,
+  Radio,
+  Sailboat,
+  Settings,
+  Shield,
+  Ship,
+  User,
+  Users,
+} from "lucide-react";
 
-export function useUser() {
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
+export const iconMap: { [key: string]: LucideIcon } = {
+  Shield,
+  CheckSquare,
+  FileText,
+  Radio,
+  Sailboat,
+  Ship,
+  Package,
+  LayoutDashboard,
+  Briefcase,
+  MessageSquare,
+  Users,
+  FileSpreadsheet,
+  Settings,
+  User,
+  CreditCard,
+  DollarSign,
+  BarChart,
+  Clock,
+  Book,
+  Check,
+  Award,
+  Headphones,
+};
 
-  useEffect(() => {
-    if (!isSupabaseConfigured) {
-      setLoading(false);
-      return;
-    }
+interface IconProps extends LucideProps {
+  name: string;
+}
 
-    const supabase = createSupabaseBrowserClient();
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event: string, session: Session | null) => {
-      setUser(session?.user ?? null);
-      setLoading(false);
-    });
+export const Icon = ({ name, ...props }: IconProps) => {
+  if (!name) {
+    return <HelpCircle {...props} />;
+  }
+  const LucideIcon = iconMap[name.charAt(0).toUpperCase() + name.slice(1)];
 
-    // Initial load
-    supabase.auth.getSession().then(({ data: { session } }: { data: { session: Session | null } }) => {
-      setUser(session?.user ?? null);
-      setLoading(false);
-    });
+  if (!LucideIcon) {
+    return <HelpCircle {...props} />; // A default fallback icon for unknown names
+  }
 
-    return () => {
-      subscription?.unsubscribe();
-    };
-  }, []);
+  return <LucideIcon {...props} />;
+};
 
-  return { user, loading, error: null };
+export default Icon;
+````
+
+## File: packages/shared/src/utils/cn.ts
+````typescript
+import { type ClassValue, clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
 }
 ````
 
-## File: packages/supabase/src/Mutations/blogs.ts
+## File: packages/supabase/src/hooks/useAnalyticsData.ts
+````typescript
+"use client";
+
+import { format, isValid, startOfDay } from "date-fns";
+import { useMemo } from "react";
+import { useBlogs } from "./useBlogs";
+import { useServices } from "./useServices";
+import { useSubmissions } from "./useSubmissions";
+
+export function useAnalyticsData() {
+  const {
+    data: submissions,
+    loading: submissionsLoading,
+    error: submissionsError,
+  } = useSubmissions();
+  const {
+    data: services,
+    loading: servicesLoading,
+    error: servicesError,
+  } = useServices();
+  const { data: blogs, loading: blogsLoading, error: blogsError } = useBlogs();
+
+  const loading = submissionsLoading || servicesLoading || blogsLoading;
+  const error = submissionsError || servicesError || blogsError;
+
+  const totalSubmissions = useMemo(() => {
+    if (!submissions || !services) return [];
+    return submissions.map((submission) => {
+      const service = services.find((s) => s.slug === submission.service_name);
+      const serviceName = service ? service.title : "Unknown Service";
+      const submitterName = submission.full_name || "Anonymous";
+      return `${submitterName} - ${serviceName}`;
+    });
+  }, [submissions, services]);
+
+  const totalRevenue = useMemo(() => {
+    if (!submissions || !services) return 0;
+    return submissions
+      .filter((s) => s.status === "archived")
+      .reduce((acc, submission) => {
+        const service = services.find(
+          (s) => s.slug === submission.service_name,
+        );
+        return acc + (service?.pricing || 0);
+      }, 0);
+  }, [submissions, services]);
+
+  const revenueSubmissions = useMemo(() => {
+    if (!submissions || !services) return [];
+    return submissions
+      .filter((s) => s.status === "archived")
+      .map((submission) => {
+        const service = services.find(
+          (s) => s.slug === submission.service_name,
+        );
+        const serviceName = service ? service.title : "Unknown Service";
+        const submitterName = submission.full_name || "Anonymous";
+        return `${submitterName} - ${serviceName}`;
+      });
+  }, [submissions, services]);
+
+  const newApplications = useMemo(() => {
+    if (!submissions) return [];
+    return submissions.filter((s) => s.status === "pending");
+  }, [submissions]);
+
+  const submissionsByDay = useMemo(() => {
+    if (!submissions) return [];
+    const counts = submissions.reduce(
+      (acc, submission) => {
+        if (submission.created_at) {
+          const date = new Date(submission.created_at);
+          if (isValid(date)) {
+            const day = format(startOfDay(date), "yyyy-MM-dd");
+            acc[day] = (acc[day] || 0) + 1;
+          }
+        }
+        return acc;
+      },
+      {} as Record<string, number>,
+    );
+
+    return Object.entries(counts)
+      .map(([day, count]) => ({ day, count }))
+      .sort((a, b) => new Date(a.day).getTime() - new Date(b.day).getTime());
+  }, [submissions]);
+
+  const submissionsByService = useMemo(() => {
+    if (!submissions) return [];
+    const counts = submissions.reduce(
+      (acc, submission) => {
+        const serviceName = submission.service_name || "Unknown";
+        acc[serviceName] = (acc[serviceName] || 0) + 1;
+        return acc;
+      },
+      {} as Record<string, number>,
+    );
+
+    return Object.entries(counts).map(([name, count]) => ({ name, count }));
+  }, [submissions]);
+
+  return {
+    submissions,
+    services,
+    blogs,
+    totalSubmissions,
+    totalRevenue,
+    revenueSubmissions,
+    newApplications,
+    submissionsByDay,
+    submissionsByService,
+    loading,
+    error,
+  };
+}
+````
+
+## File: packages/supabase/src/hooks/useDashboardData.ts
+````typescript
+"use client";
+
+import { useMemo } from "react";
+import { useContacts } from "./useContacts";
+import { useServices } from "./useServices";
+import { useSubmissions } from "./useSubmissions";
+
+export function useDashboardData() {
+  const {
+    data: submissions,
+    loading: submissionsLoading,
+    error: submissionsError,
+  } = useSubmissions();
+  const {
+    data: contacts,
+    loading: contactsLoading,
+    error: contactsError,
+  } = useContacts();
+  const {
+    data: services,
+    loading: servicesLoading,
+    error: servicesError,
+  } = useServices();
+
+  const loading = submissionsLoading || contactsLoading || servicesLoading;
+  const error = submissionsError || contactsError || servicesError;
+
+  const stats = useMemo(() => {
+    const totalSubmissions = submissions?.length ?? 0;
+    const newApplications =
+      submissions?.filter((s) => s.status === "pending").length ?? 0;
+    const totalContacts = contacts?.length ?? 0;
+    const totalRevenue =
+      submissions
+        ?.filter((s) => s.status === "archived")
+        .reduce((acc, submission) => {
+          const service = services?.find(
+            (s) => s.slug === submission.service_name,
+          );
+          return acc + (service?.pricing || 0);
+        }, 0) ?? 0;
+
+    return { totalSubmissions, newApplications, totalContacts, totalRevenue };
+  }, [submissions, contacts, services]);
+
+  const submissionsByService = useMemo(() => {
+    if (!submissions || !services) return [];
+    return services
+      .map((service) => {
+        const count = submissions.filter(
+          (s) => s.service_name === service.slug,
+        ).length;
+        return { ...service, submissions: count };
+      })
+      .filter((service) => service.submissions > 0);
+  }, [submissions, services]);
+
+  const recentActivity = useMemo(() => {
+    if (!submissions || !contacts) return [];
+    const combined = [
+      ...submissions.map((s) => ({
+        ...s,
+        type: "submission" as const,
+        date: s.created_at,
+        name: s.full_name,
+        id: s.id,
+        email: s.email,
+        service_name: s.service_name,
+      })),
+      ...contacts.map((c) => ({
+        ...c,
+        type: "contact" as const,
+        date: c.submitted_at,
+        name: c.name,
+        id: c.id,
+        email: c.email,
+        service_name: "Contact Form",
+      })),
+    ];
+    return combined
+      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+      .slice(0, 5);
+  }, [submissions, contacts]);
+
+  return { loading, error, stats, submissionsByService, recentActivity };
+}
+````
+
+## File: packages/supabase/src/Mutations/formSubmissions.ts
+````typescript
+import { createSupabaseAdminClient } from "../admin";
+import { CACHE_TAGS, mutationResult } from "../cache";
+import type { Database } from "../supabaseType";
+
+type SubmissionUpdate =
+  Database["public"]["Tables"]["form_submissions"]["Update"];
+
+export async function updateFormSubmission(id: string, data: SubmissionUpdate) {
+  const supabase = createSupabaseAdminClient();
+  const { data: submission, error } = await supabase
+    .from("form_submissions")
+    .update(data)
+    .eq("id", id)
+    .select("*")
+    .single();
+
+  if (error) throw new Error(error.message);
+
+  return mutationResult(submission, {
+    tags: [CACHE_TAGS.formSubmissions],
+    mode: "immediate",
+  });
+}
+````
+
+## File: packages/supabase/src/Mutations/testimonials.ts
 ````typescript
 import { createSupabaseAdminClient } from "../admin";
 import { CACHE_PATHS, CACHE_TAGS, mutationResult } from "../cache";
-import { createSupabaseBrowserClient } from "../client";
 import type { Database } from "../supabaseType";
 
-type BlogInsert = Database["public"]["Tables"]["blog_posts"]["Insert"];
+type TestimonialInsert = Database["public"]["Tables"]["testimonials"]["Insert"];
 
-export async function incrementBlogPostViews(slug: string): Promise<void> {
-  const supabase = createSupabaseBrowserClient();
-  const { error } = await supabase
-    .rpc("increment_views", { post_slug: slug });
-
-  if (error) {
-    console.error("Failed to increment views:", error.message);
-  }
-}
-
-export async function upsertBlog(data: BlogInsert) {
+export async function upsertTestimonial(data: TestimonialInsert) {
   const supabase = createSupabaseAdminClient();
-  const { data: blog, error } = await supabase
-    .from("blog_posts")
+  const { data: testimonial, error } = await supabase
+    .from("testimonials")
     .upsert(data)
     .select("*")
     .single();
 
   if (error) throw new Error(error.message);
 
-  return mutationResult(blog, {
-    tags: [CACHE_TAGS.blogs, CACHE_TAGS.blog(blog.slug)],
-    paths: [
-      CACHE_PATHS.home,
-      CACHE_PATHS.blog,
-      CACHE_PATHS.blogPost(blog.slug),
-    ],
+  return mutationResult(testimonial, {
+    tags: [CACHE_TAGS.testimonials],
+    paths: [CACHE_PATHS.home],
     mode: "immediate",
   });
 }
 
-export async function deleteBlog(id: string) {
+export async function deleteTestimonial(id: string) {
   const supabase = createSupabaseAdminClient();
-  const { data: existing, error: readError } = await supabase
-    .from("blog_posts")
-    .select("slug")
-    .eq("id", id)
-    .maybeSingle();
-
-  if (readError) throw new Error(readError.message);
-
-  const { error } = await supabase.from("blog_posts").delete().eq("id", id);
+  const { error } = await supabase.from("testimonials").delete().eq("id", id);
   if (error) throw new Error(error.message);
 
   return mutationResult(undefined, {
-    tags: [
-      CACHE_TAGS.blogs,
-      ...(existing?.slug ? [CACHE_TAGS.blog(existing.slug)] : []),
-    ],
-    paths: [
-      CACHE_PATHS.home,
-      CACHE_PATHS.blog,
-      ...(existing?.slug ? [CACHE_PATHS.blogPost(existing.slug)] : []),
-    ],
+    tags: [CACHE_TAGS.testimonials],
+    paths: [CACHE_PATHS.home],
     mode: "immediate",
   });
-}
-````
-
-## File: repomix.config.json
-````json
-{
-  "$schema": "https://repomix.com/schemas/latest/schema.json",
-  "input": {
-    "maxFileSize": 52428800
-  },
-  "output": {
-    "filePath": "context.md",
-    "style": "markdown",
-    "parsableStyle": false,
-    "fileSummary": true,
-    "directoryStructure": true,
-    "files": true,
-    "removeComments": false,
-    "removeEmptyLines": false,
-    "compress": false,
-    "topFilesLength": 5,
-    "showLineNumbers": false,
-    "truncateBase64": false,
-    "copyToClipboard": false,
-    "includeFullDirectoryStructure": false,
-    "tokenCountTree": false,
-    "git": {
-      "sortByChanges": true,
-      "sortByChangesMaxCommits": 100,
-      "includeDiffs": false,
-      "includeLogs": false,
-      "includeLogsCount": 50
-    }
-  },
-  "include": [],
-  "ignore": {
-    "useGitignore": true,
-    "useDotIgnore": true,
-    "useDefaultPatterns": true,
-    "customPatterns": []
-  },
-  "security": {
-    "enableSecurityCheck": true
-  },
-  "tokenCount": {
-    "encoding": "o200k_base"
-  }
 }
 ````
 
@@ -11402,170 +10899,96 @@ yarn-error.log*
 next-env.d.ts
 ````
 
-## File: apps/admin/app/admin/blogs/BlogEditor.tsx
+## File: apps/admin/app/admin/form_submissions/schema.ts
 ````typescript
-"use client";
-import DOMPurify from "isomorphic-dompurify";
-import dynamic from "next/dynamic";
-import { useEffect, useState } from "react";
-import "react-quill-new/dist/quill.snow.css";
-import Image from "next/image";
-import { Card, CardHeader } from "@/components/ui/card";
+import * as z from "zod";
 
-const ReactQuill = dynamic(() => import("react-quill-new"), {
-  ssr: false,
-  loading: () => (
-    <div className="h-64 flex items-center justify-center bg-slate-50 rounded-lg">
-      Loading Editor...
-    </div>
-  ),
+export const submissionSchema = z.object({
+  fullName: z.string().min(1, "Full name is required"),
+  email: z.string().email(),
+  phone: z.string().optional(),
+  company: z.string().optional(),
+  industry: z.string().optional(),
+  serviceName: z.string().optional(),
+  status: z.enum([
+    "pending",
+    "in-progress",
+    "completed",
+    "rejected",
+    "archived",
+  ]),
+  details: z
+    .string()
+    .optional()
+    .refine(
+      (val) => {
+        if (!val || val.trim() === "") return true;
+        try {
+          JSON.parse(val);
+          return true;
+        } catch (_e) {
+          return false;
+        }
+      },
+      { message: "Details must be a valid JSON object." },
+    ),
+  notes: z.string().optional(),
+  contactOwner: z.string().optional(),
 });
+````
 
-const modules = {
-  toolbar: [
-    [{ header: [1, 2, 3, false] }],
-    ["bold", "italic", "underline", "strike"],
-    [{ list: "ordered" }, { list: "bullet" }],
-    ["link", "image", "video"],
-    ["clean"],
-  ],
-};
-
-interface BlogEditorProps {
-  value: string;
-  onChange: (value: string) => void;
-  onImageSelect?: (url: string) => void;
-  title: string;
-  featured_image: string | null | undefined;
-}
-
-export default function BlogEditor({
-  value,
-  onChange,
-  onImageSelect: _onImageSelect,
-  title,
-  featured_image,
-}: BlogEditorProps) {
-  const [view, setView] = useState<"edit" | "preview">("edit");
-  const [sanitized, setSanitized] = useState("");
-
-  useEffect(() => {
-    setSanitized(DOMPurify.sanitize(value));
-  }, [value]);
-
-  return (
-    <Card className="max-w-5xl w-full mx-auto p-4 md:p-8">
-      <CardHeader className="flex items-center justify-between bg-white sticky top-0 z-10 py-2 border-b border-slate-100">
-        <div className="flex bg-slate-100 p-1 rounded-xl">
-          <button
-            type="button"
-            onClick={() => setView("edit")}
-            className={`px-6 py-2 text-sm font-semibold rounded-lg transition-all ${
-              view === "edit"
-                ? "bg-white shadow-sm text-indigo-600"
-                : "text-slate-500 hover:text-slate-700"
-            }`}
-          >
-            Edit Content
-          </button>
-          <button
-            type="button"
-            onClick={() => setView("preview")}
-            className={`px-6 py-2 text-sm font-semibold rounded-lg transition-all ${
-              view === "preview"
-                ? "bg-white shadow-sm text-indigo-600"
-                : "text-slate-500 hover:text-slate-700"
-            }`}
-          >
-            Live Preview
-          </button>
-        </div>
-      </CardHeader>
-
-      <div className="w-full">
-        {view === "edit" ? (
-          <div className="animate-in fade-in duration-300 rounded-2xl border border-slate-200 shadow-sm ">
-            <style>{`
-              .ql-container {
-                font-size: 16px;
-                border-bottom-left-radius: 12px;
-                border-bottom-right-radius: 12px;
-              }
-              .ql-toolbar {
-                position: sticky;
-                top: 68px; /* Adjust this to match the header's height */
-                z-index: 9;
-                border-top-left-radius: 12px;
-                border-top-right-radius: 12px;
-                border-color: #f1f5f9 !important;
-                background: #f8fafc;
-                border-bottom: 1px solid #f1f5f9;
-              }
-              .ql-editor {
-                min-height: 400px;
-              }
-            `}</style>
-            <ReactQuill
-              theme="snow"
-              value={value}
-              onChange={onChange}
-              modules={modules}
-              className="border-none"
-            />
-          </div>
-        ) : (
-          <div className="p-4 animate-in slide-in-from-bottom-2 duration-300">
-            {featured_image && (
-              <div className="mb-8">
-                <h2 className="text-lg font-bold mb-4 text-slate-800">
-                  Featured Image
-                </h2>
-                <div className="relative aspect-video w-full max-w-2xl mx-auto overflow-hidden rounded-lg shadow-lg border border-slate-200">
-                  <Image
-                    src={featured_image}
-                    alt="Featured Image Preview"
-                    fill
-                    className="object-cover"
-                  />
-                </div>
-              </div>
-            )}
-            <div className="mb-10 border-b border-slate-100 pb-8">
-              <h1 className="text-2xl font-black text-slate-900 mb-4 tracking-tight leading-tight">
-                {title || "Untitled Post"}
-              </h1>
-              <div className="flex items-center gap-3 text-slate-400 text-sm">
-                <span className="bg-slate-100 px-2 py-1 rounded">Preview</span>
-                <span>•</span>
-                <span>{new Date().toLocaleDateString()}</span>
-                <span>•</span>
-                <span>5 min read</span>
-              </div>
-            </div>
-
-            <article
-              className="prose prose-slate prose-indigo max-w-none 
-                                       break-words overflow-wrap-anywhere
-                                       prose-headings:font-bold prose-headings:tracking-tight
-                                       prose-a:text-indigo-600 prose-img:rounded-2xl prose-img:shadow-lg
-                                       [&_iframe]:w-full [&_iframe]:aspect-video [&_iframe]:rounded-xl max-w-none 
-          [&>h1]:text-3xl [&>h1]:font-bold [&>h1]:mb-4 
-          [&>h2]:text-2xl [&>h2]:font-bold [&>h2]:mb-3 
-          [&>h3]:text-xl [&>h3]:font-bold [&>h3]:mb-2 
-          [&>p]:mb-4 [&>p]:leading-relaxed [&>p]:text-slate-700
-          [&>ul]:list-disc [&>ul]:ml-6 [&>ul]:my-4
-          [&>img]:rounded-lg"
-              dangerouslySetInnerHTML={{
-                __html:
-                  sanitized ||
-                  '<p class="text-slate-400 italic">No content to display yet...</p>',
-              }}
-            />
-          </div>
-        )}
-      </div>
-    </Card>
-  );
+## File: apps/admin/biome.json
+````json
+{
+  "root": false,
+  "$schema": "https://biomejs.dev/schemas/2.2.0/schema.json",
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "useIgnoreFile": true
+  },
+  "files": {
+    "ignoreUnknown": true,
+    "includes": ["**", "!node_modules", "!.next", "!dist", "!build"]
+  },
+  "formatter": {
+    "enabled": true,
+    "indentStyle": "space",
+    "indentWidth": 2
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": true,
+      "style": {
+        "noNonNullAssertion": "off"
+      },
+      "suspicious": {
+        "noArrayIndexKey": "off",
+        "noDocumentCookie": "off",
+        "noExplicitAny": "off",
+        "noUnknownAtRules": "off"
+      },
+      "a11y": {
+        "noSvgWithoutTitle": "off",
+        "useSemanticElements": "off"
+      },
+      "security": {
+        "noDangerouslySetInnerHtml": "off"
+      }
+    },
+    "domains": {
+      "next": "recommended",
+      "react": "recommended"
+    }
+  },
+  "assist": {
+    "actions": {
+      "source": {
+        "organizeImports": "on"
+      }
+    }
+  }
 }
 ````
 
@@ -16087,6 +15510,57 @@ export async function POST(request: NextRequest) {
 }
 ````
 
+## File: apps/client/biome.json
+````json
+{
+  "root": false,
+  "$schema": "https://biomejs.dev/schemas/2.2.0/schema.json",
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "useIgnoreFile": true
+  },
+  "files": {
+    "ignoreUnknown": true,
+    "includes": ["**", "!node_modules", "!.next", "!dist", "!build"]
+  },
+  "formatter": {
+    "enabled": true,
+    "indentStyle": "space",
+    "indentWidth": 2
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": true,
+      "performance": {
+        "noImgElement": "off"
+      },
+      "suspicious": {
+        "noArrayIndexKey": "off",
+        "noExplicitAny": "off",
+        "noImplicitAnyLet": "off",
+        "noUnknownAtRules": "off"
+      },
+      "security": {
+        "noDangerouslySetInnerHtml": "off"
+      }
+    },
+    "domains": {
+      "next": "recommended",
+      "react": "recommended"
+    }
+  },
+  "assist": {
+    "actions": {
+      "source": {
+        "organizeImports": "on"
+      }
+    }
+  }
+}
+````
+
 ## File: apps/client/components/blog/StickyShare.tsx
 ````typescript
 import { FaFacebook, FaLinkedin, FaTwitter } from "react-icons/fa";
@@ -16623,6 +16097,75 @@ export {
 };
 ````
 
+## File: biome.json
+````json
+{
+  "$schema": "https://biomejs.dev/schemas/2.2.0/schema.json",
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "useIgnoreFile": true
+  },
+  "files": {
+    "ignoreUnknown": true,
+    "includes": ["**", "!**/node_modules", "!**/.next", "!**/dist", "!**/build"]
+  },
+  "formatter": {
+    "enabled": true,
+    "indentStyle": "space",
+    "indentWidth": 2
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": true,
+      "a11y": {
+        "noAriaHiddenOnFocusable": "off",
+        "noLabelWithoutControl": "off",
+        "noStaticElementInteractions": "off",
+        "noSvgWithoutTitle": "off",
+        "useButtonType": "off",
+        "useKeyWithClickEvents": "off",
+        "useMediaCaption": "off",
+        "useSemanticElements": "off"
+      },
+      "correctness": {
+        "noInvalidUseBeforeDeclaration": "off",
+        "useExhaustiveDependencies": "off"
+      },
+      "performance": {
+        "noImgElement": "off"
+      },
+      "security": {
+        "noDangerouslySetInnerHtml": "off"
+      },
+      "style": {
+        "noNonNullAssertion": "off"
+      },
+      "suspicious": {
+        "noArrayIndexKey": "off",
+        "noAssignInExpressions": "off",
+        "noExplicitAny": "off",
+        "noImplicitAnyLet": "off",
+        "useIterableCallbackReturn": "off",
+        "noUnknownAtRules": "off"
+      }
+    },
+    "domains": {
+      "next": "recommended",
+      "react": "recommended"
+    }
+  },
+  "assist": {
+    "actions": {
+      "source": {
+        "organizeImports": "on"
+      }
+    }
+  }
+}
+````
+
 ## File: packages/shared/src/types/domain.ts
 ````typescript
 export interface PricingPlan {
@@ -16785,6 +16328,26 @@ export interface User {
 }
 ````
 
+## File: packages/supabase/src/admin.ts
+````typescript
+import { createClient } from "@supabase/supabase-js";
+import type { Database } from "./supabaseType";
+
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+const supabaseServiceRoleKey =
+  process.env.SUPABASE_SERVICE_ROLE_KEY ||
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+
+export const createSupabaseAdminClient = () => {
+  return createClient<Database>(supabaseUrl, supabaseServiceRoleKey, {
+    auth: {
+      autoRefreshToken: false,
+      persistSession: false,
+    },
+  });
+};
+````
+
 ## File: packages/supabase/src/client.ts
 ````typescript
 import { createBrowserClient } from "@supabase/ssr";
@@ -16804,1374 +16367,429 @@ export const createSupabaseBrowserClient = () => {
 };
 ````
 
-## File: packages/supabase/src/hooks/useDataFetching.ts
+## File: packages/supabase/src/hooks/useBlogs.ts
 ````typescript
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
-import {
-  createSupabaseBrowserClient,
-  isSupabaseConfigured,
-} from "../client";
-import type { Database } from "../supabaseType";
+import type { BlogPost } from "@bilacert/shared/types";
+import { useDataFetching } from "./useDataFetching";
 
-type PublicTableName = keyof Database["public"]["Tables"] & string;
+export function useBlogs() {
+  return useDataFetching<BlogPost>("blog_posts");
+}
+````
 
-export function useDataFetching<T>(
-  tableName: PublicTableName,
-  selectQuery: string = "*",
-  orderBy: string = "created_at",
-) {
-  const [data, setData] = useState<T[]>([]);
+## File: packages/supabase/src/hooks/useContacts.ts
+````typescript
+"use client";
+
+import type { Contact } from "@bilacert/shared/types";
+import { useDataFetching } from "./useDataFetching";
+
+export function useContacts() {
+  return useDataFetching<Contact>("contacts", "*", "submitted_at");
+}
+````
+
+## File: packages/supabase/src/hooks/useServices.ts
+````typescript
+"use client";
+
+import type { Service } from "@bilacert/shared/types";
+import { useDataFetching } from "./useDataFetching";
+
+export function useServices() {
+  return useDataFetching<Service>("services");
+}
+````
+
+## File: packages/supabase/src/hooks/useSubmissions.ts
+````typescript
+"use client";
+
+import type { Submission } from "@bilacert/shared/types";
+import { useDataFetching } from "./useDataFetching";
+
+export function useSubmissions() {
+  return useDataFetching<Submission>("form_submissions");
+}
+````
+
+## File: packages/supabase/src/hooks/useTestimonials.ts
+````typescript
+"use client";
+
+import type { Testimonial } from "@bilacert/shared/types";
+import { useDataFetching } from "./useDataFetching";
+
+export function useTestimonials() {
+  return useDataFetching<Testimonial>("testimonials");
+}
+````
+
+## File: packages/supabase/src/hooks/useUser.ts
+````typescript
+"use client";
+
+import type { Session, User } from "@supabase/supabase-js";
+import { useEffect, useState } from "react";
+import { createSupabaseBrowserClient, isSupabaseConfigured } from "../client";
+
+export function useUser() {
+  const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
 
-  const fetchData = useCallback(async () => {
+  useEffect(() => {
     if (!isSupabaseConfigured) {
       setLoading(false);
       return;
     }
 
     const supabase = createSupabaseBrowserClient();
-    setLoading(true);
-    const { data: fetchedData, error: fetchError } = await supabase
-      .from(tableName)
-      .select(selectQuery)
-      .order(orderBy, { ascending: false });
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(
+      (_event: string, session: Session | null) => {
+        setUser(session?.user ?? null);
+        setLoading(false);
+      },
+    );
 
-    if (fetchError) {
-      setError(fetchError as unknown as Error);
-      setData([]);
-    } else {
-      setData((fetchedData as unknown as T[]) || []);
-      setError(null);
-    }
-    setLoading(false);
-  }, [tableName, selectQuery, orderBy]);
-
-  useEffect(() => {
-    fetchData();
-
-    if (!isSupabaseConfigured) {
-      return;
-    }
-
-    const supabase = createSupabaseBrowserClient();
-    const channel = supabase
-      .channel(`${tableName}-realtime`)
-      .on(
-        "postgres_changes",
-        { event: "*", schema: "public", table: tableName },
-        () => {
-          fetchData();
-        },
-      )
-      .subscribe((status: string, err?: Error) => {
-        if (err) {
-          console.error("Supabase subscription error:", err);
-        }
+    // Initial load
+    supabase.auth
+      .getSession()
+      .then(({ data: { session } }: { data: { session: Session | null } }) => {
+        setUser(session?.user ?? null);
+        setLoading(false);
       });
 
     return () => {
-      supabase.removeChannel(channel);
+      subscription?.unsubscribe();
     };
-  }, [tableName, fetchData]);
-
-  return { data, loading, error, refresh: fetchData };
-}
-````
-
-## File: packages/supabase/src/hooks/useFormSubmission.ts
-````typescript
-"use client";
-import { useCallback, useEffect, useState } from "react";
-import type { FormSubmissionPayload } from "@bilacert/shared/types";
-
-export interface FormSubmissionResponse {
-  success: boolean;
-  message: string;
-  submissionId?: string;
-  error?: string;
-}
-
-export interface UseFormSubmissionState {
-  isLoading: boolean;
-  isSuccess: boolean;
-  error: string | null;
-  successMessage: string | null;
-}
-
-export function useFormSubmission() {
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [successMessage, setSuccessMessage] = useState<string | null>(null);
-
-  const handleSubmit = useCallback(
-    async (
-      payload: FormSubmissionPayload,
-    ): Promise<FormSubmissionResponse | null> => {
-      setIsLoading(true);
-      setError(null);
-      setSuccessMessage(null);
-
-      try {
-        const endpoint =
-          payload.formType === "contact"
-            ? "/api/contacts"
-            : "/api/form-submissions";
-        const response = await fetch(endpoint, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(payload),
-        });
-
-        const data = (await response.json()) as FormSubmissionResponse;
-
-        if (!response.ok) {
-          const errorMessage =
-            data.error || "Failed to submit form. Please try again.";
-          setError(errorMessage);
-          return { success: false, message: errorMessage };
-        }
-
-        setSuccessMessage(data.message);
-        return data;
-      } catch (err) {
-        const errorMessage =
-          err instanceof Error ? err.message : "An unexpected error occurred";
-        setError(errorMessage);
-        return { success: false, message: errorMessage };
-      } finally {
-        setIsLoading(false);
-      }
-    },
-    [],
-  );
-
-  const reset = useCallback(() => {
-    setError(null);
-    setSuccessMessage(null);
-    setIsLoading(false);
   }, []);
 
-  return {
-    isLoading,
-    error,
-    isSuccess: successMessage !== null,
-    successMessage,
-    handleSubmit,
-    reset,
-  };
-}
-
-export function useFetchSubmission(submissionId: string | null) {
-  const [data, setData] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  const fetchSubmission = useCallback(async () => {
-    if (!submissionId) return;
-
-    setIsLoading(true);
-    setError(null);
-
-    try {
-      const response = await fetch(
-        `/api/form-submissions?submissionId=${submissionId}`,
-      );
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || "Failed to fetch submission");
-      }
-
-      const submissionData = await response.json();
-      setData(submissionData);
-    } catch (err) {
-      const errorMessage =
-        err instanceof Error ? err.message : "An error occurred";
-      setError(errorMessage);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [submissionId]);
-
-  useEffect(() => {
-    fetchSubmission();
-  }, [fetchSubmission]);
-
-  return { data, isLoading, error, refetch: fetchSubmission };
+  return { user, loading, error: null };
 }
 ````
 
-## File: packages/supabase/src/supabaseType.ts
+## File: packages/supabase/src/middleware.ts
 ````typescript
-export type Json =
-  | string
-  | number
-  | boolean
-  | null
-  | { [key: string]: Json | undefined }
-  | Json[]
+import { createServerClient } from "@supabase/ssr";
+import { type NextRequest, NextResponse } from "next/server";
+import type { Database } from "./supabaseType";
 
-export type Database = {
-  // Allows to automatically instantiate createClient with right options
-  // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
-  __InternalSupabase: {
-    PostgrestVersion: "14.1"
-  }
-  public: {
-    Tables: {
-      blog_posts: {
-        Row: {
-          authorId: string | null
-          authorName: string | null
-          category: string | null
-          content: string
-          createdAt: string | null
-          excerpt: string | null
-          featured: boolean | null
-          featuredImage: string | null
-          id: string
-          published: boolean | null
-          publishedAt: string | null
-          readTime: string | null
-          seoDescription: string | null
-          seoKeywords: string | null
-          seoTitle: string | null
-          slug: string
-          tags: string | null
-          thumbnail: string | null
-          title: string
-          updatedAt: string | null
-          viewsCount: number | null
-        }
-        Insert: {
-          authorId?: string | null
-          authorName?: string | null
-          category?: string | null
-          content: string
-          createdAt?: string | null
-          excerpt?: string | null
-          featured?: boolean | null
-          featuredImage?: string | null
-          id: string
-          published?: boolean | null
-          publishedAt?: string | null
-          readTime?: string | null
-          seoDescription?: string | null
-          seoKeywords?: string | null
-          seoTitle?: string | null
-          slug: string
-          tags?: string | null
-          thumbnail?: string | null
-          title: string
-          updatedAt?: string | null
-          viewsCount?: number | null
-        }
-        Update: {
-          authorId?: string | null
-          authorName?: string | null
-          category?: string | null
-          content?: string
-          createdAt?: string | null
-          excerpt?: string | null
-          featured?: boolean | null
-          featuredImage?: string | null
-          id?: string
-          published?: boolean | null
-          publishedAt?: string | null
-          readTime?: string | null
-          seoDescription?: string | null
-          seoKeywords?: string | null
-          seoTitle?: string | null
-          slug?: string
-          tags?: string | null
-          thumbnail?: string | null
-          title?: string
-          updatedAt?: string | null
-          viewsCount?: number | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "blog_posts_author_id_fkey"
-            columns: ["authorId"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      contacts: {
-        Row: {
-          email: string
-          id: string
-          message: string | null
-          name: string | null
-          phone: string | null
-          service: string | null
-          submittedAt: string
-        }
-        Insert: {
-          email: string
-          id?: string
-          message?: string | null
-          name?: string | null
-          phone?: string | null
-          service?: string | null
-          submittedAt?: string
-        }
-        Update: {
-          email?: string
-          id?: string
-          message?: string | null
-          name?: string | null
-          phone?: string | null
-          service?: string | null
-          submittedAt?: string
-        }
-        Relationships: []
-      }
-      form_submissions: {
-        Row: {
-          assignedTo: string | null
-          company: string | null
-          completedAt: string | null
-          createdAt: string | null
-          details: Json | null
-          email: string
-          formType: string
-          fullName: string
-          id: string
-          industry: string | null
-          internalNotes: string | null
-          phone: string | null
-          serviceId: string | null
-          serviceName: string | null
-          status: string
-          updatedAt: string | null
-        }
-        Insert: {
-          assignedTo?: string | null
-          company?: string | null
-          completedAt?: string | null
-          createdAt?: string | null
-          details?: Json | null
-          email: string
-          formType: string
-          fullName: string
-          id?: string
-          industry?: string | null
-          internalNotes?: string | null
-          phone?: string | null
-          serviceId?: string | null
-          serviceName?: string | null
-          status?: string
-          updatedAt?: string | null
-        }
-        Update: {
-          assignedTo?: string | null
-          company?: string | null
-          completedAt?: string | null
-          createdAt?: string | null
-          details?: Json | null
-          email?: string
-          formType?: string
-          fullName?: string
-          id?: string
-          industry?: string | null
-          internalNotes?: string | null
-          phone?: string | null
-          serviceId?: string | null
-          serviceName?: string | null
-          status?: string
-          updatedAt?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "form_submissions_assigned_to_fkey"
-            columns: ["assignedTo"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      services: {
-        Row: {
-          category: string | null
-          content: string | null
-          createdAt: string | null
-          description: string | null
-          featured: boolean | null
-          features: string[] | null
-          href: string
-          icon: string | null
-          id: string
-          image: string | null
-          includes: string[] | null
-          orderIndex: number | null
-          pricing: number | null
-          pricingPlans: Json | null
-          processingTime: string | null
-          processSteps: Json | null
-          published: boolean | null
-          requirements: string[] | null
-          seoDescription: string | null
-          seoKeywords: string | null
-          seoTitle: string | null
-          shortDescription: string | null
-          slug: string
-          successStory: Json | null
-          thumbnail: string | null
-          title: string
-          updatedAt: string | null
-        }
-        Insert: {
-          category?: string | null
-          content?: string | null
-          createdAt?: string | null
-          description?: string | null
-          featured?: boolean | null
-          features?: string[] | null
-          href: string
-          icon?: string | null
-          id?: string
-          image?: string | null
-          includes?: string[] | null
-          orderIndex?: number | null
-          pricing?: number | null
-          pricingPlans?: Json | null
-          processingTime?: string | null
-          processSteps?: Json | null
-          published?: boolean | null
-          requirements?: string[] | null
-          seoDescription?: string | null
-          seoKeywords?: string | null
-          seoTitle?: string | null
-          shortDescription?: string | null
-          slug: string
-          successStory?: Json | null
-          thumbnail?: string | null
-          title: string
-          updatedAt?: string | null
-        }
-        Update: {
-          category?: string | null
-          content?: string | null
-          createdAt?: string | null
-          description?: string | null
-          featured?: boolean | null
-          features?: string[] | null
-          href?: string
-          icon?: string | null
-          id?: string
-          image?: string | null
-          includes?: string[] | null
-          orderIndex?: number | null
-          pricing?: number | null
-          pricingPlans?: Json | null
-          processingTime?: string | null
-          processSteps?: Json | null
-          published?: boolean | null
-          requirements?: string[] | null
-          seoDescription?: string | null
-          seoKeywords?: string | null
-          seoTitle?: string | null
-          shortDescription?: string | null
-          slug?: string
-          successStory?: Json | null
-          thumbnail?: string | null
-          title?: string
-          updatedAt?: string | null
-        }
-        Relationships: []
-      }
-      testimonials: {
-        Row: {
-          createdAt: string | null
-          id: string
-          postUrl: string
-        }
-        Insert: {
-          createdAt?: string | null
-          id?: string
-          postUrl: string
-        }
-        Update: {
-          createdAt?: string | null
-          id?: string
-          postUrl?: string
-        }
-        Relationships: []
-      }
-      users: {
-        Row: {
-          bio: string | null
-          company: string | null
-          createdAt: string | null
-          createdBy: string | null
-          email: string
-          firstName: string | null
-          id: string
-          isActive: boolean | null
-          lastName: string | null
-          phone: string | null
-          profileImage: string | null
-          role: string
-          updatedAt: string | null
-          updatedBy: string | null
-        }
-        Insert: {
-          bio?: string | null
-          company?: string | null
-          createdAt?: string | null
-          createdBy?: string | null
-          email: string
-          firstName?: string | null
-          id: string
-          isActive?: boolean | null
-          lastName?: string | null
-          phone?: string | null
-          profileImage?: string | null
-          role?: string
-          updatedAt?: string | null
-          updatedBy?: string | null
-        }
-        Update: {
-          bio?: string | null
-          company?: string | null
-          createdAt?: string | null
-          createdBy?: string | null
-          email?: string
-          firstName?: string | null
-          id?: string
-          isActive?: boolean | null
-          lastName?: string | null
-          phone?: string | null
-          profileImage?: string | null
-          role?: string
-          updatedAt?: string | null
-          updatedBy?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "users_created_by_fkey"
-            columns: ["createdBy"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "users_updated_by_fkey"
-            columns: ["updatedBy"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-    }
-    Views: {
-      [_ in never]: never
-    }
-    Functions: {
-      increment_views: { Args: { post_slug: string }; Returns: undefined }
-    }
-    Enums: {
-      [_ in never]: never
-    }
-    CompositeTypes: {
-      [_ in never]: never
-    }
-  }
-}
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
-type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">
+export const createClient = (request: NextRequest) => {
+  let supabaseResponse = NextResponse.next({
+    request: {
+      headers: request.headers,
+    },
+  });
 
-type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, "public">]
+  const _supabase = createServerClient<Database>(supabaseUrl!, supabaseKey!, {
+    cookies: {
+      getAll() {
+        return request.cookies.getAll();
+      },
+      setAll(cookiesToSet) {
+        cookiesToSet.forEach(({ name, value }) =>
+          request.cookies.set(name, value),
+        );
 
-export type Tables<
-  DefaultSchemaTableNameOrOptions extends
-    | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
-    | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals
-  }
-    ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
-        DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
-    : never = never,
-> = DefaultSchemaTableNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals
-}
-  ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
-      DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
-      Row: infer R
-    }
-    ? R
-    : never
-  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema["Tables"] &
-        DefaultSchema["Views"])
-    ? (DefaultSchema["Tables"] &
-        DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends {
-        Row: infer R
-      }
-      ? R
-      : never
-    : never
+        supabaseResponse = NextResponse.next({
+          request,
+        });
 
-export type TablesInsert<
-  DefaultSchemaTableNameOrOptions extends
-    | keyof DefaultSchema["Tables"]
-    | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals
-  }
-    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
-    : never = never,
-> = DefaultSchemaTableNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals
-}
-  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
-      Insert: infer I
-    }
-    ? I
-    : never
-  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
-    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
-        Insert: infer I
-      }
-      ? I
-      : never
-    : never
+        cookiesToSet.forEach(({ name, value, options }) =>
+          supabaseResponse.cookies.set(name, value, options),
+        );
+      },
+    },
+  });
 
-export type TablesUpdate<
-  DefaultSchemaTableNameOrOptions extends
-    | keyof DefaultSchema["Tables"]
-    | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals
-  }
-    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
-    : never = never,
-> = DefaultSchemaTableNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals
-}
-  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
-      Update: infer U
-    }
-    ? U
-    : never
-  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
-    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
-        Update: infer U
-      }
-      ? U
-      : never
-    : never
-
-export type Enums<
-  DefaultSchemaEnumNameOrOptions extends
-    | keyof DefaultSchema["Enums"]
-    | { schema: keyof DatabaseWithoutInternals },
-  EnumName extends DefaultSchemaEnumNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals
-  }
-    ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
-    : never = never,
-> = DefaultSchemaEnumNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals
-}
-  ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
-  : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
-    ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
-    : never
-
-export type CompositeTypes<
-  PublicCompositeTypeNameOrOptions extends
-    | keyof DefaultSchema["CompositeTypes"]
-    | { schema: keyof DatabaseWithoutInternals },
-  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals
-  }
-    ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
-    : never = never,
-> = PublicCompositeTypeNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals
-}
-  ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
-  : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
-    ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
-    : never
-
-export const Constants = {
-  public: {
-    Enums: {},
-  },
-} as const
+  return supabaseResponse;
+};
 ````
 
-## File: turbo.json
+## File: packages/supabase/src/Mutations/blogs.ts
+````typescript
+import { createSupabaseAdminClient } from "../admin";
+import { CACHE_PATHS, CACHE_TAGS, mutationResult } from "../cache";
+import { createSupabaseBrowserClient } from "../client";
+import type { Database } from "../supabaseType";
+
+type BlogInsert = Database["public"]["Tables"]["blog_posts"]["Insert"];
+
+export async function incrementBlogPostViews(slug: string): Promise<void> {
+  const supabase = createSupabaseBrowserClient();
+  const { error } = await supabase.rpc("increment_views", { post_slug: slug });
+
+  if (error) {
+    console.error("Failed to increment views:", error.message);
+  }
+}
+
+export async function upsertBlog(data: BlogInsert) {
+  const supabase = createSupabaseAdminClient();
+  const { data: blog, error } = await supabase
+    .from("blog_posts")
+    .upsert(data)
+    .select("*")
+    .single();
+
+  if (error) throw new Error(error.message);
+
+  return mutationResult(blog, {
+    tags: [CACHE_TAGS.blogs, CACHE_TAGS.blog(blog.slug)],
+    paths: [
+      CACHE_PATHS.home,
+      CACHE_PATHS.blog,
+      CACHE_PATHS.blogPost(blog.slug),
+    ],
+    mode: "immediate",
+  });
+}
+
+export async function deleteBlog(id: string) {
+  const supabase = createSupabaseAdminClient();
+  const { data: existing, error: readError } = await supabase
+    .from("blog_posts")
+    .select("slug")
+    .eq("id", id)
+    .maybeSingle();
+
+  if (readError) throw new Error(readError.message);
+
+  const { error } = await supabase.from("blog_posts").delete().eq("id", id);
+  if (error) throw new Error(error.message);
+
+  return mutationResult(undefined, {
+    tags: [
+      CACHE_TAGS.blogs,
+      ...(existing?.slug ? [CACHE_TAGS.blog(existing.slug)] : []),
+    ],
+    paths: [
+      CACHE_PATHS.home,
+      CACHE_PATHS.blog,
+      ...(existing?.slug ? [CACHE_PATHS.blogPost(existing.slug)] : []),
+    ],
+    mode: "immediate",
+  });
+}
+````
+
+## File: repomix.config.json
 ````json
 {
-  "$schema": "https://turbo.build/schema.json",
-  "globalEnv": [
-    "REVALIDATION_SECRET",
-    "NEXT_PUBLIC_CLIENT_URL"
-  ],
-  "tasks": {
-    "build": {
-      "dependsOn": [
-        "^build"
-      ],
-      "outputs": [
-        ".next/**",
-        "!.next/cache/**",
-        "dist/**"
-      ]
-    },
-    "dev": {
-      "cache": false,
-      "persistent": true
-    },
-    "lint": {
-      "dependsOn": [
-        "^build"
-      ]
-    },
-    "lint:fix": {
-      "dependsOn": [
-        "^lint:fix"
-      ]
-    },
-    "format": {
-      "cache": false
-    },
-    "typecheck": {
-      "dependsOn": [
-        "^build"
-      ]
+  "$schema": "https://repomix.com/schemas/latest/schema.json",
+  "input": {
+    "maxFileSize": 52428800
+  },
+  "output": {
+    "filePath": "context.md",
+    "style": "markdown",
+    "parsableStyle": false,
+    "fileSummary": true,
+    "directoryStructure": true,
+    "files": true,
+    "removeComments": false,
+    "removeEmptyLines": false,
+    "compress": false,
+    "topFilesLength": 5,
+    "showLineNumbers": false,
+    "truncateBase64": false,
+    "copyToClipboard": false,
+    "includeFullDirectoryStructure": false,
+    "tokenCountTree": false,
+    "git": {
+      "sortByChanges": true,
+      "sortByChangesMaxCommits": 100,
+      "includeDiffs": false,
+      "includeLogs": false,
+      "includeLogsCount": 50
     }
+  },
+  "include": [],
+  "ignore": {
+    "useGitignore": true,
+    "useDotIgnore": true,
+    "useDefaultPatterns": true,
+    "customPatterns": []
+  },
+  "security": {
+    "enableSecurityCheck": true
+  },
+  "tokenCount": {
+    "encoding": "o200k_base"
   }
 }
 ````
 
-## File: apps/admin/app/admin/blogs/actions.ts
-````typescript
-"use server";
-
-import {
-  deleteBlog as deleteBlogMutation,
-  upsertBlog as upsertBlogMutation,
-} from "@bilacert/supabase/Mutations/blogs";
-import { revalidatePath } from "next/cache";
-import { v4 as uuidv4 } from "uuid";
-import { triggerRevalidation } from "@/lib/revalidation";
-import { blogSchema } from "./schema";
-
-export async function upsertBlog(values: unknown) {
-  const parsedValues = blogSchema.safeParse(values);
-
-  if (!parsedValues.success) {
-    return { error: parsedValues.error.message };
-  }
-
-  const { id, ...rest } = parsedValues.data;
-
-  const dataToUpsert = id ? { ...rest, id } : { ...rest, id: uuidv4() };
-
-  try {
-    const result = await upsertBlogMutation(dataToUpsert);
-    await triggerRevalidation(result.revalidate);
-  } catch (error) {
-    const message = error instanceof Error ? error.message : "Unknown error";
-    return { error: `Database error: ${message}` };
-  }
-
-  revalidatePath("/admin/blogs");
-
-  return { error: null };
-}
-
-export async function deleteBlog(blogId: string) {
-  try {
-    const result = await deleteBlogMutation(blogId);
-    await triggerRevalidation(result.revalidate);
-  } catch (error) {
-    const message = error instanceof Error ? error.message : "Unknown error";
-    return { error: `Database error: ${message}` };
-  }
-
-  revalidatePath("/admin/blogs");
-
-  return { error: null };
-}
-````
-
-## File: apps/admin/app/admin/blogs/BlogDetails.tsx
+## File: apps/admin/app/admin/blogs/BlogEditor.tsx
 ````typescript
 "use client";
-
-import type { BlogPost } from "@bilacert/shared/types";
-import { format } from "date-fns";
-import { ArrowLeft, Edit, Trash2 } from "lucide-react";
+import DOMPurify from "isomorphic-dompurify";
+import dynamic from "next/dynamic";
+import { useEffect, useState } from "react";
+import "react-quill-new/dist/quill.snow.css";
 import Image from "next/image";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import DeleteBlogDialog from "./DeleteBlogDialog";
+import { Card, CardHeader } from "@/components/ui/card";
 
-interface BlogDetailsProps {
-  blog: BlogPost;
+const ReactQuill = dynamic(() => import("react-quill-new"), {
+  ssr: false,
+  loading: () => (
+    <div className="h-64 flex items-center justify-center bg-slate-50 rounded-lg">
+      Loading Editor...
+    </div>
+  ),
+});
+
+const modules = {
+  toolbar: [
+    [{ header: [1, 2, 3, false] }],
+    ["bold", "italic", "underline", "strike"],
+    [{ list: "ordered" }, { list: "bullet" }],
+    ["link", "image", "video"],
+    ["clean"],
+  ],
+};
+
+interface BlogEditorProps {
+  value: string;
+  onChange: (value: string) => void;
+  onImageSelect?: (url: string) => void;
+  title: string;
+  featuredImage: string | null | undefined;
 }
 
-export default function BlogDetails({ blog }: BlogDetailsProps) {
-  const router = useRouter();
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+export default function BlogEditor({
+  value,
+  onChange,
+  onImageSelect: _onImageSelect,
+  title,
+  featuredImage,
+}: BlogEditorProps) {
+  const [view, setView] = useState<"edit" | "preview">("edit");
+  const [sanitized, setSanitized] = useState("");
 
-  if (!blog) return null;
-
-  const handleDelete = () => {
-    setIsDeleteDialogOpen(true);
-  };
-
-  const onDeleted = () => {
-    setIsDeleteDialogOpen(false);
-    router.push("/admin/blogs");
-    router.refresh();
-  };
-
-  const handleCloseDialog = () => {
-    setIsDeleteDialogOpen(false);
-  };
+  useEffect(() => {
+    setSanitized(DOMPurify.sanitize(value));
+  }, [value]);
 
   return (
-    <>
-      <div className="space-y-6">
-        <div className="flex items-center justify-between">
-          <Button variant="outline" asChild>
-            <Link href="/admin/blogs">
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              Back to Blogs
-            </Link>
-          </Button>
-          <div className="flex gap-2">
-            <Button asChild>
-              <Link href={`/admin/blogs/${blog.id}/edit`}>
-                <Edit className="mr-2 h-4 w-4" /> Edit
-              </Link>
-            </Button>
-            <Button variant="destructive" onClick={handleDelete}>
-              <Trash2 className="mr-2 h-4 w-4" /> Delete
-            </Button>
-          </div>
+    <Card className="max-w-5xl w-full mx-auto p-4 md:p-8">
+      <CardHeader className="flex items-center justify-between bg-white sticky top-0 z-10 py-2 border-b border-slate-100">
+        <div className="flex bg-slate-100 p-1 rounded-xl">
+          <button
+            type="button"
+            onClick={() => setView("edit")}
+            className={`px-6 py-2 text-sm font-semibold rounded-lg transition-all ${
+              view === "edit"
+                ? "bg-white shadow-sm text-indigo-600"
+                : "text-slate-500 hover:text-slate-700"
+            }`}
+          >
+            Edit Content
+          </button>
+          <button
+            type="button"
+            onClick={() => setView("preview")}
+            className={`px-6 py-2 text-sm font-semibold rounded-lg transition-all ${
+              view === "preview"
+                ? "bg-white shadow-sm text-indigo-600"
+                : "text-slate-500 hover:text-slate-700"
+            }`}
+          >
+            Live Preview
+          </button>
         </div>
+      </CardHeader>
 
-        {(blog.featured_image || blog.thumbnail) && (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {blog.featured_image && (
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-lg">Featured Image</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="relative aspect-video w-full max-w-lg overflow-hidden rounded-lg">
-                    <Image
-                      src={blog.featured_image}
-                      alt="Featured Image"
-                      fill
-                      className="object-cover"
-                    />
-                  </div>
-                </CardContent>
-              </Card>
-            )}
-            {blog.thumbnail && (
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-lg">Thumbnail</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="relative aspect-square w-48 overflow-hidden rounded-lg">
-                    <Image
-                      src={blog.thumbnail}
-                      alt="Thumbnail"
-                      fill
-                      className="object-cover"
-                    />
-                  </div>
-                </CardContent>
-              </Card>
-            )}
+      <div className="w-full">
+        {view === "edit" ? (
+          <div className="animate-in fade-in duration-300 rounded-2xl border border-slate-200 shadow-sm ">
+            <style>{`
+              .ql-container {
+                font-size: 16px;
+                border-bottom-left-radius: 12px;
+                border-bottom-right-radius: 12px;
+              }
+              .ql-toolbar {
+                position: sticky;
+                top: 68px; /* Adjust this to match the header's height */
+                z-index: 9;
+                border-top-left-radius: 12px;
+                border-top-right-radius: 12px;
+                border-color: #f1f5f9 !important;
+                background: #f8fafc;
+                border-bottom: 1px solid #f1f5f9;
+              }
+              .ql-editor {
+                min-height: 400px;
+              }
+            `}</style>
+            <ReactQuill
+              theme="snow"
+              value={value}
+              onChange={onChange}
+              modules={modules}
+              className="border-none"
+            />
           </div>
-        )}
-
-        <Card>
-          <CardHeader>
-            <div className="flex justify-between items-start">
-              <div>
-                <CardTitle>{blog.title}</CardTitle>
-                {blog.category && (
-                  <CardDescription>{blog.category}</CardDescription>
-                )}
-              </div>
-              <div className="flex gap-2">
-                {blog.featured && <Badge>Featured</Badge>}
-                <Badge variant={blog.published ? "default" : "secondary"}>
-                  {blog.published ? "Published" : "Draft"}
-                </Badge>
-              </div>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="space-y-4">
-                <h4 className="text-sm font-medium text-muted-foreground">
-                  Details
-                </h4>
-                <div className="text-sm">
-                  <strong>Slug:</strong>{" "}
-                  <span className="font-mono">{blog.slug}</span>
+        ) : (
+          <div className="p-4 animate-in slide-in-from-bottom-2 duration-300">
+            {featuredImage && (
+              <div className="mb-8">
+                <h2 className="text-lg font-bold mb-4 text-slate-800">
+                  Featured Image
+                </h2>
+                <div className="relative aspect-video w-full max-w-2xl mx-auto overflow-hidden rounded-lg shadow-lg border border-slate-200">
+                  <Image
+                    src={featuredImage}
+                    alt="Featured Image Preview"
+                    fill
+                    className="object-cover"
+                  />
                 </div>
-                {blog.author_name && (
-                  <div className="text-sm">
-                    <strong>Author:</strong> {blog.author_name}
-                  </div>
-                )}
-                {blog.read_time && (
-                  <div className="text-sm">
-                    <strong>Read Time:</strong> {blog.read_time}
-                  </div>
-                )}
-                {blog.tags && (
-                  <div className="text-sm">
-                    <strong>Tags:</strong> {blog.tags}
-                  </div>
-                )}
-                <div className="text-sm">
-                  <strong>Created:</strong>{" "}
-                  {format(new Date(blog.created_at), "PPpp")}
-                </div>
-                {blog.updated_at && (
-                  <div className="text-sm">
-                    <strong>Updated:</strong>{" "}
-                    {format(new Date(blog.updated_at), "PPpp")}
-                  </div>
-                )}
-              </div>
-              <div className="space-y-4 md:col-span-2">
-                <h4 className="text-sm font-medium text-muted-foreground">
-                  SEO
-                </h4>
-                {blog.seo_title && (
-                  <div className="text-sm">
-                    <strong>Title:</strong> {blog.seo_title}
-                  </div>
-                )}
-                {blog.seo_description && (
-                  <div className="text-sm">
-                    <strong>Description:</strong> {blog.seo_description}
-                  </div>
-                )}
-                {blog.seo_keywords && (
-                  <div className="text-sm">
-                    <strong>Keywords:</strong> {blog.seo_keywords}
-                  </div>
-                )}
-              </div>
-            </div>
-            {blog.excerpt && (
-              <div className="mt-6 border-t pt-6">
-                <h3 className="text-lg font-medium mb-2">Excerpt</h3>
-                <p className="text-sm text-card-foreground italic">
-                  "{blog.excerpt}"
-                </p>
               </div>
             )}
-            {blog.content && (
-              <div className="mt-6 border-t pt-6 max-w-[256] sm:max-w-lg  md:max-w-xl lg:max-w-3xl mx-auto">
-                <div className="flex justify-between items-center mb-4 gap-4">
-                  <h3 className="text-lg font-medium mb-2">Content</h3>
-                  <Button asChild>
-                    <Link href={`/admin/blogs/${blog.id}/edit`}>
-                      <Edit className="mr-2 h-4 w-4" /> Edit
-                    </Link>
-                  </Button>
-                </div>
-                <article
-                  className="prose prose-slate prose-indigo text-sm
+            <div className="mb-10 border-b border-slate-100 pb-8">
+              <h1 className="text-2xl font-black text-slate-900 mb-4 tracking-tight leading-tight">
+                {title || "Untitled Post"}
+              </h1>
+              <div className="flex items-center gap-3 text-slate-400 text-sm">
+                <span className="bg-slate-100 px-2 py-1 rounded">Preview</span>
+                <span>•</span>
+                <span>{new Date().toLocaleDateString()}</span>
+                <span>•</span>
+                <span>5 min read</span>
+              </div>
+            </div>
+
+            <article
+              className="prose prose-slate prose-indigo max-w-none 
                                        break-words overflow-wrap-anywhere
                                        prose-headings:font-bold prose-headings:tracking-tight
                                        prose-a:text-indigo-600 prose-img:rounded-2xl prose-img:shadow-lg
-                                       [&_iframe]:w-full [&_iframe]:aspect-video [&_iframe]:rounded-xl 
+                                       [&_iframe]:w-full [&_iframe]:aspect-video [&_iframe]:rounded-xl max-w-none 
           [&>h1]:text-3xl [&>h1]:font-bold [&>h1]:mb-4 
           [&>h2]:text-2xl [&>h2]:font-bold [&>h2]:mb-3 
           [&>h3]:text-xl [&>h3]:font-bold [&>h3]:mb-2 
           [&>p]:mb-4 [&>p]:leading-relaxed [&>p]:text-slate-700
           [&>ul]:list-disc [&>ul]:ml-6 [&>ul]:my-4
           [&>img]:rounded-lg"
-                  dangerouslySetInnerHTML={{
-                    __html:
-                      blog.content ||
-                      '<p class="text-slate-400 italic">No content to display yet...</p>',
-                  }}
-                />
-              </div>
-            )}
-          </CardContent>
-        </Card>
-      </div>
-
-      {isDeleteDialogOpen && (
-        <DeleteBlogDialog
-          isOpen={isDeleteDialogOpen}
-          onClose={handleCloseDialog}
-          blog={blog}
-          onDeleted={onDeleted}
-        />
-      )}
-    </>
-  );
-}
-````
-
-## File: apps/admin/app/admin/blogs/BlogsClient.tsx
-````typescript
-"use client";
-
-import type { BlogPost } from "@bilacert/shared/types";
-import { useBlogs } from "@bilacert/supabase/hooks/useBlogs";
-import { format, isValid, parseISO } from "date-fns";
-import {
-  Calendar,
-  Filter,
-  MoreHorizontal,
-  PlusCircle,
-  Search,
-} from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useMemo, useState } from "react";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import DeleteBlogDialog from "./DeleteBlogDialog";
-
-const safeFormatDate = (
-  date: string | Date | undefined,
-  dateFormat = "PP",
-  fallback = "Invalid date",
-) => {
-  if (!date) return fallback;
-  const d = typeof date === "string" ? parseISO(date) : date;
-  return isValid(d) ? format(d, dateFormat) : fallback;
-};
-
-const BlogCard = ({
-  blog,
-  onEdit,
-  onDelete,
-}: {
-  blog: BlogPost;
-  onEdit: (blog: BlogPost) => void;
-  onDelete: (blog: BlogPost) => void;
-}) => {
-  const router = useRouter();
-  return (
-    <div
-      key={blog.id}
-      className="group relative flex flex-col overflow-hidden rounded-xl bg-white shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-lg border"
-    >
-      <Link
-        href={`/admin/blogs/${blog.id}`}
-        className="absolute inset-0 z-10"
-        aria-label={`View ${blog.title}`}
-      >
-        <span className="sr-only">View Details</span>
-      </Link>
-      <div className="absolute top-4 right-4 z-20">
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-8 w-8 rounded-full bg-background/60 backdrop-blur-sm hover:bg-background"
-              onClick={(e) => e.preventDefault()}
-            >
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={(e) => {
-                e.preventDefault();
-                router.push(`/admin/blogs/${blog.id}`);
+              dangerouslySetInnerHTML={{
+                __html:
+                  sanitized ||
+                  '<p class="text-slate-400 italic">No content to display yet...</p>',
               }}
-            >
-              View
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              onClick={(e) => {
-                e.preventDefault();
-                onEdit(blog);
-              }}
-            >
-              Edit
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem
-              className="text-destructive focus:bg-destructive/10 focus:text-destructive"
-              onClick={(e) => {
-                e.preventDefault();
-                onDelete(blog);
-              }}
-            >
-              Delete
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
-
-      <div className="relative h-48 w-full">
-        <Image
-          src={
-            blog.featured_image ||
-            `https://picsum.photos/seed/${blog.id}/600/400`
-          }
-          alt={blog.title}
-          fill
-          className="object-cover transition-transform duration-300 group-hover:scale-105"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
-        <div className="absolute bottom-4 left-4">
-          {blog.category && <Badge variant="secondary">{blog.category}</Badge>}
-        </div>
-      </div>
-
-      <div className="flex flex-col flex-grow p-6">
-        <h3 className="mb-2 text-xl font-semibold text-primary line-clamp-2">
-          {blog.title}
-        </h3>
-        <p className="mb-4 text-sm text-muted-foreground line-clamp-3 flex-grow">
-          {blog.excerpt}
-        </p>
-        <div className="mt-auto flex items-center justify-between text-xs text-muted-foreground">
-          <Badge variant={blog.published ? "default" : "outline"}>
-            {blog.published ? "Published" : "Draft"}
-          </Badge>
-          <div className="flex items-center gap-2">
-            <Calendar className="h-4 w-4" />
-            <span>{safeFormatDate(blog.created_at, "PP")}</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-export default function BlogsClient() {
-  const { data: blogs, loading, error, refresh } = useBlogs();
-  const router = useRouter();
-
-  const [searchQuery, setSearchQuery] = useState("");
-  const [categoryFilter, setCategoryFilter] = useState("all");
-  const [statusTab, setStatusTab] = useState("all");
-
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const [selectedBlog, setSelectedBlog] = useState<BlogPost | null>(null);
-
-  const categories = useMemo(() => {
-    const cats = new Set<string>();
-    blogs.forEach((blog) => {
-      if (blog.category) cats.add(blog.category);
-    });
-    return Array.from(cats).sort();
-  }, [blogs]);
-
-  const filteredBlogs = useMemo(() => {
-    return blogs.filter((blog) => {
-      const matchesSearch =
-        blog.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        (blog.excerpt?.toLowerCase().includes(searchQuery.toLowerCase()) ??
-          false);
-
-      const matchesCategory =
-        categoryFilter === "all" || blog.category === categoryFilter;
-
-      const matchesStatus =
-        statusTab === "all" ||
-        (statusTab === "published" && blog.published) ||
-        (statusTab === "draft" && !blog.published);
-
-      return matchesSearch && matchesCategory && matchesStatus;
-    });
-  }, [blogs, searchQuery, categoryFilter, statusTab]);
-
-  const handleEdit = (blog: BlogPost) => {
-    router.push(`/admin/blogs/${blog.id}/edit`);
-  };
-
-  const handleDelete = (blog: BlogPost) => {
-    setSelectedBlog(blog);
-    setIsDeleteDialogOpen(true);
-  };
-
-  const onDeleted = () => {
-    setIsDeleteDialogOpen(false);
-    setSelectedBlog(null);
-    refresh();
-  };
-
-  if (error) {
-    return (
-      <div className="text-destructive p-4 border border-destructive/20 rounded-lg bg-destructive/10">
-        Error loading blogs: {error.message}
-      </div>
-    );
-  }
-
-  return (
-    <div className="space-y-6">
-      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Blogs</h1>
-          <p className="text-muted-foreground">
-            Manage your blog posts and content.
-          </p>
-        </div>
-        <Button asChild>
-          <Link href="/admin/blogs/new">
-            <PlusCircle className="mr-2 h-4 w-4" />
-            Add Post
-          </Link>
-        </Button>
-      </div>
-
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-b pb-4">
-        <Tabs
-          defaultValue="all"
-          className="w-full sm:w-auto"
-          onValueChange={setStatusTab}
-        >
-          <TabsList>
-            <TabsTrigger value="all">All</TabsTrigger>
-            <TabsTrigger value="published">Published</TabsTrigger>
-            <TabsTrigger value="draft">Drafts</TabsTrigger>
-          </TabsList>
-        </Tabs>
-
-        <div className="flex items-center gap-2">
-          <div className="relative w-full sm:w-64">
-            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder="Search blogs..."
-              className="pl-8"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
-          <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-            <SelectTrigger className="w-[180px]">
-              <Filter className="mr-2 h-4 w-4 text-muted-foreground" />
-              <SelectValue placeholder="Category" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Categories</SelectItem>
-              {categories.map((cat) => (
-                <SelectItem key={cat} value={cat}>
-                  {cat}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
+        )}
       </div>
-
-      {loading ? (
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-          {Array.from({ length: 6 }).map((_, i) => (
-            <div
-              key={i}
-              className="h-[400px] w-full animate-pulse rounded-xl bg-muted"
-            ></div>
-          ))}
-        </div>
-      ) : filteredBlogs.length === 0 ? (
-        <div className="flex flex-col items-center justify-center rounded-xl border-2 border-dashed py-24 text-center">
-          <div className="rounded-full bg-muted p-6 mb-4">
-            <Search className="h-10 w-10 text-muted-foreground" />
-          </div>
-          <h3 className="text-xl font-semibold">No blogs found</h3>
-          <p className="text-muted-foreground max-w-xs mx-auto mt-2">
-            We couldn't find any blogs matching your current filters. Try
-            adjusting your search or category.
-          </p>
-          {(searchQuery || categoryFilter !== "all" || statusTab !== "all") && (
-            <Button
-              variant="outline"
-              className="mt-6"
-              onClick={() => {
-                setSearchQuery("");
-                setCategoryFilter("all");
-                setStatusTab("all");
-              }}
-            >
-              Clear all filters
-            </Button>
-          )}
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-          {filteredBlogs.map((blog) => (
-            <BlogCard
-              key={blog.id}
-              blog={blog}
-              onEdit={handleEdit}
-              onDelete={handleDelete}
-            />
-          ))}
-        </div>
-      )}
-
-      {isDeleteDialogOpen && (
-        <DeleteBlogDialog
-          isOpen={isDeleteDialogOpen}
-          onClose={() => setIsDeleteDialogOpen(false)}
-          onDeleted={onDeleted}
-          blog={selectedBlog}
-        />
-      )}
-    </div>
+    </Card>
   );
 }
 ````
@@ -19025,315 +17643,6 @@ export default function DeleteContactDialog({
 }
 ````
 
-## File: apps/admin/app/admin/dashboard/DashboardClient.tsx
-````typescript
-"use client";
-
-import { Icon } from "@bilacert/shared/Icon";
-import type { Submission } from "@bilacert/shared/types";
-import { useDashboardData } from "@bilacert/supabase/hooks/useDashboardData";
-import { format, isValid, parseISO } from "date-fns";
-import {
-  BarChart as BarChartIcon,
-  Clock,
-  DollarSign,
-  Users,
-} from "lucide-react";
-import Link from "next/link";
-import StatCard from "@/components/admin/StatCard";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
-
-const safeFormatDate = (
-  date: string | Date | undefined,
-  fallback = "Invalid date",
-) => {
-  if (!date) return fallback;
-  const d = typeof date === "string" ? parseISO(date) : date;
-  return isValid(d) ? format(d, "dd MMM yyyy, HH:mm") : fallback;
-};
-
-export default function DashboardClient() {
-  const { loading, error, stats, submissionsByService, recentActivity } =
-    useDashboardData();
-
-  if (error) {
-    return (
-      <div className="text-destructive">
-        Error loading dashboard data: {error.message}
-      </div>
-    );
-  }
-
-  return (
-    <div className="space-y-8">
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <StatCard
-          title="Total Submissions"
-          value={loading ? "..." : `${stats.totalSubmissions}`}
-          icon={<Icon name="Package" className="h-4 w-4" />}
-        />
-        <StatCard
-          title="New Applications"
-          value={loading ? "..." : `${stats.newApplications}`}
-          icon={<BarChartIcon className="h-4 w-4" />}
-        />
-        <StatCard
-          title="Total Contacts"
-          value={loading ? "..." : `${stats.totalContacts}`}
-          icon={<Users className="h-4 w-4" />}
-        />
-        <StatCard
-          title="Total Revenue"
-          value={
-            loading
-              ? "..."
-              : `R ${stats.totalRevenue.toLocaleString("en-ZA", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
-          }
-          icon={<DollarSign className="h-4 w-4" />}
-        />
-      </div>
-
-      <div className="grid gap-8 md:grid-cols-2">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-lg font-medium">
-              Submissions by Service
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {submissionsByService.length > 0 ? (
-                (() => {
-                  const progressColorClasses = [
-                    "[&>div]:bg-chart-1",
-                    "[&>div]:bg-chart-2",
-                    "[&>div]:bg-chart-3",
-                    "[&>div]:bg-chart-4",
-                    "[&>div]:bg-chart-5",
-                  ];
-                  return submissionsByService
-                    .sort((a, b) => b.submissions - a.submissions)
-                    .map((item, index) => (
-                      <div
-                        key={item.id}
-                        className="grid grid-cols-[auto_1fr_auto] items-center gap-4"
-                      >
-                        <div className="flex items-center gap-3">
-                          <Icon
-                            name={item.icon as any}
-                            className="h-5 w-5 text-muted-foreground"
-                          />
-                          <span className="truncate text-sm font-medium">
-                            {item.title}
-                          </span>
-                        </div>
-                        <Progress
-                          value={
-                            (item.submissions / stats.totalSubmissions) * 100
-                          }
-                          className={`h-2 ${progressColorClasses[index % progressColorClasses.length]}`}
-                        />
-                        <span className="font-mono text-sm font-medium">
-                          {item.submissions}
-                        </span>
-                      </div>
-                    ));
-                })()
-              ) : (
-                <div className="text-center text-muted-foreground pt-4">
-                  No submissions yet.
-                </div>
-              )}
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-lg font-medium">
-              Recent Activity
-            </CardTitle>
-            <Clock className="h-5 w-5 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-2">
-              {recentActivity.length > 0 ? (
-                recentActivity.map((activity) => (
-                  <Link
-                    key={(activity as any).id}
-                    href={
-                      activity.type === "submission"
-                        ? `/admin/form_submissions/${(activity as any).id}`
-                        : `/admin/contacts/${(activity as any).id}`
-                    }
-                    className="block rounded-lg transition-colors hover:bg-muted/50"
-                  >
-                    <div className="flex items-start gap-4 p-3">
-                      <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10 text-primary shrink-0">
-                        <Icon
-                          name={
-                            activity.type === "submission"
-                              ? "Package"
-                              : "MessageSquare"
-                          }
-                          className="h-5 w-5"
-                        />
-                      </div>
-                      <div className="grid gap-0.5 flex-1">
-                        <p className="text-sm font-medium">
-                          {(activity as any).fullName || (activity as any).name}
-                        </p>
-                        <p className="text-xs text-muted-foreground">
-                          {(activity as any).email}
-                        </p>
-                        <p className="text-xs text-muted-foreground mt-1">
-                          {activity.type === "submission"
-                            ? (activity as Submission).service_name ||
-                              (activity as Submission).service_name
-                            : "Contact Form"}
-                        </p>
-                      </div>
-                      <div className="ml-auto text-xs text-muted-foreground whitespace-nowrap">
-                        {safeFormatDate((activity as any).date)}
-                      </div>
-                    </div>
-                  </Link>
-                ))
-              ) : (
-                <div className="text-center text-muted-foreground pt-4">
-                  No recent activity.
-                </div>
-              )}
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-    </div>
-  );
-}
-````
-
-## File: apps/admin/app/admin/form_submissions/columns.tsx
-````typescript
-"use client";
-
-import type { Submission } from "@bilacert/shared/types";
-import type { ColumnDef } from "@tanstack/react-table";
-import { format } from "date-fns";
-import { ArrowUpDown, MoreHorizontal } from "lucide-react";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import StatusUpdate from "./StatusUpdate";
-
-export const statusVariantMap: {
-  [key: string]: "default" | "secondary" | "destructive" | "outline";
-} = {
-  pending: "secondary",
-  "in-progress": "outline",
-  completed: "default",
-  rejected: "destructive",
-  archived: "secondary",
-};
-
-interface ColumnsOptions {
-  onDelete: (submission: Submission) => void;
-}
-
-export const columns = ({
-  onDelete,
-}: ColumnsOptions): ColumnDef<Submission>[] => [
-  {
-    accessorKey: "form_type",
-    header: "Form Type",
-  },
-  {
-    accessorKey: "service_name",
-    header: "Service Name",
-  },
-  {
-    accessorKey: "full_name",
-    header: "Client Name",
-  },
-  {
-    accessorKey: "email",
-    header: "Client Email",
-  },
-  {
-    accessorKey: "created_at",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Submitted At
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
-    cell: ({ row }) => {
-      const date = row.getValue("created_at") as string;
-      if (!date) return "N/A";
-      const formattedDate = format(new Date(date), "PPpp");
-      return <div className="font-medium">{formattedDate}</div>;
-    },
-  },
-  {
-    accessorKey: "status",
-    header: "Status",
-    cell: ({ row }) => {
-      return <StatusUpdate submission={row.original} />;
-    },
-  },
-  {
-    id: "actions",
-    cell: ({ row }) => {
-      const submission = row.original;
-
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem asChild>
-              <Link href={`/admin/form_submissions/${submission.id}`}>
-                View Details
-              </Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem asChild>
-              <Link href={`/admin/form_submissions/${submission.id}/edit`}>
-                Edit
-              </Link>
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem
-              className="text-destructive focus:bg-destructive/10 focus:text-destructive"
-              onClick={() => onDelete(submission)}
-            >
-              Delete
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
-    },
-  },
-];
-````
-
 ## File: apps/admin/app/admin/form_submissions/data-table.tsx
 ````typescript
 "use client";
@@ -19717,448 +18026,6 @@ export default function AdminLayout({
         <div className="flex-1 p-4 sm:p-6 lg:p-8">{children}</div>
       </main>
     </SidebarProvider>
-  );
-}
-````
-
-## File: apps/admin/app/admin/services/[id]/ServiceDetails.tsx
-````typescript
-"use client";
-
-import { Icon } from "@bilacert/shared/Icon";
-import type {
-  PricingPlan,
-  ProcessStep,
-  Service,
-  SuccessStory,
-} from "@bilacert/shared/types";
-import { format } from "date-fns";
-import { ArrowLeft, CheckCircle, Edit, Trash2 } from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import DeleteServiceDialog from "../DeleteServiceDialog";
-
-interface ServiceDetailsProps {
-  service: Service;
-}
-
-export default function ServiceDetails({ service }: ServiceDetailsProps) {
-  const router = useRouter();
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-
-  if (!service) return null;
-
-  const handleDelete = () => {
-    setIsDeleteDialogOpen(true);
-  };
-
-  const handleCloseDialog = () => {
-    setIsDeleteDialogOpen(false);
-    router.push("/admin/services");
-    router.refresh();
-  };
-
-  const renderStringArray = (data: string[] | undefined) => {
-    if (!data || data.length === 0)
-      return <p className="text-sm text-card-foreground">Not set.</p>;
-    return (
-      <ul className="list-disc list-inside space-y-1 mt-1 text-sm text-card-foreground">
-        {data.map((item, index) => (
-          <li key={index}>{item}</li>
-        ))}
-      </ul>
-    );
-  };
-
-  const renderPricingPlans = (plans: PricingPlan[] | undefined) => {
-    if (!plans || plans.length === 0)
-      return (
-        <p className="text-sm text-card-foreground">
-          No pricing plans defined.
-        </p>
-      );
-    return (
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-2">
-        {plans.map((plan, index) => (
-          <Card key={index} className="flex flex-col">
-            <CardHeader>
-              <div className="flex justify-between items-start">
-                <CardTitle className="text-lg">{plan.title}</CardTitle>
-                {plan.popular && <Badge variant="default">Popular</Badge>}
-              </div>
-              <CardDescription>{plan.description}</CardDescription>
-            </CardHeader>
-            <CardContent className="flex-grow space-y-4">
-              <p className="text-2xl font-bold">{plan.price}</p>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                {plan.features.map((feature, i) => (
-                  <li key={i} className="flex items-start">
-                    <CheckCircle className="h-4 w-4 mr-2 mt-1 text-green-500 shrink-0" />
-                    <span>{feature}</span>
-                  </li>
-                ))}
-              </ul>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-    );
-  };
-
-  const renderProcessSteps = (steps: ProcessStep[] | undefined) => {
-    if (!steps || steps.length === 0)
-      return (
-        <p className="text-sm text-card-foreground">
-          No process steps defined.
-        </p>
-      );
-    return (
-      <div className="relative mt-4 pl-6">
-        <div className="absolute left-0 top-0 bottom-0 w-px bg-border -translate-x-1/2 ml-3"></div>
-        <div className="space-y-8">
-          {steps.map((step, index) => (
-            <div key={index} className="relative flex items-start gap-4">
-              <div className="flex-shrink-0 w-6 h-6 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold text-xs z-10">
-                {step.step}
-              </div>
-              <div className="flex-grow">
-                <h5 className="font-semibold text-card-foreground">
-                  {step.title}
-                </h5>
-                <p className="text-sm text-muted-foreground">
-                  {step.description}
-                </p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    );
-  };
-
-  const renderSuccessStory = (story: SuccessStory | undefined) => {
-    if (!story)
-      return (
-        <p className="text-sm text-card-foreground">
-          No success story defined.
-        </p>
-      );
-    return (
-      <Card className="mt-2 bg-muted/50">
-        <CardContent className="p-6 space-y-4">
-          <div>
-            <h5 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-              Scenario
-            </h5>
-            <p className="text-sm text-card-foreground">{story.scenario}</p>
-          </div>
-          <div>
-            <h5 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-              Challenge
-            </h5>
-            <p className="text-sm text-card-foreground">{story.challenge}</p>
-          </div>
-          <div>
-            <h5 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-              Solution
-            </h5>
-            <p className="text-sm text-card-foreground">{story.solution}</p>
-          </div>
-          <div>
-            <h5 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-              Result
-            </h5>
-            <p className="text-sm text-card-foreground font-medium">
-              {story.result}
-            </p>
-          </div>
-        </CardContent>
-      </Card>
-    );
-  };
-
-  return (
-    <>
-      <div className="space-y-6">
-        <div className="flex items-center justify-between">
-          <Button variant="outline" asChild>
-            <Link href="/admin/services">
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              Back to Services
-            </Link>
-          </Button>
-          <div className="flex gap-2">
-            <Button asChild>
-              <Link href={`/admin/services/${service.id}/edit`}>
-                <Edit className="mr-2 h-4 w-4" /> Edit
-              </Link>
-            </Button>
-            <Button variant="destructive" onClick={handleDelete}>
-              <Trash2 className="mr-2 h-4 w-4" /> Delete
-            </Button>
-          </div>
-        </div>
-
-        <Card>
-          <CardHeader>
-            <div className="flex justify-between items-start">
-              <div>
-                <CardTitle>{service.title}</CardTitle>
-                <CardDescription>{service.category}</CardDescription>
-              </div>
-              <Badge variant={service.featured ? "default" : "secondary"}>
-                {service.featured ? "Featured" : "Not Featured"}
-              </Badge>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="grid gap-6 md:grid-cols-2">
-              <div className="space-y-6">
-                <div>
-                  <h4 className="text-sm font-medium text-muted-foreground">
-                    Status
-                  </h4>
-                  <Badge variant={service.published ? "default" : "secondary"}>
-                    {service.published ? "Published" : "Draft"}
-                  </Badge>
-                </div>
-                {service.description && (
-                  <div>
-                    <h4 className="text-sm font-medium text-muted-foreground">
-                      Description
-                    </h4>
-                    <p className="text-sm text-card-foreground">
-                      {service.description}
-                    </p>
-                  </div>
-                )}
-                {service.short_description && (
-                  <div>
-                    <h4 className="text-sm font-medium text-muted-foreground">
-                      Short Description
-                    </h4>
-                    <p className="text-sm text-card-foreground">
-                      {service.short_description}
-                    </p>
-                  </div>
-                )}
-                {service.content && (
-                  <div>
-                    <h4 className="text-sm font-medium text-muted-foreground">
-                      Content
-                    </h4>
-                    <div className="prose prose-sm dark:prose-invert mt-1 text-card-foreground text-sm whitespace-pre-wrap">
-                      {service.content}
-                    </div>
-                  </div>
-                )}
-                <div>
-                  <h4 className="text-sm font-medium text-muted-foreground">
-                    Features
-                  </h4>
-                  {renderStringArray(service.features)}
-                </div>
-                <div>
-                  <h4 className="text-sm font-medium text-muted-foreground">
-                    Requirements
-                  </h4>
-                  {renderStringArray(service.requirements)}
-                </div>
-                <div>
-                  <h4 className="text-sm font-medium text-muted-foreground">
-                    Includes
-                  </h4>
-                  {renderStringArray(service.includes)}
-                </div>
-              </div>
-              <div className="space-y-6">
-                {service.slug && (
-                  <div>
-                    <h4 className="text-sm font-medium text-muted-foreground">
-                      Slug
-                    </h4>
-                    <p className="text-sm font-mono text-card-foreground">
-                      {service.slug}
-                    </p>
-                  </div>
-                )}
-                {service.href && (
-                  <div>
-                    <h4 className="text-sm font-medium text-muted-foreground">
-                      HREF
-                    </h4>
-                    <p className="text-sm font-mono text-card-foreground">
-                      {service.href}
-                    </p>
-                  </div>
-                )}
-                {service.icon && (
-                  <div>
-                    <h4 className="text-sm font-medium text-muted-foreground">
-                      Icon
-                    </h4>
-                    <div className="flex items-center gap-2 mt-1">
-                      <Icon
-                        name={service.icon}
-                        className="h-5 w-5 text-accent"
-                      />
-                      <p className="text-sm font-mono text-card-foreground">
-                        {service.icon}
-                      </p>
-                    </div>
-                  </div>
-                )}
-                {service.order_index !== undefined && (
-                  <div>
-                    <h4 className="text-sm font-medium text-muted-foreground">
-                      Order Index
-                    </h4>
-                    <p className="text-sm text-card-foreground">
-                      {service.order_index}
-                    </p>
-                  </div>
-                )}
-                {service.processing_time && (
-                  <div>
-                    <h4 className="text-sm font-medium text-muted-foreground">
-                      Processing Time
-                    </h4>
-                    <p className="text-sm text-card-foreground">
-                      {service.processing_time}
-                    </p>
-                  </div>
-                )}
-                {service.pricing !== null && service.pricing !== undefined && (
-                  <div>
-                    <h4 className="text-sm font-medium text-muted-foreground">
-                      Pricing
-                    </h4>
-                    <p className="text-sm font-mono text-card-foreground">
-                      R{Number(service.pricing).toFixed(2)}
-                    </p>
-                  </div>
-                )}
-                <div>
-                  <h4 className="text-sm font-medium text-muted-foreground">
-                    Created At
-                  </h4>
-                  <p className="text-sm text-card-foreground">
-                    {format(new Date(service.created_at), "PPpp")}
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {(service.image || service.thumbnail) && (
-              <div className="mt-6 border-t pt-6">
-                <h3 className="text-lg font-medium mb-4">Media</h3>
-                <div className="flex gap-4">
-                  {service.image && (
-                    <div>
-                      <h4 className="text-sm font-medium text-muted-foreground">
-                        Image
-                      </h4>
-                      <Image
-                        src={service.image}
-                        alt="Service Image"
-                        width={300}
-                        height={200}
-                        className="mt-1 rounded-md border"
-                      />
-                    </div>
-                  )}
-                  {service.thumbnail && (
-                    <div>
-                      <h4 className="text-sm font-medium text-muted-foreground">
-                        Thumbnail
-                      </h4>
-                      <Image
-                        src={service.thumbnail}
-                        alt="Service Thumbnail"
-                        width={150}
-                        height={100}
-                        className="mt-1 rounded-md border"
-                      />
-                    </div>
-                  )}
-                </div>
-              </div>
-            )}
-            {(service.seo_title ||
-              service.seo_description ||
-              service.seo_keywords) && (
-              <div className="mt-6 border-t pt-6">
-                <h3 className="text-lg font-medium mb-4">SEO</h3>
-                <div className="grid md:grid-cols-2 gap-6">
-                  {service.seo_title && (
-                    <div>
-                      <h4 className="text-sm font-medium text-muted-foreground">
-                        SEO Title
-                      </h4>
-                      <p className="text-sm text-card-foreground">
-                        {service.seo_title}
-                      </p>
-                    </div>
-                  )}
-                  {service.seo_description && (
-                    <div>
-                      <h4 className="text-sm font-medium text-muted-foreground">
-                        SEO Description
-                      </h4>
-                      <p className="text-sm text-card-foreground">
-                        {service.seo_description}
-                      </p>
-                    </div>
-                  )}
-                  {service.seo_keywords && (
-                    <div className="col-span-full">
-                      <h4 className="text-sm font-medium text-muted-foreground">
-                        SEO Keywords
-                      </h4>
-                      <p className="text-sm text-card-foreground">
-                        {service.seo_keywords}
-                      </p>
-                    </div>
-                  )}
-                </div>
-              </div>
-            )}
-
-            <div className="mt-6 border-t pt-6">
-              <h3 className="text-lg font-medium mb-4">Pricing Plans</h3>
-              {renderPricingPlans(service.pricing_plans)}
-            </div>
-            <div className="mt-6 border-t pt-6">
-              <h3 className="text-lg font-medium mb-4">Process Steps</h3>
-              {renderProcessSteps(service.process_steps)}
-            </div>
-            <div className="mt-6 border-t pt-6">
-              <h3 className="text-lg font-medium mb-4">Success Story</h3>
-              {renderSuccessStory(service.success_story)}
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      {isDeleteDialogOpen && (
-        <DeleteServiceDialog
-          isOpen={isDeleteDialogOpen}
-          onClose={handleCloseDialog}
-          service={service}
-        />
-      )}
-    </>
   );
 }
 ````
@@ -21157,6 +19024,131 @@ export async function getTestimonials(): Promise<Testimonial[]> {
 }
 ````
 
+## File: packages/supabase/src/hooks/useFormSubmission.ts
+````typescript
+"use client";
+import type { FormSubmissionPayload } from "@bilacert/shared/types";
+import { useCallback, useEffect, useState } from "react";
+
+export interface FormSubmissionResponse {
+  success: boolean;
+  message: string;
+  submissionId?: string;
+  error?: string;
+}
+
+export interface UseFormSubmissionState {
+  isLoading: boolean;
+  isSuccess: boolean;
+  error: string | null;
+  successMessage: string | null;
+}
+
+export function useFormSubmission() {
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+
+  const handleSubmit = useCallback(
+    async (
+      payload: FormSubmissionPayload,
+    ): Promise<FormSubmissionResponse | null> => {
+      setIsLoading(true);
+      setError(null);
+      setSuccessMessage(null);
+
+      try {
+        const endpoint =
+          payload.formType === "contact"
+            ? "/api/contacts"
+            : "/api/form-submissions";
+        const response = await fetch(endpoint, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(payload),
+        });
+
+        const data = (await response.json()) as FormSubmissionResponse;
+
+        if (!response.ok) {
+          const errorMessage =
+            data.error || "Failed to submit form. Please try again.";
+          setError(errorMessage);
+          return { success: false, message: errorMessage };
+        }
+
+        setSuccessMessage(data.message);
+        return data;
+      } catch (err) {
+        const errorMessage =
+          err instanceof Error ? err.message : "An unexpected error occurred";
+        setError(errorMessage);
+        return { success: false, message: errorMessage };
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [],
+  );
+
+  const reset = useCallback(() => {
+    setError(null);
+    setSuccessMessage(null);
+    setIsLoading(false);
+  }, []);
+
+  return {
+    isLoading,
+    error,
+    isSuccess: successMessage !== null,
+    successMessage,
+    handleSubmit,
+    reset,
+  };
+}
+
+export function useFetchSubmission(submissionId: string | null) {
+  const [data, setData] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchSubmission = useCallback(async () => {
+    if (!submissionId) return;
+
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const response = await fetch(
+        `/api/form-submissions?submissionId=${submissionId}`,
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to fetch submission");
+      }
+
+      const submissionData = await response.json();
+      setData(submissionData);
+    } catch (err) {
+      const errorMessage =
+        err instanceof Error ? err.message : "An error occurred";
+      setError(errorMessage);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [submissionId]);
+
+  useEffect(() => {
+    fetchSubmission();
+  }, [fetchSubmission]);
+
+  return { data, isLoading, error, refetch: fetchSubmission };
+}
+````
+
 ## File: packages/supabase/src/server.ts
 ````typescript
 import { type CookieOptions, createServerClient } from "@supabase/ssr";
@@ -21197,13 +19189,558 @@ export async function createSupabaseServerClient() {
 }
 ````
 
-## File: apps/admin/app/admin/blogs/[id]/edit/page.tsx
+## File: packages/supabase/src/supabaseType.ts
 ````typescript
+export type Json =
+  | string
+  | number
+  | boolean
+  | null
+  | { [key: string]: Json | undefined }
+  | Json[];
+
+export type Database = {
+  // Allows to automatically instantiate createClient with right options
+  // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
+  __InternalSupabase: {
+    PostgrestVersion: "14.1";
+  };
+  public: {
+    Tables: {
+      blog_posts: {
+        Row: {
+          authorId: string | null;
+          authorName: string | null;
+          category: string | null;
+          content: string;
+          createdAt: string | null;
+          excerpt: string | null;
+          featured: boolean | null;
+          featuredImage: string | null;
+          id: string;
+          published: boolean | null;
+          publishedAt: string | null;
+          readTime: string | null;
+          seoDescription: string | null;
+          seoKeywords: string | null;
+          seoTitle: string | null;
+          slug: string;
+          tags: string | null;
+          thumbnail: string | null;
+          title: string;
+          updatedAt: string | null;
+          viewsCount: number | null;
+        };
+        Insert: {
+          authorId?: string | null;
+          authorName?: string | null;
+          category?: string | null;
+          content: string;
+          createdAt?: string | null;
+          excerpt?: string | null;
+          featured?: boolean | null;
+          featuredImage?: string | null;
+          id: string;
+          published?: boolean | null;
+          publishedAt?: string | null;
+          readTime?: string | null;
+          seoDescription?: string | null;
+          seoKeywords?: string | null;
+          seoTitle?: string | null;
+          slug: string;
+          tags?: string | null;
+          thumbnail?: string | null;
+          title: string;
+          updatedAt?: string | null;
+          viewsCount?: number | null;
+        };
+        Update: {
+          authorId?: string | null;
+          authorName?: string | null;
+          category?: string | null;
+          content?: string;
+          createdAt?: string | null;
+          excerpt?: string | null;
+          featured?: boolean | null;
+          featuredImage?: string | null;
+          id?: string;
+          published?: boolean | null;
+          publishedAt?: string | null;
+          readTime?: string | null;
+          seoDescription?: string | null;
+          seoKeywords?: string | null;
+          seoTitle?: string | null;
+          slug?: string;
+          tags?: string | null;
+          thumbnail?: string | null;
+          title?: string;
+          updatedAt?: string | null;
+          viewsCount?: number | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "blog_posts_author_id_fkey";
+            columns: ["authorId"];
+            isOneToOne: false;
+            referencedRelation: "users";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      contacts: {
+        Row: {
+          email: string;
+          id: string;
+          message: string | null;
+          name: string | null;
+          phone: string | null;
+          service: string | null;
+          submittedAt: string;
+        };
+        Insert: {
+          email: string;
+          id?: string;
+          message?: string | null;
+          name?: string | null;
+          phone?: string | null;
+          service?: string | null;
+          submittedAt?: string;
+        };
+        Update: {
+          email?: string;
+          id?: string;
+          message?: string | null;
+          name?: string | null;
+          phone?: string | null;
+          service?: string | null;
+          submittedAt?: string;
+        };
+        Relationships: [];
+      };
+      form_submissions: {
+        Row: {
+          assignedTo: string | null;
+          company: string | null;
+          completedAt: string | null;
+          createdAt: string | null;
+          details: Json | null;
+          email: string;
+          formType: string;
+          fullName: string;
+          id: string;
+          industry: string | null;
+          internalNotes: string | null;
+          phone: string | null;
+          serviceId: string | null;
+          serviceName: string | null;
+          status: string;
+          updatedAt: string | null;
+        };
+        Insert: {
+          assignedTo?: string | null;
+          company?: string | null;
+          completedAt?: string | null;
+          createdAt?: string | null;
+          details?: Json | null;
+          email: string;
+          formType: string;
+          fullName: string;
+          id?: string;
+          industry?: string | null;
+          internalNotes?: string | null;
+          phone?: string | null;
+          serviceId?: string | null;
+          serviceName?: string | null;
+          status?: string;
+          updatedAt?: string | null;
+        };
+        Update: {
+          assignedTo?: string | null;
+          company?: string | null;
+          completedAt?: string | null;
+          createdAt?: string | null;
+          details?: Json | null;
+          email?: string;
+          formType?: string;
+          fullName?: string;
+          id?: string;
+          industry?: string | null;
+          internalNotes?: string | null;
+          phone?: string | null;
+          serviceId?: string | null;
+          serviceName?: string | null;
+          status?: string;
+          updatedAt?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "form_submissions_assigned_to_fkey";
+            columns: ["assignedTo"];
+            isOneToOne: false;
+            referencedRelation: "users";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      services: {
+        Row: {
+          category: string | null;
+          content: string | null;
+          createdAt: string | null;
+          description: string | null;
+          featured: boolean | null;
+          features: string[] | null;
+          href: string;
+          icon: string | null;
+          id: string;
+          image: string | null;
+          includes: string[] | null;
+          orderIndex: number | null;
+          pricing: number | null;
+          pricingPlans: Json | null;
+          processingTime: string | null;
+          processSteps: Json | null;
+          published: boolean | null;
+          requirements: string[] | null;
+          seoDescription: string | null;
+          seoKeywords: string | null;
+          seoTitle: string | null;
+          shortDescription: string | null;
+          slug: string;
+          successStory: Json | null;
+          thumbnail: string | null;
+          title: string;
+          updatedAt: string | null;
+        };
+        Insert: {
+          category?: string | null;
+          content?: string | null;
+          createdAt?: string | null;
+          description?: string | null;
+          featured?: boolean | null;
+          features?: string[] | null;
+          href: string;
+          icon?: string | null;
+          id?: string;
+          image?: string | null;
+          includes?: string[] | null;
+          orderIndex?: number | null;
+          pricing?: number | null;
+          pricingPlans?: Json | null;
+          processingTime?: string | null;
+          processSteps?: Json | null;
+          published?: boolean | null;
+          requirements?: string[] | null;
+          seoDescription?: string | null;
+          seoKeywords?: string | null;
+          seoTitle?: string | null;
+          shortDescription?: string | null;
+          slug: string;
+          successStory?: Json | null;
+          thumbnail?: string | null;
+          title: string;
+          updatedAt?: string | null;
+        };
+        Update: {
+          category?: string | null;
+          content?: string | null;
+          createdAt?: string | null;
+          description?: string | null;
+          featured?: boolean | null;
+          features?: string[] | null;
+          href?: string;
+          icon?: string | null;
+          id?: string;
+          image?: string | null;
+          includes?: string[] | null;
+          orderIndex?: number | null;
+          pricing?: number | null;
+          pricingPlans?: Json | null;
+          processingTime?: string | null;
+          processSteps?: Json | null;
+          published?: boolean | null;
+          requirements?: string[] | null;
+          seoDescription?: string | null;
+          seoKeywords?: string | null;
+          seoTitle?: string | null;
+          shortDescription?: string | null;
+          slug?: string;
+          successStory?: Json | null;
+          thumbnail?: string | null;
+          title?: string;
+          updatedAt?: string | null;
+        };
+        Relationships: [];
+      };
+      testimonials: {
+        Row: {
+          createdAt: string | null;
+          id: string;
+          postUrl: string;
+        };
+        Insert: {
+          createdAt?: string | null;
+          id?: string;
+          postUrl: string;
+        };
+        Update: {
+          createdAt?: string | null;
+          id?: string;
+          postUrl?: string;
+        };
+        Relationships: [];
+      };
+      users: {
+        Row: {
+          bio: string | null;
+          company: string | null;
+          createdAt: string | null;
+          createdBy: string | null;
+          email: string;
+          firstName: string | null;
+          id: string;
+          isActive: boolean | null;
+          lastName: string | null;
+          phone: string | null;
+          profileImage: string | null;
+          role: string;
+          updatedAt: string | null;
+          updatedBy: string | null;
+        };
+        Insert: {
+          bio?: string | null;
+          company?: string | null;
+          createdAt?: string | null;
+          createdBy?: string | null;
+          email: string;
+          firstName?: string | null;
+          id: string;
+          isActive?: boolean | null;
+          lastName?: string | null;
+          phone?: string | null;
+          profileImage?: string | null;
+          role?: string;
+          updatedAt?: string | null;
+          updatedBy?: string | null;
+        };
+        Update: {
+          bio?: string | null;
+          company?: string | null;
+          createdAt?: string | null;
+          createdBy?: string | null;
+          email?: string;
+          firstName?: string | null;
+          id?: string;
+          isActive?: boolean | null;
+          lastName?: string | null;
+          phone?: string | null;
+          profileImage?: string | null;
+          role?: string;
+          updatedAt?: string | null;
+          updatedBy?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "users_created_by_fkey";
+            columns: ["createdBy"];
+            isOneToOne: false;
+            referencedRelation: "users";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "users_updated_by_fkey";
+            columns: ["updatedBy"];
+            isOneToOne: false;
+            referencedRelation: "users";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+    };
+    Views: {
+      [_ in never]: never;
+    };
+    Functions: {
+      increment_views: { Args: { post_slug: string }; Returns: undefined };
+    };
+    Enums: {
+      [_ in never]: never;
+    };
+    CompositeTypes: {
+      [_ in never]: never;
+    };
+  };
+};
+
+type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">;
+
+type DefaultSchema = DatabaseWithoutInternals[Extract<
+  keyof Database,
+  "public"
+>];
+
+export type Tables<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals;
+  }
+    ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+        DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
+    : never = never,
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals;
+}
+  ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+      DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
+      Row: infer R;
+    }
+    ? R
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema["Tables"] &
+        DefaultSchema["Views"])
+    ? (DefaultSchema["Tables"] &
+        DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends {
+        Row: infer R;
+      }
+      ? R
+      : never
+    : never;
+
+export type TablesInsert<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof DefaultSchema["Tables"]
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals;
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    : never = never,
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals;
+}
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+      Insert: infer I;
+    }
+    ? I
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
+    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+        Insert: infer I;
+      }
+      ? I
+      : never
+    : never;
+
+export type TablesUpdate<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof DefaultSchema["Tables"]
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals;
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    : never = never,
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals;
+}
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+      Update: infer U;
+    }
+    ? U
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
+    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+        Update: infer U;
+      }
+      ? U
+      : never
+    : never;
+
+export type Enums<
+  DefaultSchemaEnumNameOrOptions extends
+    | keyof DefaultSchema["Enums"]
+    | { schema: keyof DatabaseWithoutInternals },
+  EnumName extends DefaultSchemaEnumNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals;
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
+    : never = never,
+> = DefaultSchemaEnumNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals;
+}
+  ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
+  : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
+    ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
+    : never;
+
+export type CompositeTypes<
+  PublicCompositeTypeNameOrOptions extends
+    | keyof DefaultSchema["CompositeTypes"]
+    | { schema: keyof DatabaseWithoutInternals },
+  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals;
+  }
+    ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
+    : never = never,
+> = PublicCompositeTypeNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals;
+}
+  ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
+  : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
+    ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
+    : never;
+
+export const Constants = {
+  public: {
+    Enums: {},
+  },
+} as const;
+````
+
+## File: turbo.json
+````json
+{
+  "$schema": "https://turbo.build/schema.json",
+  "globalEnv": ["REVALIDATION_SECRET", "NEXT_PUBLIC_CLIENT_URL"],
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": [".next/**", "!.next/cache/**", "dist/**"]
+    },
+    "dev": {
+      "cache": false,
+      "persistent": true
+    },
+    "lint": {
+      "dependsOn": ["^build"]
+    },
+    "lint:fix": {
+      "dependsOn": ["^lint:fix"]
+    },
+    "format": {
+      "cache": false
+    },
+    "typecheck": {
+      "dependsOn": ["^build"]
+    }
+  }
+}
+````
+
+## File: apps/admin/app/admin/blogs/BlogDetails.tsx
+````typescript
+"use client";
+
 import type { BlogPost } from "@bilacert/shared/types";
-import { createSupabaseServerClient } from "@bilacert/supabase/server";
-import { ArrowLeft } from "lucide-react";
+import { format } from "date-fns";
+import { ArrowLeft, Edit, Trash2 } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -21212,161 +19749,549 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import BlogForm from "../../BlogForm";
+import DeleteBlogDialog from "./DeleteBlogDialog";
 
-export const metadata = {
-  title: "Edit Blog Post | Bilacert Admin Pro",
-  description: "Edit an existing blog post.",
-};
-
-async function getBlog(id: string): Promise<BlogPost | null> {
-  const supabase = await createSupabaseServerClient();
-  const { data, error } = await supabase
-    .from("blog_posts")
-    .select("*")
-    .eq("id", id)
-    .single();
-
-  if (error || !data) {
-    return null;
-  }
-
-  return {
-    id: data.id,
-    title: data.title,
-    slug: data.slug,
-    excerpt: data.excerpt,
-    content: data.content,
-    category: data.category,
-    tags: data.tags,
-    read_time: data.read_time,
-    seo_title: data.seo_title,
-    seo_description: data.seo_description,
-    seo_keywords: data.seo_keywords,
-    featured_image: data.featured_image,
-    thumbnail: data.thumbnail,
-    published: data.published,
-    published_at: data.published_at,
-    featured: data.featured,
-    author_id: data.author_id,
-    author_name: data.author_name,
-    views_count: data.views_count,
-    created_at: data.created_at,
-    updated_at: data.updated_at,
-  } as BlogPost;
+interface BlogDetailsProps {
+  blog: BlogPost;
 }
 
-export default async function EditBlogPage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
-  const { id } = await params;
-  const blog = await getBlog(id);
+export default function BlogDetails({ blog }: BlogDetailsProps) {
+  const router = useRouter();
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
-  if (!blog) {
-    notFound();
-  }
+  if (!blog) return null;
+
+  const handleDelete = () => {
+    setIsDeleteDialogOpen(true);
+  };
+
+  const onDeleted = () => {
+    setIsDeleteDialogOpen(false);
+    router.push("/admin/blogs");
+    router.refresh();
+  };
+
+  const handleCloseDialog = () => {
+    setIsDeleteDialogOpen(false);
+  };
 
   return (
-    <div className="space-y-6">
-      <Button variant="outline" asChild>
-        <Link href="/admin/blogs">
-          <ArrowLeft className="mr-2 h-4 w-4" />
-          Back to Blogs
-        </Link>
-      </Button>
+    <>
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <Button variant="outline" asChild>
+            <Link href="/admin/blogs">
+              <ArrowLeft className="mr-2 h-4 w-4" />
+              Back to Blogs
+            </Link>
+          </Button>
+          <div className="flex gap-2">
+            <Button asChild>
+              <Link href={`/admin/blogs/${blog.id}/edit`}>
+                <Edit className="mr-2 h-4 w-4" /> Edit
+              </Link>
+            </Button>
+            <Button variant="destructive" onClick={handleDelete}>
+              <Trash2 className="mr-2 h-4 w-4" /> Delete
+            </Button>
+          </div>
+        </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Edit Blog Post</CardTitle>
-          <CardDescription>
-            Update the details for "{blog.title}".
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <BlogForm blog={blog} />
-        </CardContent>
-      </Card>
-    </div>
+        {(blog.featuredImage || blog.thumbnail) && (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {blog.featuredImage && (
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg">Featured Image</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="relative aspect-video w-full max-w-lg overflow-hidden rounded-lg">
+                    <Image
+                      src={blog.featuredImage}
+                      alt="Featured Image"
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+            {blog.thumbnail && (
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg">Thumbnail</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="relative aspect-square w-48 overflow-hidden rounded-lg">
+                    <Image
+                      src={blog.thumbnail}
+                      alt="Thumbnail"
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+          </div>
+        )}
+
+        <Card>
+          <CardHeader>
+            <div className="flex justify-between items-start">
+              <div>
+                <CardTitle>{blog.title}</CardTitle>
+                {blog.category && (
+                  <CardDescription>{blog.category}</CardDescription>
+                )}
+              </div>
+              <div className="flex gap-2">
+                {blog.featured && <Badge>Featured</Badge>}
+                <Badge variant={blog.published ? "default" : "secondary"}>
+                  {blog.published ? "Published" : "Draft"}
+                </Badge>
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="space-y-4">
+                <h4 className="text-sm font-medium text-muted-foreground">
+                  Details
+                </h4>
+                <div className="text-sm">
+                  <strong>Slug:</strong>{" "}
+                  <span className="font-mono">{blog.slug}</span>
+                </div>
+                {blog.authorName && (
+                  <div className="text-sm">
+                    <strong>Author:</strong> {blog.authorName}
+                  </div>
+                )}
+                {blog.readTime && (
+                  <div className="text-sm">
+                    <strong>Read Time:</strong> {blog.readTime}
+                  </div>
+                )}
+                {blog.tags && (
+                  <div className="text-sm">
+                    <strong>Tags:</strong> {blog.tags}
+                  </div>
+                )}
+                <div className="text-sm">
+                  <strong>Created:</strong>{" "}
+                  {format(new Date(blog.createdAt), "PPpp")}
+                </div>
+                {blog.updatedAt && (
+                  <div className="text-sm">
+                    <strong>Updated:</strong>{" "}
+                    {format(new Date(blog.updatedAt), "PPpp")}
+                  </div>
+                )}
+              </div>
+              <div className="space-y-4 md:col-span-2">
+                <h4 className="text-sm font-medium text-muted-foreground">
+                  SEO
+                </h4>
+                {blog.seoTitle && (
+                  <div className="text-sm">
+                    <strong>Title:</strong> {blog.seoTitle}
+                  </div>
+                )}
+                {blog.seoDescription && (
+                  <div className="text-sm">
+                    <strong>Description:</strong> {blog.seoDescription}
+                  </div>
+                )}
+                {blog.seoKeywords && (
+                  <div className="text-sm">
+                    <strong>Keywords:</strong> {blog.seoKeywords}
+                  </div>
+                )}
+              </div>
+            </div>
+            {blog.excerpt && (
+              <div className="mt-6 border-t pt-6">
+                <h3 className="text-lg font-medium mb-2">Excerpt</h3>
+                <p className="text-sm text-card-foreground italic">
+                  "{blog.excerpt}"
+                </p>
+              </div>
+            )}
+            {blog.content && (
+              <div className="mt-6 border-t pt-6 max-w-[256] sm:max-w-lg  md:max-w-xl lg:max-w-3xl mx-auto">
+                <div className="flex justify-between items-center mb-4 gap-4">
+                  <h3 className="text-lg font-medium mb-2">Content</h3>
+                  <Button asChild>
+                    <Link href={`/admin/blogs/${blog.id}/edit`}>
+                      <Edit className="mr-2 h-4 w-4" /> Edit
+                    </Link>
+                  </Button>
+                </div>
+                <article
+                  className="prose prose-slate prose-indigo text-sm
+                                       break-words overflow-wrap-anywhere
+                                       prose-headings:font-bold prose-headings:tracking-tight
+                                       prose-a:text-indigo-600 prose-img:rounded-2xl prose-img:shadow-lg
+                                       [&_iframe]:w-full [&_iframe]:aspect-video [&_iframe]:rounded-xl 
+          [&>h1]:text-3xl [&>h1]:font-bold [&>h1]:mb-4 
+          [&>h2]:text-2xl [&>h2]:font-bold [&>h2]:mb-3 
+          [&>h3]:text-xl [&>h3]:font-bold [&>h3]:mb-2 
+          [&>p]:mb-4 [&>p]:leading-relaxed [&>p]:text-slate-700
+          [&>ul]:list-disc [&>ul]:ml-6 [&>ul]:my-4
+          [&>img]:rounded-lg"
+                  dangerouslySetInnerHTML={{
+                    __html:
+                      blog.content ||
+                      '<p class="text-slate-400 italic">No content to display yet...</p>',
+                  }}
+                />
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+
+      {isDeleteDialogOpen && (
+        <DeleteBlogDialog
+          isOpen={isDeleteDialogOpen}
+          onClose={handleCloseDialog}
+          blog={blog}
+          onDeleted={onDeleted}
+        />
+      )}
+    </>
   );
 }
 ````
 
-## File: apps/admin/app/admin/blogs/[id]/page.tsx
+## File: apps/admin/app/admin/blogs/BlogsClient.tsx
 ````typescript
+"use client";
+
 import type { BlogPost } from "@bilacert/shared/types";
-import { createSupabaseServerClient } from "@bilacert/supabase/server";
-import type { Metadata } from "next";
-import { notFound } from "next/navigation";
-import BlogDetails from "../BlogDetails";
+import { useBlogs } from "@bilacert/supabase/hooks/useBlogs";
+import { format, isValid, parseISO } from "date-fns";
+import {
+  Calendar,
+  Filter,
+  MoreHorizontal,
+  PlusCircle,
+  Search,
+} from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useMemo, useState } from "react";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import DeleteBlogDialog from "./DeleteBlogDialog";
 
-async function getBlog(id: string): Promise<BlogPost | null> {
-  const supabase = await createSupabaseServerClient();
-  const { data, error } = await supabase
-    .from("blog_posts")
-    .select("*")
-    .eq("id", id)
-    .single();
+const safeFormatDate = (
+  date: string | Date | undefined,
+  dateFormat = "PP",
+  fallback = "Invalid date",
+) => {
+  if (!date) return fallback;
+  const d = typeof date === "string" ? parseISO(date) : date;
+  return isValid(d) ? format(d, dateFormat) : fallback;
+};
 
-  if (error || !data) {
-    return null;
-  }
-
-  return {
-    id: data.id,
-    title: data.title,
-    slug: data.slug,
-    excerpt: data.excerpt,
-    content: data.content,
-    category: data.category,
-    tags: data.tags,
-    read_time: data.read_time,
-    seo_title: data.seo_title,
-    seo_description: data.seo_description,
-    seo_keywords: data.seo_keywords,
-    featured_image: data.featured_image,
-    thumbnail: data.thumbnail,
-    published: data.published,
-    published_at: data.published_at,
-    featured: data.featured,
-    author_id: data.author_id,
-    author_name: data.author_name,
-    views_count: data.views_count,
-    created_at: data.created_at,
-    updated_at: data.updated_at,
-  } as BlogPost;
-}
-
-export async function generateMetadata({
-  params,
+const BlogCard = ({
+  blog,
+  onEdit,
+  onDelete,
 }: {
-  params: { id: string };
-}): Promise<Metadata> {
-  const blog = await getBlog(params.id);
-  if (!blog) {
-    return {
-      title: "Blog Post Not Found",
-    };
-  }
-  return {
-    title: `${blog.title} | Bilacert Admin Pro`,
+  blog: BlogPost;
+  onEdit: (blog: BlogPost) => void;
+  onDelete: (blog: BlogPost) => void;
+}) => {
+  const router = useRouter();
+  return (
+    <div
+      key={blog.id}
+      className="group relative flex flex-col overflow-hidden rounded-xl bg-white shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-lg border"
+    >
+      <Link
+        href={`/admin/blogs/${blog.id}`}
+        className="absolute inset-0 z-10"
+        aria-label={`View ${blog.title}`}
+      >
+        <span className="sr-only">View Details</span>
+      </Link>
+      <div className="absolute top-4 right-4 z-20">
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8 rounded-full bg-background/60 backdrop-blur-sm hover:bg-background"
+              onClick={(e) => e.preventDefault()}
+            >
+              <span className="sr-only">Open menu</span>
+              <MoreHorizontal className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+            <DropdownMenuItem
+              onClick={(e) => {
+                e.preventDefault();
+                router.push(`/admin/blogs/${blog.id}`);
+              }}
+            >
+              View
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={(e) => {
+                e.preventDefault();
+                onEdit(blog);
+              }}
+            >
+              Edit
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              className="text-destructive focus:bg-destructive/10 focus:text-destructive"
+              onClick={(e) => {
+                e.preventDefault();
+                onDelete(blog);
+              }}
+            >
+              Delete
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+
+      <div className="relative h-48 w-full">
+        <Image
+          src={
+            blog.featuredImage ||
+            `https://picsum.photos/seed/${blog.id}/600/400`
+          }
+          alt={blog.title}
+          fill
+          className="object-cover transition-transform duration-300 group-hover:scale-105"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+        <div className="absolute bottom-4 left-4">
+          {blog.category && <Badge variant="secondary">{blog.category}</Badge>}
+        </div>
+      </div>
+
+      <div className="flex flex-col flex-grow p-6">
+        <h3 className="mb-2 text-xl font-semibold text-primary line-clamp-2">
+          {blog.title}
+        </h3>
+        <p className="mb-4 text-sm text-muted-foreground line-clamp-3 flex-grow">
+          {blog.excerpt}
+        </p>
+        <div className="mt-auto flex items-center justify-between text-xs text-muted-foreground">
+          <Badge variant={blog.published ? "default" : "outline"}>
+            {blog.published ? "Published" : "Draft"}
+          </Badge>
+          <div className="flex items-center gap-2">
+            <Calendar className="h-4 w-4" />
+            <span>{safeFormatDate(blog.createdAt, "PP")}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default function BlogsClient() {
+  const { data: blogs, loading, error, refresh } = useBlogs();
+  const router = useRouter();
+
+  const [searchQuery, setSearchQuery] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState("all");
+  const [statusTab, setStatusTab] = useState("all");
+
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [selectedBlog, setSelectedBlog] = useState<BlogPost | null>(null);
+
+  const categories = useMemo(() => {
+    const cats = new Set<string>();
+    blogs.forEach((blog) => {
+      if (blog.category) cats.add(blog.category);
+    });
+    return Array.from(cats).sort();
+  }, [blogs]);
+
+  const filteredBlogs = useMemo(() => {
+    return blogs.filter((blog) => {
+      const matchesSearch =
+        blog.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (blog.excerpt?.toLowerCase().includes(searchQuery.toLowerCase()) ??
+          false);
+
+      const matchesCategory =
+        categoryFilter === "all" || blog.category === categoryFilter;
+
+      const matchesStatus =
+        statusTab === "all" ||
+        (statusTab === "published" && blog.published) ||
+        (statusTab === "draft" && !blog.published);
+
+      return matchesSearch && matchesCategory && matchesStatus;
+    });
+  }, [blogs, searchQuery, categoryFilter, statusTab]);
+
+  const handleEdit = (blog: BlogPost) => {
+    router.push(`/admin/blogs/${blog.id}/edit`);
   };
-}
 
-export default async function BlogDetailsPage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
-  const { id } = await params;
-  const blog = await getBlog(id);
+  const handleDelete = (blog: BlogPost) => {
+    setSelectedBlog(blog);
+    setIsDeleteDialogOpen(true);
+  };
 
-  if (!blog) {
-    notFound();
+  const onDeleted = () => {
+    setIsDeleteDialogOpen(false);
+    setSelectedBlog(null);
+    refresh();
+  };
+
+  if (error) {
+    return (
+      <div className="text-destructive p-4 border border-destructive/20 rounded-lg bg-destructive/10">
+        Error loading blogs: {error.message}
+      </div>
+    );
   }
 
-  return <BlogDetails blog={blog} />;
+  return (
+    <div className="space-y-6">
+      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">Blogs</h1>
+          <p className="text-muted-foreground">
+            Manage your blog posts and content.
+          </p>
+        </div>
+        <Button asChild>
+          <Link href="/admin/blogs/new">
+            <PlusCircle className="mr-2 h-4 w-4" />
+            Add Post
+          </Link>
+        </Button>
+      </div>
+
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-b pb-4">
+        <Tabs
+          defaultValue="all"
+          className="w-full sm:w-auto"
+          onValueChange={setStatusTab}
+        >
+          <TabsList>
+            <TabsTrigger value="all">All</TabsTrigger>
+            <TabsTrigger value="published">Published</TabsTrigger>
+            <TabsTrigger value="draft">Drafts</TabsTrigger>
+          </TabsList>
+        </Tabs>
+
+        <div className="flex items-center gap-2">
+          <div className="relative w-full sm:w-64">
+            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Search blogs..."
+              className="pl-8"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
+          <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+            <SelectTrigger className="w-[180px]">
+              <Filter className="mr-2 h-4 w-4 text-muted-foreground" />
+              <SelectValue placeholder="Category" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Categories</SelectItem>
+              {categories.map((cat) => (
+                <SelectItem key={cat} value={cat}>
+                  {cat}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
+
+      {loading ? (
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <div
+              key={i}
+              className="h-[400px] w-full animate-pulse rounded-xl bg-muted"
+            ></div>
+          ))}
+        </div>
+      ) : filteredBlogs.length === 0 ? (
+        <div className="flex flex-col items-center justify-center rounded-xl border-2 border-dashed py-24 text-center">
+          <div className="rounded-full bg-muted p-6 mb-4">
+            <Search className="h-10 w-10 text-muted-foreground" />
+          </div>
+          <h3 className="text-xl font-semibold">No blogs found</h3>
+          <p className="text-muted-foreground max-w-xs mx-auto mt-2">
+            We couldn't find any blogs matching your current filters. Try
+            adjusting your search or category.
+          </p>
+          {(searchQuery || categoryFilter !== "all" || statusTab !== "all") && (
+            <Button
+              variant="outline"
+              className="mt-6"
+              onClick={() => {
+                setSearchQuery("");
+                setCategoryFilter("all");
+                setStatusTab("all");
+              }}
+            >
+              Clear all filters
+            </Button>
+          )}
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+          {filteredBlogs.map((blog) => (
+            <BlogCard
+              key={blog.id}
+              blog={blog}
+              onEdit={handleEdit}
+              onDelete={handleDelete}
+            />
+          ))}
+        </div>
+      )}
+
+      {isDeleteDialogOpen && (
+        <DeleteBlogDialog
+          isOpen={isDeleteDialogOpen}
+          onClose={() => setIsDeleteDialogOpen(false)}
+          onDeleted={onDeleted}
+          blog={selectedBlog}
+        />
+      )}
+    </div>
+  );
 }
 ````
 
@@ -21443,95 +20368,313 @@ export async function deleteContact(contactId: string) {
 }
 ````
 
-## File: apps/admin/app/admin/form_submissions/[id]/edit/page.tsx
+## File: apps/admin/app/admin/dashboard/DashboardClient.tsx
 ````typescript
+"use client";
+
+import { Icon } from "@bilacert/shared/Icon";
 import type { Submission } from "@bilacert/shared/types";
-import { createSupabaseBrowserClient } from "@bilacert/supabase/client";
-import { ArrowLeft } from "lucide-react";
-import Link from "next/link";
-import { notFound } from "next/navigation";
-import { Button } from "@/components/ui/button";
+import { useDashboardData } from "@bilacert/supabase/hooks/useDashboardData";
+import { format, isValid, parseISO } from "date-fns";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import SubmissionForm from "../../SubmissionForm";
+  BarChart as BarChartIcon,
+  Clock,
+  DollarSign,
+  Users,
+} from "lucide-react";
+import Link from "next/link";
+import StatCard from "@/components/admin/StatCard";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
 
-const supabase = createSupabaseBrowserClient();
-
-export const metadata = {
-  title: "Edit Submission | Bilacert Admin Pro",
-  description: "Edit a form submission.",
+const safeFormatDate = (
+  date: string | Date | undefined,
+  fallback = "Invalid date",
+) => {
+  if (!date) return fallback;
+  const d = typeof date === "string" ? parseISO(date) : date;
+  return isValid(d) ? format(d, "dd MMM yyyy, HH:mm") : fallback;
 };
 
-async function getSubmission(id: string): Promise<Submission | null> {
-  const { data, error } = await supabase
-    .from("form_submissions")
-    .select("*")
-    .eq("id", id)
-    .single();
+export default function DashboardClient() {
+  const { loading, error, stats, submissionsByService, recentActivity } =
+    useDashboardData();
 
-  if (error || !data) {
-    return null;
-  }
-
-  return {
-    id: data.id,
-    form_type: data.form_type,
-    status: data.status,
-    service_id: data.service_id,
-    service_name: data.service_name,
-    full_name: data.full_name,
-    email: data.email,
-    phone: data.phone,
-    company: data.company,
-    industry: data.industry,
-    details: data.details,
-    internal_notes: data.internal_notes,
-    assigned_to: data.assigned_to,
-    created_at: data.created_at,
-    updated_at: data.updated_at,
-    completed_at: data.completed_at,
-  } as Submission;
-}
-
-export default async function EditSubmissionPage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
-  const { id } = await params;
-  const submission = await getSubmission(id);
-
-  if (!submission) {
-    notFound();
+  if (error) {
+    return (
+      <div className="text-destructive">
+        Error loading dashboard data: {error.message}
+      </div>
+    );
   }
 
   return (
-    <div className="space-y-6">
-      <Button variant="outline" asChild>
-        <Link href={`/admin/form_submissions/${submission.id}`}>
-          <ArrowLeft className="mr-2 h-4 w-4" />
-          Back to Submission
-        </Link>
-      </Button>
-      <Card>
-        <CardHeader>
-          <CardTitle>Edit Submission</CardTitle>
-          <CardDescription>
-            Update details for submission from "{submission.full_name}".
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <SubmissionForm submission={submission} />
-        </CardContent>
-      </Card>
+    <div className="space-y-8">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <StatCard
+          title="Total Submissions"
+          value={loading ? "..." : `${stats.totalSubmissions}`}
+          icon={<Icon name="Package" className="h-4 w-4" />}
+        />
+        <StatCard
+          title="New Applications"
+          value={loading ? "..." : `${stats.newApplications}`}
+          icon={<BarChartIcon className="h-4 w-4" />}
+        />
+        <StatCard
+          title="Total Contacts"
+          value={loading ? "..." : `${stats.totalContacts}`}
+          icon={<Users className="h-4 w-4" />}
+        />
+        <StatCard
+          title="Total Revenue"
+          value={
+            loading
+              ? "..."
+              : `R ${stats.totalRevenue.toLocaleString("en-ZA", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+          }
+          icon={<DollarSign className="h-4 w-4" />}
+        />
+      </div>
+
+      <div className="grid gap-8 md:grid-cols-2">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-lg font-medium">
+              Submissions by Service
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {submissionsByService.length > 0 ? (
+                (() => {
+                  const progressColorClasses = [
+                    "[&>div]:bg-chart-1",
+                    "[&>div]:bg-chart-2",
+                    "[&>div]:bg-chart-3",
+                    "[&>div]:bg-chart-4",
+                    "[&>div]:bg-chart-5",
+                  ];
+                  return submissionsByService
+                    .sort((a, b) => b.submissions - a.submissions)
+                    .map((item, index) => (
+                      <div
+                        key={item.id}
+                        className="grid grid-cols-[auto_1fr_auto] items-center gap-4"
+                      >
+                        <div className="flex items-center gap-3">
+                          <Icon
+                            name={item.icon as any}
+                            className="h-5 w-5 text-muted-foreground"
+                          />
+                          <span className="truncate text-sm font-medium">
+                            {item.title}
+                          </span>
+                        </div>
+                        <Progress
+                          value={
+                            (item.submissions / stats.totalSubmissions) * 100
+                          }
+                          className={`h-2 ${progressColorClasses[index % progressColorClasses.length]}`}
+                        />
+                        <span className="font-mono text-sm font-medium">
+                          {item.submissions}
+                        </span>
+                      </div>
+                    ));
+                })()
+              ) : (
+                <div className="text-center text-muted-foreground pt-4">
+                  No submissions yet.
+                </div>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-lg font-medium">
+              Recent Activity
+            </CardTitle>
+            <Clock className="h-5 w-5 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-2">
+              {recentActivity.length > 0 ? (
+                recentActivity.map((activity) => (
+                  <Link
+                    key={(activity as any).id}
+                    href={
+                      activity.type === "submission"
+                        ? `/admin/form_submissions/${(activity as any).id}`
+                        : `/admin/contacts/${(activity as any).id}`
+                    }
+                    className="block rounded-lg transition-colors hover:bg-muted/50"
+                  >
+                    <div className="flex items-start gap-4 p-3">
+                      <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10 text-primary shrink-0">
+                        <Icon
+                          name={
+                            activity.type === "submission"
+                              ? "Package"
+                              : "MessageSquare"
+                          }
+                          className="h-5 w-5"
+                        />
+                      </div>
+                      <div className="grid gap-0.5 flex-1">
+                        <p className="text-sm font-medium">
+                          {(activity as any).fullName || (activity as any).name}
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          {(activity as any).email}
+                        </p>
+                        <p className="text-xs text-muted-foreground mt-1">
+                          {activity.type === "submission"
+                            ? (activity as Submission).serviceName ||
+                              (activity as Submission).serviceName
+                            : "Contact Form"}
+                        </p>
+                      </div>
+                      <div className="ml-auto text-xs text-muted-foreground whitespace-nowrap">
+                        {safeFormatDate((activity as any).date)}
+                      </div>
+                    </div>
+                  </Link>
+                ))
+              ) : (
+                <div className="text-center text-muted-foreground pt-4">
+                  No recent activity.
+                </div>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }
+````
+
+## File: apps/admin/app/admin/form_submissions/columns.tsx
+````typescript
+"use client";
+
+import type { Submission } from "@bilacert/shared/types";
+import type { ColumnDef } from "@tanstack/react-table";
+import { format } from "date-fns";
+import { ArrowUpDown, MoreHorizontal } from "lucide-react";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import StatusUpdate from "./StatusUpdate";
+
+export const statusVariantMap: {
+  [key: string]: "default" | "secondary" | "destructive" | "outline";
+} = {
+  pending: "secondary",
+  "in-progress": "outline",
+  completed: "default",
+  rejected: "destructive",
+  archived: "secondary",
+};
+
+interface ColumnsOptions {
+  onDelete: (submission: Submission) => void;
+}
+
+export const columns = ({
+  onDelete,
+}: ColumnsOptions): ColumnDef<Submission>[] => [
+  {
+    accessorKey: "formType",
+    header: "Form Type",
+  },
+  {
+    accessorKey: "serviceName",
+    header: "Service Name",
+  },
+  {
+    accessorKey: "fullName",
+    header: "Client Name",
+  },
+  {
+    accessorKey: "email",
+    header: "Client Email",
+  },
+  {
+    accessorKey: "createdAt",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Submitted At
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+    cell: ({ row }) => {
+      const date = row.getValue("createdAt") as string;
+      if (!date) return "N/A";
+      const formattedDate = format(new Date(date), "PPpp");
+      return <div className="font-medium">{formattedDate}</div>;
+    },
+  },
+  {
+    accessorKey: "status",
+    header: "Status",
+    cell: ({ row }) => {
+      return <StatusUpdate submission={row.original} />;
+    },
+  },
+  {
+    id: "actions",
+    cell: ({ row }) => {
+      const submission = row.original;
+
+      return (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="h-8 w-8 p-0">
+              <span className="sr-only">Open menu</span>
+              <MoreHorizontal className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+            <DropdownMenuItem asChild>
+              <Link href={`/admin/form_submissions/${submission.id}`}>
+                View Details
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link href={`/admin/form_submissions/${submission.id}/edit`}>
+                Edit
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              className="text-destructive focus:bg-destructive/10 focus:text-destructive"
+              onClick={() => onDelete(submission)}
+            >
+              Delete
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      );
+    },
+  },
+];
 ````
 
 ## File: apps/admin/app/admin/form_submissions/DeleteSubmissionDialog.tsx
@@ -21629,241 +20772,6 @@ export default function DeleteSubmissionDialog({
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
-  );
-}
-````
-
-## File: apps/admin/app/admin/form_submissions/SubmissionDetails.tsx
-````typescript
-"use client";
-
-import type { Submission } from "@bilacert/shared/types";
-import { format } from "date-fns";
-import { ArrowLeft, Edit, Phone, Trash2 } from "lucide-react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { statusVariantMap } from "./columns";
-import DeleteSubmissionDialog from "./DeleteSubmissionDialog";
-
-interface SubmissionDetailsProps {
-  submission: Submission;
-}
-
-export default function SubmissionDetails({
-  submission,
-}: SubmissionDetailsProps) {
-  const router = useRouter();
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-
-  if (!submission) return null;
-
-  const handleDelete = () => {
-    setIsDeleteDialogOpen(true);
-  };
-
-  const handleCloseDialog = () => {
-    setIsDeleteDialogOpen(false);
-  };
-
-  const onDeleted = () => {
-    setIsDeleteDialogOpen(false);
-    router.push("/admin/form_submissions");
-    router.refresh();
-  };
-
-  const renderJson = (data: unknown) => {
-    if (data == null) {
-      return <p className="text-sm text-card-foreground">Not set.</p>;
-    }
-    return (
-      <div className="prose prose-sm dark:prose-invert mt-1 text-card-foreground text-sm whitespace-pre-wrap">
-        <pre className="bg-muted/50 p-2 rounded-md">
-          <code>{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      </div>
-    );
-  };
-
-  const formatPhoneNumberForWhatsApp = (phone: string) => {
-    // Remove all non-digit characters
-    return phone.replace(/\D/g, "");
-  };
-
-  return (
-    <>
-      <div className="space-y-6">
-        <div className="flex items-center justify-between">
-          <Button variant="outline" asChild>
-            <Link href="/admin/form_submissions">
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              Back to Submissions
-            </Link>
-          </Button>
-          <div className="flex gap-2">
-            <Button asChild>
-              <Link href={`/admin/form_submissions/${submission.id}/edit`}>
-                <Edit className="mr-2 h-4 w-4" /> Edit
-              </Link>
-            </Button>
-            <Button variant="destructive" onClick={handleDelete}>
-              <Trash2 className="mr-2 h-4 w-4" /> Delete
-            </Button>
-          </div>
-        </div>
-
-        <Card>
-          <CardHeader>
-            <div className="flex justify-between items-start">
-              <div>
-                <CardTitle>Submission from {submission.full_name}</CardTitle>
-                <CardDescription>
-                  {submission.service_name
-                    ? `Service: ${submission.service_name}`
-                    : `Form: ${submission.form_type}`}
-                </CardDescription>
-              </div>
-              <Badge
-                variant={statusVariantMap[submission.status] || "default"}
-                className="capitalize"
-              >
-                {submission.status}
-              </Badge>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="grid gap-6 md:grid-cols-2">
-              <div className="space-y-6">
-                <div>
-                  <h4 className="text-sm font-medium text-muted-foreground">
-                    Client Name
-                  </h4>
-                  <p className="text-sm text-card-foreground">
-                    {submission.full_name}
-                  </p>
-                </div>
-                <div>
-                  <h4 className="text-sm font-medium text-muted-foreground">
-                    Client Email
-                  </h4>
-                  <p className="text-sm text-card-foreground">
-                    {submission.email}
-                  </p>
-                </div>
-                {submission.phone && (
-                  <div>
-                    <h4 className="text-sm font-medium text-muted-foreground">
-                      Phone
-                    </h4>
-                    <a
-                      href={`https://wa.me/${formatPhoneNumberForWhatsApp(submission.phone)}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-2 text-sm text-primary transition-colors hover:underline"
-                    >
-                      <Phone className="h-4 w-4" />
-                      {submission.phone}
-                    </a>
-                  </div>
-                )}
-                {submission.company && (
-                  <div>
-                    <h4 className="text-sm font-medium text-muted-foreground">
-                      Company
-                    </h4>
-                    <p className="text-sm text-card-foreground">
-                      {submission.company}
-                    </p>
-                  </div>
-                )}
-                {submission.industry && (
-                  <div>
-                    <h4 className="text-sm font-medium text-muted-foreground">
-                      Industry
-                    </h4>
-                    <p className="text-sm text-card-foreground">
-                      {submission.industry}
-                    </p>
-                  </div>
-                )}
-              </div>
-              <div className="space-y-6">
-                {submission.assigned_to && (
-                  <div>
-                    <h4 className="text-sm font-medium text-muted-foreground">
-                      Assigned To
-                    </h4>
-                    <p className="text-sm text-mono text-card-foreground">
-                      {submission.assigned_to}
-                    </p>
-                  </div>
-                )}
-                <div>
-                  <h4 className="text-sm font-medium text-muted-foreground">
-                    Submitted At
-                  </h4>
-                  <p className="text-sm text-card-foreground">
-                    {format(new Date(submission.created_at), "PPpp")}
-                  </p>
-                </div>
-                <div>
-                  <h4 className="text-sm font-medium text-muted-foreground">
-                    Last Updated
-                  </h4>
-                  <p className="text-sm text-card-foreground">
-                    {format(new Date(submission.updated_at), "PPpp")}
-                  </p>
-                </div>
-                {submission.completed_at && (
-                  <div>
-                    <h4 className="text-sm font-medium text-muted-foreground">
-                      Completed At
-                    </h4>
-                    <p className="text-sm text-card-foreground">
-                      {format(new Date(submission.completed_at), "PPpp")}
-                    </p>
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {submission.details != null && (
-              <div className="mt-6 border-t pt-6">
-                <h3 className="text-lg font-medium mb-4">Submission Details</h3>
-                {renderJson(submission.details)}
-              </div>
-            )}
-
-            {submission.internal_notes && (
-              <div className="mt-6 border-t pt-6">
-                <h3 className="text-lg font-medium mb-4">Internal Notes</h3>
-                <div className="prose prose-sm dark:prose-invert mt-1 text-card-foreground text-sm whitespace-pre-wrap">
-                  {submission.internal_notes}
-                </div>
-              </div>
-            )}
-          </CardContent>
-        </Card>
-      </div>
-
-      {isDeleteDialogOpen && (
-        <DeleteSubmissionDialog
-          isOpen={isDeleteDialogOpen}
-          onClose={handleCloseDialog}
-          submission={submission}
-          onDeleted={onDeleted}
-        />
-      )}
-    </>
   );
 }
 ````
@@ -22066,80 +20974,445 @@ export default async function EditServicePage({
 }
 ````
 
-## File: apps/admin/app/admin/services/actions.ts
+## File: apps/admin/app/admin/services/[id]/ServiceDetails.tsx
 ````typescript
-"use server";
+"use client";
 
+import { Icon } from "@bilacert/shared/Icon";
+import type {
+  PricingPlan,
+  ProcessStep,
+  Service,
+  SuccessStory,
+} from "@bilacert/shared/types";
+import { format } from "date-fns";
+import { ArrowLeft, CheckCircle, Edit, Trash2 } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
-  deleteService as deleteServiceMutation,
-  upsertService as upsertServiceMutation,
-} from "@bilacert/supabase/Mutations/services";
-import { revalidatePath } from "next/cache";
-import { triggerRevalidation } from "@/lib/revalidation";
-import { serviceSchema } from "./schema";
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import DeleteServiceDialog from "../DeleteServiceDialog";
 
-export async function upsertService(values: unknown) {
-  const parsedValues = serviceSchema.safeParse(values);
-
-  if (!parsedValues.success) {
-    return { error: parsedValues.error.message };
-  }
-
-  const {
-    id,
-    shortDescription,
-    orderIndex,
-    processingTime,
-    seoTitle,
-    seoDescription,
-    seoKeywords,
-    pricingPlans,
-    processSteps,
-    successStory,
-    ...rest
-  } = parsedValues.data;
-
-  const dataToUpsert = {
-    ...rest,
-    id,
-    short_description: shortDescription,
-    order_index: orderIndex,
-    processing_time: processingTime,
-    seo_title: seoTitle,
-    seo_description: seoDescription,
-    seo_keywords: seoKeywords,
-    pricing_plans: pricingPlans,
-    process_steps: processSteps,
-    success_story: successStory,
-  };
-
-  try {
-    const result = await upsertServiceMutation(
-      dataToUpsert as Parameters<typeof upsertServiceMutation>[0],
-    );
-    await triggerRevalidation(result.revalidate);
-  } catch (error) {
-    const message = error instanceof Error ? error.message : "Unknown error";
-    return { error: `Database error: ${message}` };
-  }
-
-  revalidatePath("/admin/services");
-
-  return { error: null };
+interface ServiceDetailsProps {
+  service: Service;
 }
 
-export async function deleteService(serviceId: string) {
-  try {
-    const result = await deleteServiceMutation(serviceId);
-    await triggerRevalidation(result.revalidate);
-  } catch (error) {
-    const message = error instanceof Error ? error.message : "Unknown error";
-    return { error: `Database error: ${message}` };
-  }
+export default function ServiceDetails({ service }: ServiceDetailsProps) {
+  const router = useRouter();
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
-  revalidatePath("/admin/services");
+  if (!service) return null;
 
-  return { error: null };
+  const handleDelete = () => {
+    setIsDeleteDialogOpen(true);
+  };
+
+  const handleCloseDialog = () => {
+    setIsDeleteDialogOpen(false);
+    router.push("/admin/services");
+    router.refresh();
+  };
+
+  const renderStringArray = (data: string[] | undefined) => {
+    if (!data || data.length === 0)
+      return <p className="text-sm text-card-foreground">Not set.</p>;
+    return (
+      <ul className="list-disc list-inside space-y-1 mt-1 text-sm text-card-foreground">
+        {data.map((item, index) => (
+          <li key={index}>{item}</li>
+        ))}
+      </ul>
+    );
+  };
+
+  const renderPricingPlans = (plans: PricingPlan[] | undefined) => {
+    if (!plans || plans.length === 0)
+      return (
+        <p className="text-sm text-card-foreground">
+          No pricing plans defined.
+        </p>
+      );
+    return (
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-2">
+        {plans.map((plan, index) => (
+          <Card key={index} className="flex flex-col">
+            <CardHeader>
+              <div className="flex justify-between items-start">
+                <CardTitle className="text-lg">{plan.title}</CardTitle>
+                {plan.popular && <Badge variant="default">Popular</Badge>}
+              </div>
+              <CardDescription>{plan.description}</CardDescription>
+            </CardHeader>
+            <CardContent className="flex-grow space-y-4">
+              <p className="text-2xl font-bold">{plan.price}</p>
+              <ul className="space-y-2 text-sm text-muted-foreground">
+                {plan.features.map((feature, i) => (
+                  <li key={i} className="flex items-start">
+                    <CheckCircle className="h-4 w-4 mr-2 mt-1 text-green-500 shrink-0" />
+                    <span>{feature}</span>
+                  </li>
+                ))}
+              </ul>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    );
+  };
+
+  const renderProcessSteps = (steps: ProcessStep[] | undefined) => {
+    if (!steps || steps.length === 0)
+      return (
+        <p className="text-sm text-card-foreground">
+          No process steps defined.
+        </p>
+      );
+    return (
+      <div className="relative mt-4 pl-6">
+        <div className="absolute left-0 top-0 bottom-0 w-px bg-border -translate-x-1/2 ml-3"></div>
+        <div className="space-y-8">
+          {steps.map((step, index) => (
+            <div key={index} className="relative flex items-start gap-4">
+              <div className="flex-shrink-0 w-6 h-6 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold text-xs z-10">
+                {step.step}
+              </div>
+              <div className="flex-grow">
+                <h5 className="font-semibold text-card-foreground">
+                  {step.title}
+                </h5>
+                <p className="text-sm text-muted-foreground">
+                  {step.description}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  };
+
+  const renderSuccessStory = (story: SuccessStory | undefined) => {
+    if (!story)
+      return (
+        <p className="text-sm text-card-foreground">
+          No success story defined.
+        </p>
+      );
+    return (
+      <Card className="mt-2 bg-muted/50">
+        <CardContent className="p-6 space-y-4">
+          <div>
+            <h5 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+              Scenario
+            </h5>
+            <p className="text-sm text-card-foreground">{story.scenario}</p>
+          </div>
+          <div>
+            <h5 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+              Challenge
+            </h5>
+            <p className="text-sm text-card-foreground">{story.challenge}</p>
+          </div>
+          <div>
+            <h5 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+              Solution
+            </h5>
+            <p className="text-sm text-card-foreground">{story.solution}</p>
+          </div>
+          <div>
+            <h5 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+              Result
+            </h5>
+            <p className="text-sm text-card-foreground font-medium">
+              {story.result}
+            </p>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  };
+
+  return (
+    <>
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <Button variant="outline" asChild>
+            <Link href="/admin/services">
+              <ArrowLeft className="mr-2 h-4 w-4" />
+              Back to Services
+            </Link>
+          </Button>
+          <div className="flex gap-2">
+            <Button asChild>
+              <Link href={`/admin/services/${service.id}/edit`}>
+                <Edit className="mr-2 h-4 w-4" /> Edit
+              </Link>
+            </Button>
+            <Button variant="destructive" onClick={handleDelete}>
+              <Trash2 className="mr-2 h-4 w-4" /> Delete
+            </Button>
+          </div>
+        </div>
+
+        <Card>
+          <CardHeader>
+            <div className="flex justify-between items-start">
+              <div>
+                <CardTitle>{service.title}</CardTitle>
+                <CardDescription>{service.category}</CardDescription>
+              </div>
+              <Badge variant={service.featured ? "default" : "secondary"}>
+                {service.featured ? "Featured" : "Not Featured"}
+              </Badge>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="grid gap-6 md:grid-cols-2">
+              <div className="space-y-6">
+                <div>
+                  <h4 className="text-sm font-medium text-muted-foreground">
+                    Status
+                  </h4>
+                  <Badge variant={service.published ? "default" : "secondary"}>
+                    {service.published ? "Published" : "Draft"}
+                  </Badge>
+                </div>
+                {service.description && (
+                  <div>
+                    <h4 className="text-sm font-medium text-muted-foreground">
+                      Description
+                    </h4>
+                    <p className="text-sm text-card-foreground">
+                      {service.description}
+                    </p>
+                  </div>
+                )}
+                {service.shortDescription && (
+                  <div>
+                    <h4 className="text-sm font-medium text-muted-foreground">
+                      Short Description
+                    </h4>
+                    <p className="text-sm text-card-foreground">
+                      {service.shortDescription}
+                    </p>
+                  </div>
+                )}
+                {service.content && (
+                  <div>
+                    <h4 className="text-sm font-medium text-muted-foreground">
+                      Content
+                    </h4>
+                    <div className="prose prose-sm dark:prose-invert mt-1 text-card-foreground text-sm whitespace-pre-wrap">
+                      {service.content}
+                    </div>
+                  </div>
+                )}
+                <div>
+                  <h4 className="text-sm font-medium text-muted-foreground">
+                    Features
+                  </h4>
+                  {renderStringArray(service.features)}
+                </div>
+                <div>
+                  <h4 className="text-sm font-medium text-muted-foreground">
+                    Requirements
+                  </h4>
+                  {renderStringArray(service.requirements)}
+                </div>
+                <div>
+                  <h4 className="text-sm font-medium text-muted-foreground">
+                    Includes
+                  </h4>
+                  {renderStringArray(service.includes)}
+                </div>
+              </div>
+              <div className="space-y-6">
+                {service.slug && (
+                  <div>
+                    <h4 className="text-sm font-medium text-muted-foreground">
+                      Slug
+                    </h4>
+                    <p className="text-sm font-mono text-card-foreground">
+                      {service.slug}
+                    </p>
+                  </div>
+                )}
+                {service.href && (
+                  <div>
+                    <h4 className="text-sm font-medium text-muted-foreground">
+                      HREF
+                    </h4>
+                    <p className="text-sm font-mono text-card-foreground">
+                      {service.href}
+                    </p>
+                  </div>
+                )}
+                {service.icon && (
+                  <div>
+                    <h4 className="text-sm font-medium text-muted-foreground">
+                      Icon
+                    </h4>
+                    <div className="flex items-center gap-2 mt-1">
+                      <Icon
+                        name={service.icon}
+                        className="h-5 w-5 text-accent"
+                      />
+                      <p className="text-sm font-mono text-card-foreground">
+                        {service.icon}
+                      </p>
+                    </div>
+                  </div>
+                )}
+                {service.orderIndex !== undefined && (
+                  <div>
+                    <h4 className="text-sm font-medium text-muted-foreground">
+                      Order Index
+                    </h4>
+                    <p className="text-sm text-card-foreground">
+                      {service.orderIndex}
+                    </p>
+                  </div>
+                )}
+                {service.processingTime && (
+                  <div>
+                    <h4 className="text-sm font-medium text-muted-foreground">
+                      Processing Time
+                    </h4>
+                    <p className="text-sm text-card-foreground">
+                      {service.processingTime}
+                    </p>
+                  </div>
+                )}
+                {service.pricing !== null && service.pricing !== undefined && (
+                  <div>
+                    <h4 className="text-sm font-medium text-muted-foreground">
+                      Pricing
+                    </h4>
+                    <p className="text-sm font-mono text-card-foreground">
+                      R{Number(service.pricing).toFixed(2)}
+                    </p>
+                  </div>
+                )}
+                <div>
+                  <h4 className="text-sm font-medium text-muted-foreground">
+                    Created At
+                  </h4>
+                  <p className="text-sm text-card-foreground">
+                    {format(new Date(service.createdAt), "PPpp")}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {(service.image || service.thumbnail) && (
+              <div className="mt-6 border-t pt-6">
+                <h3 className="text-lg font-medium mb-4">Media</h3>
+                <div className="flex gap-4">
+                  {service.image && (
+                    <div>
+                      <h4 className="text-sm font-medium text-muted-foreground">
+                        Image
+                      </h4>
+                      <Image
+                        src={service.image}
+                        alt="Service Image"
+                        width={300}
+                        height={200}
+                        className="mt-1 rounded-md border"
+                      />
+                    </div>
+                  )}
+                  {service.thumbnail && (
+                    <div>
+                      <h4 className="text-sm font-medium text-muted-foreground">
+                        Thumbnail
+                      </h4>
+                      <Image
+                        src={service.thumbnail}
+                        alt="Service Thumbnail"
+                        width={150}
+                        height={100}
+                        className="mt-1 rounded-md border"
+                      />
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+            {(service.seoTitle ||
+              service.seoDescription ||
+              service.seoKeywords) && (
+              <div className="mt-6 border-t pt-6">
+                <h3 className="text-lg font-medium mb-4">SEO</h3>
+                <div className="grid md:grid-cols-2 gap-6">
+                  {service.seoTitle && (
+                    <div>
+                      <h4 className="text-sm font-medium text-muted-foreground">
+                        SEO Title
+                      </h4>
+                      <p className="text-sm text-card-foreground">
+                        {service.seoTitle}
+                      </p>
+                    </div>
+                  )}
+                  {service.seoDescription && (
+                    <div>
+                      <h4 className="text-sm font-medium text-muted-foreground">
+                        SEO Description
+                      </h4>
+                      <p className="text-sm text-card-foreground">
+                        {service.seoDescription}
+                      </p>
+                    </div>
+                  )}
+                  {service.seoKeywords && (
+                    <div className="col-span-full">
+                      <h4 className="text-sm font-medium text-muted-foreground">
+                        SEO Keywords
+                      </h4>
+                      <p className="text-sm text-card-foreground">
+                        {service.seoKeywords}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
+            <div className="mt-6 border-t pt-6">
+              <h3 className="text-lg font-medium mb-4">Pricing Plans</h3>
+              {renderPricingPlans(service.pricingPlans)}
+            </div>
+            <div className="mt-6 border-t pt-6">
+              <h3 className="text-lg font-medium mb-4">Process Steps</h3>
+              {renderProcessSteps(service.processSteps)}
+            </div>
+            <div className="mt-6 border-t pt-6">
+              <h3 className="text-lg font-medium mb-4">Success Story</h3>
+              {renderSuccessStory(service.successStory)}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {isDeleteDialogOpen && (
+        <DeleteServiceDialog
+          isOpen={isDeleteDialogOpen}
+          onClose={handleCloseDialog}
+          service={service}
+        />
+      )}
+    </>
+  );
 }
 ````
 
@@ -23563,117 +22836,87 @@ export function RelatedPosts({ posts }: RelatedPostsProps) {
 }
 ````
 
-## File: packages/supabase/src/Queries/blogs.ts
-````typescript
-import type { BlogPost } from "@bilacert/shared/types";
-import { createSupabaseBrowserClient } from "../client";
-import type { Database } from "../supabaseType";
-
-type BlogPostRow = Database["public"]["Tables"]["blog_posts"]["Row"];
-
-function normalizeBlogPost(row: BlogPostRow): BlogPost {
-  return {
-    id: row.id,
-    title: row.title,
-    slug: row.slug,
-    excerpt: row.excerpt ?? undefined,
-    content: row.content,
-    category: row.category ?? undefined,
-    tags: row.tags ?? undefined,
-    readTime: row.read_time ?? undefined,
-    seoTitle: row.seo_title ?? undefined,
-    seoDescription: row.seo_description ?? undefined,
-    seoKeywords: row.seo_keywords ?? undefined,
-    featuredImage: row.featured_image ?? undefined,
-    thumbnail: row.thumbnail ?? undefined,
-    published: row.published ?? false,
-    publishedAt: row.published_at ?? undefined,
-    featured: row.featured ?? false,
-    authorId: row.author_id ?? undefined,
-    authorName: row.author_name ?? undefined,
-    viewsCount: row.views_count ?? 0,
-    createdAt: row.created_at ?? row.published_at ?? new Date(0).toISOString(),
-    updatedAt: row.updated_at ?? undefined,
-  };
-}
-
-export async function getAllPublishedBlogSlugs() {
-  const supabase = createSupabaseBrowserClient();
-  const { data, error } = await supabase
-    .from("blog_posts")
-    .select("slug")
-    .eq("published", true);
-
-  if (error) {
-    throw new Error(error.message);
-  }
-
-  return data;
-}
-
-export async function getAllPublishedBlogPosts(): Promise<BlogPost[]> {
-  const supabase = createSupabaseBrowserClient();
-  const { data, error } = await supabase
-    .from("blog_posts")
-    .select("*")
-    .eq("published", true)
-    .order("created_at", { ascending: false });
-
-  if (error) {
-    throw new Error(error.message);
-  }
-
-  return data.map(normalizeBlogPost);
-}
-
-export async function getBlogPostBySlug(
-  slug: string,
-): Promise<BlogPost | null> {
-  const supabase = createSupabaseBrowserClient();
-  const { data, error } = await supabase
-    .from("blog_posts")
-    .select("*")
-    .eq("slug", slug)
-    .single();
-
-  if (error) {
-    return null;
-  }
-
-  return normalizeBlogPost(data);
-}
-
-export async function getBlogPostsByCategory(
-  category: string,
-  limit: number = 3,
-): Promise<BlogPost[]> {
-  const supabase = createSupabaseBrowserClient();
-  const { data, error } = await supabase
-    .from("blog_posts")
-    .select("*")
-    .eq("category", category)
-    .limit(limit);
-
-  if (error) {
-    return [];
-  }
-
-  return data.map(normalizeBlogPost);
-}
-````
-
-## File: apps/admin/app/admin/blogs/BlogForm.tsx
+## File: packages/supabase/src/hooks/useDataFetching.ts
 ````typescript
 "use client";
 
+import { useCallback, useEffect, useState } from "react";
+import { createSupabaseBrowserClient, isSupabaseConfigured } from "../client";
+import type { Database } from "../supabaseType";
+
+type PublicTableName = keyof Database["public"]["Tables"] & string;
+
+export function useDataFetching<T>(
+  tableName: PublicTableName,
+  selectQuery: string = "*",
+  orderBy: string = "created_at",
+) {
+  const [data, setData] = useState<T[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
+
+  const fetchData = useCallback(async () => {
+    if (!isSupabaseConfigured) {
+      setLoading(false);
+      return;
+    }
+
+    const supabase = createSupabaseBrowserClient();
+    setLoading(true);
+    const { data: fetchedData, error: fetchError } = await supabase
+      .from(tableName)
+      .select(selectQuery)
+      .order(orderBy, { ascending: false });
+
+    if (fetchError) {
+      setError(fetchError as unknown as Error);
+      setData([]);
+    } else {
+      setData((fetchedData as unknown as T[]) || []);
+      setError(null);
+    }
+    setLoading(false);
+  }, [tableName, selectQuery, orderBy]);
+
+  useEffect(() => {
+    fetchData();
+
+    if (!isSupabaseConfigured) {
+      return;
+    }
+
+    const supabase = createSupabaseBrowserClient();
+    const channel = supabase
+      .channel(`${tableName}-realtime`)
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: tableName },
+        () => {
+          fetchData();
+        },
+      )
+      .subscribe((_status: string, err?: Error) => {
+        if (err) {
+          console.error("Supabase subscription error:", err);
+        }
+      });
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [tableName, fetchData]);
+
+  return { data, loading, error, refresh: fetchData };
+}
+````
+
+## File: apps/admin/app/admin/blogs/[id]/edit/page.tsx
+````typescript
 import type { BlogPost } from "@bilacert/shared/types";
-import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
-import { Loader2 } from "lucide-react";
+import { createSupabaseServerClient } from "@bilacert/supabase/server";
+import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useEffect, useTransition } from "react";
-import { useForm } from "react-hook-form";
-import PexelsImagePicker from "@/components/PexelsImagePicker";
+import { notFound } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -23682,447 +22925,231 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import ImageUpload from "@/components/ui/ImageUpload";
-import { Input } from "@/components/ui/input";
-import { Switch } from "@/components/ui/switch";
-import { Textarea } from "@/components/ui/textarea";
-import { useToast } from "@/hooks/use-toast";
-import { upsertBlog } from "./actions";
-import BlogEditor from "./BlogEditor";
-import { type BlogFormValues, blogSchema } from "./schema";
+import BlogForm from "../../BlogForm";
 
-interface BlogFormProps {
-  blog?: BlogPost | null;
+export const metadata = {
+  title: "Edit Blog Post | Bilacert Admin Pro",
+  description: "Edit an existing blog post.",
+};
+
+async function getBlog(id: string): Promise<BlogPost | null> {
+  const supabase = await createSupabaseServerClient();
+  const { data, error } = await supabase
+    .from("blog_posts")
+    .select("*")
+    .eq("id", id)
+    .single();
+
+  if (error || !data) {
+    return null;
+  }
+
+  return {
+    id: data.id,
+    title: data.title,
+    slug: data.slug,
+    excerpt: data.excerpt,
+    content: data.content,
+    category: data.category,
+    tags: data.tags,
+    readTime: data.readTime,
+    seoTitle: data.seoTitle,
+    seoDescription: data.seoDescription,
+    seoKeywords: data.seoKeywords,
+    featuredImage: data.featuredImage,
+    thumbnail: data.thumbnail,
+    published: data.published,
+    publishedAt: data.publishedAt,
+    featured: data.featured,
+    authorId: data.authorId,
+    authorName: data.authorName,
+    viewsCount: data.viewsCount,
+    createdAt: data.createdAt,
+    updatedAt: data.updatedAt,
+  } as BlogPost;
 }
 
-const slugify = (str: string) =>
-  str
-    .toLowerCase()
-    .trim()
-    .replace(/[^\w\s-]/g, "")
-    .replace(/[\s_-]+/g, "-")
-    .replace(/^-+|-+$/g, "");
+export default async function EditBlogPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
+  const blog = await getBlog(id);
 
-export default function BlogForm({ blog }: BlogFormProps) {
-  const { toast } = useToast();
-  const router = useRouter();
-  const [isPending, startTransition] = useTransition();
-
-  const form = useForm<BlogFormValues>({
-    resolver: standardSchemaResolver(blogSchema),
-    defaultValues: {
-      title: "",
-      slug: "",
-      author_name: "Bilacert Team",
-      read_time: "5 min read",
-      category: "",
-      tags: "",
-      excerpt: "",
-      content: "",
-      published: false,
-      featured_image: "",
-      thumbnail: "",
-      featured: false,
-      seo_title: "",
-      seo_description: "",
-      seo_keywords: "",
-    },
-  });
-
-  const { handleSubmit, reset, watch, setValue } = form;
-
-  const title = watch("title");
-  const isEditing = !!blog;
-
-  useEffect(() => {
-    if (!isEditing && title) {
-      setValue("slug", slugify(title), { shouldValidate: true });
-    }
-  }, [title, setValue, isEditing]);
-
-  useEffect(() => {
-    if (blog) {
-      reset({
-        ...blog,
-        author_name: blog.author_name || "Bilacert Team",
-        read_time: blog.read_time || "5 min read",
-        tags: blog.tags || "",
-        excerpt: blog.excerpt || "",
-        content: blog.content || "",
-        featured_image: blog.featured_image || "",
-        thumbnail: blog.thumbnail || "",
-        seo_title: blog.seo_title || "",
-        seo_description: blog.seo_description || "",
-        seo_keywords: blog.seo_keywords || "",
-      });
-    }
-  }, [blog, reset]);
-
-  const onSubmit = (values: BlogFormValues) => {
-    startTransition(async () => {
-      const result = await upsertBlog(values);
-      if (result.error) {
-        toast({
-          variant: "destructive",
-          title: "Error saving blog post",
-          description: result.error,
-        });
-      } else {
-        toast({
-          title: "Blog post saved",
-        });
-        router.push("/admin/blogs");
-      }
-    });
-  };
+  if (!blog) {
+    notFound();
+  }
 
   return (
-    <Form {...form}>
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
-        <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
-          <div className="space-y-6 lg:col-span-2">
-            <Card>
-              <CardHeader>
-                <CardTitle>Core Details</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <FormField
-                  control={form.control}
-                  name="title"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Title</FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder="e.g., My Awesome Blog Post"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="slug"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Slug</FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder="e.g., my-awesome-blog-post"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="excerpt"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Excerpt</FormLabel>
-                      <FormControl>
-                        <Textarea
-                          placeholder="A short summary of the post."
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </CardContent>
-            </Card>
+    <div className="space-y-6">
+      <Button variant="outline" asChild>
+        <Link href="/admin/blogs">
+          <ArrowLeft className="mr-2 h-4 w-4" />
+          Back to Blogs
+        </Link>
+      </Button>
 
-            <Card>
-              <CardHeader>
-                <CardTitle>Media</CardTitle>
-                <CardDescription>
-                  Upload local images or pick from Pexels
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <FormField
-                    control={form.control}
-                    name="featured_image"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Featured Image</FormLabel>
-                        <FormControl>
-                          <ImageUpload
-                            bucket="blogs"
-                            initialUrl={field.value}
-                            onUpload={(url) => field.onChange(url)}
-                            onRemove={() => field.onChange("")}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="thumbnail"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Thumbnail Image</FormLabel>
-                        <FormControl>
-                          <ImageUpload
-                            bucket="blogs"
-                            initialUrl={field.value}
-                            onUpload={(url) => field.onChange(url)}
-                            onRemove={() => field.onChange("")}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-
-                <div className="border-t pt-6">
-                  <h3 className="text-sm font-medium mb-4">
-                    Pexels Image Picker
-                  </h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="space-y-2">
-                      <p className="text-xs text-muted-foreground">
-                        Quick pick for Featured Image
-                      </p>
-                      <PexelsImagePicker
-                        onSelect={(url) => setValue("featured_image", url)}
-                        currentImageUrl={watch("featured_image")}
-                        suggestions={[
-                          title,
-                          watch("category"),
-                          ...(watch("tags") || "")
-                            .split(",")
-                            .map((t) => t.trim()),
-                        ].filter((t): t is string => !!t)}
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <p className="text-xs text-muted-foreground">
-                        Quick pick for Thumbnail
-                      </p>
-                      <PexelsImagePicker
-                        onSelect={(url) => setValue("thumbnail", url)}
-                        currentImageUrl={watch("thumbnail")}
-                        suggestions={[
-                          title,
-                          watch("category"),
-                          ...(watch("tags") || "")
-                            .split(",")
-                            .map((t) => t.trim()),
-                        ].filter((t): t is string => !!t)}
-                      />
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            <FormField
-              control={form.control}
-              name="content"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Content</FormLabel>
-                  <FormControl>
-                    <BlogEditor
-                      featured_image={watch("featured_image")}
-                      onImageSelect={(url) => setValue("featured_image", url)}
-                      value={field.value ?? ""}
-                      onChange={field.onChange}
-                      title={title}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <Card>
-              <CardHeader>
-                <CardTitle>SEO</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <FormField
-                  control={form.control}
-                  name="seo_title"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>SEO Title</FormLabel>
-                      <FormControl>
-                        <Input {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="seo_description"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>SEO Description</FormLabel>
-                      <FormControl>
-                        <Textarea {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="seo_keywords"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>SEO Keywords (comma separated)</FormLabel>
-                      <FormControl>
-                        <Input {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </CardContent>
-            </Card>
-          </div>
-          <div className="space-y-6 lg:col-span-1">
-            <Card>
-              <CardHeader>
-                <CardTitle>Publishing</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <FormField
-                  control={form.control}
-                  name="published"
-                  render={({ field }) => (
-                    <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
-                      <div className="space-y-0.5">
-                        <FormLabel>Published</FormLabel>
-                        <FormDescription>
-                          Make this post visible.
-                        </FormDescription>
-                      </div>
-                      <FormControl>
-                        <Switch
-                          checked={field.value}
-                          onCheckedChange={field.onChange}
-                        />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="featured"
-                  render={({ field }) => (
-                    <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
-                      <div className="space-y-0.5">
-                        <FormLabel>Featured Post</FormLabel>
-                        <FormDescription>
-                          Display this post prominently.
-                        </FormDescription>
-                      </div>
-                      <FormControl>
-                        <Switch
-                          checked={field.value}
-                          onCheckedChange={field.onChange}
-                        />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader>
-                <CardTitle>Details</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <FormField
-                  control={form.control}
-                  name="author_name"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Author</FormLabel>
-                      <FormControl>
-                        <Input {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="read_time"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Read Time</FormLabel>
-                      <FormControl>
-                        <Input placeholder="e.g., 5 min read" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="category"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Category</FormLabel>
-                      <FormControl>
-                        <Input placeholder="e.g., Tech" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="tags"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Tags (comma separated)</FormLabel>
-                      <FormControl>
-                        <Input placeholder="e.g., icasa, nrcs" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-        <div className="flex justify-end gap-4">
-          <Button type="button" variant="outline" asChild>
-            <Link href="/admin/blogs">Cancel</Link>
-          </Button>
-          <Button type="submit" disabled={isPending}>
-            {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            {isEditing ? "Save Changes" : "Create Post"}
-          </Button>
-        </div>
-      </form>
-    </Form>
+      <Card>
+        <CardHeader>
+          <CardTitle>Edit Blog Post</CardTitle>
+          <CardDescription>
+            Update the details for "{blog.title}".
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <BlogForm blog={blog} />
+        </CardContent>
+      </Card>
+    </div>
   );
+}
+````
+
+## File: apps/admin/app/admin/blogs/[id]/page.tsx
+````typescript
+import type { BlogPost } from "@bilacert/shared/types";
+import { createSupabaseServerClient } from "@bilacert/supabase/server";
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+import BlogDetails from "../BlogDetails";
+
+async function getBlog(id: string): Promise<BlogPost | null> {
+  const supabase = await createSupabaseServerClient();
+  const { data, error } = await supabase
+    .from("blog_posts")
+    .select("*")
+    .eq("id", id)
+    .single();
+
+  if (error || !data) {
+    return null;
+  }
+
+  return {
+    id: data.id,
+    title: data.title,
+    slug: data.slug,
+    excerpt: data.excerpt,
+    content: data.content,
+    category: data.category,
+    tags: data.tags,
+    readTime: data.readTime,
+    seoTitle: data.seoTitle,
+    seoDescription: data.seoDescription,
+    seoKeywords: data.seoKeywords,
+    featuredImage: data.featuredImage,
+    thumbnail: data.thumbnail,
+    published: data.published,
+    publishedAt: data.publishedAt,
+    featured: data.featured,
+    authorId: data.authorId,
+    authorName: data.authorName,
+    viewsCount: data.viewsCount,
+    createdAt: data.createdAt,
+    updatedAt: data.updatedAt,
+  } as BlogPost;
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: { id: string };
+}): Promise<Metadata> {
+  const blog = await getBlog(params.id);
+  if (!blog) {
+    return {
+      title: "Blog Post Not Found",
+    };
+  }
+  return {
+    title: `${blog.title} | Bilacert Admin Pro`,
+  };
+}
+
+export default async function BlogDetailsPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
+  const blog = await getBlog(id);
+
+  if (!blog) {
+    notFound();
+  }
+
+  return <BlogDetails blog={blog} />;
+}
+````
+
+## File: apps/admin/app/admin/blogs/actions.ts
+````typescript
+"use server";
+
+import {
+  deleteBlog as deleteBlogMutation,
+  upsertBlog as upsertBlogMutation,
+} from "@bilacert/supabase/Mutations/blogs";
+import { revalidatePath } from "next/cache";
+import { v4 as uuidv4 } from "uuid";
+import { triggerRevalidation } from "@/lib/revalidation";
+import { blogSchema } from "./schema";
+
+export async function upsertBlog(values: unknown) {
+  const parsedValues = blogSchema.safeParse(values);
+
+  if (!parsedValues.success) {
+    return { error: parsedValues.error.message };
+  }
+
+  const { id, ...rest } = parsedValues.data;
+
+  // Map form values to DB schema camelCase
+  const dataToUpsert = {
+    id: id || uuidv4(),
+    title: rest.title,
+    slug: rest.slug,
+    authorName: rest.authorName,
+    readTime: rest.readTime,
+    category: rest.category,
+    tags: rest.tags,
+    excerpt: rest.excerpt,
+    content: rest.content,
+    published: rest.published,
+    featuredImage: rest.featuredImage,
+    thumbnail: rest.thumbnail,
+    featured: rest.featured,
+    seoTitle: rest.seoTitle,
+    seoDescription: rest.seoDescription,
+    seoKeywords: rest.seoKeywords,
+  };
+
+  try {
+    const result = await upsertBlogMutation(dataToUpsert);
+    await triggerRevalidation(result.revalidate);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Unknown error";
+    return { error: `Database error: ${message}` };
+  }
+
+  revalidatePath("/admin/blogs");
+
+  return { error: null };
+}
+
+export async function deleteBlog(blogId: string) {
+  try {
+    const result = await deleteBlogMutation(blogId);
+    await triggerRevalidation(result.revalidate);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Unknown error";
+    return { error: `Database error: ${message}` };
+  }
+
+  revalidatePath("/admin/blogs");
+
+  return { error: null };
 }
 ````
 
@@ -24300,15 +23327,29 @@ export default function ContactForm({ contact }: ContactFormProps) {
 }
 ````
 
-## File: apps/admin/app/admin/form_submissions/[id]/page.tsx
+## File: apps/admin/app/admin/form_submissions/[id]/edit/page.tsx
 ````typescript
 import type { Submission } from "@bilacert/shared/types";
 import { createSupabaseBrowserClient } from "@bilacert/supabase/client";
-import type { Metadata } from "next";
+import { ArrowLeft } from "lucide-react";
+import Link from "next/link";
 import { notFound } from "next/navigation";
-import SubmissionDetails from "../SubmissionDetails";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import SubmissionForm from "../../SubmissionForm";
 
 const supabase = createSupabaseBrowserClient();
+
+export const metadata = {
+  title: "Edit Submission | Bilacert Admin Pro",
+  description: "Edit a form submission.",
+};
 
 async function getSubmission(id: string): Promise<Submission | null> {
   const { data, error } = await supabase
@@ -24323,42 +23364,25 @@ async function getSubmission(id: string): Promise<Submission | null> {
 
   return {
     id: data.id,
-    form_type: data.form_type,
+    formType: data.formType,
     status: data.status,
-    service_id: data.service_id,
-    service_name: data.service_name,
-    full_name: data.full_name,
+    serviceId: data.serviceId,
+    serviceName: data.serviceName,
+    fullName: data.fullName,
     email: data.email,
     phone: data.phone,
     company: data.company,
     industry: data.industry,
     details: data.details,
-    internal_notes: data.internal_notes,
-    assigned_to: data.assigned_to,
-    created_at: data.created_at,
-    updated_at: data.updated_at,
-    completed_at: data.completed_at,
+    internalNotes: data.internalNotes,
+    assignedTo: data.assignedTo,
+    createdAt: data.createdAt,
+    updatedAt: data.updatedAt,
+    completedAt: data.completedAt,
   } as Submission;
 }
 
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}): Promise<Metadata> {
-  const { id } = await params;
-  const submission = await getSubmission(id);
-  if (!submission) {
-    return {
-      title: "Submission Not Found",
-    };
-  }
-  return {
-    title: `Submission from ${submission.full_name} | Bilacert Admin Pro`,
-  };
-}
-
-export default async function SubmissionDetailsPage({
+export default async function EditSubmissionPage({
   params,
 }: {
   params: Promise<{ id: string }>;
@@ -24370,392 +23394,261 @@ export default async function SubmissionDetailsPage({
     notFound();
   }
 
-  return <SubmissionDetails submission={submission} />;
+  return (
+    <div className="space-y-6">
+      <Button variant="outline" asChild>
+        <Link href={`/admin/form_submissions/${submission.id}`}>
+          <ArrowLeft className="mr-2 h-4 w-4" />
+          Back to Submission
+        </Link>
+      </Button>
+      <Card>
+        <CardHeader>
+          <CardTitle>Edit Submission</CardTitle>
+          <CardDescription>
+            Update details for submission from "{submission.fullName}".
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <SubmissionForm submission={submission} />
+        </CardContent>
+      </Card>
+    </div>
+  );
 }
 ````
 
-## File: apps/admin/app/admin/form_submissions/actions.ts
-````typescript
-"use server";
-
-import type { Submission } from "@bilacert/shared/types";
-import { updateFormSubmission } from "@bilacert/supabase/Mutations/formSubmissions";
-import { revalidatePath } from "next/cache";
-import { triggerRevalidation } from "@/lib/revalidation";
-import { submissionSchema } from "./schema";
-
-export async function upsertSubmission(values: unknown, submissionId: string) {
-  const parsedValues = submissionSchema.safeParse(values);
-
-  if (!parsedValues.success) {
-    return { error: parsedValues.error.message };
-  }
-
-  const submissionData = {
-    full_name: parsedValues.data.full_name,
-    email: parsedValues.data.email,
-    phone: parsedValues.data.phone,
-    company: parsedValues.data.company,
-    industry: parsedValues.data.industry,
-    service_name: parsedValues.data.service_name,
-    status: parsedValues.data.status,
-    details: parsedValues.data.details
-      ? JSON.parse(parsedValues.data.details)
-      : null,
-    internal_notes: parsedValues.data.notes,
-    assigned_to: parsedValues.data.contact_owner || null,
-    updated_at: new Date().toISOString(),
-  };
-
-  let data: Submission;
-  try {
-    const result = await updateFormSubmission(submissionId, submissionData);
-    data = result.data as Submission;
-    await triggerRevalidation(result.revalidate);
-  } catch (error) {
-    const message = error instanceof Error ? error.message : "Unknown error";
-    return { error: `Database error: ${message}` };
-  }
-
-  revalidatePath("/admin/form_submissions");
-  revalidatePath(`/admin/form_submissions/${data.id}`);
-
-  return {
-    data,
-    message: `Submission updated successfully!`,
-  };
-}
-
-export async function updateSubmissionStatus(
-  submissionId: string,
-  status: Submission["status"],
-) {
-  let data: Submission;
-  try {
-    const result = await updateFormSubmission(submissionId, {
-      status,
-      updated_at: new Date().toISOString(),
-    });
-    data = result.data as Submission;
-    await triggerRevalidation(result.revalidate);
-  } catch (error) {
-    const message = error instanceof Error ? error.message : "Unknown error";
-    return { error: `Database error: ${message}` };
-  }
-
-  revalidatePath("/admin/form_submissions");
-  revalidatePath(`/admin/form_submissions/${data.id}`);
-
-  return {
-    data,
-    message: "Status updated successfully",
-  };
-}
-````
-
-## File: apps/admin/app/admin/form_submissions/SubmissionForm.tsx
+## File: apps/admin/app/admin/form_submissions/SubmissionDetails.tsx
 ````typescript
 "use client";
 
 import type { Submission } from "@bilacert/shared/types";
-import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
-import { Loader2 } from "lucide-react";
+import { format } from "date-fns";
+import { ArrowLeft, Edit, Phone, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
-import { useForm } from "react-hook-form";
-import type * as z from "zod";
+import { useState } from "react";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
-import { useToast } from "@/hooks/use-toast";
-import { upsertSubmission } from "./actions";
-import { submissionSchema } from "./schema";
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { statusVariantMap } from "./columns";
+import DeleteSubmissionDialog from "./DeleteSubmissionDialog";
 
-type SubmissionFormValues = z.infer<typeof submissionSchema>;
-
-interface SubmissionFormProps {
+interface SubmissionDetailsProps {
   submission: Submission;
 }
 
-export default function SubmissionForm({ submission }: SubmissionFormProps) {
-  const { toast } = useToast();
+export default function SubmissionDetails({
+  submission,
+}: SubmissionDetailsProps) {
   const router = useRouter();
-  const form = useForm<SubmissionFormValues>({
-    resolver: standardSchemaResolver(submissionSchema),
-    defaultValues: {
-      full_name: "",
-      email: "",
-      phone: "",
-      company: "",
-      industry: "",
-      service_name: "",
-      status: "pending",
-      details: "",
-      notes: "",
-      contact_owner: "",
-    },
-  });
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
-  const {
-    handleSubmit,
-    reset,
-    formState: { isSubmitting },
-  } = form;
+  if (!submission) return null;
 
-  useEffect(() => {
-    if (submission) {
-      reset({
-        full_name: submission.full_name,
-        email: submission.email,
-        phone: submission.phone || "",
-        company: submission.company || "",
-        industry: submission.industry || "",
-        service_name: submission.service_name || "",
-        status: submission.status,
-        details: submission.details
-          ? JSON.stringify(submission.details, null, 2)
-          : "",
-        notes: submission.internal_notes || "",
-        contact_owner: submission.assigned_to || "",
-      });
+  const handleDelete = () => {
+    setIsDeleteDialogOpen(true);
+  };
+
+  const handleCloseDialog = () => {
+    setIsDeleteDialogOpen(false);
+  };
+
+  const onDeleted = () => {
+    setIsDeleteDialogOpen(false);
+    router.push("/admin/form_submissions");
+    router.refresh();
+  };
+
+  const renderJson = (data: unknown) => {
+    if (data == null) {
+      return <p className="text-sm text-card-foreground">Not set.</p>;
     }
-  }, [submission, reset]);
+    return (
+      <div className="prose prose-sm dark:prose-invert mt-1 text-card-foreground text-sm whitespace-pre-wrap">
+        <pre className="bg-muted/50 p-2 rounded-md">
+          <code>{JSON.stringify(data, null, 2)}</code>
+        </pre>
+      </div>
+    );
+  };
 
-  const onSubmit = async (values: SubmissionFormValues) => {
-    try {
-      if (!submission.id) {
-        throw new Error("Submission ID is missing");
-      }
-      const result = await upsertSubmission(values, submission.id);
-
-      if (result.error) {
-        throw new Error(result.error);
-      }
-
-      toast({
-        title: result.message,
-      });
-      router.push(`/admin/form_submissions/${submission.id}`);
-      router.refresh();
-    } catch (error: any) {
-      toast({
-        variant: "destructive",
-        title: "Error saving submission",
-        description: error.message,
-      });
-    }
+  const formatPhoneNumberForWhatsApp = (phone: string) => {
+    // Remove all non-digit characters
+    return phone.replace(/\D/g, "");
   };
 
   return (
-    <Form {...form}>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="grid md:grid-cols-2 gap-6">
-          <div className="space-y-6">
-            <FormField
-              control={form.control}
-              name="full_name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Full Name</FormLabel>
-                  <FormControl>
-                    <Input {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email</FormLabel>
-                  <FormControl>
-                    <Input {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="phone"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Phone</FormLabel>
-                  <FormControl>
-                    <Input {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="company"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Company</FormLabel>
-                  <FormControl>
-                    <Input {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="industry"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Industry</FormLabel>
-                  <FormControl>
-                    <Input {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-          <div className="space-y-6">
-            <FormField
-              control={form.control}
-              name="service_name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Service Name</FormLabel>
-                  <FormControl>
-                    <Input {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="status"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Status</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger className="capitalize">
-                        <SelectValue placeholder="Select a status" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {[
-                        "pending",
-                        "in-progress",
-                        "completed",
-                        "rejected",
-                        "archived",
-                      ].map((status) => (
-                        <SelectItem
-                          key={status}
-                          value={status}
-                          className="capitalize"
-                        >
-                          {status}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="contact_owner"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Assigned To (User ID)</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="Enter user UUID"
-                      {...field}
-                      value={field.value ?? ""}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="details"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Details (JSON format)</FormLabel>
-                  <FormControl>
-                    <Textarea
-                      placeholder='e.g., { "inquiry": "..." }'
-                      rows={6}
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="notes"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Internal Notes</FormLabel>
-                  <FormControl>
-                    <Textarea
-                      placeholder="Add internal notes here..."
-                      rows={4}
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-        </div>
-        <div className="mt-8 flex justify-end gap-4">
-          <Button type="button" variant="outline" asChild>
-            <Link
-              href={
-                submission.id
-                  ? `/admin/form_submissions/${submission.id}`
-                  : "/admin/form_submissions"
-              }
-            >
-              Cancel
+    <>
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <Button variant="outline" asChild>
+            <Link href="/admin/form_submissions">
+              <ArrowLeft className="mr-2 h-4 w-4" />
+              Back to Submissions
             </Link>
           </Button>
-          <Button type="submit" disabled={isSubmitting}>
-            {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            Save Changes
-          </Button>
+          <div className="flex gap-2">
+            <Button asChild>
+              <Link href={`/admin/form_submissions/${submission.id}/edit`}>
+                <Edit className="mr-2 h-4 w-4" /> Edit
+              </Link>
+            </Button>
+            <Button variant="destructive" onClick={handleDelete}>
+              <Trash2 className="mr-2 h-4 w-4" /> Delete
+            </Button>
+          </div>
         </div>
-      </form>
-    </Form>
+
+        <Card>
+          <CardHeader>
+            <div className="flex justify-between items-start">
+              <div>
+                <CardTitle>Submission from {submission.fullName}</CardTitle>
+                <CardDescription>
+                  {submission.serviceName
+                    ? `Service: ${submission.serviceName}`
+                    : `Form: ${submission.formType}`}
+                </CardDescription>
+              </div>
+              <Badge
+                variant={statusVariantMap[submission.status] || "default"}
+                className="capitalize"
+              >
+                {submission.status}
+              </Badge>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="grid gap-6 md:grid-cols-2">
+              <div className="space-y-6">
+                <div>
+                  <h4 className="text-sm font-medium text-muted-foreground">
+                    Client Name
+                  </h4>
+                  <p className="text-sm text-card-foreground">
+                    {submission.fullName}
+                  </p>
+                </div>
+                <div>
+                  <h4 className="text-sm font-medium text-muted-foreground">
+                    Client Email
+                  </h4>
+                  <p className="text-sm text-card-foreground">
+                    {submission.email}
+                  </p>
+                </div>
+                {submission.phone && (
+                  <div>
+                    <h4 className="text-sm font-medium text-muted-foreground">
+                      Phone
+                    </h4>
+                    <a
+                      href={`https://wa.me/${formatPhoneNumberForWhatsApp(submission.phone)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-2 text-sm text-primary transition-colors hover:underline"
+                    >
+                      <Phone className="h-4 w-4" />
+                      {submission.phone}
+                    </a>
+                  </div>
+                )}
+                {submission.company && (
+                  <div>
+                    <h4 className="text-sm font-medium text-muted-foreground">
+                      Company
+                    </h4>
+                    <p className="text-sm text-card-foreground">
+                      {submission.company}
+                    </p>
+                  </div>
+                )}
+                {submission.industry && (
+                  <div>
+                    <h4 className="text-sm font-medium text-muted-foreground">
+                      Industry
+                    </h4>
+                    <p className="text-sm text-card-foreground">
+                      {submission.industry}
+                    </p>
+                  </div>
+                )}
+              </div>
+              <div className="space-y-6">
+                {submission.assignedTo && (
+                  <div>
+                    <h4 className="text-sm font-medium text-muted-foreground">
+                      Assigned To
+                    </h4>
+                    <p className="text-sm text-mono text-card-foreground">
+                      {submission.assignedTo}
+                    </p>
+                  </div>
+                )}
+                <div>
+                  <h4 className="text-sm font-medium text-muted-foreground">
+                    Submitted At
+                  </h4>
+                  <p className="text-sm text-card-foreground">
+                    {format(new Date(submission.createdAt), "PPpp")}
+                  </p>
+                </div>
+                <div>
+                  <h4 className="text-sm font-medium text-muted-foreground">
+                    Last Updated
+                  </h4>
+                  <p className="text-sm text-card-foreground">
+                    {format(new Date(submission.updatedAt), "PPpp")}
+                  </p>
+                </div>
+                {submission.completedAt && (
+                  <div>
+                    <h4 className="text-sm font-medium text-muted-foreground">
+                      Completed At
+                    </h4>
+                    <p className="text-sm text-card-foreground">
+                      {format(new Date(submission.completedAt), "PPpp")}
+                    </p>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {submission.details != null && (
+              <div className="mt-6 border-t pt-6">
+                <h3 className="text-lg font-medium mb-4">Submission Details</h3>
+                {renderJson(submission.details)}
+              </div>
+            )}
+
+            {submission.internalNotes && (
+              <div className="mt-6 border-t pt-6">
+                <h3 className="text-lg font-medium mb-4">Internal Notes</h3>
+                <div className="prose prose-sm dark:prose-invert mt-1 text-card-foreground text-sm whitespace-pre-wrap">
+                  {submission.internalNotes}
+                </div>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+
+      {isDeleteDialogOpen && (
+        <DeleteSubmissionDialog
+          isOpen={isDeleteDialogOpen}
+          onClose={handleCloseDialog}
+          submission={submission}
+          onDeleted={onDeleted}
+        />
+      )}
+    </>
   );
 }
 ````
@@ -25673,288 +24566,117 @@ export default async function BlogPage() {
 }
 ````
 
-## File: apps/client/app/services/[serviceId]/page.tsx
+## File: packages/supabase/src/Queries/blogs.ts
 ````typescript
-import type {
-  PricingPlan,
-  ProcessStep,
-  SuccessStory as TSuccessStory,
-} from "@bilacert/shared/types";
-import type { Metadata } from "next";
-import { notFound } from "next/navigation";
-import { CTASection } from "@/components/service/CTASection";
-import { PricingPlans } from "@/components/service/PricingPlans";
-import { ProcessSteps } from "@/components/service/ProcessSteps";
-import { ServiceHero } from "@/components/service/ServiceHero";
-import { SuccessStory } from "@/components/service/SuccessStory";
-import { WhatIsSection } from "@/components/service/WhatIsSection";
-import { WhyChooseUs } from "@/components/service/WhyChooseUs";
-import { getCachedServiceBySlug, getCachedServiceSlugs } from "../../_lib/cached-public-data";
-
-interface Props {
-  params: Promise<{ serviceId: string }>;
-}
-
-export async function generateStaticParams() {
-  const slugs = await getCachedServiceSlugs();
-  return slugs.map((item) => ({ serviceId: item.slug }));
-}
-
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { serviceId } = await params;
-  const service = await getCachedServiceBySlug(serviceId);
-
-  if (!service) {
-    return {
-      title: "Service Not Found - Bilacert",
-    };
-  }
-
-  return {
-    title: service.seoTitle || `${service.title} - Bilacert`,
-    description: service.seoDescription || service.description,
-    keywords: service.seoKeywords || [
-      service.title.toLowerCase(),
-      ...(service.category?.split(", ").map((c: string) => c.toLowerCase()) ||
-        []),
-      "licensing",
-      "certification",
-      "ICASA",
-      "South Africa",
-    ],
-    openGraph: {
-      title: service.seoTitle || service.title,
-      description: service.seoDescription || service.shortDescription,
-      url: `https://bilacert.co.za/services/${serviceId}`,
-      type: "website",
-      images: service.image ? [{ url: service.image }] : [],
-    },
-    alternates: {
-      canonical: `https://bilacert.co.za/services/${serviceId}`,
-    },
-  };
-}
-
-export default async function ServiceDetailPage({ params }: Props) {
-  const { serviceId } = await params;
-  const service = await getCachedServiceBySlug(serviceId);
-
-  if (!service) {
-    notFound();
-  }
-
-  const formPath = `/services/${serviceId}/form`;
-
-  return (
-    <div className="min-h-screen">
-      <ServiceHero
-        title={service.title}
-        subtitle={service.shortDescription || ""}
-        iconName={service.icon || ""}
-        imageSrc={service.image || ""}
-        processing_time={service.processingTime || ""}
-        formPath={formPath}
-        phone="075 430 4433"
-      />
-
-      {service.content && (
-        <WhatIsSection
-          title={`What is this ${service.title}?`}
-          firstParagraph={service.content}
-          secondParagraph=""
-          checkpoints={[]}
-        />
-      )}
-
-      <WhyChooseUs />
-
-      {service.processSteps && (
-        <ProcessSteps
-          title="Our Process"
-          subtitle="A streamlined approach to get you certified."
-          steps={(service.processSteps as unknown as ProcessStep[]).map(
-            (step) => ({ ...step, step: step.step.toString() }),
-          )}
-        />
-      )}
-
-      {service.pricingPlans && (
-        <PricingPlans
-          title="Pricing Plans"
-          subtitle="Choose the best plan for your needs."
-          plans={(service.pricingPlans as unknown as PricingPlan[]).map(
-            (plan) => ({
-              ...plan,
-              title: plan.name,
-              popular: false,
-              description: plan.description || "",
-            }),
-          )}
-          formPath={formPath}
-        />
-      )}
-
-      {service.successStory && (
-        <SuccessStory {...(service.successStory as TSuccessStory)} />
-      )}
-
-      <CTASection
-        heading="Ready to get started?"
-        description="Contact us today for a free consultation."
-        primaryCTA={{ label: "Contact Us", href: "/contact" }}
-        secondaryCTA={{ label: "Learn More", href: "/about" }}
-      />
-    </div>
-  );
-}
-````
-
-## File: packages/supabase/package.json
-````json
-{
-  "name": "@bilacert/supabase",
-  "version": "0.0.0",
-  "private": true,
-  "exports": {
-    "./client": "./src/client.ts",
-    "./server": "./src/server.ts",
-    "./admin": "./src/admin.ts",
-    "./cache": "./src/cache.ts",
-    "./middleware": "./src/middleware.ts",
-    "./supabaseType": "./src/supabaseType.ts",
-    "./Queries/*": "./src/Queries/*.ts",
-    "./Mutations/*": "./src/Mutations/*.ts",
-    "./hooks/*": "./src/hooks/*.ts"
-  },
-  "dependencies": {
-    "@bilacert/shared": "workspace:*",
-    "@supabase/ssr": "catalog:",
-    "@supabase/supabase-js": "catalog:",
-    "typescript": "catalog:" 
-  },
-  "scripts": {
-    "supabase:types": "supabase gen types typescript --local > src/supabaseType.ts"
-  }
-}
-````
-
-## File: packages/supabase/src/Queries/services.ts
-````typescript
+import type { BlogPost } from "@bilacert/shared/types";
 import { createSupabaseBrowserClient } from "../client";
-import type { Service } from "@bilacert/shared/types";
 import type { Database } from "../supabaseType";
 
-type ServiceRow = Database["public"]["Tables"]["services"]["Row"];
+type BlogPostRow = Database["public"]["Tables"]["blog_posts"]["Row"];
 
-export function normalizeService(row: ServiceRow): Service {
+function normalizeBlogPost(row: BlogPostRow): BlogPost {
   return {
     id: row.id,
     title: row.title,
     slug: row.slug,
-    href: row.href,
+    excerpt: row.excerpt ?? undefined,
+    content: row.content,
     category: row.category ?? undefined,
-    description: row.description ?? undefined,
-    shortDescription: row.short_description ?? undefined,
-    icon: row.icon ?? undefined,
-    orderIndex: row.order_index ?? undefined,
-    content: row.content ?? undefined,
-    features: row.features ?? undefined,
-    requirements: row.requirements ?? undefined,
-    includes: row.includes ?? undefined,
-    published: row.published ?? false,
-    featured: row.featured ?? false,
-    createdAt: row.created_at ?? new Date(0).toISOString(),
-    processingTime: row.processing_time ?? undefined,
-    pricing: row.pricing ?? undefined,
-    image: row.image ?? undefined,
+    tags: row.tags ?? undefined,
+    readTime: row.readTime ?? undefined,
+    seoTitle: row.seoTitle ?? undefined,
+    seoDescription: row.seoDescription ?? undefined,
+    seoKeywords: row.seoKeywords ?? undefined,
+    featuredImage: row.featuredImage ?? undefined,
     thumbnail: row.thumbnail ?? undefined,
-    seoTitle: row.seo_title ?? undefined,
-    seoDescription: row.seo_description ?? undefined,
-    seoKeywords: row.seo_keywords ?? undefined,
-    pricingPlans:
-      (row.pricing_plans as unknown as Service["pricingPlans"]) ?? undefined,
-    processSteps:
-      (row.process_steps as unknown as Service["processSteps"]) ?? undefined,
-    successStory:
-      (row.success_story as unknown as Service["successStory"]) ?? undefined,
-    updatedAt: row.updated_at ?? undefined,
+    published: row.published ?? false,
+    publishedAt: row.publishedAt ?? undefined,
+    featured: row.featured ?? false,
+    authorId: row.authorId ?? undefined,
+    authorName: row.authorName ?? undefined,
+    viewsCount: row.viewsCount ?? 0,
+    createdAt: row.createdAt ?? row.publishedAt ?? new Date(0).toISOString(),
+    updatedAt: row.updatedAt ?? undefined,
   };
 }
 
-export async function getPublishedServices(): Promise<Service[]> {
+export async function getAllPublishedBlogSlugs() {
   const supabase = createSupabaseBrowserClient();
   const { data, error } = await supabase
-    .from("services")
-    .select("*")
-    .eq("published", true)
-    .order("order_index", { ascending: true });
-
-  if (error) {
-    console.error("Error fetching services:", error);
-    return [];
-  }
-
-  return (data || []).map(normalizeService);
-}
-
-export async function getFeaturedServices(): Promise<Service[]> {
-  const supabase = createSupabaseBrowserClient();
-  const { data, error } = await supabase
-    .from("services")
-    .select("*")
-    .eq("published", true)
-    .eq("featured", true)
-    .order("order_index", { ascending: true })
-    .limit(4);
-
-  if (error) {
-    console.error("Error fetching featured services:", error);
-    return [];
-  }
-
-  return (data || []).map(normalizeService);
-}
-
-export async function getServiceBySlug(slug: string): Promise<Service | null> {
-  const supabase = createSupabaseBrowserClient();
-  const { data, error } = await supabase
-    .from("services")
-    .select("*")
-    .eq("slug", slug)
-    .single();
-
-  if (error || !data) {
-    return null;
-  }
-
-  return normalizeService(data);
-}
-
-export async function getAllPublishedServiceSlugs(): Promise<
-  { slug: string }[]
-> {
-  const supabase = createSupabaseBrowserClient();
-  const { data, error } = await supabase
-    .from("services")
+    .from("blog_posts")
     .select("slug")
     .eq("published", true);
 
   if (error) {
-    console.error("Error fetching service slugs:", error);
+    throw new Error(error.message);
+  }
+
+  return data;
+}
+
+export async function getAllPublishedBlogPosts(): Promise<BlogPost[]> {
+  const supabase = createSupabaseBrowserClient();
+  const { data, error } = await supabase
+    .from("blog_posts")
+    .select("*")
+    .eq("published", true)
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return data.map(normalizeBlogPost);
+}
+
+export async function getBlogPostBySlug(
+  slug: string,
+): Promise<BlogPost | null> {
+  const supabase = createSupabaseBrowserClient();
+  const { data, error } = await supabase
+    .from("blog_posts")
+    .select("*")
+    .eq("slug", slug)
+    .single();
+
+  if (error) {
+    return null;
+  }
+
+  return normalizeBlogPost(data);
+}
+
+export async function getBlogPostsByCategory(
+  category: string,
+  limit: number = 3,
+): Promise<BlogPost[]> {
+  const supabase = createSupabaseBrowserClient();
+  const { data, error } = await supabase
+    .from("blog_posts")
+    .select("*")
+    .eq("category", category)
+    .limit(limit);
+
+  if (error) {
     return [];
   }
 
-  return data || [];
+  return data.map(normalizeBlogPost);
 }
 ````
 
-## File: apps/admin/app/admin/contacts/[id]/edit/page.tsx
+## File: apps/admin/app/admin/blogs/BlogForm.tsx
 ````typescript
-import type { Contact } from "@bilacert/shared/types";
-import { createSupabaseServerClient } from "@bilacert/supabase/server";
-import { ArrowLeft } from "lucide-react";
+"use client";
+
+import type { BlogPost } from "@bilacert/shared/types";
+import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
+import { Loader2 } from "lucide-react";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { useRouter } from "next/navigation";
+import { useEffect, useTransition } from "react";
+import { useForm } from "react-hook-form";
+import PexelsImagePicker from "@/components/PexelsImagePicker";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -25963,83 +24685,463 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import ContactForm from "../../ContactForm";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import ImageUpload from "@/components/ui/ImageUpload";
+import { Input } from "@/components/ui/input";
+import { Switch } from "@/components/ui/switch";
+import { Textarea } from "@/components/ui/textarea";
+import { useToast } from "@/hooks/use-toast";
+import { upsertBlog } from "./actions";
+import BlogEditor from "./BlogEditor";
+import { type BlogFormValues, blogSchema } from "./schema";
 
-export const metadata = {
-  title: "Edit Contact | Bilacert Admin Pro",
-  description: "Edit an existing contact.",
-};
-
-async function getContact(id: string): Promise<Contact | null> {
-  const supabase = await createSupabaseServerClient();
-  const { data, error } = await supabase
-    .from("contacts")
-    .select("*")
-    .eq("id", id)
-    .single();
-
-  if (error || !data) {
-    return null;
-  }
-
-  return {
-    id: data.id,
-    name: data.name,
-    email: data.email,
-    phone: data.phone,
-    message: data.message,
-    submitted_at: data.submitted_at,
-  } as Contact;
+interface BlogFormProps {
+  blog?: BlogPost | null;
 }
 
-export default async function EditContactPage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
-  const { id } = await params;
-  const contact = await getContact(id);
+const slugify = (str: string) =>
+  str
+    .toLowerCase()
+    .trim()
+    .replace(/[^\w\s-]/g, "")
+    .replace(/[\s_-]+/g, "-")
+    .replace(/^-+|-+$/g, "");
 
-  if (!contact) {
-    notFound();
-  }
+export default function BlogForm({ blog }: BlogFormProps) {
+  const { toast } = useToast();
+  const router = useRouter();
+  const [isPending, startTransition] = useTransition();
+
+  const form = useForm<BlogFormValues>({
+    resolver: standardSchemaResolver(blogSchema),
+    defaultValues: {
+      title: "",
+      slug: "",
+      authorName: "Bilacert Team",
+      readTime: "5 min read",
+      category: "",
+      tags: "",
+      excerpt: "",
+      content: "",
+      published: false,
+      featuredImage: "",
+      thumbnail: "",
+      featured: false,
+      seoTitle: "",
+      seoDescription: "",
+      seoKeywords: "",
+    },
+  });
+
+  const { handleSubmit, reset, watch, setValue } = form;
+
+  const title = watch("title");
+  const isEditing = !!blog;
+
+  useEffect(() => {
+    if (!isEditing && title) {
+      setValue("slug", slugify(title), { shouldValidate: true });
+    }
+  }, [title, setValue, isEditing]);
+
+  useEffect(() => {
+    if (blog) {
+      reset({
+        ...blog,
+        authorName: blog.authorName || "Bilacert Team",
+        readTime: blog.readTime || "5 min read",
+        tags: blog.tags || "",
+        excerpt: blog.excerpt || "",
+        content: blog.content || "",
+        featuredImage: blog.featuredImage || "",
+        thumbnail: blog.thumbnail || "",
+        seoTitle: blog.seoTitle || "",
+        seoDescription: blog.seoDescription || "",
+        seoKeywords: blog.seoKeywords || "",
+      });
+    }
+  }, [blog, reset]);
+
+  const onSubmit = (values: BlogFormValues) => {
+    startTransition(async () => {
+      const result = await upsertBlog(values);
+      if (result.error) {
+        toast({
+          variant: "destructive",
+          title: "Error saving blog post",
+          description: result.error,
+        });
+      } else {
+        toast({
+          title: "Blog post saved",
+        });
+        router.push("/admin/blogs");
+      }
+    });
+  };
 
   return (
-    <div className="space-y-6">
-      <Button variant="outline" asChild>
-        <Link href="/admin/contacts">
-          <ArrowLeft className="mr-2 h-4 w-4" />
-          Back to Contacts
-        </Link>
-      </Button>
-      <Card>
-        <CardHeader>
-          <CardTitle>Edit Contact</CardTitle>
-          <CardDescription>
-            Update the details for "{contact.name}".
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <ContactForm contact={contact} />
-        </CardContent>
-      </Card>
-    </div>
+    <Form {...form}>
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
+          <div className="space-y-6 lg:col-span-2">
+            <Card>
+              <CardHeader>
+                <CardTitle>Core Details</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <FormField
+                  control={form.control}
+                  name="title"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Title</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="e.g., My Awesome Blog Post"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="slug"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Slug</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="e.g., my-awesome-blog-post"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="excerpt"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Excerpt</FormLabel>
+                      <FormControl>
+                        <Textarea
+                          placeholder="A short summary of the post."
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Media</CardTitle>
+                <CardDescription>
+                  Upload local images or pick from Pexels
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <FormField
+                    control={form.control}
+                    name="featuredImage"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Featured Image</FormLabel>
+                        <FormControl>
+                          <ImageUpload
+                            bucket="blogs"
+                            initialUrl={field.value}
+                            onUpload={(url) => field.onChange(url)}
+                            onRemove={() => field.onChange("")}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="thumbnail"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Thumbnail Image</FormLabel>
+                        <FormControl>
+                          <ImageUpload
+                            bucket="blogs"
+                            initialUrl={field.value}
+                            onUpload={(url) => field.onChange(url)}
+                            onRemove={() => field.onChange("")}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
+                <div className="border-t pt-6">
+                  <h3 className="text-sm font-medium mb-4">
+                    Pexels Image Picker
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <p className="text-xs text-muted-foreground">
+                        Quick pick for Featured Image
+                      </p>
+                      <PexelsImagePicker
+                        onSelect={(url) => setValue("featuredImage", url)}
+                        currentImageUrl={watch("featuredImage")}
+                        suggestions={[
+                          title,
+                          watch("category"),
+                          ...(watch("tags") || "")
+                            .split(",")
+                            .map((t) => t.trim()),
+                        ].filter((t): t is string => !!t)}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <p className="text-xs text-muted-foreground">
+                        Quick pick for Thumbnail
+                      </p>
+                      <PexelsImagePicker
+                        onSelect={(url) => setValue("thumbnail", url)}
+                        currentImageUrl={watch("thumbnail")}
+                        suggestions={[
+                          title,
+                          watch("category"),
+                          ...(watch("tags") || "")
+                            .split(",")
+                            .map((t) => t.trim()),
+                        ].filter((t): t is string => !!t)}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <FormField
+              control={form.control}
+              name="content"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Content</FormLabel>
+                  <FormControl>
+                    <BlogEditor
+                      featuredImage={watch("featuredImage")}
+                      onImageSelect={(url) => setValue("featuredImage", url)}
+                      value={field.value ?? ""}
+                      onChange={field.onChange}
+                      title={title}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <Card>
+              <CardHeader>
+                <CardTitle>SEO</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <FormField
+                  control={form.control}
+                  name="seoTitle"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>SEO Title</FormLabel>
+                      <FormControl>
+                        <Input {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="seoDescription"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>SEO Description</FormLabel>
+                      <FormControl>
+                        <Textarea {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="seoKeywords"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>SEO Keywords (comma separated)</FormLabel>
+                      <FormControl>
+                        <Input {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </CardContent>
+            </Card>
+          </div>
+          <div className="space-y-6 lg:col-span-1">
+            <Card>
+              <CardHeader>
+                <CardTitle>Publishing</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <FormField
+                  control={form.control}
+                  name="published"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                      <div className="space-y-0.5">
+                        <FormLabel>Published</FormLabel>
+                        <FormDescription>
+                          Make this post visible.
+                        </FormDescription>
+                      </div>
+                      <FormControl>
+                        <Switch
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="featured"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                      <div className="space-y-0.5">
+                        <FormLabel>Featured Post</FormLabel>
+                        <FormDescription>
+                          Display this post prominently.
+                        </FormDescription>
+                      </div>
+                      <FormControl>
+                        <Switch
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader>
+                <CardTitle>Details</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <FormField
+                  control={form.control}
+                  name="authorName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Author</FormLabel>
+                      <FormControl>
+                        <Input {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="readTime"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Read Time</FormLabel>
+                      <FormControl>
+                        <Input placeholder="e.g., 5 min read" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="category"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Category</FormLabel>
+                      <FormControl>
+                        <Input placeholder="e.g., Tech" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="tags"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Tags (comma separated)</FormLabel>
+                      <FormControl>
+                        <Input placeholder="e.g., icasa, nrcs" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+        <div className="flex justify-end gap-4">
+          <Button type="button" variant="outline" asChild>
+            <Link href="/admin/blogs">Cancel</Link>
+          </Button>
+          <Button type="submit" disabled={isPending}>
+            {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            {isEditing ? "Save Changes" : "Create Post"}
+          </Button>
+        </div>
+      </form>
+    </Form>
   );
 }
 ````
 
-## File: apps/admin/app/admin/contacts/[id]/page.tsx
+## File: apps/admin/app/admin/form_submissions/[id]/page.tsx
 ````typescript
-import type { Contact } from "@bilacert/shared/types";
-import { createSupabaseServerClient } from "@bilacert/supabase/server";
+import type { Submission } from "@bilacert/shared/types";
+import { createSupabaseBrowserClient } from "@bilacert/supabase/client";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import ContactDetails from "../ContactDetails";
+import SubmissionDetails from "../SubmissionDetails";
 
-async function getContact(id: string): Promise<Contact | null> {
-  const supabase = await createSupabaseServerClient();
+const supabase = createSupabaseBrowserClient();
+
+async function getSubmission(id: string): Promise<Submission | null> {
   const { data, error } = await supabase
-    .from("contacts")
+    .from("form_submissions")
     .select("*")
     .eq("id", id)
     .single();
@@ -26050,43 +25152,515 @@ async function getContact(id: string): Promise<Contact | null> {
 
   return {
     id: data.id,
-    name: data.name,
+    formType: data.formType,
+    status: data.status,
+    serviceId: data.serviceId,
+    serviceName: data.serviceName,
+    fullName: data.fullName,
     email: data.email,
     phone: data.phone,
-    message: data.message,
-    submitted_at: data.submitted_at,
-  } as Contact;
+    company: data.company,
+    industry: data.industry,
+    details: data.details,
+    internalNotes: data.internalNotes,
+    assignedTo: data.assignedTo,
+    createdAt: data.createdAt,
+    updatedAt: data.updatedAt,
+    completedAt: data.completedAt,
+  } as Submission;
 }
 
 export async function generateMetadata({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }): Promise<Metadata> {
-  const contact = await getContact(params.id);
-  if (!contact) {
+  const { id } = await params;
+  const submission = await getSubmission(id);
+  if (!submission) {
     return {
-      title: "Contact Not Found",
+      title: "Submission Not Found",
     };
   }
   return {
-    title: `${contact.name} | Bilacert Admin Pro`,
+    title: `Submission from ${submission.fullName} | Bilacert Admin Pro`,
   };
 }
 
-export default async function ContactDetailsPage({
+export default async function SubmissionDetailsPage({
   params,
 }: {
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const contact = await getContact(id);
+  const submission = await getSubmission(id);
 
-  if (!contact) {
+  if (!submission) {
     notFound();
   }
 
-  return <ContactDetails contact={contact} />;
+  return <SubmissionDetails submission={submission} />;
+}
+````
+
+## File: apps/admin/app/admin/form_submissions/actions.ts
+````typescript
+"use server";
+
+import type { Submission } from "@bilacert/shared/types";
+import { updateFormSubmission } from "@bilacert/supabase/Mutations/formSubmissions";
+import { revalidatePath } from "next/cache";
+import { triggerRevalidation } from "@/lib/revalidation";
+import { submissionSchema } from "./schema";
+
+export async function upsertSubmission(values: unknown, submissionId: string) {
+  const parsedValues = submissionSchema.safeParse(values);
+
+  if (!parsedValues.success) {
+    return { error: parsedValues.error.message };
+  }
+
+  const submissionData = {
+    fullName: parsedValues.data.fullName,
+    email: parsedValues.data.email,
+    phone: parsedValues.data.phone,
+    company: parsedValues.data.company,
+    industry: parsedValues.data.industry,
+    serviceName: parsedValues.data.serviceName,
+    status: parsedValues.data.status,
+    details: parsedValues.data.details
+      ? JSON.parse(parsedValues.data.details)
+      : null,
+    internalNotes: parsedValues.data.notes,
+    assignedTo: parsedValues.data.contactOwner || null,
+    updatedAt: new Date().toISOString(),
+  };
+
+  let data: Submission;
+  try {
+    const result = await updateFormSubmission(submissionId, submissionData);
+    data = result.data as Submission;
+    await triggerRevalidation(result.revalidate);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Unknown error";
+    return { error: `Database error: ${message}` };
+  }
+
+  revalidatePath("/admin/form_submissions");
+  revalidatePath(`/admin/form_submissions/${data.id}`);
+
+  return {
+    data,
+    message: `Submission updated successfully!`,
+  };
+}
+
+export async function updateSubmissionStatus(
+  submissionId: string,
+  status: Submission["status"],
+) {
+  let data: Submission;
+  try {
+    const result = await updateFormSubmission(submissionId, {
+      status,
+      updatedAt: new Date().toISOString(),
+    });
+    data = result.data as Submission;
+    await triggerRevalidation(result.revalidate);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Unknown error";
+    return { error: `Database error: ${message}` };
+  }
+
+  revalidatePath("/admin/form_submissions");
+  revalidatePath(`/admin/form_submissions/${data.id}`);
+
+  return {
+    data,
+    message: "Status updated successfully",
+  };
+}
+````
+
+## File: apps/admin/app/admin/form_submissions/SubmissionForm.tsx
+````typescript
+"use client";
+
+import type { Submission } from "@bilacert/shared/types";
+import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
+import { Loader2 } from "lucide-react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import type * as z from "zod";
+import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+import { useToast } from "@/hooks/use-toast";
+import { upsertSubmission } from "./actions";
+import { submissionSchema } from "./schema";
+
+type SubmissionFormValues = z.infer<typeof submissionSchema>;
+
+interface SubmissionFormProps {
+  submission: Submission;
+}
+
+export default function SubmissionForm({ submission }: SubmissionFormProps) {
+  const { toast } = useToast();
+  const router = useRouter();
+  const form = useForm<SubmissionFormValues>({
+    resolver: standardSchemaResolver(submissionSchema),
+    defaultValues: {
+      fullName: "",
+      email: "",
+      phone: "",
+      company: "",
+      industry: "",
+      serviceName: "",
+      status: "pending",
+      details: "",
+      notes: "",
+      contactOwner: "",
+    },
+  });
+
+  const {
+    handleSubmit,
+    reset,
+    formState: { isSubmitting },
+  } = form;
+
+  useEffect(() => {
+    if (submission) {
+      reset({
+        fullName: submission.fullName,
+        email: submission.email,
+        phone: submission.phone || "",
+        company: submission.company || "",
+        industry: submission.industry || "",
+        serviceName: submission.serviceName || "",
+        status: submission.status,
+        details: submission.details
+          ? JSON.stringify(submission.details, null, 2)
+          : "",
+        notes: submission.internalNotes || "",
+        contactOwner: submission.assignedTo || "",
+      });
+    }
+  }, [submission, reset]);
+
+  const onSubmit = async (values: SubmissionFormValues) => {
+    try {
+      if (!submission.id) {
+        throw new Error("Submission ID is missing");
+      }
+      const result = await upsertSubmission(values, submission.id);
+
+      if (result.error) {
+        throw new Error(result.error);
+      }
+
+      toast({
+        title: result.message,
+      });
+      router.push(`/admin/form_submissions/${submission.id}`);
+      router.refresh();
+    } catch (error: any) {
+      toast({
+        variant: "destructive",
+        title: "Error saving submission",
+        description: error.message,
+      });
+    }
+  };
+
+  return (
+    <Form {...form}>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <div className="grid md:grid-cols-2 gap-6">
+          <div className="space-y-6">
+            <FormField
+              control={form.control}
+              name="fullName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Full Name</FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email</FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="phone"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Phone</FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="company"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Company</FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="industry"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Industry</FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+          <div className="space-y-6">
+            <FormField
+              control={form.control}
+              name="serviceName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Service Name</FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="status"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Status</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger className="capitalize">
+                        <SelectValue placeholder="Select a status" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {[
+                        "pending",
+                        "in-progress",
+                        "completed",
+                        "rejected",
+                        "archived",
+                      ].map((status) => (
+                        <SelectItem
+                          key={status}
+                          value={status}
+                          className="capitalize"
+                        >
+                          {status}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="contactOwner"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Assigned To (User ID)</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Enter user UUID"
+                      {...field}
+                      value={field.value ?? ""}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="details"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Details (JSON format)</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      placeholder='e.g., { "inquiry": "..." }'
+                      rows={6}
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="notes"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Internal Notes</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      placeholder="Add internal notes here..."
+                      rows={4}
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+        </div>
+        <div className="mt-8 flex justify-end gap-4">
+          <Button type="button" variant="outline" asChild>
+            <Link
+              href={
+                submission.id
+                  ? `/admin/form_submissions/${submission.id}`
+                  : "/admin/form_submissions"
+              }
+            >
+              Cancel
+            </Link>
+          </Button>
+          <Button type="submit" disabled={isSubmitting}>
+            {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            Save Changes
+          </Button>
+        </div>
+      </form>
+    </Form>
+  );
+}
+````
+
+## File: apps/admin/app/admin/services/actions.ts
+````typescript
+"use server";
+
+import {
+  deleteService as deleteServiceMutation,
+  upsertService as upsertServiceMutation,
+} from "@bilacert/supabase/Mutations/services";
+import { revalidatePath } from "next/cache";
+import { triggerRevalidation } from "@/lib/revalidation";
+import { serviceSchema } from "./schema";
+
+export async function upsertService(values: unknown) {
+  const parsedValues = serviceSchema.safeParse(values);
+
+  if (!parsedValues.success) {
+    return { error: parsedValues.error.message };
+  }
+
+  const {
+    id,
+    shortDescription,
+    orderIndex,
+    processingTime,
+    seoTitle,
+    seoDescription,
+    seoKeywords,
+    pricingPlans,
+    processSteps,
+    successStory,
+    ...rest
+  } = parsedValues.data;
+
+  const dataToUpsert = {
+    ...rest,
+    id,
+    shortDescription,
+    orderIndex,
+    processingTime,
+    seoTitle,
+    seoDescription,
+    seoKeywords,
+    pricingPlans,
+    processSteps,
+    successStory,
+  };
+
+  try {
+    const result = await upsertServiceMutation(dataToUpsert as any);
+    await triggerRevalidation(result.revalidate);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Unknown error";
+    return { error: `Database error: ${message}` };
+  }
+
+  revalidatePath("/admin/services");
+
+  return { error: null };
+}
+
+export async function deleteService(serviceId: string) {
+  try {
+    const result = await deleteServiceMutation(serviceId);
+    await triggerRevalidation(result.revalidate);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Unknown error";
+    return { error: `Database error: ${message}` };
+  }
+
+  revalidatePath("/admin/services");
+
+  return { error: null };
 }
 ````
 
@@ -26974,6 +26548,145 @@ export default function Page() {
 }
 ````
 
+## File: apps/client/app/services/[serviceId]/page.tsx
+````typescript
+import type {
+  PricingPlan,
+  ProcessStep,
+  SuccessStory as TSuccessStory,
+} from "@bilacert/shared/types";
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+import { CTASection } from "@/components/service/CTASection";
+import { PricingPlans } from "@/components/service/PricingPlans";
+import { ProcessSteps } from "@/components/service/ProcessSteps";
+import { ServiceHero } from "@/components/service/ServiceHero";
+import { SuccessStory } from "@/components/service/SuccessStory";
+import { WhatIsSection } from "@/components/service/WhatIsSection";
+import { WhyChooseUs } from "@/components/service/WhyChooseUs";
+import {
+  getCachedServiceBySlug,
+  getCachedServiceSlugs,
+} from "../../_lib/cached-public-data";
+
+interface Props {
+  params: Promise<{ serviceId: string }>;
+}
+
+export async function generateStaticParams() {
+  const slugs = await getCachedServiceSlugs();
+  return slugs.map((item) => ({ serviceId: item.slug }));
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { serviceId } = await params;
+  const service = await getCachedServiceBySlug(serviceId);
+
+  if (!service) {
+    return {
+      title: "Service Not Found - Bilacert",
+    };
+  }
+
+  return {
+    title: service.seoTitle || `${service.title} - Bilacert`,
+    description: service.seoDescription || service.description,
+    keywords: service.seoKeywords || [
+      service.title.toLowerCase(),
+      ...(service.category?.split(", ").map((c: string) => c.toLowerCase()) ||
+        []),
+      "licensing",
+      "certification",
+      "ICASA",
+      "South Africa",
+    ],
+    openGraph: {
+      title: service.seoTitle || service.title,
+      description: service.seoDescription || service.shortDescription,
+      url: `https://bilacert.co.za/services/${serviceId}`,
+      type: "website",
+      images: service.image ? [{ url: service.image }] : [],
+    },
+    alternates: {
+      canonical: `https://bilacert.co.za/services/${serviceId}`,
+    },
+  };
+}
+
+export default async function ServiceDetailPage({ params }: Props) {
+  const { serviceId } = await params;
+  const service = await getCachedServiceBySlug(serviceId);
+
+  if (!service) {
+    notFound();
+  }
+
+  const formPath = `/services/${serviceId}/form`;
+
+  return (
+    <div className="min-h-screen">
+      <ServiceHero
+        title={service.title}
+        subtitle={service.shortDescription || ""}
+        iconName={service.icon || ""}
+        imageSrc={service.image || ""}
+        processing_time={service.processingTime || ""}
+        formPath={formPath}
+        phone="075 430 4433"
+      />
+
+      {service.content && (
+        <WhatIsSection
+          title={`What is this ${service.title}?`}
+          firstParagraph={service.content}
+          secondParagraph=""
+          checkpoints={[]}
+        />
+      )}
+
+      <WhyChooseUs />
+
+      {service.processSteps && (
+        <ProcessSteps
+          title="Our Process"
+          subtitle="A streamlined approach to get you certified."
+          steps={(service.processSteps as unknown as ProcessStep[]).map(
+            (step) => ({ ...step, step: step.step.toString() }),
+          )}
+        />
+      )}
+
+      {service.pricingPlans && (
+        <PricingPlans
+          title="Pricing Plans"
+          subtitle="Choose the best plan for your needs."
+          plans={(service.pricingPlans as unknown as PricingPlan[]).map(
+            (plan) => ({
+              ...plan,
+              title: plan.name,
+              popular: false,
+              description: plan.description || "",
+            }),
+          )}
+          formPath={formPath}
+        />
+      )}
+
+      {service.successStory && (
+        <SuccessStory {...(service.successStory as TSuccessStory)} />
+      )}
+
+      <CTASection
+        heading="Ready to get started?"
+        description="Contact us today for a free consultation."
+        primaryCTA={{ label: "Contact Us", href: "/contact" }}
+        secondaryCTA={{ label: "Learn More", href: "/about" }}
+      />
+    </div>
+  );
+}
+````
+
 ## File: package.json
 ````json
 {
@@ -26992,6 +26705,145 @@ export default function Page() {
   "devDependencies": {
     "turbo": "latest"
   }
+}
+````
+
+## File: packages/supabase/package.json
+````json
+{
+  "name": "@bilacert/supabase",
+  "version": "0.0.0",
+  "private": true,
+  "exports": {
+    "./client": "./src/client.ts",
+    "./server": "./src/server.ts",
+    "./admin": "./src/admin.ts",
+    "./cache": "./src/cache.ts",
+    "./middleware": "./src/middleware.ts",
+    "./supabaseType": "./src/supabaseType.ts",
+    "./Queries/*": "./src/Queries/*.ts",
+    "./Mutations/*": "./src/Mutations/*.ts",
+    "./hooks/*": "./src/hooks/*.ts"
+  },
+  "dependencies": {
+    "@bilacert/shared": "workspace:*",
+    "@supabase/ssr": "catalog:",
+    "@supabase/supabase-js": "catalog:",
+    "typescript": "catalog:"
+  },
+  "scripts": {
+    "supabase:types": "supabase gen types typescript --local > src/supabaseType.ts"
+  }
+}
+````
+
+## File: packages/supabase/src/Queries/services.ts
+````typescript
+import type { Service } from "@bilacert/shared/types";
+import { createSupabaseBrowserClient } from "../client";
+import type { Database } from "../supabaseType";
+
+type ServiceRow = Database["public"]["Tables"]["services"]["Row"];
+
+export function normalizeService(row: ServiceRow): Service {
+  return {
+    id: row.id,
+    title: row.title,
+    slug: row.slug,
+    href: row.href,
+    category: row.category ?? undefined,
+    description: row.description ?? undefined,
+    shortDescription: row.short_description ?? undefined,
+    icon: row.icon ?? undefined,
+    orderIndex: row.order_index ?? undefined,
+    content: row.content ?? undefined,
+    features: row.features ?? undefined,
+    requirements: row.requirements ?? undefined,
+    includes: row.includes ?? undefined,
+    published: row.published ?? false,
+    featured: row.featured ?? false,
+    createdAt: row.created_at ?? new Date(0).toISOString(),
+    processingTime: row.processing_time ?? undefined,
+    pricing: row.pricing ?? undefined,
+    image: row.image ?? undefined,
+    thumbnail: row.thumbnail ?? undefined,
+    seoTitle: row.seo_title ?? undefined,
+    seoDescription: row.seo_description ?? undefined,
+    seoKeywords: row.seo_keywords ?? undefined,
+    pricingPlans:
+      (row.pricing_plans as unknown as Service["pricingPlans"]) ?? undefined,
+    processSteps:
+      (row.process_steps as unknown as Service["processSteps"]) ?? undefined,
+    successStory:
+      (row.success_story as unknown as Service["successStory"]) ?? undefined,
+    updatedAt: row.updated_at ?? undefined,
+  };
+}
+
+export async function getPublishedServices(): Promise<Service[]> {
+  const supabase = createSupabaseBrowserClient();
+  const { data, error } = await supabase
+    .from("services")
+    .select("*")
+    .eq("published", true)
+    .order("order_index", { ascending: true });
+
+  if (error) {
+    console.error("Error fetching services:", error);
+    return [];
+  }
+
+  return (data || []).map(normalizeService);
+}
+
+export async function getFeaturedServices(): Promise<Service[]> {
+  const supabase = createSupabaseBrowserClient();
+  const { data, error } = await supabase
+    .from("services")
+    .select("*")
+    .eq("published", true)
+    .eq("featured", true)
+    .order("order_index", { ascending: true })
+    .limit(4);
+
+  if (error) {
+    console.error("Error fetching featured services:", error);
+    return [];
+  }
+
+  return (data || []).map(normalizeService);
+}
+
+export async function getServiceBySlug(slug: string): Promise<Service | null> {
+  const supabase = createSupabaseBrowserClient();
+  const { data, error } = await supabase
+    .from("services")
+    .select("*")
+    .eq("slug", slug)
+    .single();
+
+  if (error || !data) {
+    return null;
+  }
+
+  return normalizeService(data);
+}
+
+export async function getAllPublishedServiceSlugs(): Promise<
+  { slug: string }[]
+> {
+  const supabase = createSupabaseBrowserClient();
+  const { data, error } = await supabase
+    .from("services")
+    .select("slug")
+    .eq("published", true);
+
+  if (error) {
+    console.error("Error fetching service slugs:", error);
+    return [];
+  }
+
+  return data || [];
 }
 ````
 
@@ -27059,6 +26911,267 @@ catalog:
   "@radix-ui/react-alert-dialog": "^1.1.6"
   "biome": "2.2.0"
   "@biomejs/biome": "2.2.0"
+````
+
+## File: apps/admin/app/admin/contacts/[id]/edit/page.tsx
+````typescript
+import type { Contact } from "@bilacert/shared/types";
+import { createSupabaseServerClient } from "@bilacert/supabase/server";
+import { ArrowLeft } from "lucide-react";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import ContactForm from "../../ContactForm";
+
+export const metadata = {
+  title: "Edit Contact | Bilacert Admin Pro",
+  description: "Edit an existing contact.",
+};
+
+async function getContact(id: string): Promise<Contact | null> {
+  const supabase = await createSupabaseServerClient();
+  const { data, error } = await supabase
+    .from("contacts")
+    .select("*")
+    .eq("id", id)
+    .single();
+
+  if (error || !data) {
+    return null;
+  }
+
+  return {
+    id: data.id,
+    name: data.name,
+    email: data.email,
+    phone: data.phone,
+    message: data.message,
+    submittedAt: data.submittedAt,
+  } as Contact;
+}
+
+export default async function EditContactPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
+  const contact = await getContact(id);
+
+  if (!contact) {
+    notFound();
+  }
+
+  return (
+    <div className="space-y-6">
+      <Button variant="outline" asChild>
+        <Link href="/admin/contacts">
+          <ArrowLeft className="mr-2 h-4 w-4" />
+          Back to Contacts
+        </Link>
+      </Button>
+      <Card>
+        <CardHeader>
+          <CardTitle>Edit Contact</CardTitle>
+          <CardDescription>
+            Update the details for "{contact.name}".
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <ContactForm contact={contact} />
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+````
+
+## File: apps/admin/app/admin/contacts/[id]/page.tsx
+````typescript
+import type { Contact } from "@bilacert/shared/types";
+import { createSupabaseServerClient } from "@bilacert/supabase/server";
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+import ContactDetails from "../ContactDetails";
+
+async function getContact(id: string): Promise<Contact | null> {
+  const supabase = await createSupabaseServerClient();
+  const { data, error } = await supabase
+    .from("contacts")
+    .select("*")
+    .eq("id", id)
+    .single();
+
+  if (error || !data) {
+    return null;
+  }
+
+  return {
+    id: data.id,
+    name: data.name,
+    email: data.email,
+    phone: data.phone,
+    message: data.message,
+    submittedAt: data.submittedAt,
+  } as Contact;
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: { id: string };
+}): Promise<Metadata> {
+  const contact = await getContact(params.id);
+  if (!contact) {
+    return {
+      title: "Contact Not Found",
+    };
+  }
+  return {
+    title: `${contact.name} | Bilacert Admin Pro`,
+  };
+}
+
+export default async function ContactDetailsPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
+  const contact = await getContact(id);
+
+  if (!contact) {
+    notFound();
+  }
+
+  return <ContactDetails contact={contact} />;
+}
+````
+
+## File: apps/client/components/Testimonials.tsx
+````typescript
+"use client";
+
+import type { Testimonial } from "@bilacert/shared/types";
+import { createSupabaseBrowserClient } from "@bilacert/supabase/client";
+import { useEffect, useState } from "react";
+
+type TestimonialEmbed = Pick<Testimonial, "id" | "postUrl">;
+
+declare global {
+  interface Window {
+    FB?: {
+      XFBML: {
+        parse: () => void;
+      };
+      init: (options: { xfbml: boolean; version: string }) => void;
+    };
+    fbAsyncInit?: () => void;
+  }
+}
+
+export default function Testimonials() {
+  const [testimonials, setTestimonials] = useState<TestimonialEmbed[]>([]);
+  const supabase = createSupabaseBrowserClient();
+
+  useEffect(() => {
+    const fetchTestimonials = async () => {
+      const { data, error } = await supabase
+        .from("testimonials")
+        .select("id, post_url")
+        .order("created_at", { ascending: false });
+
+      if (error) {
+        console.error("Error fetching testimonials:", error);
+        return;
+      }
+
+      if (data) {
+        const normalized = data.map((t: any) => ({
+          id: t.id,
+          postUrl: t.post_url,
+        }));
+        setTestimonials(normalized);
+      }
+    };
+
+    fetchTestimonials();
+  }, [supabase]);
+
+  useEffect(() => {
+    if (testimonials.length > 0) {
+      if (window.FB?.XFBML) {
+        window.FB.XFBML.parse();
+      } else {
+        window.fbAsyncInit = () => {
+          if (window.FB) {
+            window.FB.init({
+              xfbml: true,
+              version: "v18.0",
+            });
+            window.FB.XFBML.parse();
+          }
+        };
+        ((d, s, id) => {
+          var js,
+            fjs = d.getElementsByTagName(s)[0];
+          if (d.getElementById(id)) return;
+          js = d.createElement(s) as HTMLScriptElement;
+          js.id = id;
+          js.src = "https://connect.facebook.net/en_US/sdk.js";
+          if (fjs?.parentNode) {
+            fjs.parentNode.insertBefore(js, fjs);
+          } else {
+            d.head.appendChild(js);
+          }
+        })(document, "script", "facebook-jssdk");
+      }
+    }
+  }, [testimonials]);
+
+  if (testimonials.length === 0) {
+    return null;
+  }
+
+  return (
+    <section className="py-20 bg-primary text-white">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div id="fb-root"></div>
+        <div className="text-center mb-16">
+          <h2 className="text-3xl lg:text-4xl font-bold mb-4">
+            Trusted by South African Businesses
+          </h2>
+          <p className="text-xl text-gray-200 max-w-3xl mx-auto">
+            See what our clients say about our services
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 justify-items-center">
+          {testimonials.map((t) => (
+            <div
+              key={t.id}
+              className="fb-post bg-white rounded-xl overflow-hidden"
+              data-href={t.postUrl}
+              data-width="500"
+              data-show-text="true"
+            >
+              <blockquote cite={t.postUrl} className="fb-xfbml-parse-ignore">
+                <a href={t.postUrl}>Post</a>
+              </blockquote>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
 ````
 
 ## File: apps/admin/app/admin/analysis/AnalysisClient.tsx
@@ -27354,7 +27467,7 @@ export default function AnalysisClient() {
     }
   }, [chartData]);
 
-  const handleKeyVisibilityChange = (key: string) => {
+  const _handleKeyVisibilityChange = (key: string) => {
     setVisibleKeys((prev) =>
       prev.includes(key) ? prev.filter((k) => k !== key) : [...prev, key],
     );
@@ -27373,7 +27486,6 @@ export default function AnalysisClient() {
     detailedSubmissions,
     turnaroundAnalysis,
     combinedActivity,
-    combinedActivityKeys,
     serviceKeys,
     statusKeys,
     totalSubmissions,
@@ -27495,132 +27607,10 @@ export default function AnalysisClient() {
           <CardTitle>Combined Activity</CardTitle>
         </CardHeader>
         <CardContent>
-         <CombinedActivityChart
-  data={combinedActivity}
-  keys={visibleKeys}
-/>
+          <CombinedActivityChart data={combinedActivity} keys={visibleKeys} />
         </CardContent>
       </Card>
     </div>
-  );
-}
-````
-
-## File: apps/client/components/Testimonials.tsx
-````typescript
-"use client";
-
-import type { Testimonial } from "@bilacert/shared/types";
-import { createSupabaseBrowserClient } from "@bilacert/supabase/client";
-import { useEffect, useState } from "react";
-
-type TestimonialEmbed = Pick<Testimonial, "id" | "postUrl">;
-
-declare global {
-  interface Window {
-    FB?: {
-      XFBML: {
-        parse: () => void;
-      };
-      init: (options: { xfbml: boolean; version: string }) => void;
-    };
-    fbAsyncInit?: () => void;
-  }
-}
-
-export default function Testimonials() {
-  const [testimonials, setTestimonials] = useState<TestimonialEmbed[]>([]);
-  const supabase = createSupabaseBrowserClient();
-
-  useEffect(() => {
-    const fetchTestimonials = async () => {
-      const { data, error } = await supabase
-        .from("testimonials")
-        .select("id, post_url")
-        .order("created_at", { ascending: false });
-
-      if (error) {
-        console.error("Error fetching testimonials:", error);
-        return;
-      }
-
-      if (data) {
-        const normalized = data.map((t: any) => ({
-          id: t.id,
-          postUrl: t.post_url,
-        }));
-        setTestimonials(normalized);
-      }
-    };
-
-    fetchTestimonials();
-  }, [supabase]);
-
-  useEffect(() => {
-    if (testimonials.length > 0) {
-      if (window.FB?.XFBML) {
-        window.FB.XFBML.parse();
-      } else {
-        window.fbAsyncInit = () => {
-          if (window.FB) {
-            window.FB.init({
-              xfbml: true,
-              version: "v18.0",
-            });
-            window.FB.XFBML.parse();
-          }
-        };
-        ((d, s, id) => {
-          var js,
-            fjs = d.getElementsByTagName(s)[0];
-          if (d.getElementById(id)) return;
-          js = d.createElement(s) as HTMLScriptElement;
-          js.id = id;
-          js.src = "https://connect.facebook.net/en_US/sdk.js";
-          if (fjs?.parentNode) {
-            fjs.parentNode.insertBefore(js, fjs);
-          } else {
-            d.head.appendChild(js);
-          }
-        })(document, "script", "facebook-jssdk");
-      }
-    }
-  }, [testimonials]);
-
-  if (testimonials.length === 0) {
-    return null;
-  }
-
-  return (
-    <section className="py-20 bg-primary text-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div id="fb-root"></div>
-        <div className="text-center mb-16">
-          <h2 className="text-3xl lg:text-4xl font-bold mb-4">
-            Trusted by South African Businesses
-          </h2>
-          <p className="text-xl text-gray-200 max-w-3xl mx-auto">
-            See what our clients say about our services
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 justify-items-center">
-          {testimonials.map((t) => (
-            <div
-              key={t.id}
-              className="fb-post bg-white rounded-xl overflow-hidden"
-              data-href={t.postUrl}
-              data-width="500"
-              data-show-text="true"
-            >
-              <blockquote cite={t.postUrl} className="fb-xfbml-parse-ignore">
-                <a href={t.postUrl}>Post</a>
-              </blockquote>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
   );
 }
 ````

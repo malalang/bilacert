@@ -9,7 +9,7 @@ type PublicTableName = keyof Database["public"]["Tables"] & string;
 export function useDataFetching<T>(
   tableName: PublicTableName,
   selectQuery: string = "*",
-  orderBy: string = "created_at",
+  orderBy: string = "createdAt",
 ) {
   const [data, setData] = useState<T[]>([]);
   const [loading, setLoading] = useState(true);

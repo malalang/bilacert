@@ -25,9 +25,9 @@ export function useAnalyticsData() {
   const totalSubmissions = useMemo(() => {
     if (!submissions || !services) return [];
     return submissions.map((submission) => {
-      const service = services.find((s) => s.slug === submission.service_name);
+      const service = services.find((s) => s.slug === submission.serviceName);
       const serviceName = service ? service.title : "Unknown Service";
-      const submitterName = submission.full_name || "Anonymous";
+      const submitterName = submission.fullName || "Anonymous";
       return `${submitterName} - ${serviceName}`;
     });
   }, [submissions, services]);
@@ -38,7 +38,7 @@ export function useAnalyticsData() {
       .filter((s) => s.status === "archived")
       .reduce((acc, submission) => {
         const service = services.find(
-          (s) => s.slug === submission.service_name,
+          (s) => s.slug === submission.serviceName,
         );
         return acc + (service?.pricing || 0);
       }, 0);
@@ -50,10 +50,10 @@ export function useAnalyticsData() {
       .filter((s) => s.status === "archived")
       .map((submission) => {
         const service = services.find(
-          (s) => s.slug === submission.service_name,
+          (s) => s.slug === submission.serviceName,
         );
         const serviceName = service ? service.title : "Unknown Service";
-        const submitterName = submission.full_name || "Anonymous";
+        const submitterName = submission.fullName || "Anonymous";
         return `${submitterName} - ${serviceName}`;
       });
   }, [submissions, services]);
@@ -67,8 +67,8 @@ export function useAnalyticsData() {
     if (!submissions) return [];
     const counts = submissions.reduce(
       (acc, submission) => {
-        if (submission.created_at) {
-          const date = new Date(submission.created_at);
+        if (submission.createdAt) {
+          const date = new Date(submission.createdAt);
           if (isValid(date)) {
             const day = format(startOfDay(date), "yyyy-MM-dd");
             acc[day] = (acc[day] || 0) + 1;
@@ -88,7 +88,7 @@ export function useAnalyticsData() {
     if (!submissions) return [];
     const counts = submissions.reduce(
       (acc, submission) => {
-        const serviceName = submission.service_name || "Unknown";
+        const serviceName = submission.serviceName || "Unknown";
         acc[serviceName] = (acc[serviceName] || 0) + 1;
         return acc;
       },

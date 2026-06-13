@@ -33,8 +33,8 @@ async function getTestimonial(id: string): Promise<Testimonial | null> {
 
   return {
     id: data.id,
-    post_url: data.post_url,
-    created_at: data.created_at,
+    postUrl: data.postUrl,
+    createdAt: data.createdAt,
   } as Testimonial;
 }
 
