@@ -27,7 +27,7 @@ export async function submitForm(
         fullName: fullName,
         email: email,
         phone: phone || null,
-        details: { message, ...serviceData } || {},
+        details: { message, ...serviceData },
         status: "pending",
       })
       .select();
