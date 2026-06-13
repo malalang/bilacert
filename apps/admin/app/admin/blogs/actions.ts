@@ -17,8 +17,26 @@ export async function upsertBlog(values: unknown) {
   }
 
   const { id, ...rest } = parsedValues.data;
-
-  const dataToUpsert = id ? { ...rest, id } : { ...rest, id: uuidv4() };
+  
+  // Map form values to DB schema camelCase
+  const dataToUpsert = {
+    id: id || uuidv4(),
+    title: rest.title,
+    slug: rest.slug,
+    authorName: rest.authorName,
+    readTime: rest.readTime,
+    category: rest.category,
+    tags: rest.tags,
+    excerpt: rest.excerpt,
+    content: rest.content,
+    published: rest.published,
+    featuredImage: rest.featuredImage,
+    thumbnail: rest.thumbnail,
+    featured: rest.featured,
+    seoTitle: rest.seoTitle,
+    seoDescription: rest.seoDescription,
+    seoKeywords: rest.seoKeywords,
+  };
 
   try {
     const result = await upsertBlogMutation(dataToUpsert);

@@ -14,19 +14,19 @@ export async function upsertSubmission(values: unknown, submissionId: string) {
   }
 
   const submissionData = {
-    full_name: parsedValues.data.full_name,
+    fullName: parsedValues.data.fullName,
     email: parsedValues.data.email,
     phone: parsedValues.data.phone,
     company: parsedValues.data.company,
     industry: parsedValues.data.industry,
-    service_name: parsedValues.data.service_name,
+    serviceName: parsedValues.data.serviceName,
     status: parsedValues.data.status,
     details: parsedValues.data.details
       ? JSON.parse(parsedValues.data.details)
       : null,
-    internal_notes: parsedValues.data.notes,
-    assigned_to: parsedValues.data.contact_owner || null,
-    updated_at: new Date().toISOString(),
+    internalNotes: parsedValues.data.notes,
+    assignedTo: parsedValues.data.contactOwner || null,
+    updatedAt: new Date().toISOString(),
   };
 
   let data: Submission;
@@ -56,7 +56,7 @@ export async function updateSubmissionStatus(
   try {
     const result = await updateFormSubmission(submissionId, {
       status,
-      updated_at: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
     });
     data = result.data as Submission;
     await triggerRevalidation(result.revalidate);

@@ -88,11 +88,11 @@ export default function SubmissionDetails({
           <CardHeader>
             <div className="flex justify-between items-start">
               <div>
-                <CardTitle>Submission from {submission.full_name}</CardTitle>
+                <CardTitle>Submission from {submission.fullName}</CardTitle>
                 <CardDescription>
-                  {submission.service_name
-                    ? `Service: ${submission.service_name}`
-                    : `Form: ${submission.form_type}`}
+                  {submission.serviceName
+                    ? `Service: ${submission.serviceName}`
+                    : `Form: ${submission.formType}`}
                 </CardDescription>
               </div>
               <Badge
@@ -111,7 +111,7 @@ export default function SubmissionDetails({
                     Client Name
                   </h4>
                   <p className="text-sm text-card-foreground">
-                    {submission.full_name}
+                    {submission.fullName}
                   </p>
                 </div>
                 <div>
@@ -160,13 +160,13 @@ export default function SubmissionDetails({
                 )}
               </div>
               <div className="space-y-6">
-                {submission.assigned_to && (
+                {submission.assignedTo && (
                   <div>
                     <h4 className="text-sm font-medium text-muted-foreground">
                       Assigned To
                     </h4>
                     <p className="text-sm text-mono text-card-foreground">
-                      {submission.assigned_to}
+                      {submission.assignedTo}
                     </p>
                   </div>
                 )}
@@ -175,7 +175,7 @@ export default function SubmissionDetails({
                     Submitted At
                   </h4>
                   <p className="text-sm text-card-foreground">
-                    {format(new Date(submission.created_at), "PPpp")}
+                    {format(new Date(submission.createdAt), "PPpp")}
                   </p>
                 </div>
                 <div>
@@ -183,16 +183,16 @@ export default function SubmissionDetails({
                     Last Updated
                   </h4>
                   <p className="text-sm text-card-foreground">
-                    {format(new Date(submission.updated_at), "PPpp")}
+                    {format(new Date(submission.updatedAt), "PPpp")}
                   </p>
                 </div>
-                {submission.completed_at && (
+                {submission.completedAt && (
                   <div>
                     <h4 className="text-sm font-medium text-muted-foreground">
                       Completed At
                     </h4>
                     <p className="text-sm text-card-foreground">
-                      {format(new Date(submission.completed_at), "PPpp")}
+                      {format(new Date(submission.completedAt), "PPpp")}
                     </p>
                   </div>
                 )}
@@ -206,11 +206,11 @@ export default function SubmissionDetails({
               </div>
             )}
 
-            {submission.internal_notes && (
+            {submission.internalNotes && (
               <div className="mt-6 border-t pt-6">
                 <h3 className="text-lg font-medium mb-4">Internal Notes</h3>
                 <div className="prose prose-sm dark:prose-invert mt-1 text-card-foreground text-sm whitespace-pre-wrap">
-                  {submission.internal_notes}
+                  {submission.internalNotes}
                 </div>
               </div>
             )}

@@ -34,15 +34,15 @@ export const columns = ({
   onDelete,
 }: ColumnsOptions): ColumnDef<Submission>[] => [
   {
-    accessorKey: "form_type",
+    accessorKey: "formType",
     header: "Form Type",
   },
   {
-    accessorKey: "service_name",
+    accessorKey: "serviceName",
     header: "Service Name",
   },
   {
-    accessorKey: "full_name",
+    accessorKey: "fullName",
     header: "Client Name",
   },
   {
@@ -50,7 +50,7 @@ export const columns = ({
     header: "Client Email",
   },
   {
-    accessorKey: "created_at",
+    accessorKey: "createdAt",
     header: ({ column }) => {
       return (
         <Button
@@ -63,7 +63,7 @@ export const columns = ({
       );
     },
     cell: ({ row }) => {
-      const date = row.getValue("created_at") as string;
+      const date = row.getValue("createdAt") as string;
       if (!date) return "N/A";
       const formattedDate = format(new Date(date), "PPpp");
       return <div className="font-medium">{formattedDate}</div>;

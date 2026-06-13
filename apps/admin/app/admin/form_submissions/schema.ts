@@ -1,12 +1,12 @@
 import * as z from "zod";
 
 export const submissionSchema = z.object({
-  full_name: z.string().min(1, "Full name is required"),
+  fullName: z.string().min(1, "Full name is required"),
   email: z.string().email(),
   phone: z.string().optional(),
   company: z.string().optional(),
   industry: z.string().optional(),
-  service_name: z.string().optional(),
+  serviceName: z.string().optional(),
   status: z.enum([
     "pending",
     "in-progress",
@@ -30,5 +30,5 @@ export const submissionSchema = z.object({
       { message: "Details must be a valid JSON object." },
     ),
   notes: z.string().optional(),
-  contact_owner: z.string().optional(),
+  contactOwner: z.string().optional(),
 });

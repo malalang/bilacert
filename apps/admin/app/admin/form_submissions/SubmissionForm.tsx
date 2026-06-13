@@ -42,16 +42,16 @@ export default function SubmissionForm({ submission }: SubmissionFormProps) {
   const form = useForm<SubmissionFormValues>({
     resolver: standardSchemaResolver(submissionSchema),
     defaultValues: {
-      full_name: "",
+      fullName: "",
       email: "",
       phone: "",
       company: "",
       industry: "",
-      service_name: "",
+      serviceName: "",
       status: "pending",
       details: "",
       notes: "",
-      contact_owner: "",
+      contactOwner: "",
     },
   });
 
@@ -64,18 +64,18 @@ export default function SubmissionForm({ submission }: SubmissionFormProps) {
   useEffect(() => {
     if (submission) {
       reset({
-        full_name: submission.full_name,
+        fullName: submission.fullName,
         email: submission.email,
         phone: submission.phone || "",
         company: submission.company || "",
         industry: submission.industry || "",
-        service_name: submission.service_name || "",
+        serviceName: submission.serviceName || "",
         status: submission.status,
         details: submission.details
           ? JSON.stringify(submission.details, null, 2)
           : "",
-        notes: submission.internal_notes || "",
-        contact_owner: submission.assigned_to || "",
+        notes: submission.internalNotes || "",
+        contactOwner: submission.assignedTo || "",
       });
     }
   }, [submission, reset]);
@@ -112,7 +112,7 @@ export default function SubmissionForm({ submission }: SubmissionFormProps) {
           <div className="space-y-6">
             <FormField
               control={form.control}
-              name="full_name"
+              name="fullName"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Full Name</FormLabel>
@@ -179,7 +179,7 @@ export default function SubmissionForm({ submission }: SubmissionFormProps) {
           <div className="space-y-6">
             <FormField
               control={form.control}
-              name="service_name"
+              name="serviceName"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Service Name</FormLabel>
@@ -229,7 +229,7 @@ export default function SubmissionForm({ submission }: SubmissionFormProps) {
             />
             <FormField
               control={form.control}
-              name="contact_owner"
+              name="contactOwner"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Assigned To (User ID)</FormLabel>

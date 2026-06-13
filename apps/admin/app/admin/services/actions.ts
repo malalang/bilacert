@@ -32,20 +32,20 @@ export async function upsertService(values: unknown) {
   const dataToUpsert = {
     ...rest,
     id,
-    short_description: shortDescription,
-    order_index: orderIndex,
-    processing_time: processingTime,
-    seo_title: seoTitle,
-    seo_description: seoDescription,
-    seo_keywords: seoKeywords,
-    pricing_plans: pricingPlans,
-    process_steps: processSteps,
-    success_story: successStory,
+    shortDescription,
+    orderIndex,
+    processingTime,
+    seoTitle,
+    seoDescription,
+    seoKeywords,
+    pricingPlans,
+    processSteps,
+    successStory,
   };
 
   try {
     const result = await upsertServiceMutation(
-      dataToUpsert as Parameters<typeof upsertServiceMutation>[0],
+      dataToUpsert as any,
     );
     await triggerRevalidation(result.revalidate);
   } catch (error) {

@@ -56,19 +56,19 @@ export default function BlogForm({ blog }: BlogFormProps) {
     defaultValues: {
       title: "",
       slug: "",
-      author_name: "Bilacert Team",
-      read_time: "5 min read",
+      authorName: "Bilacert Team",
+      readTime: "5 min read",
       category: "",
       tags: "",
       excerpt: "",
       content: "",
       published: false,
-      featured_image: "",
+      featuredImage: "",
       thumbnail: "",
       featured: false,
-      seo_title: "",
-      seo_description: "",
-      seo_keywords: "",
+      seoTitle: "",
+      seoDescription: "",
+      seoKeywords: "",
     },
   });
 
@@ -87,16 +87,16 @@ export default function BlogForm({ blog }: BlogFormProps) {
     if (blog) {
       reset({
         ...blog,
-        author_name: blog.author_name || "Bilacert Team",
-        read_time: blog.read_time || "5 min read",
+        authorName: blog.authorName || "Bilacert Team",
+        readTime: blog.readTime || "5 min read",
         tags: blog.tags || "",
         excerpt: blog.excerpt || "",
         content: blog.content || "",
-        featured_image: blog.featured_image || "",
+        featuredImage: blog.featuredImage || "",
         thumbnail: blog.thumbnail || "",
-        seo_title: blog.seo_title || "",
-        seo_description: blog.seo_description || "",
-        seo_keywords: blog.seo_keywords || "",
+        seoTitle: blog.seoTitle || "",
+        seoDescription: blog.seoDescription || "",
+        seoKeywords: blog.seoKeywords || "",
       });
     }
   }, [blog, reset]);
@@ -191,7 +191,7 @@ export default function BlogForm({ blog }: BlogFormProps) {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <FormField
                     control={form.control}
-                    name="featured_image"
+                    name="featuredImage"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Featured Image</FormLabel>
@@ -237,8 +237,8 @@ export default function BlogForm({ blog }: BlogFormProps) {
                         Quick pick for Featured Image
                       </p>
                       <PexelsImagePicker
-                        onSelect={(url) => setValue("featured_image", url)}
-                        currentImageUrl={watch("featured_image")}
+                        onSelect={(url) => setValue("featuredImage", url)}
+                        currentImageUrl={watch("featuredImage")}
                         suggestions={[
                           title,
                           watch("category"),
@@ -277,8 +277,8 @@ export default function BlogForm({ blog }: BlogFormProps) {
                   <FormLabel>Content</FormLabel>
                   <FormControl>
                     <BlogEditor
-                      featured_image={watch("featured_image")}
-                      onImageSelect={(url) => setValue("featured_image", url)}
+                      featuredImage={watch("featuredImage")}
+                      onImageSelect={(url) => setValue("featuredImage", url)}
                       value={field.value ?? ""}
                       onChange={field.onChange}
                       title={title}
@@ -296,7 +296,7 @@ export default function BlogForm({ blog }: BlogFormProps) {
               <CardContent className="space-y-4">
                 <FormField
                   control={form.control}
-                  name="seo_title"
+                  name="seoTitle"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>SEO Title</FormLabel>
@@ -309,7 +309,7 @@ export default function BlogForm({ blog }: BlogFormProps) {
                 />
                 <FormField
                   control={form.control}
-                  name="seo_description"
+                  name="seoDescription"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>SEO Description</FormLabel>
@@ -322,7 +322,7 @@ export default function BlogForm({ blog }: BlogFormProps) {
                 />
                 <FormField
                   control={form.control}
-                  name="seo_keywords"
+                  name="seoKeywords"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>SEO Keywords (comma separated)</FormLabel>
@@ -391,7 +391,7 @@ export default function BlogForm({ blog }: BlogFormProps) {
               <CardContent className="space-y-4">
                 <FormField
                   control={form.control}
-                  name="author_name"
+                  name="authorName"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Author</FormLabel>
@@ -404,7 +404,7 @@ export default function BlogForm({ blog }: BlogFormProps) {
                 />
                 <FormField
                   control={form.control}
-                  name="read_time"
+                  name="readTime"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Read Time</FormLabel>

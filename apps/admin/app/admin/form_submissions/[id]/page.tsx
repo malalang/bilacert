@@ -19,21 +19,21 @@ async function getSubmission(id: string): Promise<Submission | null> {
 
   return {
     id: data.id,
-    form_type: data.form_type,
+    formType: data.formType,
     status: data.status,
-    service_id: data.service_id,
-    service_name: data.service_name,
-    full_name: data.full_name,
+    serviceId: data.serviceId,
+    serviceName: data.serviceName,
+    fullName: data.fullName,
     email: data.email,
     phone: data.phone,
     company: data.company,
     industry: data.industry,
     details: data.details,
-    internal_notes: data.internal_notes,
-    assigned_to: data.assigned_to,
-    created_at: data.created_at,
-    updated_at: data.updated_at,
-    completed_at: data.completed_at,
+    internalNotes: data.internalNotes,
+    assignedTo: data.assignedTo,
+    createdAt: data.createdAt,
+    updatedAt: data.updatedAt,
+    completedAt: data.completedAt,
   } as Submission;
 }
 
@@ -50,7 +50,7 @@ export async function generateMetadata({
     };
   }
   return {
-    title: `Submission from ${submission.full_name} | Bilacert Admin Pro`,
+    title: `Submission from ${submission.fullName} | Bilacert Admin Pro`,
   };
 }
 
