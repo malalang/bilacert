@@ -30,7 +30,7 @@ interface BlogEditorProps {
   onChange: (value: string) => void;
   onImageSelect?: (url: string) => void;
   title: string;
-  featured_image: string | null | undefined;
+  featuredImage: string | null | undefined;
 }
 
 export default function BlogEditor({
@@ -38,7 +38,7 @@ export default function BlogEditor({
   onChange,
   onImageSelect: _onImageSelect,
   title,
-  featured_image,
+  featuredImage,
 }: BlogEditorProps) {
   const [view, setView] = useState<"edit" | "preview">("edit");
   const [sanitized, setSanitized] = useState("");
@@ -109,14 +109,14 @@ export default function BlogEditor({
           </div>
         ) : (
           <div className="p-4 animate-in slide-in-from-bottom-2 duration-300">
-            {featured_image && (
+            {featuredImage && (
               <div className="mb-8">
                 <h2 className="text-lg font-bold mb-4 text-slate-800">
                   Featured Image
                 </h2>
                 <div className="relative aspect-video w-full max-w-2xl mx-auto overflow-hidden rounded-lg shadow-lg border border-slate-200">
                   <Image
-                    src={featured_image}
+                    src={featuredImage}
                     alt="Featured Image Preview"
                     fill
                     className="object-cover"
