@@ -14,6 +14,7 @@
     "./hooks/*": "./src/hooks/*.ts"
   },
   "dependencies": {
+    "@bilacert/contracts": "workspace:*",
     "@bilacert/shared": "workspace:*",
     "@supabase/ssr": "catalog:",
     "@supabase/supabase-js": "catalog:",
