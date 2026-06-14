@@ -455,6 +455,9 @@ importers:
 
   packages/supabase:
     dependencies:
+      '@bilacert/contracts':
+        specifier: workspace:*
+        version: link:../contracts
       '@bilacert/shared':
         specifier: workspace:*
         version: link:../shared
