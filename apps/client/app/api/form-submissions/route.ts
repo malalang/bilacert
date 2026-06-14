@@ -1,3 +1,4 @@
+import { type Json } from "@bilacert/supabase/supabaseType";
 import { formSubmissionPayloadSchema } from "@bilacert/contracts/formSubmission";
 import { createFormSubmission } from "@bilacert/supabase/Mutations/formSubmissions";
 import { getFormSubmissionById } from "@bilacert/supabase/Queries/formSubmissions";
