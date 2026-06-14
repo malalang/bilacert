@@ -21,9 +21,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { upsertContact } from "./actions";
-import { contactSchema } from "./schema";
-
-type ContactFormValues = z.infer<typeof contactSchema>;
+import { contactSchema, type ContactMessageInput as ContactFormValues } from "@bilacert/contracts/contact";
 
 interface ContactFormProps {
   contact?: Contact | null;

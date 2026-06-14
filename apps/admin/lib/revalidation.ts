@@ -1,4 +1,4 @@
-import type { RevalidationRequest } from "@bilacert/supabase/cache";
+import type { RevalidationRequest } from "@bilacert/contracts/revalidation";
 
 export async function triggerRevalidation(request: RevalidationRequest) {
   const clientUrl = process.env.NEXT_PUBLIC_CLIENT_URL;

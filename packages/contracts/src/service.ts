@@ -1,6 +1,6 @@
-import * as z from "zod";
+import { z } from "zod";
 
-const pricingPlanSchema = z.object({
+export const pricingPlanSchema = z.object({
   title: z.string().min(1, "Title is required"),
   description: z.string().default(""),
   price: z.string().min(1, "Price is required"),
@@ -8,13 +8,13 @@ const pricingPlanSchema = z.object({
   popular: z.boolean().default(false),
 });
 
-const processStepSchema = z.object({
+export const processStepSchema = z.object({
   step: z.coerce.string().min(1, "Step number is required"),
   title: z.string().min(1, "Title is required"),
   description: z.string().min(1, "Description is required"),
 });
 
-const successStorySchema = z.object({
+export const successStorySchema = z.object({
   scenario: z.string().optional(),
   challenge: z.string().optional(),
   solution: z.string().optional(),
@@ -55,3 +55,6 @@ export const serviceSchema = z.object({
 });
 
 export type ServiceFormValues = z.infer<typeof serviceSchema>;
+export type PricingPlan = z.infer<typeof pricingPlanSchema>;
+export type ProcessStep = z.infer<typeof processStepSchema>;
+export type SuccessStory = z.infer<typeof successStorySchema>;

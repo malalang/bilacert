@@ -24,7 +24,7 @@ import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { upsertService } from "./actions";
-import { type ServiceFormValues, serviceSchema } from "./schema";
+import { type ServiceFormValues, serviceSchema } from "@bilacert/contracts/service";
 
 interface ServiceFormProps {
   service?: Service | null;

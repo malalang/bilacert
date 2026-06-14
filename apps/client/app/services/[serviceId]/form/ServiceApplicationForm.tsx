@@ -1,9 +1,9 @@
 "use client";
 
-import type { FormSubmissionPayload, Service } from "@bilacert/shared/types";
-import { useFormSubmission } from "@bilacert/supabase/hooks/useFormSubmission";
+import { type Service } from "@bilacert/contracts/service";
+import { submitFormAction } from "../../../forms/actions";
 import { AlertCircle, CheckCircle, Send } from "lucide-react";
-import { useState } from "react";
+import { useState, useTransition } from "react";
 
 export default function ServiceApplicationForm({
   service,
@@ -21,37 +21,47 @@ export default function ServiceApplicationForm({
     details: "",
   });
 
-  const { isLoading, error, isSuccess, successMessage, handleSubmit, reset } =
-    useFormSubmission();
+  const [isPending, startTransition] = useTransition();
+  const [error, setError] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+
+  const reset = () => {
+    setError(null);
+    setSuccessMessage(null);
+  };
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    reset();
 
-    const payload: FormSubmissionPayload = {
-      formType: "service-inquiry",
-      serviceId: service.id,
-      serviceName: serviceSlug,
-      fullName: formData.fullName,
-      email: formData.email,
-      phone: formData.phone,
-      companyName: formData.company,
-      industry: formData.industry,
-      message: formData.details,
-    };
-
-    const result = await handleSubmit(payload);
-
-    if (result?.success) {
-      setFormData({
-        fullName: "",
-        email: "",
-        phone: "",
-        company: "",
-        industry: "",
-        details: "",
+    startTransition(async () => {
+      const result = await submitFormAction({
+        formType: "service-inquiry",
+        serviceId: service.id,
+        serviceName: serviceSlug,
+        fullName: formData.fullName,
+        email: formData.email,
+        phone: formData.phone || undefined,
+        companyName: formData.company || undefined,
+        industry: formData.industry || undefined,
+        message: formData.details,
       });
-      setTimeout(reset, 5000);
-    }
+
+      if (result.ok) {
+        setSuccessMessage(result.message || "Application submitted successfully!");
+        setFormData({
+          fullName: "",
+          email: "",
+          phone: "",
+          company: "",
+          industry: "",
+          details: "",
+        });
+        setTimeout(reset, 5000);
+      } else {
+        setError(result.error);
+      }
+    });
   };
 
   const handleChange = (
@@ -202,10 +212,10 @@ export default function ServiceApplicationForm({
 
           <button
             type="submit"
-            disabled={isLoading}
+            disabled={isPending}
             className="w-full bg-primary text-white py-4 px-6 rounded-lg font-semibold text-lg hover:bg-primary-light transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
           >
-            {isLoading ? (
+            {isPending ? (
               <>
                 <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2" />
                 Sending...

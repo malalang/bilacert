@@ -7,7 +7,8 @@ import {
 import { revalidatePath } from "next/cache";
 import { v4 as uuidv4 } from "uuid";
 import { triggerRevalidation } from "@/lib/revalidation";
-import { blogSchema } from "./schema";
+import { blogSchema } from "@bilacert/contracts/blog";
+import { type ActionResult } from "@bilacert/contracts/actionResult";
 
 export async function upsertBlog(values: unknown) {
   const parsedValues = blogSchema.safeParse(values);

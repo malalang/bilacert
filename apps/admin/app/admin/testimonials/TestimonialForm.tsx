@@ -20,9 +20,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { upsertTestimonial } from "./actions";
-import { testimonialSchema } from "./schema";
-
-type TestimonialFormValues = z.infer<typeof testimonialSchema>;
+import { testimonialSchema, type TestimonialContract as TestimonialFormValues } from "@bilacert/contracts/testimonial";
 
 interface TestimonialFormProps {
   testimonial?: Testimonial | null;

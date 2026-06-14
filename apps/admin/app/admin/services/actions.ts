@@ -6,7 +6,8 @@ import {
 } from "@bilacert/supabase/Mutations/services";
 import { revalidatePath } from "next/cache";
 import { triggerRevalidation } from "@/lib/revalidation";
-import { serviceSchema } from "./schema";
+import { serviceSchema } from "@bilacert/contracts/service";
+import { type ActionResult } from "@bilacert/contracts/actionResult";
 
 export async function upsertService(values: unknown) {
   const parsedValues = serviceSchema.safeParse(values);

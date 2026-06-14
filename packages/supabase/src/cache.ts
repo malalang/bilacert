@@ -1,3 +1,5 @@
+import type { RevalidationRequest } from "@bilacert/contracts/revalidation";
+
 export const CACHE_TAGS = {
   blogs: "blogs",
   blog: (slug: string) => `blog:${slug}`,
@@ -15,14 +17,6 @@ export const CACHE_PATHS = {
   services: "/services",
   service: (id: string) => `/services/${id}`,
 } as const;
-
-export type RevalidationMode = "max" | "immediate";
-
-export interface RevalidationRequest {
-  tags?: readonly string[];
-  paths?: readonly string[];
-  mode?: RevalidationMode;
-}
 
 export interface MutationResult<T> {
   data: T;

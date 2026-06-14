@@ -1,3 +1,4 @@
+import { formSubmissionPayloadSchema } from "@bilacert/contracts/formSubmission";
 import { createFormSubmission } from "@bilacert/supabase/Mutations/formSubmissions";
 import { getFormSubmissionById } from "@bilacert/supabase/Queries/formSubmissions";
 import { getServiceBySlug } from "@bilacert/supabase/Queries/services";
@@ -8,6 +9,16 @@ import { type NextRequest, NextResponse } from "next/server";
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
+    
+    const parsed = formSubmissionPayloadSchema.safeParse(body);
+
+    if (!parsed.success) {
+      return NextResponse.json(
+        { error: "Invalid form data", details: parsed.error.format() },
+        { status: 400 },
+      );
+    }
+
     const {
       formType,
       serviceId,
@@ -15,19 +26,10 @@ export async function POST(request: NextRequest) {
       fullName,
       email,
       phone,
-      company,
       companyName,
       industry,
       details,
-    } = body;
-
-    // Validate required fields
-    if (!formType || !fullName || !email) {
-      return NextResponse.json(
-        { error: "Missing required fields: formType, fullName, email" },
-        { status: 400 },
-      );
-    }
+    } = parsed.data;
 
     // Insert form submission using mutation
     const { data } = await createFormSubmission({
@@ -37,7 +39,7 @@ export async function POST(request: NextRequest) {
       fullName,
       email,
       phone: phone || null,
-      company: company || companyName || null,
+      company: companyName || null,
       industry: industry || null,
       details: details || null,
       status: "pending",

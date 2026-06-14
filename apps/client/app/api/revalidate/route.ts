@@ -1,7 +1,8 @@
-import type {
-  RevalidationMode,
-  RevalidationRequest,
-} from "@bilacert/supabase/cache";
+import {
+  type RevalidationMode,
+  type RevalidationRequest,
+  revalidationPayloadSchema,
+} from "@bilacert/contracts/revalidation";
 import { revalidatePath, revalidateTag } from "next/cache";
 import { type NextRequest, NextResponse } from "next/server";
 

@@ -1,4 +1,4 @@
-import * as z from "zod";
+import { z } from "zod";
 
 export const blogSchema = z.object({
   id: z.string().optional(),
@@ -28,3 +28,4 @@ export const blogSchema = z.object({
 });
 
 export type BlogFormValues = z.infer<typeof blogSchema>;
+export type BlogContract = BlogFormValues;

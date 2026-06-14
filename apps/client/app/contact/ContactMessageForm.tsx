@@ -1,12 +1,12 @@
 "use client";
 
-import { useFormSubmission } from "@bilacert/supabase/hooks/useFormSubmission";
+import { submitContactForm } from "./actions";
 import {
   AlertCircle,
   CheckCircle,
   Send,
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useTransition } from "react";
 
 export default function ContactMessageForm({
   defaultService,
@@ -21,31 +21,37 @@ export default function ContactMessageForm({
     message: "",
   });
 
-  const { isLoading, error, isSuccess, successMessage, handleSubmit, reset } =
-    useFormSubmission();
+  const [isPending, startTransition] = useTransition();
+  const [error, setError] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError(null);
+    setSuccessMessage(null);
 
-    const result = await handleSubmit({
-      formType: "contact",
-      serviceId: formData.service || undefined,
-      fullName: formData.name,
-      email: formData.email,
-      phone: formData.phone || undefined,
-      message: formData.message,
-    });
-
-    if (result?.success) {
-      setFormData({
-        name: "",
-        email: "",
-        phone: "",
-        service: "",
-        message: "",
+    startTransition(async () => {
+      const result = await submitContactForm({
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone || undefined,
+        service: formData.service || undefined,
+        message: formData.message,
       });
-      setTimeout(reset, 5000);
-    }
+
+      if (result.ok) {
+        setSuccessMessage(result.message || "Message sent successfully!");
+        setFormData({
+          name: "",
+          email: "",
+          phone: "",
+          service: "",
+          message: "",
+        });
+      } else {
+        setError(result.error);
+      }
+    });
   };
 
   const handleChange = (
@@ -194,10 +200,10 @@ export default function ContactMessageForm({
 
         <button
           type="submit"
-          disabled={isLoading}
+          disabled={isPending}
           className="w-full bg-primary text-white py-4 px-6 rounded-lg font-semibold text-lg hover:bg-primary-light transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
         >
-          {isLoading ? (
+          {isPending ? (
             <>
               <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2" />
               Sending...

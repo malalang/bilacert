@@ -1,24 +1,37 @@
+import { contactSchema } from "@bilacert/contracts/contact";
 import { createContact } from "@bilacert/supabase/Mutations/contacts";
 import { type NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { service, fullName, email, phone, message } = body;
+    
+    // Map client fields to schema if necessary, or update client to match
+    const mappedBody = {
+      name: body.fullName,
+      email: body.email,
+      phone: body.phone,
+      service: body.service,
+      message: body.message
+    };
 
-    if (!fullName || !email || !message) {
+    const parsed = contactSchema.safeParse(mappedBody);
+
+    if (!parsed.success) {
       return NextResponse.json(
-        { error: "Missing required fields: fullName, email, message" },
+        { error: "Invalid form data", details: parsed.error.format() },
         { status: 400 },
       );
     }
 
+    const { name, email, phone, service, message } = parsed.data;
+
     const { data } = await createContact({
-      name: fullName,
+      name,
       email,
       phone: phone || null,
       service: service || null,
-      message,
+      message: message || null,
     });
 
     console.log(`✓ Contact form submission received from ${email}`);

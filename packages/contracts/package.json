@@ -1,0 +1,21 @@
+{
+  "name": "@bilacert/contracts",
+  "version": "0.0.0",
+  "private": true,
+  "exports": {
+    "./blog": "./src/blog.ts",
+    "./contact": "./src/contact.ts",
+    "./formSubmission": "./src/formSubmission.ts",
+    "./service": "./src/service.ts",
+    "./testimonial": "./src/testimonial.ts",
+    "./actionResult": "./src/actionResult.ts",
+    "./revalidation": "./src/revalidation.ts"
+  },
+  "dependencies": {
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@bilacert/typescript-config": "workspace:*",
+    "typescript": "catalog:"
+  }
+}

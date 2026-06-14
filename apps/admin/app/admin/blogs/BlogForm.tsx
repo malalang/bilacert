@@ -32,7 +32,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { upsertBlog } from "./actions";
 import BlogEditor from "./BlogEditor";
-import { type BlogFormValues, blogSchema } from "./schema";
+import { type BlogFormValues, blogSchema } from "@bilacert/contracts/blog";
 
 interface BlogFormProps {
   blog?: BlogPost | null;

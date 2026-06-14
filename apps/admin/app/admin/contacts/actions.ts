@@ -8,7 +8,8 @@ import {
 } from "@bilacert/supabase/Mutations/contacts";
 import { revalidatePath } from "next/cache";
 import { triggerRevalidation } from "@/lib/revalidation";
-import { contactSchema } from "./schema";
+import { contactSchema } from "@bilacert/contracts/contact";
+import { type ActionResult } from "@bilacert/contracts/actionResult";
 
 export async function getContacts() {
   const supabase = createSupabaseAdminClient();

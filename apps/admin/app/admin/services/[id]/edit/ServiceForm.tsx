@@ -20,7 +20,7 @@ import ProcessStepsForm from "../../components/ProcessStepsForm";
 import PublishingForm from "../../components/PublishingForm";
 import SeoForm from "../../components/SeoForm";
 import SuccessStoryForm from "../../components/SuccessStoryForm";
-import { type ServiceFormValues, serviceSchema } from "../../schema";
+import { type ServiceFormValues, serviceSchema } from "@bilacert/contracts/service";
 
 interface ServiceFormProps {
   service?: Service | null;

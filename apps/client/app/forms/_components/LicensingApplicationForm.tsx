@@ -1,9 +1,9 @@
 "use client";
 
-import type { FormType } from "@bilacert/shared/types";
-import { useFormSubmission } from "@bilacert/supabase/hooks/useFormSubmission";
+import type { FormType } from "@bilacert/contracts/formSubmission";
+import { submitFormAction } from "../actions";
 import Link from "next/link";
-import { type ChangeEvent, type FormEvent, useState } from "react";
+import { type ChangeEvent, type FormEvent, useState, useTransition } from "react";
 
 interface FormData {
   fullName: string;
@@ -30,7 +30,8 @@ export default function LicensingApplicationForm({
     message: "",
   });
 
-  const { isLoading, error, handleSubmit } = useFormSubmission();
+  const [isPending, startTransition] = useTransition();
+  const [error, setError] = useState<string | null>(null);
   const [submitted, setSubmitted] = useState(false);
 
   const handleInputChange = (
@@ -42,28 +43,33 @@ export default function LicensingApplicationForm({
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setError(null);
 
-    const result = await handleSubmit({
-      formType,
-      serviceName,
-      fullName: formData.fullName,
-      email: formData.email,
-      phone: formData.phone || undefined,
-      companyName: formData.companyName || undefined,
-      message: formData.message,
-      details: { message: formData.message },
-    });
-
-    if (result?.success) {
-      setSubmitted(true);
-      setFormData({
-        fullName: "",
-        email: "",
-        phone: "",
-        companyName: "",
-        message: "",
+    startTransition(async () => {
+      const result = await submitFormAction({
+        formType,
+        serviceName,
+        fullName: formData.fullName,
+        email: formData.email,
+        phone: formData.phone || undefined,
+        companyName: formData.companyName || undefined,
+        message: formData.message,
+        details: { message: formData.message },
       });
-    }
+
+      if (result.ok) {
+        setSubmitted(true);
+        setFormData({
+          fullName: "",
+          email: "",
+          phone: "",
+          companyName: "",
+          message: "",
+        });
+      } else {
+        setError(result.error);
+      }
+    });
   };
 
   if (submitted) {
@@ -195,10 +201,10 @@ export default function LicensingApplicationForm({
       <div>
         <button
           type="submit"
-          disabled={isLoading}
+          disabled={isPending}
           className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50"
         >
-          {isLoading ? "Submitting..." : "Submit Application"}
+          {isPending ? "Submitting..." : "Submit Application"}
         </button>
       </div>
     </form>

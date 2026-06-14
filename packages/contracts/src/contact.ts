@@ -1,4 +1,4 @@
-import * as z from "zod";
+import { z } from "zod";
 
 export const contactSchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -7,3 +7,5 @@ export const contactSchema = z.object({
   service: z.string().optional(),
   message: z.string().optional(),
 });
+
+export type ContactMessageInput = z.infer<typeof contactSchema>;

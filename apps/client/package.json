@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@bilacert/shared": "workspace:*",
+    "@bilacert/contracts": "workspace:*",
     "@bilacert/supabase": "workspace:*",
     "next": "catalog:",
     "react": "catalog:",

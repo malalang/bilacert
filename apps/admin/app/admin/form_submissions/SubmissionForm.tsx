@@ -28,9 +28,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { upsertSubmission } from "./actions";
-import { submissionSchema } from "./schema";
-
-type SubmissionFormValues = z.infer<typeof submissionSchema>;
+import { submissionSchema, type SubmissionFormValues } from "@bilacert/contracts/formSubmission";
 
 interface SubmissionFormProps {
   submission: Submission;
