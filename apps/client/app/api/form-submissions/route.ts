@@ -41,7 +41,7 @@ export async function POST(request: NextRequest) {
       phone: phone || null,
       company: companyName || null,
       industry: industry || null,
-      details: details || null,
+      details: (details as unknown as Json) || null,
       status: "pending",
     });
 
