@@ -23,7 +23,7 @@ export async function upsertSubmission(values: unknown, submissionId: string) {
     serviceName: parsedValues.data.serviceName,
     status: parsedValues.data.status,
     details: parsedValues.data.details
-      ? JSON.parse(parsedValues.data.details)
+      ? (JSON.parse(parsedValues.data.details) as Json)
       : null,
     internalNotes: parsedValues.data.notes,
     assignedTo: parsedValues.data.contactOwner || null,
