@@ -66,7 +66,7 @@ export const formSubmissionPayloadSchema = z.object({
   serviceId: z.string().optional(),
   message: z.string().min(1),
   industry: z.string().optional(),
-  details: z.record(z.unknown()).optional(),
+  details: z.record(z.string(), z.unknown()).optional(),
   serviceName: z.string().optional(),
 });
 
