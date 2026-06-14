@@ -3,6 +3,7 @@
 import { formSubmissionPayloadSchema, type FormSubmissionPayload } from "@bilacert/contracts/formSubmission";
 import { type ActionResult } from "@bilacert/contracts/actionResult";
 import { createFormSubmission } from "@bilacert/supabase/Mutations/formSubmissions";
+import { type Json } from "@bilacert/supabase/supabaseType";
 
 export async function submitFormAction(values: FormSubmissionPayload): Promise<ActionResult<{ id: string }>> {
   const parsed = formSubmissionPayloadSchema.safeParse(values);
@@ -37,7 +38,7 @@ export async function submitFormAction(values: FormSubmissionPayload): Promise<A
       phone: phone || null,
       company: companyName || null,
       industry: industry || null,
-      details: details || null,
+      details: details ? (details as unknown as Json) : null,
       status: "pending",
     });
 
