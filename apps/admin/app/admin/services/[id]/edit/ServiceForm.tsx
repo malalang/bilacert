@@ -1,26 +1,11 @@
 "use client";
 
-import type { Service } from "@bilacert/shared/types";
+import {
+  type Service,
+  type ServiceFormValues,
+  serviceSchema,
+} from "@bilacert/contracts/service";
 import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
-import { Loader2 } from "lucide-react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
-import { useForm } from "react-hook-form";
-import { Button } from "@/components/ui/button";
-import { Form } from "@/components/ui/form";
-import { useToast } from "@/hooks/use-toast";
-import { upsertService } from "../../actions";
-import CoreDetailsForm from "../../components/CoreDetailsForm";
-import DetailsForm from "../../components/DetailsForm";
-import FeaturesForm from "../../components/FeaturesForm";
-import MediaForm from "../../components/MediaForm";
-import PricingPlansForm from "../../components/PricingPlansForm";
-import ProcessStepsForm from "../../components/ProcessStepsForm";
-import PublishingForm from "../../components/PublishingForm";
-import SeoForm from "../../components/SeoForm";
-import SuccessStoryForm from "../../components/SuccessStoryForm";
-import { type ServiceFormValues, serviceSchema } from "@bilacert/contracts/service";
 
 interface ServiceFormProps {
   service?: Service | null;
