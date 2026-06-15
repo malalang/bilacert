@@ -39,7 +39,7 @@ export const serviceSchema = z.object({
   content: z.string().optional(),
   features: z.string().optional(),
   requirements: z.string().optional(),
-  includes: z.string().optional(),
+  includes: z.array(z.string()).default([]),
   published: z.boolean().default(false),
   featured: z.boolean().default(false),
   processingTime: z.string().optional(),

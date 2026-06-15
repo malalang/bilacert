@@ -4,6 +4,21 @@ import type { Database } from "../supabaseType";
 
 type ServiceRow = Database["public"]["Tables"]["services"]["Row"];
 
+function toStringArray(value: unknown): string[] {
+  if (Array.isArray(value)) {
+    return value.filter((item): item is string => typeof item === "string");
+  }
+
+  if (typeof value === "string") {
+    return value
+      .split("\n")
+      .map((item) => item.trim())
+      .filter(Boolean);
+  }
+
+  return [];
+}
+
 export function normalizeService(row: ServiceRow): Service {
   return {
     id: row.id,
@@ -18,7 +33,7 @@ export function normalizeService(row: ServiceRow): Service {
     content: row.content ?? undefined,
     features: row.features ?? undefined,
     requirements: row.requirements ?? undefined,
-    includes: row.includes ?? undefined,
+    includes: toStringArray(row.includes),
     published: row.published ?? false,
     featured: row.featured ?? false,
     processingTime: row.processingTime ?? undefined,
@@ -34,7 +49,8 @@ export function normalizeService(row: ServiceRow): Service {
       (row.processSteps as any) ?? [],
     successStory:
       (row.successStory as any) ?? undefined,
-    updatedAt: row.updatedAt ?? undefined,
+    createdAt: row.createdAt ?? new Date().toISOString(),
+    updatedAt: row.updatedAt ?? row.createdAt ?? new Date().toISOString(),
   };
 }
 
