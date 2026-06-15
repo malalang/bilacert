@@ -34,6 +34,7 @@ export function normalizeService(row: ServiceRow): Service {
       (row.processSteps as any) ?? [],
     successStory:
       (row.successStory as any) ?? undefined,
+    updatedAt: row.updatedAt ?? undefined,
   };
 }
 
