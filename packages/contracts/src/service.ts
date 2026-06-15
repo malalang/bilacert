@@ -52,6 +52,8 @@ export const serviceSchema = z.object({
   pricingPlans: z.array(pricingPlanSchema).default([]),
   processSteps: z.array(processStepSchema).default([]),
   successStory: successStorySchema.optional(),
+  createdAt: z.string().optional(),
+  updatedAt: z.string().optional(),
 });
 
 export type Service = z.infer<typeof serviceSchema>;
