@@ -1,4 +1,4 @@
-import type { Service } from "@bilacert/shared/types";
+import type { Service } from "@bilacert/contracts/service";
 import { createSupabaseAdminClient } from "@bilacert/supabase/admin";
 import { normalizeService } from "@bilacert/supabase/Queries/services";
 import { ArrowLeft } from "lucide-react";
