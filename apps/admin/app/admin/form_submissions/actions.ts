@@ -5,7 +5,7 @@ import { updateFormSubmission } from "@bilacert/supabase/Mutations/formSubmissio
 import { revalidatePath } from "next/cache";
 import { triggerRevalidation } from "@/lib/revalidation";
 import { submissionSchema } from "@bilacert/contracts/formSubmission";
-import { type ActionResult } from "@bilacert/contracts/actionResult";
+import type { Json } from "@bilacert/supabase/supabaseType";
 
 export async function upsertSubmission(values: unknown, submissionId: string) {
   const parsedValues = submissionSchema.safeParse(values);
