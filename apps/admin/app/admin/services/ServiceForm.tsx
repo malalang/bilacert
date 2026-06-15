@@ -156,9 +156,7 @@ export default function ServiceForm({ service }: ServiceFormProps) {
 
       const servicePricingPlans = (service.pricingPlans || []).map((p) => ({
         ...p,
-        features: Array.isArray(p.features)
-          ? p.features.join("\n")
-          : p.features || "",
+        features: Array.isArray(p.features) ? p.features : [],
       }));
 
       const populatedPlans = defaultPricingPlans.map((defaultPlan, index) => {
