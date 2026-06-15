@@ -7,11 +7,6 @@ export type Json =
   | Json[];
 
 export type Database = {
-  // Allows to automatically instantiate createClient with right options
-  // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
-  __InternalSupabase: {
-    PostgrestVersion: "14.1";
-  };
   public: {
     Tables: {
       blog_posts: {
@@ -368,7 +363,7 @@ export type Database = {
       [_ in never]: never;
     };
     Functions: {
-      increment_views: { Args: { post_slug: string }; Returns: undefined };
+      [_ in never]: never;
     };
     Enums: {
       [_ in never]: never;
