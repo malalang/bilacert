@@ -1,4 +1,4 @@
-import type { Service } from "@bilacert/shared/types";
+import { type Service } from "@bilacert/contracts/service";
 import { createSupabaseBrowserClient } from "../client";
 import type { Database } from "../supabaseType";
 
@@ -10,8 +10,8 @@ export function normalizeService(row: ServiceRow): Service {
     title: row.title,
     slug: row.slug,
     href: row.href,
-    category: row.category ?? undefined,
-    description: row.description ?? undefined,
+    category: row.category ?? "",
+    description: row.description ?? "",
     shortDescription: row.shortDescription ?? undefined,
     icon: row.icon ?? undefined,
     orderIndex: row.orderIndex ?? undefined,
@@ -21,7 +21,6 @@ export function normalizeService(row: ServiceRow): Service {
     includes: row.includes ?? undefined,
     published: row.published ?? false,
     featured: row.featured ?? false,
-    createdAt: row.createdAt ?? new Date(0).toISOString(),
     processingTime: row.processingTime ?? undefined,
     pricing: row.pricing ?? undefined,
     image: row.image ?? undefined,
@@ -30,12 +29,11 @@ export function normalizeService(row: ServiceRow): Service {
     seoDescription: row.seoDescription ?? undefined,
     seoKeywords: row.seoKeywords ?? undefined,
     pricingPlans:
-      (row.pricingPlans as unknown as Service["pricingPlans"]) ?? undefined,
+      (row.pricingPlans as any) ?? [],
     processSteps:
-      (row.processSteps as unknown as Service["processSteps"]) ?? undefined,
+      (row.processSteps as any) ?? [],
     successStory:
-      (row.successStory as unknown as Service["successStory"]) ?? undefined,
-    updatedAt: row.updatedAt ?? undefined,
+      (row.successStory as any) ?? undefined,
   };
 }
 
