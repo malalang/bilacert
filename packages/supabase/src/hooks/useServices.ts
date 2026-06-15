@@ -1,6 +1,6 @@
 "use client";
 
-import type { Service } from "@bilacert/shared/types";
+import type { Service } from "@bilacert/contracts/service";
 import { useDataFetching } from "./useDataFetching";
 
 export function useServices() {
