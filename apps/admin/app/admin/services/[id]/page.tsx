@@ -1,4 +1,4 @@
-import type { Service } from "@bilacert/shared/types";
+import type { Service } from "@bilacert/contracts/service";
 import { createSupabaseBrowserClient } from "@bilacert/supabase/client";
 import { normalizeService } from "@bilacert/supabase/Queries/services";
 import type { Metadata } from "next";
