@@ -363,7 +363,10 @@ export type Database = {
       [_ in never]: never;
     };
     Functions: {
-      [_ in never]: never;
+      increment_views: {
+        Args: { post_slug: string };
+        Returns: undefined;
+      };
     };
     Enums: {
       [_ in never]: never;
