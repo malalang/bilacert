@@ -44,12 +44,13 @@ export default function ServiceDetails({ service }: ServiceDetailsProps) {
     router.refresh();
   };
 
-  const renderStringArray = (data: string[] | undefined) => {
-    if (!data || data.length === 0)
+  const renderStringArray = (data: string[] | string | undefined) => {
+    const arrayData = typeof data === 'string' ? [data] : data;
+    if (!arrayData || arrayData.length === 0)
       return <p className="text-sm text-card-foreground">Not set.</p>;
     return (
       <ul className="list-disc list-inside space-y-1 mt-1 text-sm text-card-foreground">
-        {data.map((item, index) => (
+        {arrayData.map((item, index) => (
           <li key={index}>{item}</li>
         ))}
       </ul>
