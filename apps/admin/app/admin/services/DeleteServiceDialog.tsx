@@ -37,7 +37,7 @@ export default function DeleteServiceDialog({
 
     setIsDeleting(true);
     try {
-      const result = await deleteService(service.id);
+      const result = await deleteService(service.id!);
 
       if (result.error) {
         throw new Error(result.error);
