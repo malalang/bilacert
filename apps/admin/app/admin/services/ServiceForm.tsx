@@ -57,7 +57,7 @@ export default function ServiceForm({ service }: ServiceFormProps) {
       content: "",
       features: "",
       requirements: "",
-      includes: "",
+      includes: [],
       published: false,
       featured: false,
       processingTime: "",
@@ -181,9 +181,7 @@ export default function ServiceForm({ service }: ServiceFormProps) {
         requirements: Array.isArray(service.requirements)
           ? service.requirements.join("\n")
           : "",
-        includes: Array.isArray(service.includes)
-          ? service.includes.join("\n")
-          : "",
+        includes: Array.isArray(service.includes) ? service.includes : [],
         published: service.published || false,
         featured: service.featured || false,
         processingTime: service.processingTime || "",
@@ -370,7 +368,17 @@ export default function ServiceForm({ service }: ServiceFormProps) {
                     <FormItem>
                       <FormLabel>What's Included (one per line)</FormLabel>
                       <FormControl>
-                        <Textarea {...field} />
+                        <Textarea
+                          value={Array.isArray(field.value) ? field.value.join("\n") : ""}
+                          onChange={(event) =>
+                            field.onChange(
+                              event.target.value
+                                .split("\n")
+                                .map((item) => item.trim())
+                                .filter(Boolean),
+                            )
+                          }
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
