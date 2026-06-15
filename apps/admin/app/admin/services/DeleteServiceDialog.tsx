@@ -1,6 +1,6 @@
 "use client";
 
-import type { Service } from "@bilacert/shared/types";
+import type { Service } from "@bilacert/contracts/service";
 import { Loader2 } from "lucide-react";
 import { useState } from "react";
 import {
