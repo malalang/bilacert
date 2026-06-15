@@ -162,9 +162,7 @@ export default function ServiceForm({ service }: ServiceFormProps) {
         requirements: Array.isArray(service.requirements)
           ? service.requirements.join("\n")
           : "",
-        includes: Array.isArray(service.includes)
-          ? service.includes.join("\n")
-          : "",
+        includes: Array.isArray(service.includes) ? service.includes : [],
         published: service.published || false,
         featured: service.featured || false,
         processingTime: service.processingTime || "",
