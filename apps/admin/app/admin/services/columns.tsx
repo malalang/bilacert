@@ -1,6 +1,6 @@
 "use client";
 
-import type { Service } from "@bilacert/shared/types";
+import type { Service } from "@bilacert/contracts/service";
 import type { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 import Link from "next/link";
