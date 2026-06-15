@@ -53,7 +53,7 @@ export default function ServiceForm({ service }: ServiceFormProps) {
       content: "",
       features: "",
       requirements: "",
-      includes: "",
+      includes: [],
       published: false,
       featured: false,
       processingTime: "",
