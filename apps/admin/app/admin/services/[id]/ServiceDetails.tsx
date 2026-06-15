@@ -330,7 +330,7 @@ export default function ServiceDetails({ service }: ServiceDetailsProps) {
                     Created At
                   </h4>
                   <p className="text-sm text-card-foreground">
-                    {format(new Date(service.createdAt), "PPpp")}
+                    {service.createdAt ? format(new Date(service.createdAt), "PPpp") : "N/A"}
                   </p>
                 </div>
               </div>
