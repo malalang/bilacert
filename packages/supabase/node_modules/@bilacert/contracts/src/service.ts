@@ -22,7 +22,7 @@ export const successStorySchema = z.object({
 });
 
 export const serviceSchema = z.object({
-  id: z.string(),
+  id: z.string().optional(),
   title: z.string().min(1, "Title is required"),
   slug: z.string().min(1, "Slug is required"),
   href: z

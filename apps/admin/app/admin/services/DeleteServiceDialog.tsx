@@ -33,11 +33,11 @@ export default function DeleteServiceDialog({
   const [isDeleting, setIsDeleting] = useState(false);
 
   const handleDelete = async () => {
-    if (!service) return;
+    if (!service || !service.id) return;
 
     setIsDeleting(true);
     try {
-      const result = await deleteService(service.id!);
+      const result = await deleteService(service.id);
 
       if (result.error) {
         throw new Error(result.error);
