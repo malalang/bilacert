@@ -39,9 +39,9 @@ export default function SubmissionsClient() {
   const filtered = (submissions || []).filter((s) => {
     const term = search.toLowerCase();
     const matchesSearch = 
-      s.full_name?.toLowerCase().includes(term) ||
+      s.fullName?.toLowerCase().includes(term) ||
       s.email?.toLowerCase().includes(term) ||
-      s.service_name?.toLowerCase().includes(term);
+      s.serviceName?.toLowerCase().includes(term);
 
     if (activeTab === "all") return matchesSearch;
     return matchesSearch && s.status === activeTab;

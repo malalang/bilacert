@@ -46,8 +46,8 @@ const statusVariants: Record<string, string> = {
 };
 
 export default function SubmissionCard({ submission, onDelete }: SubmissionCardProps) {
-  const date = submission.submitted_at 
-    ? format(new Date(submission.submitted_at), "PPP p") 
+  const date = submission.createdAt 
+    ? format(new Date(submission.createdAt), "PPP p") 
     : "Unknown date";
 
   return (
@@ -63,7 +63,7 @@ export default function SubmissionCard({ submission, onDelete }: SubmissionCardP
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1">
                     <h3 className="font-bold text-lg leading-none truncate">
-                      {submission.full_name || "Anonymous"}
+                      {submission.fullName || "Anonymous"}
                     </h3>
                     <Badge variant="outline" className={`capitalize px-2 py-0 h-5 text-[10px] font-bold ${statusVariants[submission.status] || ""}`}>
                       {submission.status}
@@ -72,11 +72,11 @@ export default function SubmissionCard({ submission, onDelete }: SubmissionCardP
                   <div className="flex flex-wrap items-center gap-y-1 gap-x-4 text-sm text-muted-foreground font-medium">
                     <div className="flex items-center gap-1.5">
                       <Briefcase className="h-3.5 w-3.5" />
-                      {submission.service_name || "General Inquiry"}
+                      {submission.serviceName || "General Inquiry"}
                     </div>
                     <div className="flex items-center gap-1.5">
                       <Clock className="h-3.5 w-3.5" />
-                      {format(new Date(submission.submitted_at || Date.now()), "MMM d, yyyy")}
+                      {format(new Date(submission.createdAt || Date.now()), "MMM d, yyyy")}
                     </div>
                   </div>
                 </div>
@@ -137,10 +137,10 @@ export default function SubmissionCard({ submission, onDelete }: SubmissionCardP
                   <Calendar className="h-3 w-3" /> Details
                 </h4>
                 <div className="space-y-1">
-                  <p className="text-sm font-medium">Form: <span className="text-muted-foreground">{submission.form_type}</span></p>
+                  <p className="text-sm font-medium">Form: <span className="text-muted-foreground">{submission.formType}</span></p>
                   <p className="text-sm font-medium">Submitted: <span className="text-muted-foreground">{date}</span></p>
-                  {submission.assigned_to && (
-                    <p className="text-sm font-medium">Assigned to: <Badge variant="secondary">{submission.assigned_to}</Badge></p>
+                  {submission.assignedTo && (
+                    <p className="text-sm font-medium">Assigned to: <Badge variant="secondary">{submission.assignedTo}</Badge></p>
                   )}
                 </div>
               </div>
