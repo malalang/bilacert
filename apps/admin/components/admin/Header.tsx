@@ -3,9 +3,17 @@
 import { createSupabaseBrowserClient } from "@bilacert/supabase/client";
 import { useUser } from "@bilacert/supabase/hooks/useUser";
 import { ChevronDown, LogOut, User as UserIcon } from "lucide-react";
-import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -15,18 +23,10 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
 import { useToast } from "@/hooks/use-toast";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
-import { Separator } from "@/components/ui/separator";
 
 const supabase = createSupabaseBrowserClient();
 
@@ -34,7 +34,8 @@ function generateBreadcrumbs(pathname: string) {
   const paths = pathname.split("/").filter(Boolean);
   return paths.map((path, index) => {
     const href = `/${paths.slice(0, index + 1).join("/")}`;
-    const label = path.charAt(0).toUpperCase() + path.slice(1).replace(/_/g, " ");
+    const label =
+      path.charAt(0).toUpperCase() + path.slice(1).replace(/_/g, " ");
     return { href, label, isLast: index === paths.length - 1 };
   });
 }
@@ -75,10 +76,13 @@ export default function AdminHeader() {
     <header className="sticky top-0 z-10 flex h-16 items-center justify-between border-b bg-card px-4 sm:px-6 shadow-sm">
       <div className="flex items-center gap-2">
         <SidebarTrigger className="-ml-1" />
-        <Separator orientation="vertical" className="mr-2 h-4 hidden sm:block" />
+        <Separator
+          orientation="vertical"
+          className="mr-2 h-4 hidden sm:block"
+        />
         <Breadcrumb className="hidden sm:block">
           <BreadcrumbList>
-            {breadcrumbs.map((bc, i) => (
+            {breadcrumbs.map((bc, _i) => (
               <React.Fragment key={bc.href}>
                 <BreadcrumbItem>
                   {bc.isLast ? (
@@ -99,13 +103,18 @@ export default function AdminHeader() {
       {user && (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="flex items-center gap-2 px-2 hover:bg-accent/50 transition-colors">
+            <Button
+              variant="ghost"
+              className="flex items-center gap-2 px-2 hover:bg-accent/50 transition-colors"
+            >
               <Avatar className="h-8 w-8 border">
                 <AvatarImage src={avatarUrl} alt={displayName || "Admin"} />
                 <AvatarFallback>{getInitials(user.email || "")}</AvatarFallback>
               </Avatar>
               <div className="hidden flex-col items-start text-left md:flex">
-                <span className="text-sm font-medium line-clamp-1">{displayName}</span>
+                <span className="text-sm font-medium line-clamp-1">
+                  {displayName}
+                </span>
               </div>
               <ChevronDown className="h-4 w-4 text-muted-foreground" />
             </Button>

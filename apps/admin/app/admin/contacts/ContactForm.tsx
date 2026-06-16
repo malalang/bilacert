@@ -1,5 +1,9 @@
 "use client";
 
+import {
+  type ContactMessageInput as ContactFormValues,
+  contactSchema,
+} from "@bilacert/contracts/contact";
 import type { Contact } from "@bilacert/shared/types";
 import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import { Loader2 } from "lucide-react";
@@ -7,7 +11,6 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import type * as z from "zod";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -21,7 +24,6 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { upsertContact } from "./actions";
-import { contactSchema, type ContactMessageInput as ContactFormValues } from "@bilacert/contracts/contact";
 
 interface ContactFormProps {
   contact?: Contact | null;

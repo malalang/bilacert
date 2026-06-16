@@ -2,19 +2,28 @@
 
 import type { Submission } from "@bilacert/shared/types";
 import { useSubmissions } from "@bilacert/supabase/hooks/useSubmissions";
+import {
+  Archive,
+  CheckCircle2,
+  Clock,
+  Inbox,
+  LayoutGrid,
+  Search,
+  XCircle,
+} from "lucide-react";
 import { useState } from "react";
-import { Search, Inbox, Clock, CheckCircle2, XCircle, Archive, LayoutGrid } from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import DeleteSubmissionDialog from "./DeleteSubmissionDialog";
 import SubmissionCard from "./SubmissionCard";
 
 export default function SubmissionsClient() {
   const { data: submissions, loading, error } = useSubmissions();
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const [selectedSubmission, setSelectedSubmission] = useState<Submission | null>(null);
+  const [selectedSubmission, setSelectedSubmission] =
+    useState<Submission | null>(null);
   const [search, setSearch] = useState("");
   const [activeTab, setActiveTab] = useState("all");
 
@@ -38,7 +47,7 @@ export default function SubmissionsClient() {
 
   const filtered = (submissions || []).filter((s) => {
     const term = search.toLowerCase();
-    const matchesSearch = 
+    const matchesSearch =
       s.fullName?.toLowerCase().includes(term) ||
       s.email?.toLowerCase().includes(term) ||
       s.serviceName?.toLowerCase().includes(term);
@@ -67,7 +76,9 @@ export default function SubmissionsClient() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Form Submissions</h1>
+          <h1 className="text-2xl font-bold tracking-tight">
+            Form Submissions
+          </h1>
           <p className="text-sm text-muted-foreground">
             Manage and track all customer inquiries and service applications.
           </p>
@@ -89,19 +100,24 @@ export default function SubmissionsClient() {
             <LayoutGrid className="h-3.5 w-3.5" /> <span>All</span>
           </TabsTrigger>
           <TabsTrigger value="pending" className="gap-2">
-            <Clock className="h-3.5 w-3.5 text-yellow-600" /> <span>Pending</span>
+            <Clock className="h-3.5 w-3.5 text-yellow-600" />{" "}
+            <span>Pending</span>
           </TabsTrigger>
           <TabsTrigger value="in-progress" className="gap-2">
-            <Inbox className="h-3.5 w-3.5 text-blue-600" /> <span>Processing</span>
+            <Inbox className="h-3.5 w-3.5 text-blue-600" />{" "}
+            <span>Processing</span>
           </TabsTrigger>
           <TabsTrigger value="completed" className="gap-2">
-            <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" /> <span className="hidden sm:inline">Completed</span>
+            <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" />{" "}
+            <span className="hidden sm:inline">Completed</span>
           </TabsTrigger>
           <TabsTrigger value="rejected" className="gap-2">
-            <XCircle className="h-3.5 w-3.5 text-red-600" /> <span className="hidden sm:inline">Rejected</span>
+            <XCircle className="h-3.5 w-3.5 text-red-600" />{" "}
+            <span className="hidden sm:inline">Rejected</span>
           </TabsTrigger>
           <TabsTrigger value="archived" className="gap-2">
-            <Archive className="h-3.5 w-3.5 text-slate-600" /> <span className="hidden sm:inline">Archived</span>
+            <Archive className="h-3.5 w-3.5 text-slate-600" />{" "}
+            <span className="hidden sm:inline">Archived</span>
           </TabsTrigger>
         </TabsList>
 
@@ -114,9 +130,9 @@ export default function SubmissionsClient() {
                 </div>
                 <h3 className="text-lg font-semibold">No submissions found</h3>
                 <p className="text-sm text-muted-foreground max-w-xs mt-2">
-                  {search 
-                    ? "We couldn't find any submissions matching your search criteria." 
-                    : `You don't have any ${activeTab !== 'all' ? activeTab : ''} submissions at the moment.`}
+                  {search
+                    ? "We couldn't find any submissions matching your search criteria."
+                    : `You don't have any ${activeTab !== "all" ? activeTab : ""} submissions at the moment.`}
                 </p>
               </CardContent>
             </Card>
@@ -124,7 +140,8 @@ export default function SubmissionsClient() {
             <div className="grid gap-4">
               <div className="flex items-center justify-between px-1">
                 <span className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
-                  Showing {filtered.length} submission{filtered.length !== 1 ? 's' : ''}
+                  Showing {filtered.length} submission
+                  {filtered.length !== 1 ? "s" : ""}
                 </span>
               </div>
               {filtered.map((submission) => (

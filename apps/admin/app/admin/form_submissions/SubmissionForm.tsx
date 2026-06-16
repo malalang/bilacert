@@ -1,5 +1,9 @@
 "use client";
 
+import {
+  type SubmissionFormValues,
+  submissionSchema,
+} from "@bilacert/contracts/formSubmission";
 import type { Submission } from "@bilacert/shared/types";
 import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import { Loader2 } from "lucide-react";
@@ -7,7 +11,6 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import type * as z from "zod";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -28,7 +31,6 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { upsertSubmission } from "./actions";
-import { submissionSchema, type SubmissionFormValues } from "@bilacert/contracts/formSubmission";
 
 interface SubmissionFormProps {
   submission: Submission;

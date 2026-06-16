@@ -1,5 +1,6 @@
 "use server";
 
+import { contactSchema } from "@bilacert/contracts/contact";
 import type { Contact } from "@bilacert/shared/types";
 import { createSupabaseAdminClient } from "@bilacert/supabase/admin";
 import {
@@ -8,8 +9,6 @@ import {
 } from "@bilacert/supabase/Mutations/contacts";
 import { revalidatePath } from "next/cache";
 import { triggerRevalidation } from "@/lib/revalidation";
-import { contactSchema } from "@bilacert/contracts/contact";
-import { type ActionResult } from "@bilacert/contracts/actionResult";
 
 export async function getContacts() {
   const supabase = createSupabaseAdminClient();

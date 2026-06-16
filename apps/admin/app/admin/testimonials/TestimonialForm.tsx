@@ -1,5 +1,9 @@
 "use client";
 
+import {
+  type TestimonialContract as TestimonialFormValues,
+  testimonialSchema,
+} from "@bilacert/contracts/testimonial";
 import type { Testimonial } from "@bilacert/shared/types";
 import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import { Loader2 } from "lucide-react";
@@ -7,7 +11,6 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import type * as z from "zod";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -20,7 +23,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { upsertTestimonial } from "./actions";
-import { testimonialSchema, type TestimonialContract as TestimonialFormValues } from "@bilacert/contracts/testimonial";
 
 interface TestimonialFormProps {
   testimonial?: Testimonial | null;

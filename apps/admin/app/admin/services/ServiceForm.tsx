@@ -1,5 +1,9 @@
 "use client";
 
+import {
+  type ServiceFormValues,
+  serviceSchema,
+} from "@bilacert/contracts/service";
 import type { Service } from "@bilacert/shared/types";
 import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import { Loader2, PlusCircle, Trash2 } from "lucide-react";
@@ -24,7 +28,6 @@ import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { upsertService } from "./actions";
-import { type ServiceFormValues, serviceSchema } from "@bilacert/contracts/service";
 
 interface ServiceFormProps {
   service?: Service | null;
@@ -57,7 +60,7 @@ export default function ServiceForm({ service }: ServiceFormProps) {
       content: "",
       features: "",
       requirements: "",
-      includes: [], 
+      includes: [],
       published: false,
       featured: false,
       processingTime: "",
@@ -367,7 +370,11 @@ export default function ServiceForm({ service }: ServiceFormProps) {
                       <FormLabel>What's Included (one per line)</FormLabel>
                       <FormControl>
                         <Textarea
-                          value={Array.isArray(field.value) ? field.value.join("\n") : ""}
+                          value={
+                            Array.isArray(field.value)
+                              ? field.value.join("\n")
+                              : ""
+                          }
                           onChange={(event) =>
                             field.onChange(
                               event.target.value

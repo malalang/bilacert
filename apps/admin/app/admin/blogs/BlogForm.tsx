@@ -1,5 +1,6 @@
 "use client";
 
+import { type BlogFormValues, blogSchema } from "@bilacert/contracts/blog";
 import type { BlogPost } from "@bilacert/shared/types";
 import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import { Loader2 } from "lucide-react";
@@ -32,7 +33,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { upsertBlog } from "./actions";
 import BlogEditor from "./BlogEditor";
-import { type BlogFormValues, blogSchema } from "@bilacert/contracts/blog";
 
 interface BlogFormProps {
   blog?: BlogPost | null;

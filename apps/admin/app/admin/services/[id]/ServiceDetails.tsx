@@ -1,12 +1,12 @@
 "use client";
 
-import { Icon } from "@bilacert/shared/Icon";
 import type {
   PricingPlan,
   ProcessStep,
   Service,
   SuccessStory,
 } from "@bilacert/contracts/service";
+import { Icon } from "@bilacert/shared/Icon";
 import { format } from "date-fns";
 import { ArrowLeft, CheckCircle, Edit, Trash2 } from "lucide-react";
 import Image from "next/image";
@@ -45,7 +45,7 @@ export default function ServiceDetails({ service }: ServiceDetailsProps) {
   };
 
   const renderStringArray = (data: string[] | string | undefined) => {
-    const arrayData = typeof data === 'string' ? [data] : data;
+    const arrayData = typeof data === "string" ? [data] : data;
     if (!arrayData || arrayData.length === 0)
       return <p className="text-sm text-card-foreground">Not set.</p>;
     return (
@@ -330,7 +330,9 @@ export default function ServiceDetails({ service }: ServiceDetailsProps) {
                     Created At
                   </h4>
                   <p className="text-sm text-card-foreground">
-                    {service.createdAt ? format(new Date(service.createdAt), "PPpp") : "N/A"}
+                    {service.createdAt
+                      ? format(new Date(service.createdAt), "PPpp")
+                      : "N/A"}
                   </p>
                 </div>
               </div>
