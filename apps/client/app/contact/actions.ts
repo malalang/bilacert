@@ -1,17 +1,25 @@
 "use server";
 
-import { contactSchema, type ContactMessageInput } from "@bilacert/contracts/contact";
-import { type ActionResult } from "@bilacert/contracts/actionResult";
+import type { ActionResult } from "@bilacert/contracts/actionResult";
+import {
+  type ContactMessageInput,
+  contactSchema,
+} from "@bilacert/contracts/contact";
 import { createContact } from "@bilacert/supabase/Mutations/contacts";
 
-export async function submitContactForm(values: ContactMessageInput): Promise<ActionResult<{ id: string }>> {
+export async function submitContactForm(
+  values: ContactMessageInput,
+): Promise<ActionResult<{ id: string }>> {
   const parsed = contactSchema.safeParse(values);
 
   if (!parsed.success) {
     return {
       ok: false,
       error: "Invalid form data",
-      fieldErrors: parsed.error.flatten().fieldErrors as Record<string, string[]>,
+      fieldErrors: parsed.error.flatten().fieldErrors as Record<
+        string,
+        string[]
+      >,
     };
   }
 
@@ -27,7 +35,8 @@ export async function submitContactForm(values: ContactMessageInput): Promise<Ac
     return {
       ok: true,
       data: { id: data?.id || "" },
-      message: "Form submitted successfully. We will review and contact you soon.",
+      message:
+        "Form submitted successfully. We will review and contact you soon.",
     };
   } catch (error) {
     console.error("Form submission error:", error);

@@ -37,9 +37,7 @@ export function useAnalyticsData() {
     return submissions
       .filter((s) => s.status === "archived")
       .reduce((acc, submission) => {
-        const service = services.find(
-          (s) => s.slug === submission.serviceName,
-        );
+        const service = services.find((s) => s.slug === submission.serviceName);
         return acc + (service?.pricing || 0);
       }, 0);
   }, [submissions, services]);
@@ -49,9 +47,7 @@ export function useAnalyticsData() {
     return submissions
       .filter((s) => s.status === "archived")
       .map((submission) => {
-        const service = services.find(
-          (s) => s.slug === submission.serviceName,
-        );
+        const service = services.find((s) => s.slug === submission.serviceName);
         const serviceName = service ? service.title : "Unknown Service";
         const submitterName = submission.fullName || "Anonymous";
         return `${submitterName} - ${serviceName}`;

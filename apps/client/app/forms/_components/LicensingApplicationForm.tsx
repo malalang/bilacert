@@ -1,9 +1,14 @@
 "use client";
 
 import type { FormType } from "@bilacert/contracts/formSubmission";
-import { submitFormAction } from "../actions";
 import Link from "next/link";
-import { type ChangeEvent, type FormEvent, useState, useTransition } from "react";
+import {
+  type ChangeEvent,
+  type FormEvent,
+  useState,
+  useTransition,
+} from "react";
+import { submitFormAction } from "../actions";
 
 interface FormData {
   fullName: string;

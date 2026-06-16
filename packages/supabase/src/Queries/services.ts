@@ -1,4 +1,4 @@
-import { type Service } from "@bilacert/contracts/service";
+import type { Service } from "@bilacert/contracts/service";
 import { createSupabaseBrowserClient } from "../client";
 import type { Database } from "../supabaseType";
 
@@ -32,7 +32,8 @@ export function normalizeService(row: ServiceRow): Service {
     orderIndex: row.orderIndex ?? undefined,
     content: row.content ?? undefined,
     features: (row.features as unknown as string | undefined) ?? undefined,
-    requirements: (row.requirements as unknown as string | undefined) ?? undefined,
+    requirements:
+      (row.requirements as unknown as string | undefined) ?? undefined,
     includes: toStringArray(row.includes),
     published: row.published ?? false,
     featured: row.featured ?? false,
@@ -43,12 +44,9 @@ export function normalizeService(row: ServiceRow): Service {
     seoTitle: row.seoTitle ?? undefined,
     seoDescription: row.seoDescription ?? undefined,
     seoKeywords: row.seoKeywords ?? undefined,
-    pricingPlans:
-      (row.pricingPlans as any) ?? [],
-    processSteps:
-      (row.processSteps as any) ?? [],
-    successStory:
-      (row.successStory as any) ?? undefined,
+    pricingPlans: (row.pricingPlans as any) ?? [],
+    processSteps: (row.processSteps as any) ?? [],
+    successStory: (row.successStory as any) ?? undefined,
     createdAt: row.createdAt ?? new Date().toISOString(),
     updatedAt: row.updatedAt ?? row.createdAt ?? new Date().toISOString(),
   };

@@ -9,7 +9,7 @@ import { useEffect } from "react";
 import AdminHeader from "@/components/admin/Header";
 import AdminSidebar from "@/components/admin/Sidebar";
 import SupabaseNotConfigured from "@/components/admin/SupabaseNotConfigured";
-import { SidebarProvider } from "@/components/ui/sidebar";
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 
 export default function AdminLayout({
   children,
@@ -61,10 +61,12 @@ export default function AdminLayout({
   return (
     <SidebarProvider>
       <AdminSidebar />
-      <main className="flex min-h-svh flex-1 flex-col bg-background">
+      <SidebarInset className="min-w-0">
         <AdminHeader />
-        <div className="flex-1 p-4 sm:p-6 lg:p-8">{children}</div>
-      </main>
+        <main className="flex-1 overflow-x-hidden p-4 sm:p-6 lg:p-8">
+          {children}
+        </main>
+      </SidebarInset>
     </SidebarProvider>
   );
 }

@@ -1,12 +1,8 @@
 "use client";
 
-import { submitContactForm } from "./actions";
-import {
-  AlertCircle,
-  CheckCircle,
-  Send,
-} from "lucide-react";
+import { AlertCircle, CheckCircle, Send } from "lucide-react";
 import { useState, useTransition } from "react";
+import { submitContactForm } from "./actions";
 
 export default function ContactMessageForm({
   defaultService,
@@ -165,8 +161,12 @@ export default function ContactMessageForm({
             >
               <option value="">Select a service</option>
               <option value="icasa-type-approvals">ICASA Type Approvals</option>
-              <option value="nrcs-loa-applications">NRCS LOA Applications</option>
-              <option value="radio-dealer-licensing">Radio Dealer Licensing</option>
+              <option value="nrcs-loa-applications">
+                NRCS LOA Applications
+              </option>
+              <option value="radio-dealer-licensing">
+                Radio Dealer Licensing
+              </option>
               <option value="class-ecs-ecns-licensing">
                 Class ECS/ECNS Licensing
               </option>

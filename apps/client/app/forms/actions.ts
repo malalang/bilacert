@@ -1,18 +1,26 @@
 "use server";
 
-import { formSubmissionPayloadSchema, type FormSubmissionPayload } from "@bilacert/contracts/formSubmission";
-import { type ActionResult } from "@bilacert/contracts/actionResult";
+import type { ActionResult } from "@bilacert/contracts/actionResult";
+import {
+  type FormSubmissionPayload,
+  formSubmissionPayloadSchema,
+} from "@bilacert/contracts/formSubmission";
 import { createFormSubmission } from "@bilacert/supabase/Mutations/formSubmissions";
-import { type Json } from "@bilacert/supabase/supabaseType";
+import type { Json } from "@bilacert/supabase/supabaseType";
 
-export async function submitFormAction(values: FormSubmissionPayload): Promise<ActionResult<{ id: string }>> {
+export async function submitFormAction(
+  values: FormSubmissionPayload,
+): Promise<ActionResult<{ id: string }>> {
   const parsed = formSubmissionPayloadSchema.safeParse(values);
 
   if (!parsed.success) {
     return {
       ok: false,
       error: "Invalid form data",
-      fieldErrors: parsed.error.flatten().fieldErrors as Record<string, string[]>,
+      fieldErrors: parsed.error.flatten().fieldErrors as Record<
+        string,
+        string[]
+      >,
     };
   }
 
@@ -45,7 +53,8 @@ export async function submitFormAction(values: FormSubmissionPayload): Promise<A
     return {
       ok: true,
       data: { id: data?.id || "" },
-      message: "Form submitted successfully. We will review and contact you soon.",
+      message:
+        "Form submitted successfully. We will review and contact you soon.",
     };
   } catch (error) {
     console.error("Form submission error:", error);

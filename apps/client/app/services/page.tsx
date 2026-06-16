@@ -103,26 +103,27 @@ export default async function ServicesPage() {
                     <p className="mb-4 text-sm text-muted-foreground flex-grow">
                       {service.description}
                     </p>
-                    {service.includes && (service.includes as string[]).length > 0 && (
-                      <div className="mb-4">
-                        <h4 className="mb-2 text-sm font-semibold text-card-foreground">
-                          Includes:
-                        </h4>
-                        <ul className="space-y-2 text-sm text-muted-foreground">
-                          {(service.includes as string[])
-                            .slice(0, 4)
-                            .map((item: string, index: number) => (
-                              <li
-                                key={index}
-                                className="flex items-center gap-2"
-                              >
-                                <CheckCircle className="h-4 w-4 text-accent" />
-                                <span>{item}</span>
-                              </li>
-                            ))}
-                        </ul>
-                      </div>
-                    )}
+                    {service.includes &&
+                      (service.includes as string[]).length > 0 && (
+                        <div className="mb-4">
+                          <h4 className="mb-2 text-sm font-semibold text-card-foreground">
+                            Includes:
+                          </h4>
+                          <ul className="space-y-2 text-sm text-muted-foreground">
+                            {(service.includes as string[])
+                              .slice(0, 4)
+                              .map((item: string, index: number) => (
+                                <li
+                                  key={index}
+                                  className="flex items-center gap-2"
+                                >
+                                  <CheckCircle className="h-4 w-4 text-accent" />
+                                  <span>{item}</span>
+                                </li>
+                              ))}
+                          </ul>
+                        </div>
+                      )}
                   </div>
                   <div className="mt-auto pt-6">
                     {service.pricing && (

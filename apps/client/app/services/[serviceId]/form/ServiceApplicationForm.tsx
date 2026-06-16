@@ -1,9 +1,9 @@
 "use client";
 
-import { type Service } from "@bilacert/contracts/service";
-import { submitFormAction } from "../../../forms/actions";
+import type { Service } from "@bilacert/contracts/service";
 import { AlertCircle, CheckCircle, Send } from "lucide-react";
 import { useState, useTransition } from "react";
+import { submitFormAction } from "../../../forms/actions";
 
 export default function ServiceApplicationForm({
   service,
@@ -48,7 +48,9 @@ export default function ServiceApplicationForm({
       });
 
       if (result.ok) {
-        setSuccessMessage(result.message || "Application submitted successfully!");
+        setSuccessMessage(
+          result.message || "Application submitted successfully!",
+        );
         setFormData({
           fullName: "",
           email: "",

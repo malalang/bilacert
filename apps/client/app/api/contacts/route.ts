@@ -5,14 +5,14 @@ import { type NextRequest, NextResponse } from "next/server";
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    
+
     // Map client fields to schema if necessary, or update client to match
     const mappedBody = {
       name: body.fullName,
       email: body.email,
       phone: body.phone,
       service: body.service,
-      message: body.message
+      message: body.message,
     };
 
     const parsed = contactSchema.safeParse(mappedBody);

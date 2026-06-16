@@ -1,5 +1,5 @@
-import type { Metadata } from "next";
 import { Clock, Mail, Phone } from "lucide-react";
+import type { Metadata } from "next";
 import Image from "next/image";
 import ContactMessageForm from "./ContactMessageForm";
 
@@ -41,7 +41,9 @@ export default function ContactPage() {
         <div className="absolute inset-0 bg-black/40" />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h1 className="text-4xl lg:text-5xl font-bold mb-6">Get in Touch</h1>
+            <h1 className="text-4xl lg:text-5xl font-bold mb-6">
+              Get in Touch
+            </h1>
             <p className="text-xl text-gray-200 max-w-3xl mx-auto">
               Ready to simplify your compliance journey? Contact our experts for
               a free consultation and discover how we can help your business

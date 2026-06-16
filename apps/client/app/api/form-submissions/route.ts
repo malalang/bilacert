@@ -1,16 +1,16 @@
-import { type Json } from "@bilacert/supabase/supabaseType";
 import { formSubmissionPayloadSchema } from "@bilacert/contracts/formSubmission";
 import { createFormSubmission } from "@bilacert/supabase/Mutations/formSubmissions";
 import { getFormSubmissionById } from "@bilacert/supabase/Queries/formSubmissions";
 import { getServiceBySlug } from "@bilacert/supabase/Queries/services";
 import { getUserRole } from "@bilacert/supabase/Queries/users";
 import { createSupabaseServerClient } from "@bilacert/supabase/server";
+import type { Json } from "@bilacert/supabase/supabaseType";
 import { type NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    
+
     const parsed = formSubmissionPayloadSchema.safeParse(body);
 
     if (!parsed.success) {
