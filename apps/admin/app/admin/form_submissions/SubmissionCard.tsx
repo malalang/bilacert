@@ -85,7 +85,7 @@ export default function SubmissionCard({ submission, onDelete }: SubmissionCardP
             
             <div className="flex items-center gap-2">
               <div className="hidden sm:block">
-                <StatusUpdate submissionId={submission.id} currentStatus={submission.status} />
+                <StatusUpdate submission={submission} />
               </div>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -152,7 +152,7 @@ export default function SubmissionCard({ submission, onDelete }: SubmissionCardP
                      <Link href={`/admin/form_submissions/${submission.id}`}>Open Record</Link>
                    </Button>
                    <div className="sm:hidden">
-                    <StatusUpdate submissionId={submission.id} currentStatus={submission.status} />
+                    <StatusUpdate submission={submission} />
                    </div>
                  </div>
               </div>
