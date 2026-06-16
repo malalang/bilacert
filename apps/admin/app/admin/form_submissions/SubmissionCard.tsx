@@ -1,36 +1,35 @@
 "use client";
 
 import type { Submission } from "@bilacert/shared/types";
-import { 
-  User, 
-  Mail, 
-  Phone, 
-  Clock, 
-  MoreVertical, 
-  Trash2, 
-  Eye, 
-  ChevronDown,
-  Calendar,
-  Briefcase
-} from "lucide-react";
 import { format } from "date-fns";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+  Briefcase,
+  Calendar,
+  Clock,
+  Eye,
+  Mail,
+  MoreVertical,
+  Phone,
+  Trash2,
+  User,
+} from "lucide-react";
+import Link from "next/link";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import StatusUpdate from "./StatusUpdate";
-import Link from "next/link";
 
 interface SubmissionCardProps {
   submission: Submission;
@@ -45,9 +44,12 @@ const statusVariants: Record<string, string> = {
   archived: "bg-gray-100 text-gray-800 border-gray-200",
 };
 
-export default function SubmissionCard({ submission, onDelete }: SubmissionCardProps) {
-  const date = submission.createdAt 
-    ? format(new Date(submission.createdAt), "PPP p") 
+export default function SubmissionCard({
+  submission,
+  onDelete,
+}: SubmissionCardProps) {
+  const date = submission.createdAt
+    ? format(new Date(submission.createdAt), "PPP p")
     : "Unknown date";
 
   return (
@@ -65,7 +67,10 @@ export default function SubmissionCard({ submission, onDelete }: SubmissionCardP
                     <h3 className="font-bold text-lg leading-none truncate">
                       {submission.fullName || "Anonymous"}
                     </h3>
-                    <Badge variant="outline" className={`capitalize px-2 py-0 h-5 text-[10px] font-bold ${statusVariants[submission.status] || ""}`}>
+                    <Badge
+                      variant="outline"
+                      className={`capitalize px-2 py-0 h-5 text-[10px] font-bold ${statusVariants[submission.status] || ""}`}
+                    >
                       {submission.status}
                     </Badge>
                   </div>
@@ -76,13 +81,16 @@ export default function SubmissionCard({ submission, onDelete }: SubmissionCardP
                     </div>
                     <div className="flex items-center gap-1.5">
                       <Clock className="h-3.5 w-3.5" />
-                      {format(new Date(submission.createdAt || Date.now()), "MMM d, yyyy")}
+                      {format(
+                        new Date(submission.createdAt || Date.now()),
+                        "MMM d, yyyy",
+                      )}
                     </div>
                   </div>
                 </div>
               </div>
             </AccordionTrigger>
-            
+
             <div className="flex items-center gap-2">
               <div className="hidden sm:block">
                 <StatusUpdate submission={submission} />
@@ -95,11 +103,14 @@ export default function SubmissionCard({ submission, onDelete }: SubmissionCardP
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
                   <DropdownMenuItem asChild>
-                    <Link href={`/admin/form_submissions/${submission.id}`} className="cursor-pointer">
+                    <Link
+                      href={`/admin/form_submissions/${submission.id}`}
+                      className="cursor-pointer"
+                    >
                       <Eye className="mr-2 h-4 w-4" /> View Details
                     </Link>
                   </DropdownMenuItem>
-                  <DropdownMenuItem 
+                  <DropdownMenuItem
                     onClick={() => onDelete(submission)}
                     className="text-destructive focus:bg-destructive/10 focus:text-destructive cursor-pointer"
                   >
@@ -119,13 +130,19 @@ export default function SubmissionCard({ submission, onDelete }: SubmissionCardP
                 <div className="space-y-2">
                   <div className="flex items-center gap-2 text-sm">
                     <Mail className="h-4 w-4 text-muted-foreground" />
-                    <a href={`mailto:${submission.email}`} className="text-primary hover:underline truncate">
+                    <a
+                      href={`mailto:${submission.email}`}
+                      className="text-primary hover:underline truncate"
+                    >
                       {submission.email}
                     </a>
                   </div>
                   <div className="flex items-center gap-2 text-sm">
                     <Phone className="h-4 w-4 text-muted-foreground" />
-                    <a href={`tel:${submission.phone}`} className="hover:underline">
+                    <a
+                      href={`tel:${submission.phone}`}
+                      className="hover:underline"
+                    >
                       {submission.phone || "No phone provided"}
                     </a>
                   </div>
@@ -137,30 +154,47 @@ export default function SubmissionCard({ submission, onDelete }: SubmissionCardP
                   <Calendar className="h-3 w-3" /> Details
                 </h4>
                 <div className="space-y-1">
-                  <p className="text-sm font-medium">Form: <span className="text-muted-foreground">{submission.formType}</span></p>
-                  <p className="text-sm font-medium">Submitted: <span className="text-muted-foreground">{date}</span></p>
+                  <p className="text-sm font-medium">
+                    Form:{" "}
+                    <span className="text-muted-foreground">
+                      {submission.formType}
+                    </span>
+                  </p>
+                  <p className="text-sm font-medium">
+                    Submitted:{" "}
+                    <span className="text-muted-foreground">{date}</span>
+                  </p>
                   {submission.assignedTo && (
-                    <p className="text-sm font-medium">Assigned to: <Badge variant="secondary">{submission.assignedTo}</Badge></p>
+                    <p className="text-sm font-medium">
+                      Assigned to:{" "}
+                      <Badge variant="secondary">{submission.assignedTo}</Badge>
+                    </p>
                   )}
                 </div>
               </div>
 
               <div className="sm:col-span-2 lg:col-span-1">
-                 <h4 className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-3">Quick Actions</h4>
-                 <div className="flex flex-wrap gap-2">
-                   <Button variant="outline" size="sm" asChild>
-                     <Link href={`/admin/form_submissions/${submission.id}`}>Open Record</Link>
-                   </Button>
-                   <div className="sm:hidden">
+                <h4 className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-3">
+                  Quick Actions
+                </h4>
+                <div className="flex flex-wrap gap-2">
+                  <Button variant="outline" size="sm" asChild>
+                    <Link href={`/admin/form_submissions/${submission.id}`}>
+                      Open Record
+                    </Link>
+                  </Button>
+                  <div className="sm:hidden">
                     <StatusUpdate submission={submission} />
-                   </div>
-                 </div>
+                  </div>
+                </div>
               </div>
             </div>
-            
-            {submission.details && (
+
+            {!!submission.details && (
               <div className="mt-6 space-y-2">
-                <h4 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Submission Preview</h4>
+                <h4 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                  Submission Preview
+                </h4>
                 <div className="bg-background p-4 rounded-md border text-sm max-h-32 overflow-hidden relative">
                   <pre className="whitespace-pre-wrap font-sans text-xs line-clamp-4">
                     {JSON.stringify(submission.details, null, 2)}

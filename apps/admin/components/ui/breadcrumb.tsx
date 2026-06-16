@@ -1,7 +1,7 @@
+import { cn } from "@bilacert/shared/cn";
 import { Slot } from "@radix-ui/react-slot";
 import { ChevronRight, MoreHorizontal } from "lucide-react";
 import * as React from "react";
-import { cn } from "@bilacert/shared/cn";
 
 const Breadcrumb = React.forwardRef<
   HTMLElement,
@@ -63,6 +63,7 @@ const BreadcrumbPage = React.forwardRef<
   <span
     ref={ref}
     role="link"
+    tabIndex={-1}
     aria-disabled="true"
     aria-current="page"
     className={cn("font-normal text-foreground", className)}
