@@ -65,7 +65,7 @@ export default function AdminSidebar() {
   };
 
   return (
-    <Sidebar>
+    <Sidebar variant="inset" collapsible="icon">
       <SidebarHeader>
         <Link
           href="/admin/dashboard"
