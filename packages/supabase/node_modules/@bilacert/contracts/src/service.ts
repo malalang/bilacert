@@ -22,7 +22,7 @@ export const successStorySchema = z.object({
 });
 
 export const serviceSchema = z.object({
-  id: z.string(),
+  id: z.string().optional(),
   title: z.string().min(1, "Title is required"),
   slug: z.string().min(1, "Slug is required"),
   href: z
@@ -56,8 +56,8 @@ export const serviceSchema = z.object({
   updatedAt: z.string().optional(),
 });
 
-export type Service = z.infer<typeof serviceSchema>;
 export type ServiceFormValues = z.infer<typeof serviceSchema>;
+export type Service = ServiceFormValues & { id: string };
 export type PricingPlan = z.infer<typeof pricingPlanSchema>;
 export type ProcessStep = z.infer<typeof processStepSchema>;
 export type SuccessStory = z.infer<typeof successStorySchema>;
