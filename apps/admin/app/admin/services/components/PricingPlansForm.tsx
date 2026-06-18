@@ -79,7 +79,21 @@ export default function PricingPlansForm({ form }: { form: any }) {
                     <FormItem>
                       <FormLabel>Features (one per line)</FormLabel>
                       <FormControl>
-                        <Textarea {...field} />
+                        <Textarea
+                          value={
+                            Array.isArray(field.value)
+                              ? field.value.join("\n")
+                              : ""
+                          }
+                          onChange={(event) =>
+                            field.onChange(
+                              event.target.value
+                                .split("\n")
+                                .map((item) => item.trim())
+                                .filter(Boolean),
+                            )
+                          }
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
