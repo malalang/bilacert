@@ -451,6 +451,9 @@ export default function ServiceForm({ service }: ServiceFormProps) {
                               <FormLabel>Features (one per line)</FormLabel>
                               <FormControl>
                                 <Textarea
+                                  name={field.name}
+                                  ref={field.ref}
+                                  onBlur={field.onBlur}
                                   value={
                                     Array.isArray(field.value)
                                       ? field.value.join("\n")
