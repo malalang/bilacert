@@ -1,4 +1,4 @@
-import { getIcon } from "@/lib/services-config";
+import { getServiceIcon } from "@/lib/service-icons";
 
 interface WhatIsSectionProps {
   title: string;
@@ -19,7 +19,7 @@ export function WhatIsSection({
   licenseTypes,
   benefits,
 }: WhatIsSectionProps) {
-  const CheckCircleIcon = getIcon("CheckCircle");
+  const CheckCircleIcon = getServiceIcon("CheckCircle");
 
   return (
     <section className="py-20">
@@ -49,7 +49,7 @@ export function WhatIsSection({
                 </h3>
                 <div className="space-y-6">
                   {licenseTypes.map((type, index) => {
-                    const Icon = getIcon(type.icon);
+                    const Icon = getServiceIcon(type.icon);
                     return (
                       <div key={index} className="flex items-start space-x-4">
                         <div className="bg-accent p-2 rounded-lg">
@@ -75,7 +75,7 @@ export function WhatIsSection({
                 </h3>
                 <div className="space-y-6">
                   {benefits.map((benefit, index) => {
-                    const Icon = getIcon(benefit.icon);
+                    const Icon = getServiceIcon(benefit.icon);
                     return (
                       <div key={index} className="flex items-start space-x-4">
                         <div className="bg-accent p-2 rounded-lg">

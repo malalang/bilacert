@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { businessInfo } from "./business";
 
 interface SEOConfig {
   title: string;
@@ -21,9 +22,9 @@ export function generateMetadata({
   type = "website",
   publishedTime,
   modifiedTime,
-  author = "Bilacert",
+  author = businessInfo.defaultBlogAuthor,
 }: SEOConfig): Metadata {
-  const baseUrl = "https://bilacert.co.za";
+  const baseUrl = businessInfo.domain;
   const fullUrl = url ? `${baseUrl}${url}` : baseUrl;
   const fullImageUrl = image.startsWith("http") ? image : `${baseUrl}${image}`;
 
@@ -37,11 +38,11 @@ export function generateMetadata({
       "compliance",
       "South Africa",
       "regulatory approval",
-      "Bilacert",
+      businessInfo.name,
     ],
     authors: [{ name: author }],
     creator: author,
-    publisher: "Bilacert",
+    publisher: businessInfo.name,
     metadataBase: new URL(baseUrl),
     alternates: {
       canonical: fullUrl,
@@ -50,7 +51,7 @@ export function generateMetadata({
       title,
       description,
       url: fullUrl,
-      siteName: "Bilacert",
+      siteName: businessInfo.name,
       images: [
         {
           url: fullImageUrl,
@@ -69,7 +70,7 @@ export function generateMetadata({
       title,
       description,
       images: [fullImageUrl],
-      creator: "@bilacert",
+      creator: businessInfo.social.twitterCreator,
     },
     robots: {
       index: true,
@@ -134,8 +135,7 @@ export const seoConfigs = {
 
   contact: {
     title: "Contact Us - Get Expert Compliance Guidance",
-    description:
-      "Get in touch with Bilacert for expert ICASA and NRCS compliance guidance. Call 075 430 4433 or email info@bilacert.co.za for a free consultation.",
+    description: `Get in touch with ${businessInfo.name} for expert ICASA and NRCS compliance guidance. Call ${businessInfo.phone} or email ${businessInfo.email} for a free consultation.`,
     keywords: [
       "contact Bilacert",
       "ICASA compliance consultation",

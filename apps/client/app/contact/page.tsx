@@ -1,12 +1,12 @@
 import { Clock, Mail, Phone } from "lucide-react";
 import type { Metadata } from "next";
 import Image from "next/image";
+import { businessInfo } from "@/lib/business";
 import ContactMessageForm from "./ContactMessageForm";
 
 export const metadata: Metadata = {
   title: "Contact Us",
-  description:
-    "Get in touch with Bilacert for expert ICASA and NRCS compliance guidance. Call 075 430 4433 or email info@bilacert.co.za for a free consultation.",
+  description: `Get in touch with ${businessInfo.name} for expert ICASA and NRCS compliance guidance. Call ${businessInfo.phone} or email ${businessInfo.email} for a free consultation.`,
   keywords: [
     "contact Bilacert",
     "ICASA compliance consultation",
@@ -16,14 +16,13 @@ export const metadata: Metadata = {
     "free compliance consultation",
   ],
   openGraph: {
-    title: "Contact Bilacert - Get Expert Compliance Guidance",
-    description:
-      "Get in touch with Bilacert for expert ICASA and NRCS compliance guidance. Call 075 430 4433 or email info@bilacert.co.za for a free consultation.",
-    url: "https://bilacert.co.za/contact",
+    title: `Contact ${businessInfo.name} - Get Expert Compliance Guidance`,
+    description: `Get in touch with ${businessInfo.name} for expert ICASA and NRCS compliance guidance. Call ${businessInfo.phone} or email ${businessInfo.email} for a free consultation.`,
+    url: `${businessInfo.domain}/contact`,
     type: "website",
   },
   alternates: {
-    canonical: "https://bilacert.co.za/contact",
+    canonical: `${businessInfo.domain}/contact`,
   },
 };
 
@@ -61,7 +60,7 @@ export default function ContactPage() {
                 <Phone className="h-8 w-8 text-accent" />
               </div>
               <h3 className="text-xl font-semibold text-primary mb-2">Phone</h3>
-              <p className="text-gray-600 mb-2">075 430 4433</p>
+              <p className="text-gray-600 mb-2">{businessInfo.phone}</p>
               <p className="text-sm text-gray-500">Mon-Fri 08:00 - 16:30</p>
             </div>
 
@@ -70,7 +69,7 @@ export default function ContactPage() {
                 <Mail className="h-8 w-8 text-accent" />
               </div>
               <h3 className="text-xl font-semibold text-primary mb-2">Email</h3>
-              <p className="text-gray-600 mb-2">info@bilacert.co.za</p>
+              <p className="text-gray-600 mb-2">{businessInfo.email}</p>
               <p className="text-sm text-gray-500">
                 We&apos;ll respond within 24 hours
               </p>
@@ -100,18 +99,18 @@ export default function ContactPage() {
             Need Immediate Assistance?
           </h2>
           <p className="text-xl text-gray-600 mb-8">
-            For urgent compliance matters, call us directly at 075 430 4433 or
+            For urgent compliance matters, call us directly at {businessInfo.phone} or
             reach out via WhatsApp for instant support.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a
-              href="tel:0754304433"
+              href={businessInfo.telHref}
               className="bg-accent text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-accent-light transition-colors duration-200"
             >
               Call Now
             </a>
             <a
-              href="https://wa.me/27754304433"
+              href={businessInfo.whatsappHref}
               target="_blank"
               rel="noopener noreferrer"
               className="bg-green-500 text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-green-600 transition-colors duration-200"

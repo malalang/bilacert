@@ -1,5 +1,6 @@
 import { Clock, Mail, Phone } from "lucide-react";
 import Link from "next/link";
+import { businessInfo } from "@/lib/business";
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -36,7 +37,7 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Company Info */}
           <div className="lg:col-span-1">
-            <div className="text-2xl font-bold mb-4">Bilacert</div>
+            <div className="text-2xl font-bold mb-4">{businessInfo.name}</div>
             <p className="text-gray-300 mb-6">
               Your trusted compliance partner, simplifying ICASA and NRCS
               approvals for South African businesses.
@@ -44,15 +45,15 @@ export default function Footer() {
             <div className="space-y-3">
               <div className="flex items-center space-x-3">
                 <Phone className="h-5 w-5 text-accent" />
-                <span>075 430 4433</span>
+                <span>{businessInfo.phone}</span>
               </div>
               <div className="flex items-center space-x-3">
                 <Mail className="h-5 w-5 text-accent" />
-                <span>info@bilacert.co.za</span>
+                <span>{businessInfo.email}</span>
               </div>
               <div className="flex items-center space-x-3">
                 <Clock className="h-5 w-5 text-accent" />
-                <span>Mon - Fri: 8:00 - 16:30</span>
+                <span>{businessInfo.businessHours}</span>
               </div>
             </div>
           </div>
@@ -118,7 +119,7 @@ export default function Footer() {
         <div className="border-t border-white/20 mt-8 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <p className="text-gray-300 text-sm">
-              © {currentYear} Bilacert (Pty) Ltd. All rights reserved.
+              © {currentYear} {businessInfo.legalName}. All rights reserved.
             </p>
             <div className="flex space-x-6 mt-4 md:mt-0">
               <Link
@@ -133,18 +134,6 @@ export default function Footer() {
               >
                 Terms of Service
               </Link>
-            </div>
-            <div>
-              <p className="text-gray-300 text-sm">
-                Developed by{" "}
-                <Link
-                  className="text-blue-300 text-sm"
-                  href="https://abrameltonntsako.web.app"
-                >
-                  AEN Nyath
-                </Link>
-                .
-              </p>
             </div>
           </div>
         </div>

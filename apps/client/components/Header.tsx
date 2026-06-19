@@ -4,6 +4,7 @@ import { Mail, Menu, Phone, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import { businessInfo } from "@/lib/business";
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -26,15 +27,15 @@ export default function Header() {
             <div className="flex items-center space-x-6">
               <div className="flex items-center space-x-2">
                 <Phone className="h-4 w-4" />
-                <span>075 430 4433</span>
+                <span>{businessInfo.phone}</span>
               </div>
               <div className="flex items-center space-x-2">
                 <Mail className="h-4 w-4" />
-                <span>info@bilacert.co.za</span>
+                <span>{businessInfo.email}</span>
               </div>
             </div>
             <div className="hidden md:block">
-              <span>Your Compliance Partner.</span>
+              <span>{businessInfo.tagline}</span>
             </div>
           </div>
         </div>
@@ -49,8 +50,8 @@ export default function Header() {
             className="relative h-11 w-40 flex-shrink-0 flex items-center"
           >
             <Image
-              src="/logo.png"
-              alt="Bilacert Logo"
+              src={businessInfo.logoPath}
+              alt={`${businessInfo.name} Logo`}
               fill
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
               className="rounded-lg object-cover"

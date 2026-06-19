@@ -1,7 +1,7 @@
 import { CheckCircle, Shield } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { getIcon } from "@/lib/services-config";
+import { getServiceIcon } from "@/lib/service-icons";
 
 interface ServiceHeroProps {
   title: string;
@@ -22,7 +22,7 @@ export function ServiceHero({
   formPath,
   phone,
 }: ServiceHeroProps) {
-  const Icon = getIcon(iconName);
+  const Icon = getServiceIcon(iconName);
 
   return (
     <section className="relative text-white py-20">
@@ -70,8 +70,6 @@ interface HeroStatsBackdropProps {
 }
 
 export function HeroStatsBackdrop({ processingTime }: HeroStatsBackdropProps) {
-  const _CheckCircleIcon = getIcon("CheckCircle");
-
   return (
     <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8">
       <div className="space-y-6">

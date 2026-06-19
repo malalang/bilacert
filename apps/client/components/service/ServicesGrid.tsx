@@ -9,7 +9,7 @@ interface ServicesGridProps {
   bgColor?: string;
 }
 
-import { getIcon } from "@/lib/services-config";
+import { getServiceIcon } from "@/lib/service-icons";
 
 export function ServicesGrid({
   title,
@@ -29,7 +29,7 @@ export function ServicesGrid({
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {items.map((item, index) => {
-            const Icon = getIcon(item.icon);
+            const Icon = getServiceIcon(item.icon);
             return (
               <div key={index} className="bg-white p-6 rounded-xl shadow-sm">
                 <div className="bg-accent/10 w-12 h-12 rounded-lg flex items-center justify-center mb-4">
