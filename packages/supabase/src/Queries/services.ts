@@ -31,9 +31,8 @@ export function normalizeService(row: ServiceRow): Service {
     icon: row.icon ?? undefined,
     orderIndex: row.orderIndex ?? undefined,
     content: row.content ?? undefined,
-    features: (row.features as unknown as string | undefined) ?? undefined,
-    requirements:
-      (row.requirements as unknown as string | undefined) ?? undefined,
+    features: toStringArray(row.features),
+    requirements: toStringArray(row.requirements),
     includes: toStringArray(row.includes),
     published: row.published ?? false,
     featured: row.featured ?? false,

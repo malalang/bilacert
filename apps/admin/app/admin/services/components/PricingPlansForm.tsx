@@ -1,6 +1,7 @@
 "use client";
 
 import { useFieldArray } from "react-hook-form";
+import { ArrayInput } from "@/components/admin/ArrayInput";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   FormControl,
@@ -12,7 +13,6 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
-import { Textarea } from "@/components/ui/textarea";
 
 export default function PricingPlansForm({ form }: { form: any }) {
   const { fields: pricingPlanFields } = useFieldArray({
@@ -72,35 +72,12 @@ export default function PricingPlansForm({ form }: { form: any }) {
                     </FormItem>
                   )}
                 />
-                <FormField
+                <ArrayInput
                   control={form.control}
                   name={`pricingPlans.${index}.features`}
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Features (one per line)</FormLabel>
-                      <FormControl>
-                        <Textarea
-                          name={field.name}
-                          ref={field.ref}
-                          onBlur={field.onBlur}
-                          value={
-                            Array.isArray(field.value)
-                              ? field.value.join("\n")
-                              : ""
-                          }
-                          onChange={(event) =>
-                            field.onChange(
-                              event.target.value
-                                .split("\n")
-                                .map((item) => item.trim())
-                                .filter(Boolean),
-                            )
-                          }
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
+                  label="Plan Features"
+                  addLabel="Add plan feature"
+                  placeholder="Add a plan feature"
                 />
                 <FormField
                   control={form.control}

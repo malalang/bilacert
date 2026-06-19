@@ -1,14 +1,7 @@
 "use client";
 
+import { ArrayInput } from "@/components/admin/ArrayInput";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Textarea } from "@/components/ui/textarea";
 
 export default function FeaturesForm({ form }: { form: any }) {
   return (
@@ -17,44 +10,26 @@ export default function FeaturesForm({ form }: { form: any }) {
         <CardTitle>Features & Requirements</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        <FormField
+        <ArrayInput
           control={form.control}
           name="features"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Features (one per line)</FormLabel>
-              <FormControl>
-                <Textarea {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
+          label="Features"
+          addLabel="Add feature"
+          placeholder="Add a feature"
         />
-        <FormField
+        <ArrayInput
           control={form.control}
           name="requirements"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Requirements (one per line)</FormLabel>
-              <FormControl>
-                <Textarea {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
+          label="Requirements"
+          addLabel="Add requirement"
+          placeholder="Add a requirement"
         />
-        <FormField
+        <ArrayInput
           control={form.control}
           name="includes"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>What's Included (one per line)</FormLabel>
-              <FormControl>
-                <Textarea {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
+          label="What's Included"
+          addLabel="Add included item"
+          placeholder="Add an included item"
         />
       </CardContent>
     </Card>

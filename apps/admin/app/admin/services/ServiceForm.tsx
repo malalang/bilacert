@@ -11,6 +11,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
+import { ArrayInput } from "@/components/admin/ArrayInput";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -58,8 +59,8 @@ export default function ServiceForm({ service }: ServiceFormProps) {
       icon: "",
       orderIndex: 0,
       content: "",
-      features: "",
-      requirements: "",
+      features: [],
+      requirements: [],
       includes: [],
       published: false,
       featured: false,
@@ -176,12 +177,10 @@ export default function ServiceForm({ service }: ServiceFormProps) {
         icon: service.icon || "",
         orderIndex: service.orderIndex || 0,
         content: service.content || "",
-        features: Array.isArray(service.features)
-          ? service.features.join("\n")
-          : "",
+        features: Array.isArray(service.features) ? service.features : [],
         requirements: Array.isArray(service.requirements)
-          ? service.requirements.join("\n")
-          : "",
+          ? service.requirements
+          : [],
         includes: Array.isArray(service.includes) ? service.includes : [],
         published: service.published || false,
         featured: service.featured || false,
@@ -336,58 +335,26 @@ export default function ServiceForm({ service }: ServiceFormProps) {
                 <CardTitle>Features & Requirements</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <FormField
+                <ArrayInput
                   control={form.control}
                   name="features"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Features (one per line)</FormLabel>
-                      <FormControl>
-                        <Textarea {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
+                  label="Features"
+                  addLabel="Add feature"
+                  placeholder="Add a feature"
                 />
-                <FormField
+                <ArrayInput
                   control={form.control}
                   name="requirements"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Requirements (one per line)</FormLabel>
-                      <FormControl>
-                        <Textarea {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
+                  label="Requirements"
+                  addLabel="Add requirement"
+                  placeholder="Add a requirement"
                 />
-                <FormField
+                <ArrayInput
                   control={form.control}
                   name="includes"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>What's Included (one per line)</FormLabel>
-                      <FormControl>
-                        <Textarea
-                          value={
-                            Array.isArray(field.value)
-                              ? field.value.join("\n")
-                              : ""
-                          }
-                          onChange={(event) =>
-                            field.onChange(
-                              event.target.value
-                                .split("\n")
-                                .map((item) => item.trim())
-                                .filter(Boolean),
-                            )
-                          }
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
+                  label="What's Included"
+                  addLabel="Add included item"
+                  placeholder="Add an included item"
                 />
               </CardContent>
             </Card>
@@ -443,35 +410,12 @@ export default function ServiceForm({ service }: ServiceFormProps) {
                             </FormItem>
                           )}
                         />
-                        <FormField
+                        <ArrayInput
                           control={form.control}
                           name={`pricingPlans.${index}.features`}
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Features (one per line)</FormLabel>
-                              <FormControl>
-                                <Textarea
-                                  name={field.name}
-                                  ref={field.ref}
-                                  onBlur={field.onBlur}
-                                  value={
-                                    Array.isArray(field.value)
-                                      ? field.value.join("\n")
-                                      : ""
-                                  }
-                                  onChange={(event) =>
-                                    field.onChange(
-                                      event.target.value
-                                        .split("\n")
-                                        .map((item) => item.trim())
-                                        .filter(Boolean),
-                                    )
-                                  }
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
+                          label="Plan Features"
+                          addLabel="Add plan feature"
+                          placeholder="Add a plan feature"
                         />
                         <FormField
                           control={form.control}

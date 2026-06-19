@@ -54,8 +54,8 @@ export default function ServiceForm({ service }: ServiceFormProps) {
       icon: "",
       orderIndex: 0,
       content: "",
-      features: "",
-      requirements: "",
+      features: [],
+      requirements: [],
       includes: [],
       published: false,
       featured: false,
@@ -157,12 +157,10 @@ export default function ServiceForm({ service }: ServiceFormProps) {
         icon: service.icon || "",
         orderIndex: service.orderIndex || 0,
         content: service.content || "",
-        features: Array.isArray(service.features)
-          ? service.features.join("\n")
-          : "",
+        features: Array.isArray(service.features) ? service.features : [],
         requirements: Array.isArray(service.requirements)
-          ? service.requirements.join("\n")
-          : "",
+          ? service.requirements
+          : [],
         includes: Array.isArray(service.includes) ? service.includes : [],
         published: service.published || false,
         featured: service.featured || false,

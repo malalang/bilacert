@@ -4,7 +4,9 @@ export const pricingPlanSchema = z.object({
   title: z.string().min(1, "Title is required"),
   description: z.string().default(""),
   price: z.string().min(1, "Price is required"),
-  features: z.array(z.string()).default([]),
+  features: z
+    .array(z.string().trim().min(1, "Feature is required"))
+    .default([]),
   popular: z.boolean().default(false),
 });
 
@@ -37,9 +39,15 @@ export const serviceSchema = z.object({
   icon: z.string().optional(),
   orderIndex: z.coerce.number().optional(),
   content: z.string().optional(),
-  features: z.string().optional(),
-  requirements: z.string().optional(),
-  includes: z.array(z.string()).default([]),
+  features: z
+    .array(z.string().trim().min(1, "Feature is required"))
+    .default([]),
+  requirements: z
+    .array(z.string().trim().min(1, "Requirement is required"))
+    .default([]),
+  includes: z
+    .array(z.string().trim().min(1, "Included item is required"))
+    .default([]),
   published: z.boolean().default(false),
   featured: z.boolean().default(false),
   processingTime: z.string().optional(),
