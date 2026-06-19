@@ -60,11 +60,13 @@ export default async function ServicesPage() {
       {/* Hero Section */}
       <section className="relative text-white py-20">
         <Image
-          src="https://picsum.photos/seed/services/1920/1080"
-          data-ai-hint="compliance document"
-          alt="Bilacert Services"
+          src="/images/services/services-hero.svg"
+          data-ai-hint="bilacert compliance services"
+          alt="Bilacert compliance services"
           fill
           priority
+          sizes="100vw"
+          unoptimized
           className="object-cover"
         />
         <div className="absolute inset-0 bg-black/40" />
