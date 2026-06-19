@@ -1,21 +1,9 @@
-import type {
-  RevalidationMode,
-  RevalidationRequest,
+import {
+  revalidationPayloadSchema,
+  type RevalidationMode,
 } from "@bilacert/contracts/revalidation";
 import { revalidatePath, revalidateTag } from "next/cache";
 import { type NextRequest, NextResponse } from "next/server";
-
-type RevalidationPayload = RevalidationRequest & {
-  tag?: string;
-  path?: string;
-};
-
-function stringList(value: unknown): string[] {
-  if (!Array.isArray(value)) return [];
-  return value.filter(
-    (item): item is string => typeof item === "string" && item.length > 0,
-  );
-}
 
 export async function POST(request: NextRequest) {
   const secret = process.env.REVALIDATION_SECRET;
@@ -31,26 +19,28 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
   }
 
-  const body = (await request
-    .json()
-    .catch(() => null)) as RevalidationPayload | null;
+  const json = await request.json().catch(() => null);
+  const parsed = revalidationPayloadSchema.safeParse(json);
 
-  if (!body) {
-    return NextResponse.json({ message: "Invalid JSON body" }, { status: 400 });
+  if (!parsed.success) {
+    return NextResponse.json(
+      { message: "Invalid revalidation payload" },
+      { status: 400 },
+    );
   }
 
+  const body = parsed.data;
   const tags = [
-    ...stringList(body.tags),
-    ...(typeof body.tag === "string" && body.tag ? [body.tag] : []),
-  ];
+    ...(body.tags ?? []),
+    ...(body.tag ? [body.tag] : []),
+  ].filter((tag) => tag.length > 0);
   const paths = [
-    ...stringList(body.paths),
-    ...(typeof body.path === "string" && body.path ? [body.path] : []),
-  ].filter((path) => path.startsWith("/"));
+    ...(body.paths ?? []),
+    ...(body.path ? [body.path] : []),
+  ].filter((path) => path.length > 0 && path.startsWith("/"));
   const uniqueTags = [...new Set(tags)];
   const uniquePaths = [...new Set(paths)];
-  const mode: RevalidationMode =
-    body.mode === "immediate" ? "immediate" : "max";
+  const mode: RevalidationMode = body.mode === "immediate" ? "immediate" : "max";
 
   if (uniqueTags.length === 0 && uniquePaths.length === 0) {
     return NextResponse.json(

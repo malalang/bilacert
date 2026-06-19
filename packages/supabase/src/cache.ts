@@ -4,7 +4,7 @@ export const CACHE_TAGS = {
   blogs: "blogs",
   blog: (slug: string) => `blog:${slug}`,
   services: "services",
-  service: (id: string) => `service:${id}`,
+  service: (slug: string) => `service:${slug}`,
   testimonials: "testimonials",
   contacts: "contacts",
   formSubmissions: "form-submissions",
@@ -15,7 +15,7 @@ export const CACHE_PATHS = {
   blog: "/blog",
   blogPost: (slug: string) => `/blog/${slug}`,
   services: "/services",
-  service: (id: string) => `/services/${id}`,
+  service: (slug: string) => `/services/${slug}`,
 } as const;
 
 export interface MutationResult<T> {
