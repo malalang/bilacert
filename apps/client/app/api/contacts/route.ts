@@ -1,4 +1,4 @@
-import { createSupabaseServerClient } from "@bilacert/supabase/server";
+import { createContact } from "@bilacert/supabase/Mutations/contacts";
 import { type NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
@@ -13,28 +13,13 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const supabase = await createSupabaseServerClient();
-
-    const { data, error } = await supabase
-      .from("contacts")
-      .insert([
-        {
-          name: fullName,
-          email,
-          phone: phone || null,
-          service: service || null,
-          message,
-        },
-      ])
-      .select();
-
-    if (error) {
-      console.error("Supabase error:", error);
-      return NextResponse.json(
-        { error: `Failed to submit form: ${error.message}` },
-        { status: 500 },
-      );
-    }
+    const { data } = await createContact({
+      name: fullName,
+      email,
+      phone: phone || null,
+      service: service || null,
+      message,
+    });
 
     console.log(`✓ Contact form submission received from ${email}`);
 
@@ -43,7 +28,7 @@ export async function POST(request: NextRequest) {
         success: true,
         message:
           "Form submitted successfully. We will review and contact you soon.",
-        submissionId: data?.[0]?.id,
+        submissionId: data?.id,
       },
       { status: 201 },
     );

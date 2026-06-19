@@ -1,4 +1,7 @@
+import { createFormSubmission } from "@bilacert/supabase/Mutations/formSubmissions";
+import { getFormSubmissionById } from "@bilacert/supabase/Queries/formSubmissions";
 import { getServiceBySlug } from "@bilacert/supabase/Queries/services";
+import { getUserRole } from "@bilacert/supabase/Queries/users";
 import { createSupabaseServerClient } from "@bilacert/supabase/server";
 import { type NextRequest, NextResponse } from "next/server";
 
@@ -26,35 +29,19 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Create Supabase client
-    const supabase = await createSupabaseServerClient();
-
-    // Insert form submission
-    const { data, error } = await supabase
-      .from("form_submissions")
-      .insert([
-        {
-          formType,
-          serviceId: serviceId || null,
-          serviceName: serviceName || null,
-          fullName,
-          email,
-          phone: phone || null,
-          company: company || companyName || null,
-          industry: industry || null,
-          details: details || null,
-          status: "pending",
-        },
-      ])
-      .select();
-
-    if (error) {
-      console.error("Supabase error:", error);
-      return NextResponse.json(
-        { error: `Failed to submit form: ${error.message}` },
-        { status: 500 },
-      );
-    }
+    // Insert form submission using mutation
+    const { data } = await createFormSubmission({
+      formType,
+      serviceId: serviceId || null,
+      serviceName: serviceName || null,
+      fullName,
+      email,
+      phone: phone || null,
+      company: company || companyName || null,
+      industry: industry || null,
+      details: details || null,
+      status: "pending",
+    });
 
     // Log the submission for monitoring
     console.log(`✓ Form submission received: ${formType} from ${email}`);
@@ -64,7 +51,7 @@ export async function POST(request: NextRequest) {
         success: true,
         message:
           "Form submitted successfully. We will review and contact you soon.",
-        submissionId: data?.[0]?.id,
+        submissionId: data?.id,
       },
       { status: 201 },
     );
@@ -105,32 +92,24 @@ export async function GET(request: NextRequest) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
       }
 
-      const { data: userProfile } = await supabase
-        .from("users")
-        .select("role")
-        .eq("id", user.id)
-        .single();
+      const role = await getUserRole(user.id);
 
-      if (userProfile?.role !== "admin") {
+      if (role !== "admin") {
         return NextResponse.json(
           { error: "Forbidden: Only admins can view submissions" },
           { status: 403 },
         );
       }
 
-      const { data, error } = await supabase
-        .from("form_submissions")
-        .select("*")
-        .eq("id", submissionId)
-        .single();
-
-      if (error) {
+      try {
+        const data = await getFormSubmissionById(submissionId);
+        return NextResponse.json(data);
+      } catch (error) {
         return NextResponse.json(
           { error: "Submission not found" },
           { status: 404 },
         );
       }
-      return NextResponse.json(data);
     }
 
     return NextResponse.json(

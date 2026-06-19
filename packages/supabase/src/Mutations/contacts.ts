@@ -4,6 +4,22 @@ import type { Database } from "../supabaseType";
 
 type ContactInsert = Database["public"]["Tables"]["contacts"]["Insert"];
 
+export async function createContact(data: ContactInsert) {
+  const supabase = createSupabaseAdminClient();
+  const { data: contact, error } = await supabase
+    .from("contacts")
+    .insert([data])
+    .select("*")
+    .single();
+
+  if (error) throw new Error(error.message);
+
+  return mutationResult(contact, {
+    tags: [CACHE_TAGS.contacts],
+    mode: "immediate",
+  });
+}
+
 export async function upsertContact(data: ContactInsert) {
   const supabase = createSupabaseAdminClient();
   const { data: contact, error } = await supabase
