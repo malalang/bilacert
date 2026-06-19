@@ -5,7 +5,6 @@ import type { Submission } from "@bilacert/shared/types";
 import { updateFormSubmission } from "@bilacert/supabase/Mutations/formSubmissions";
 import type { Json } from "@bilacert/supabase/supabaseType";
 import { revalidatePath } from "next/cache";
-import { triggerRevalidation } from "@/lib/revalidation";
 
 export async function upsertSubmission(values: unknown, submissionId: string) {
   const parsedValues = submissionSchema.safeParse(values);
@@ -34,7 +33,6 @@ export async function upsertSubmission(values: unknown, submissionId: string) {
   try {
     const result = await updateFormSubmission(submissionId, submissionData);
     data = result.data as Submission;
-    await triggerRevalidation(result.revalidate);
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unknown error";
     return { error: `Database error: ${message}` };
@@ -60,7 +58,6 @@ export async function updateSubmissionStatus(
       updatedAt: new Date().toISOString(),
     });
     data = result.data as Submission;
-    await triggerRevalidation(result.revalidate);
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unknown error";
     return { error: `Database error: ${message}` };
