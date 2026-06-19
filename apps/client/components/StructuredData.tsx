@@ -1,4 +1,5 @@
 import Script from "next/script";
+import { businessInfo } from "@/lib/business";
 
 interface StructuredDataProps {
   type: "Organization" | "Service" | "FAQ" | "BreadcrumbList";
@@ -12,30 +13,29 @@ export default function StructuredData({ type, data }: StructuredDataProps) {
         return {
           "@context": "https://schema.org",
           "@type": "Organization",
-          name: "Bilacert (Pty) Ltd",
-          alternateName: "Bilacert",
-          url: "https://bilacert.co.za",
-          logo: "https://bilacert.co.za/logo.png",
-          description:
-            "Bilacert simplifies ICASA and NRCS LOA compliance for South African businesses. Expert guidance for type approvals, licensing, and regulatory compliance.",
+          name: businessInfo.legalName,
+          alternateName: businessInfo.name,
+          url: businessInfo.domain,
+          logo: businessInfo.logoUrl,
+          description: businessInfo.description,
           address: {
             "@type": "PostalAddress",
             addressCountry: "ZA",
-            addressRegion: "South Africa",
+            addressRegion: businessInfo.serviceArea,
           },
           contactPoint: {
             "@type": "ContactPoint",
-            telephone: "+27-75-430-4433",
+            telephone: businessInfo.telephone,
             contactType: "customer service",
-            email: "info@bilacert.co.za",
+            email: businessInfo.email,
           },
-          sameAs: ["https://bilacert.co.za"],
+          sameAs: businessInfo.social.sameAs,
           foundingDate: "2024",
           numberOfEmployees: "1-10",
           industry: "Compliance Consulting",
           serviceArea: {
             "@type": "Country",
-            name: "South Africa",
+            name: businessInfo.serviceArea,
           },
         };
 
@@ -47,13 +47,13 @@ export default function StructuredData({ type, data }: StructuredDataProps) {
           description: data.description,
           provider: {
             "@type": "Organization",
-            name: "Bilacert (Pty) Ltd",
-            url: "https://bilacert.co.za",
+            name: businessInfo.legalName,
+            url: businessInfo.domain,
           },
           serviceType: data.serviceType,
           areaServed: {
             "@type": "Country",
-            name: "South Africa",
+            name: businessInfo.serviceArea,
           },
           offers: {
             "@type": "Offer",
@@ -98,13 +98,13 @@ export default function StructuredData({ type, data }: StructuredDataProps) {
     }
   };
 
+  const structuredData = JSON.stringify(getStructuredData(), null, 2);
+
   return (
     <Script
       id={`structured-data-${type.toLowerCase()}`}
       type="application/ld+json"
-      dangerouslySetInnerHTML={{
-        __html: JSON.stringify(getStructuredData(), null, 2),
-      }}
+      dangerouslySetInnerHTML={{ __html: structuredData }}
     />
   );
 }
