@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getIcon } from "@/lib/services-config";
+import { getServiceIcon } from "@/lib/service-icons";
 
 interface PricingPlansProps {
   title: string;
@@ -20,7 +20,7 @@ export function PricingPlans({
   plans,
   formPath,
 }: PricingPlansProps) {
-  const CheckCircleIcon = getIcon("CheckCircle");
+  const CheckCircleIcon = getServiceIcon("CheckCircle");
 
   return (
     <section className="py-20">
