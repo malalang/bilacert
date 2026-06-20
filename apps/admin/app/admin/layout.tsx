@@ -61,7 +61,7 @@ export default function AdminLayout({
   return (
     <SidebarProvider>
       <AdminSidebar />
-      <SidebarInset className="min-w-0 md:!ml-0">
+      <SidebarInset className="min-w-0 md:!ml-64 md:peer-data-[state=collapsed]:!ml-12">
         <AdminHeader />
         <main className="flex-1 overflow-x-hidden p-4 sm:p-6 lg:p-8">
           {children}
