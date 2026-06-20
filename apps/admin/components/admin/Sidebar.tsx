@@ -67,10 +67,10 @@ export default function AdminSidebar() {
 
   return (
     <Sidebar variant="inset" collapsible="icon">
-      <SidebarHeader>
+      <SidebarHeader className="group-data-[collapsible=icon]:items-center group-data-[collapsible=icon]:px-2">
         <Link
           href="/admin/dashboard"
-          className="flex items-center gap-2"
+          className="flex items-center gap-2 group-data-[collapsible=icon]:justify-center"
           onClick={() => setOpenMobile(false)}
         >
           <Image
@@ -78,7 +78,7 @@ export default function AdminSidebar() {
             alt="Bilacert logo"
             width={32}
             height={32}
-            className="h-8 w-8 rounded-lg object-cover"
+            className="h-8 w-8 shrink-0 rounded-lg object-cover"
             priority
           />
           <span className="text-lg font-semibold text-sidebar-foreground group-data-[collapsible=icon]:hidden">
@@ -86,7 +86,7 @@ export default function AdminSidebar() {
           </span>
         </Link>
       </SidebarHeader>
-      <SidebarContent className="p-2">
+      <SidebarContent className="p-2 group-data-[collapsible=icon]:hidden">
         <SidebarMenu>
           {navItems.map((item) => (
             <SidebarMenuItem key={item.href}>
@@ -106,7 +106,7 @@ export default function AdminSidebar() {
           ))}
         </SidebarMenu>
       </SidebarContent>
-      <SidebarFooter>
+      <SidebarFooter className="group-data-[collapsible=icon]:hidden">
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton
