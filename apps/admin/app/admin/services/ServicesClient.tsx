@@ -2,7 +2,7 @@
 
 import type { Service } from "@bilacert/contracts/service";
 import { useServices } from "@bilacert/supabase/hooks/useServices";
-import { MoreHorizontal } from "lucide-react";
+import { ImageIcon, MoreHorizontal } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import AdminPage from "@/components/admin/AdminPage";
@@ -36,6 +36,8 @@ const ServiceCard = ({
   onDelete: (service: Service) => void;
 }) => {
   const router = useRouter();
+  const imageUrl = service.thumbnail || service.image;
+
   return (
     <div key={service.id} className="group relative">
       <Link
@@ -45,7 +47,20 @@ const ServiceCard = ({
       >
         <span className="sr-only">View Details</span>
       </Link>
-      <Card className="flex h-full flex-col transition-all duration-300 group-hover:shadow-lg group-hover:border-primary/50">
+      <Card className="flex h-full flex-col overflow-hidden transition-all duration-300 group-hover:shadow-lg group-hover:border-primary/50">
+        <div className="aspect-video border-b bg-muted">
+          {imageUrl ? (
+            <img
+              src={imageUrl}
+              alt=""
+              className="h-full w-full object-cover"
+            />
+          ) : (
+            <div className="flex h-full w-full items-center justify-center text-muted-foreground">
+              <ImageIcon className="h-8 w-8" />
+            </div>
+          )}
+        </div>
         <CardHeader>
           <div className="flex justify-between items-start">
             <CardTitle className="text-lg line-clamp-2">
