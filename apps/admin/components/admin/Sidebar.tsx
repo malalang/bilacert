@@ -55,11 +55,12 @@ export default function AdminSidebar() {
       if (error) throw error;
       setOpenMobile(false);
       router.push("/admin/login");
-    } catch (error: any) {
+    } catch (error) {
       toast({
         variant: "destructive",
         title: "Logout Failed",
-        description: error.message,
+        description:
+          error instanceof Error ? error.message : "Unable to log out.",
       });
     }
   };
@@ -73,14 +74,14 @@ export default function AdminSidebar() {
           onClick={() => setOpenMobile(false)}
         >
           <Image
-            src="/logo.png"
+            src="/logo.jpg"
             alt="Bilacert logo"
             width={32}
             height={32}
             className="h-8 w-8 rounded-lg object-cover"
             priority
           />
-          <span className="text-lg font-semibold text-sidebar-foreground">
+          <span className="text-lg font-semibold text-sidebar-foreground group-data-[collapsible=icon]:hidden">
             Bilacert Admin
           </span>
         </Link>
