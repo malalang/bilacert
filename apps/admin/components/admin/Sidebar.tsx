@@ -86,7 +86,7 @@ export default function AdminSidebar() {
           </span>
         </Link>
       </SidebarHeader>
-      <SidebarContent className="p-2 group-data-[collapsible=icon]:hidden">
+      <SidebarContent className="p-2">
         <SidebarMenu>
           {navItems.map((item) => (
             <SidebarMenuItem key={item.href}>
@@ -106,7 +106,7 @@ export default function AdminSidebar() {
           ))}
         </SidebarMenu>
       </SidebarContent>
-      <SidebarFooter className="group-data-[collapsible=icon]:hidden">
+      <SidebarFooter>
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton
