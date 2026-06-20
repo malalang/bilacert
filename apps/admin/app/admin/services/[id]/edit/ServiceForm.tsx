@@ -45,6 +45,7 @@ export default function ServiceForm({ service }: ServiceFormProps) {
   const form = useForm<ServiceFormValues>({
     resolver: standardSchemaResolver(serviceSchema),
     defaultValues: {
+      id: undefined,
       title: "",
       slug: "",
       href: "",
@@ -148,6 +149,7 @@ export default function ServiceForm({ service }: ServiceFormProps) {
       });
 
       reset({
+        id: service.id,
         title: service.title || "",
         slug: service.slug || "",
         href: service.href || "",
@@ -190,6 +192,7 @@ export default function ServiceForm({ service }: ServiceFormProps) {
     try {
       const processedValues = {
         ...values,
+        id: service?.id ?? values.id,
         processSteps: values.processSteps.map(
           (step): { title: string; description: string; step: string } => ({
             title: step.title,
@@ -210,11 +213,11 @@ export default function ServiceForm({ service }: ServiceFormProps) {
       });
       router.push("/admin/services");
       router.refresh();
-    } catch (error: any) {
+    } catch (error) {
       toast({
         variant: "destructive",
         title: "Error saving service",
-        description: error.message,
+        description: error instanceof Error ? error.message : "Unknown error",
       });
     }
   };
