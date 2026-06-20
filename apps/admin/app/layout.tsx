@@ -8,6 +8,11 @@ export const metadata: Metadata = {
     template: "%s | Bilacert Admin",
   },
   description: "Administrative dashboard for Bilacert.",
+  icons: {
+    icon: "/favicon.ico",
+    shortcut: "/favicon.ico",
+    apple: "/logo.png",
+  },
 };
 
 export default function RootLayout({
