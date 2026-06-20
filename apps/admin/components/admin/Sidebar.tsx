@@ -12,9 +12,9 @@ import {
   Settings,
   Users,
 } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Logo } from "@/components/icons";
 import {
   Sidebar,
   SidebarContent,
@@ -72,7 +72,14 @@ export default function AdminSidebar() {
           className="flex items-center gap-2"
           onClick={() => setOpenMobile(false)}
         >
-          <Logo className="h-8 w-8 text-sidebar-primary" />
+          <Image
+            src="/logo.png"
+            alt="Bilacert logo"
+            width={32}
+            height={32}
+            className="h-8 w-8 rounded-lg object-cover"
+            priority
+          />
           <span className="text-lg font-semibold text-sidebar-foreground">
             Bilacert Admin
           </span>
