@@ -3,6 +3,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { getServiceIcon } from "@/lib/service-icons";
 
+const SERVICE_IMAGE_FALLBACK = "/logo.jpg";
+
 interface ServiceHeroProps {
   title: string;
   subtitle: string;
@@ -23,11 +25,12 @@ export function ServiceHero({
   phone,
 }: ServiceHeroProps) {
   const Icon = getServiceIcon(iconName);
+  const resolvedImageSrc = imageSrc.trim() || SERVICE_IMAGE_FALLBACK;
 
   return (
     <section className="relative text-white py-20">
       <Image
-        src={imageSrc}
+        src={resolvedImageSrc}
         alt={title}
         fill
         priority
