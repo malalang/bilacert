@@ -11,6 +11,10 @@
     "./actionResult": "./src/actionResult.ts",
     "./revalidation": "./src/revalidation.ts"
   },
+  "scripts": {
+    "build": "tsc",
+    "check-types": "tsc --noEmit"
+  },
   "dependencies": {
     "zod": "catalog:"
   },
