@@ -2,7 +2,7 @@
 
 import type { Service } from "@bilacert/contracts/service";
 import { useServices } from "@bilacert/supabase/hooks/useServices";
-import { ImageIcon, MoreHorizontal } from "lucide-react";
+import { MoreHorizontal } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import AdminPage from "@/components/admin/AdminPage";
@@ -26,6 +26,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import DeleteServiceDialog from "./DeleteServiceDialog";
 
+const SERVICE_IMAGE_FALLBACK = "/logo.jpg";
+
 const ServiceCard = ({
   service,
   onEdit,
@@ -36,7 +38,8 @@ const ServiceCard = ({
   onDelete: (service: Service) => void;
 }) => {
   const router = useRouter();
-  const imageUrl = service.thumbnail || service.image;
+  const imageUrl =
+    service.thumbnail?.trim() || service.image?.trim() || SERVICE_IMAGE_FALLBACK;
 
   return (
     <div key={service.id} className="group relative">
@@ -49,17 +52,11 @@ const ServiceCard = ({
       </Link>
       <Card className="flex h-full flex-col overflow-hidden transition-all duration-300 group-hover:shadow-lg group-hover:border-primary/50">
         <div className="aspect-video border-b bg-muted">
-          {imageUrl ? (
-            <img
-              src={imageUrl}
-              alt=""
-              className="h-full w-full object-cover"
-            />
-          ) : (
-            <div className="flex h-full w-full items-center justify-center text-muted-foreground">
-              <ImageIcon className="h-8 w-8" />
-            </div>
-          )}
+          <img
+            src={imageUrl}
+            alt={service.title}
+            className="h-full w-full object-cover"
+          />
         </div>
         <CardHeader>
           <div className="flex justify-between items-start">
