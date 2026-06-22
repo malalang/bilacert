@@ -1,7 +1,9 @@
 "use client";
 
 import type { Service } from "@bilacert/contracts/service";
+import type { Submission, SubmissionStatus } from "@bilacert/shared/types";
 import { useServices } from "@bilacert/supabase/hooks/useServices";
+import { useSubmissions } from "@bilacert/supabase/hooks/useSubmissions";
 import { MoreHorizontal } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -28,18 +30,55 @@ import DeleteServiceDialog from "./DeleteServiceDialog";
 
 const SERVICE_IMAGE_FALLBACK = "/logo.jpg";
 
+const submissionStatuses: { label: string; value: SubmissionStatus }[] = [
+  { label: "Pending", value: "pending" },
+  { label: "Processing", value: "in-progress" },
+  { label: "Completed", value: "completed" },
+  { label: "Rejected", value: "rejected" },
+  { label: "Archived", value: "archived" },
+];
+
+type ServiceSubmissionStatusCount = {
+  label: string;
+  value: SubmissionStatus;
+  count: number;
+};
+
+function getServiceSubmissionStatusCounts(
+  service: Service,
+  submissions: Submission[],
+): ServiceSubmissionStatusCount[] {
+  const serviceTitle = service.title.trim().toLowerCase();
+  const serviceSubmissions = submissions.filter((submission) => {
+    const submissionServiceName = submission.serviceName?.trim().toLowerCase();
+    return submission.serviceId === service.id || submissionServiceName === serviceTitle;
+  });
+
+  return submissionStatuses.map((status) => ({
+    ...status,
+    count: serviceSubmissions.filter(
+      (submission) => submission.status === status.value,
+    ).length,
+  }));
+}
+
 const ServiceCard = ({
   service,
+  submissionStatusCounts,
   onEdit,
   onDelete,
 }: {
   service: Service;
+  submissionStatusCounts: ServiceSubmissionStatusCount[];
   onEdit: (service: Service) => void;
   onDelete: (service: Service) => void;
 }) => {
   const router = useRouter();
   const imageUrl =
     service.thumbnail?.trim() || service.image?.trim() || SERVICE_IMAGE_FALLBACK;
+  const visibleSubmissionStatusCounts = submissionStatusCounts.filter(
+    ({ count }) => count > 0,
+  );
 
   return (
     <div key={service.id} className="group relative">
@@ -122,6 +161,23 @@ const ServiceCard = ({
           <p className="line-clamp-3 text-sm text-muted-foreground">
             {service.shortDescription}
           </p>
+          <div className="rounded-xl bg-muted/40 p-3">
+            <p className="mb-2 text-xs font-bold uppercase tracking-wider text-muted-foreground">
+              Form Submissions
+            </p>
+            {visibleSubmissionStatusCounts.length > 0 ? (
+              <div className="flex flex-wrap gap-2">
+                {visibleSubmissionStatusCounts.map(({ label, value, count }) => (
+                  <Badge key={value} variant="secondary" className="gap-1">
+                    <span>{label}</span>
+                    <span className="font-semibold tabular-nums">{count}</span>
+                  </Badge>
+                ))}
+              </div>
+            ) : (
+              <p className="text-xs text-muted-foreground">No submissions yet</p>
+            )}
+          </div>
         </CardContent>
         <CardFooter>
           <p className="text-lg font-semibold">
@@ -136,6 +192,8 @@ const ServiceCard = ({
 };
 
 export default function ServicesClient() {
+  const { data: submissions } = useSubmissions();
+
   return (
     <AdminPage<Service>
       useData={useServices}
@@ -143,7 +201,15 @@ export default function ServicesClient() {
       newItemButtonText="Add Service"
       newItemLink="/admin/services/new"
       renderItem={(service, onEdit, onDelete) => (
-        <ServiceCard service={service} onEdit={onEdit} onDelete={onDelete} />
+        <ServiceCard
+          service={service}
+          submissionStatusCounts={getServiceSubmissionStatusCounts(
+            service,
+            submissions || [],
+          )}
+          onEdit={onEdit}
+          onDelete={onDelete}
+        />
       )}
       DeleteDialog={DeleteServiceDialog as any}
     />
