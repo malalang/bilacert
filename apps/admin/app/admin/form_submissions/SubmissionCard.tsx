@@ -56,9 +56,9 @@ export default function SubmissionCard({
     <Card className="group overflow-hidden border-0 shadow-sm shadow-black/5 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-black/10">
       <Accordion type="single" collapsible>
         <AccordionItem value={submission.id} className="border-none">
-          <div className="flex items-center gap-4 p-4 sm:p-6">
-            <AccordionTrigger className="flex-1 p-0 py-0 hover:no-underline [&>svg]:ml-4">
-              <div className="flex w-full flex-col gap-4 text-left sm:flex-row sm:items-center">
+          <div className="grid gap-3 p-4 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center sm:p-6">
+            <AccordionTrigger className="min-w-0 rounded-xl bg-muted/20 px-3 py-3 text-left hover:bg-muted/30 hover:no-underline [&>svg]:ml-4">
+              <div className="flex min-w-0 flex-1 items-center gap-3">
                 <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary shadow-sm shadow-primary/10">
                   <User className="h-6 w-6" />
                 </div>
@@ -91,7 +91,7 @@ export default function SubmissionCard({
               </div>
             </AccordionTrigger>
 
-            <div className="flex items-center gap-2">
+            <div className="flex items-center justify-end gap-2 sm:self-center">
               <div className="hidden sm:block">
                 <StatusUpdate submission={submission} />
               </div>
