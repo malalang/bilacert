@@ -5,6 +5,7 @@ import { useBlogs } from "@bilacert/supabase/hooks/useBlogs";
 import { format, isValid, parseISO } from "date-fns";
 import {
   Calendar,
+  Eye,
   Filter,
   MoreHorizontal,
   PlusCircle,
@@ -134,13 +135,19 @@ const BlogCard = ({
         <p className="mb-4 text-sm text-muted-foreground line-clamp-3 flex-grow">
           {blog.excerpt}
         </p>
-        <div className="mt-auto flex items-center justify-between text-xs text-muted-foreground">
+        <div className="mt-auto flex items-center justify-between gap-3 text-xs text-muted-foreground">
           <Badge variant={blog.published ? "default" : "outline"}>
             {blog.published ? "Published" : "Draft"}
           </Badge>
-          <div className="flex items-center gap-2">
-            <Calendar className="h-4 w-4" />
-            <span>{safeFormatDate(blog.createdAt, "PP")}</span>
+          <div className="flex flex-wrap items-center justify-end gap-x-3 gap-y-1">
+            <div className="flex items-center gap-1.5">
+              <Eye className="h-4 w-4" />
+              <span>{(blog.viewsCount ?? 0).toLocaleString()} views</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <Calendar className="h-4 w-4" />
+              <span>{safeFormatDate(blog.createdAt, "PP")}</span>
+            </div>
           </div>
         </div>
       </div>
