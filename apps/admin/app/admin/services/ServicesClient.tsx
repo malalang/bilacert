@@ -50,25 +50,29 @@ const ServiceCard = ({
       >
         <span className="sr-only">View Details</span>
       </Link>
-      <Card className="flex h-full flex-col overflow-hidden transition-all duration-300 group-hover:shadow-lg group-hover:border-primary/50">
-        <div className="aspect-video border-b bg-muted">
+      <Card className="flex h-full flex-col overflow-hidden border-0 shadow-sm transition-all duration-300 hover:-translate-y-2 group-hover:shadow-xl group-hover:shadow-black/10">
+        <div className="relative h-48 w-full overflow-hidden bg-muted">
           <img
             src={imageUrl}
             alt={service.title}
-            className="h-full w-full object-cover"
+            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
           />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
         </div>
         <CardHeader>
-          <div className="flex justify-between items-start">
-            <CardTitle className="text-lg line-clamp-2">
-              {service.title}
-            </CardTitle>
-            <div className="relative z-20">
+          <div className="flex items-start justify-between gap-4">
+            <div className="min-w-0 space-y-1">
+              <CardTitle className="line-clamp-2 text-lg text-primary">
+                {service.title}
+              </CardTitle>
+              <CardDescription>{service.category}</CardDescription>
+            </div>
+            <div className="relative z-20 shrink-0">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button
                     variant="ghost"
-                    className="h-8 w-8 p-0"
+                    className="h-8 w-8 rounded-full bg-background/70 p-0 backdrop-blur-sm hover:bg-background"
                     onClick={(e) => e.preventDefault()}
                   >
                     <span className="sr-only">Open menu</span>
@@ -107,16 +111,15 @@ const ServiceCard = ({
               </DropdownMenu>
             </div>
           </div>
-          <CardDescription>{service.category}</CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4 flex-grow">
+        <CardContent className="flex-grow space-y-4">
           <div className="flex flex-wrap gap-2">
             <Badge variant={service.published ? "default" : "secondary"}>
               {service.published ? "Published" : "Draft"}
             </Badge>
             {service.featured && <Badge variant="outline">Featured</Badge>}
           </div>
-          <p className="text-sm text-muted-foreground line-clamp-3">
+          <p className="line-clamp-3 text-sm text-muted-foreground">
             {service.shortDescription}
           </p>
         </CardContent>
