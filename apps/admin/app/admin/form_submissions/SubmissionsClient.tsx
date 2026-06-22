@@ -95,7 +95,7 @@ export default function SubmissionsClient() {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid grid-cols-1 sm:flex w-full sm:w-auto h-auto p-1 bg-muted/50 border overflow-x-auto">
+        <TabsList className="grid grid-cols-3 sm:flex w-full sm:w-auto h-auto p-1 bg-muted/50 border overflow-x-auto">
           <TabsTrigger value="all" className="gap-2">
             <LayoutGrid className="h-3.5 w-3.5" /> <span>All</span>
           </TabsTrigger>
