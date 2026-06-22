@@ -58,7 +58,7 @@ const BlogCard = ({
   return (
     <div
       key={blog.id}
-      className="group relative flex flex-col overflow-hidden rounded-xl bg-white shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-lg border"
+      className="group relative flex flex-col overflow-hidden rounded-xl bg-white shadow-sm shadow-black/5 transition-all duration-300 hover:-translate-y-2 hover:shadow-xl hover:shadow-black/10"
     >
       <Link
         href={`/admin/blogs/${blog.id}`}
@@ -115,8 +115,7 @@ const BlogCard = ({
       <div className="relative h-48 w-full">
         <Image
           src={
-            blog.featuredImage ||
-            `https://picsum.photos/seed/${blog.id}/600/400`
+            blog.featuredImage || `https://picsum.photos/seed/${blog.id}/600/400`
           }
           alt={blog.title}
           fill
