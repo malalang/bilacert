@@ -4,6 +4,7 @@ import { normalizeService } from "@bilacert/supabase/Queries/services";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import ServiceDetails from "./ServiceDetails";
+import ServiceSubmissionAnalysis from "./ServiceSubmissionAnalysis";
 
 const supabase = createSupabaseBrowserClient();
 
@@ -50,5 +51,10 @@ export default async function ServiceDetailsPage({
     notFound();
   }
 
-  return <ServiceDetails service={service} />;
+  return (
+    <div className="space-y-8">
+      <ServiceDetails service={service} />
+      <ServiceSubmissionAnalysis service={service} />
+    </div>
+  );
 }
