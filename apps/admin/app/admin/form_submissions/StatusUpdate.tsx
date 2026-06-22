@@ -61,7 +61,7 @@ export default function StatusUpdate({ submission }: StatusUpdateProps) {
   };
 
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex items-start gap-2">
       {isLoading && <Loader2 className="h-4 w-4 animate-spin" />}
       <Select
         value={currentStatus}
