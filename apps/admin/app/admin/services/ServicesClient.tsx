@@ -4,7 +4,15 @@ import type { Service } from "@bilacert/contracts/service";
 import type { Submission, SubmissionStatus } from "@bilacert/shared/types";
 import { useServices } from "@bilacert/supabase/hooks/useServices";
 import { useSubmissions } from "@bilacert/supabase/hooks/useSubmissions";
-import { MoreHorizontal } from "lucide-react";
+import {
+  Archive,
+  CheckCircle2,
+  Clock,
+  Inbox,
+  MoreHorizontal,
+  XCircle,
+  type LucideIcon,
+} from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import AdminPage from "@/components/admin/AdminPage";
@@ -30,17 +38,49 @@ import DeleteServiceDialog from "./DeleteServiceDialog";
 
 const SERVICE_IMAGE_FALLBACK = "/logo.jpg";
 
-const submissionStatuses: { label: string; value: SubmissionStatus }[] = [
-  { label: "Pending", value: "pending" },
-  { label: "Processing", value: "in-progress" },
-  { label: "Completed", value: "completed" },
-  { label: "Rejected", value: "rejected" },
-  { label: "Archived", value: "archived" },
+const submissionStatuses: {
+  label: string;
+  value: SubmissionStatus;
+  Icon: LucideIcon;
+  className: string;
+}[] = [
+  {
+    label: "Pending",
+    value: "pending",
+    Icon: Clock,
+    className: "bg-yellow-100 text-yellow-800 shadow-yellow-500/10",
+  },
+  {
+    label: "Processing",
+    value: "in-progress",
+    Icon: Inbox,
+    className: "bg-blue-100 text-blue-800 shadow-blue-500/10",
+  },
+  {
+    label: "Completed",
+    value: "completed",
+    Icon: CheckCircle2,
+    className: "bg-emerald-100 text-emerald-800 shadow-emerald-500/10",
+  },
+  {
+    label: "Rejected",
+    value: "rejected",
+    Icon: XCircle,
+    className: "bg-red-100 text-red-800 shadow-red-500/10",
+  },
+  {
+    label: "Archived",
+    value: "archived",
+    Icon: Archive,
+    className: "bg-slate-100 text-slate-800 shadow-slate-500/10",
+  },
 ];
 
 type ServiceSubmissionStatusCount = {
   label: string;
   value: SubmissionStatus;
+  Icon: LucideIcon;
+  className: string;
   count: number;
 };
 
@@ -51,7 +91,9 @@ function getServiceSubmissionStatusCounts(
   const serviceTitle = service.title.trim().toLowerCase();
   const serviceSubmissions = submissions.filter((submission) => {
     const submissionServiceName = submission.serviceName?.trim().toLowerCase();
-    return submission.serviceId === service.id || submissionServiceName === serviceTitle;
+    return (
+      submission.serviceId === service.id || submissionServiceName === serviceTitle
+    );
   });
 
   return submissionStatuses.map((status) => ({
@@ -161,18 +203,26 @@ const ServiceCard = ({
           <p className="line-clamp-3 text-sm text-muted-foreground">
             {service.shortDescription}
           </p>
-          <div className="rounded-xl bg-muted/40 p-3">
+          <div className="rounded-xl bg-muted/40 p-3 shadow-sm shadow-black/5">
             <p className="mb-2 text-xs font-bold uppercase tracking-wider text-muted-foreground">
               Form Submissions
             </p>
             {visibleSubmissionStatusCounts.length > 0 ? (
-              <div className="flex flex-wrap gap-2">
-                {visibleSubmissionStatusCounts.map(({ label, value, count }) => (
-                  <Badge key={value} variant="secondary" className="gap-1">
-                    <span>{label}</span>
-                    <span className="font-semibold tabular-nums">{count}</span>
-                  </Badge>
-                ))}
+              <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                {visibleSubmissionStatusCounts.map(
+                  ({ label, value, count, Icon, className }) => (
+                    <div
+                      key={value}
+                      className={`flex items-center justify-between gap-2 rounded-lg px-3 py-2 text-xs font-semibold shadow-sm ${className}`}
+                    >
+                      <span className="flex items-center gap-1.5">
+                        <Icon className="h-3.5 w-3.5" />
+                        {label}
+                      </span>
+                      <span className="tabular-nums">{count}</span>
+                    </div>
+                  ),
+                )}
               </div>
             ) : (
               <p className="text-xs text-muted-foreground">No submissions yet</p>
