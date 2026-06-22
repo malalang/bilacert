@@ -95,28 +95,28 @@ export default function SubmissionsClient() {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid grid-cols-3 sm:flex w-full sm:w-auto h-auto p-1 bg-muted/50 border overflow-x-auto">
+        <TabsList className="w-full justify-start overflow-x-auto sm:w-auto">
           <TabsTrigger value="all" className="gap-2">
             <LayoutGrid className="h-3.5 w-3.5" /> <span>All</span>
           </TabsTrigger>
           <TabsTrigger value="pending" className="gap-2">
-            <Clock className="h-3.5 w-3.5 text-yellow-600" />{" "}
+            <Clock className="h-3.5 w-3.5 text-yellow-600" />
             <span>Pending</span>
           </TabsTrigger>
           <TabsTrigger value="in-progress" className="gap-2">
-            <Inbox className="h-3.5 w-3.5 text-blue-600" />{" "}
+            <Inbox className="h-3.5 w-3.5 text-blue-600" />
             <span>Processing</span>
           </TabsTrigger>
           <TabsTrigger value="completed" className="gap-2">
-            <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" />{" "}
+            <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" />
             <span className="hidden sm:inline">Completed</span>
           </TabsTrigger>
           <TabsTrigger value="rejected" className="gap-2">
-            <XCircle className="h-3.5 w-3.5 text-red-600" />{" "}
+            <XCircle className="h-3.5 w-3.5 text-red-600" />
             <span className="hidden sm:inline">Rejected</span>
           </TabsTrigger>
           <TabsTrigger value="archived" className="gap-2">
-            <Archive className="h-3.5 w-3.5 text-slate-600" />{" "}
+            <Archive className="h-3.5 w-3.5 text-slate-600" />
             <span className="hidden sm:inline">Archived</span>
           </TabsTrigger>
         </TabsList>
