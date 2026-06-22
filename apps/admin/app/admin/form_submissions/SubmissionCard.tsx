@@ -53,28 +53,28 @@ export default function SubmissionCard({
     : "Unknown date";
 
   return (
-    <Card className="group overflow-hidden transition-all hover:shadow-md border-muted">
+    <Card className="group overflow-hidden border-0 shadow-sm shadow-black/5 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-black/10">
       <Accordion type="single" collapsible>
         <AccordionItem value={submission.id} className="border-none">
-          <div className="flex items-center p-4 sm:p-6 gap-4">
-            <AccordionTrigger className="flex-1 hover:no-underline p-0 py-0 [&>svg]:ml-4">
-              <div className="flex flex-col sm:flex-row sm:items-center gap-4 text-left w-full">
-                <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center text-primary shrink-0">
+          <div className="flex items-center gap-4 p-4 sm:p-6">
+            <AccordionTrigger className="flex-1 p-0 py-0 hover:no-underline [&>svg]:ml-4">
+              <div className="flex w-full flex-col gap-4 text-left sm:flex-row sm:items-center">
+                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary shadow-sm shadow-primary/10">
                   <User className="h-6 w-6" />
                 </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-1">
-                    <h3 className="font-bold text-lg leading-none truncate">
+                <div className="min-w-0 flex-1">
+                  <div className="mb-1 flex flex-wrap items-center gap-2">
+                    <h3 className="truncate text-lg font-bold leading-none text-card-foreground">
                       {submission.fullName || "Anonymous"}
                     </h3>
                     <Badge
                       variant="outline"
-                      className={`capitalize px-2 py-0 h-5 text-[10px] font-bold ${statusVariants[submission.status] || ""}`}
+                      className={`h-5 px-2 py-0 text-[10px] font-bold capitalize ${statusVariants[submission.status] || ""}`}
                     >
                       {submission.status}
                     </Badge>
                   </div>
-                  <div className="flex flex-wrap items-center gap-y-1 gap-x-4 text-sm text-muted-foreground font-medium">
+                  <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm font-medium text-muted-foreground">
                     <div className="flex items-center gap-1.5">
                       <Briefcase className="h-3.5 w-3.5" />
                       {submission.serviceName || "General Inquiry"}
@@ -97,7 +97,11 @@ export default function SubmissionCard({
               </div>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="icon" className="h-9 w-9">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-9 w-9 rounded-full bg-muted/50 hover:bg-muted"
+                  >
                     <MoreVertical className="h-4 w-4" />
                   </Button>
                 </DropdownMenuTrigger>
@@ -112,7 +116,7 @@ export default function SubmissionCard({
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     onClick={() => onDelete(submission)}
-                    className="text-destructive focus:bg-destructive/10 focus:text-destructive cursor-pointer"
+                    className="cursor-pointer text-destructive focus:bg-destructive/10 focus:text-destructive"
                   >
                     <Trash2 className="mr-2 h-4 w-4" /> Delete
                   </DropdownMenuItem>
@@ -121,10 +125,10 @@ export default function SubmissionCard({
             </div>
           </div>
 
-          <AccordionContent className="px-6 pb-6 pt-2 border-t bg-muted/20">
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 mt-4">
-              <div className="space-y-3">
-                <h4 className="text-xs font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-2">
+          <AccordionContent className="bg-muted/20 px-6 pb-6 pt-2">
+            <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              <div className="space-y-3 rounded-xl bg-background p-4 shadow-sm shadow-black/5">
+                <h4 className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-muted-foreground">
                   <User className="h-3 w-3" /> Contact Info
                 </h4>
                 <div className="space-y-2">
@@ -132,7 +136,7 @@ export default function SubmissionCard({
                     <Mail className="h-4 w-4 text-muted-foreground" />
                     <a
                       href={`mailto:${submission.email}`}
-                      className="text-primary hover:underline truncate"
+                      className="truncate text-primary hover:underline"
                     >
                       {submission.email}
                     </a>
@@ -149,32 +153,28 @@ export default function SubmissionCard({
                 </div>
               </div>
 
-              <div className="space-y-3">
-                <h4 className="text-xs font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-2">
+              <div className="space-y-3 rounded-xl bg-background p-4 shadow-sm shadow-black/5">
+                <h4 className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-muted-foreground">
                   <Calendar className="h-3 w-3" /> Details
                 </h4>
                 <div className="space-y-1">
                   <p className="text-sm font-medium">
-                    Form:{" "}
-                    <span className="text-muted-foreground">
-                      {submission.formType}
-                    </span>
+                    Form: <span className="text-muted-foreground">{submission.formType}</span>
                   </p>
                   <p className="text-sm font-medium">
-                    Submitted:{" "}
-                    <span className="text-muted-foreground">{date}</span>
+                    Submitted: <span className="text-muted-foreground">{date}</span>
                   </p>
                   {submission.assignedTo && (
                     <p className="text-sm font-medium">
-                      Assigned to:{" "}
+                      Assigned to: {" "}
                       <Badge variant="secondary">{submission.assignedTo}</Badge>
                     </p>
                   )}
                 </div>
               </div>
 
-              <div className="sm:col-span-2 lg:col-span-1">
-                <h4 className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-3">
+              <div className="space-y-3 rounded-xl bg-background p-4 shadow-sm shadow-black/5 sm:col-span-2 lg:col-span-1">
+                <h4 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
                   Quick Actions
                 </h4>
                 <div className="flex flex-wrap gap-2">
@@ -191,12 +191,12 @@ export default function SubmissionCard({
             </div>
 
             {!!submission.details && (
-              <div className="mt-6 space-y-2">
+              <div className="mt-6 space-y-2 rounded-xl bg-background p-4 shadow-sm shadow-black/5">
                 <h4 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
                   Submission Preview
                 </h4>
-                <div className="bg-background p-4 rounded-md border text-sm max-h-32 overflow-hidden relative">
-                  <pre className="whitespace-pre-wrap font-sans text-xs line-clamp-4">
+                <div className="relative max-h-32 overflow-hidden rounded-lg bg-muted/40 p-4 text-sm">
+                  <pre className="line-clamp-4 whitespace-pre-wrap font-sans text-xs">
                     {JSON.stringify(submission.details, null, 2)}
                   </pre>
                   <div className="absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-background to-transparent" />
