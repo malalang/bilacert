@@ -1,5 +1,13 @@
 import type { RevalidationRequest } from "@bilacert/contracts/revalidation";
 
+function getClientRevalidationUrl(clientUrl: string) {
+  const normalizedClientUrl = clientUrl.trim().match(/^https?:\/\//)
+    ? clientUrl.trim()
+    : `https://${clientUrl.trim()}`;
+
+  return new URL("/api/revalidate", normalizedClientUrl);
+}
+
 export async function triggerRevalidation(request: RevalidationRequest) {
   const clientUrl = process.env.NEXT_PUBLIC_CLIENT_URL;
   const secret = process.env.REVALIDATION_SECRET;
@@ -12,7 +20,7 @@ export async function triggerRevalidation(request: RevalidationRequest) {
   }
 
   try {
-    const response = await fetch(new URL("/api/revalidate", clientUrl), {
+    const response = await fetch(getClientRevalidationUrl(clientUrl), {
       method: "POST",
       headers: {
         Authorization: `Bearer ${secret}`,
