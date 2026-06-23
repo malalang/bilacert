@@ -176,6 +176,45 @@ function BlogInsightCard({ blog }: { blog: BlogPost }) {
   );
 }
 
+function ServiceStatusBreakdown({
+  statusCounts,
+}: {
+  statusCounts: { status: string; count: number }[];
+}) {
+  const visibleStatusCounts = statusCounts.filter(({ count }) => count > 0);
+
+  if (visibleStatusCounts.length === 0) {
+    return (
+      <p className="mt-3 text-xs text-muted-foreground">
+        No status activity for this service yet.
+      </p>
+    );
+  }
+
+  return (
+    <div className="mt-3 grid gap-2 sm:grid-cols-2 xl:grid-cols-3">
+      {visibleStatusCounts.map(({ status, count }) => {
+        const statusStyle = statusStyles[status];
+        if (!statusStyle) return null;
+        const { Icon: StatusIcon } = statusStyle;
+
+        return (
+          <div
+            key={status}
+            className={`flex items-center justify-between gap-2 rounded-lg px-3 py-2 text-xs font-semibold shadow-sm ${statusStyle.className}`}
+          >
+            <span className="flex items-center gap-1.5">
+              <StatusIcon className="h-3.5 w-3.5" />
+              {statusStyle.label}
+            </span>
+            <span className="tabular-nums">{count}</span>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
 export default function DashboardClient() {
   const {
     loading,
@@ -289,28 +328,33 @@ export default function DashboardClient() {
                     .map((item, index) => (
                       <div
                         key={item.id}
-                        className="grid grid-cols-[auto_1fr_auto] items-center gap-4 rounded-xl bg-muted/20 p-3 shadow-sm shadow-black/5"
+                        className="rounded-xl bg-muted/20 p-4 shadow-sm shadow-black/5"
                       >
-                        <div className="flex min-w-0 items-center gap-3">
-                          <Icon
-                            name={item.icon || "Package"}
-                            className="h-5 w-5 shrink-0 text-muted-foreground"
+                        <div className="grid grid-cols-[auto_1fr_auto] items-center gap-4">
+                          <div className="flex min-w-0 items-center gap-3">
+                            <Icon
+                              name={item.icon || "Package"}
+                              className="h-5 w-5 shrink-0 text-muted-foreground"
+                            />
+                            <span className="truncate text-sm font-medium">
+                              {item.title}
+                            </span>
+                          </div>
+                          <Progress
+                            value={
+                              stats.totalSubmissions > 0
+                                ? (item.submissions / stats.totalSubmissions) * 100
+                                : 0
+                            }
+                            className={`h-2 ${progressColorClasses[index % progressColorClasses.length]}`}
                           />
-                          <span className="truncate text-sm font-medium">
-                            {item.title}
+                          <span className="font-mono text-sm font-medium">
+                            {item.submissions}
                           </span>
                         </div>
-                        <Progress
-                          value={
-                            stats.totalSubmissions > 0
-                              ? (item.submissions / stats.totalSubmissions) * 100
-                              : 0
-                          }
-                          className={`h-2 ${progressColorClasses[index % progressColorClasses.length]}`}
+                        <ServiceStatusBreakdown
+                          statusCounts={item.statusCounts}
                         />
-                        <span className="font-mono text-sm font-medium">
-                          {item.submissions}
-                        </span>
                       </div>
                     ));
                 })()
