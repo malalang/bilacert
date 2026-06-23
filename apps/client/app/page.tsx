@@ -47,7 +47,7 @@ export default async function HomePage() {
     price: "From R1,000",
   };
 
-  const services = await getCachedFeaturedServices();
+  const services = (await getCachedFeaturedServices()).slice(0, 3);
   const allBlogPosts = await getCachedPublishedBlogs();
   const blogPosts = allBlogPosts.slice(0, 3);
 
@@ -160,7 +160,7 @@ export default async function HomePage() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 items-stretch">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch">
             {services.map((service) => (
               <ServiceCard key={service.id} service={service} />
             ))}
