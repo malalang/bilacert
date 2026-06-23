@@ -6,10 +6,13 @@ import { useServices } from "@bilacert/supabase/hooks/useServices";
 import { useSubmissions } from "@bilacert/supabase/hooks/useSubmissions";
 import {
   Archive,
+  BarChart3,
   CheckCircle2,
   Clock,
   Inbox,
   MoreHorizontal,
+  Package,
+  Sparkles,
   XCircle,
   type LucideIcon,
 } from "lucide-react";
@@ -34,6 +37,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Progress } from "@/components/ui/progress";
 import DeleteServiceDialog from "./DeleteServiceDialog";
 
 const SERVICE_IMAGE_FALLBACK = "/logo.jpg";
@@ -84,17 +88,31 @@ type ServiceSubmissionStatusCount = {
   count: number;
 };
 
+function normalizeServiceKey(value: string | undefined) {
+  return value?.trim().toLowerCase();
+}
+
+function getServiceSubmissions(service: Service, submissions: Submission[]) {
+  const serviceKeys = [service.id, service.slug, service.title]
+    .map(normalizeServiceKey)
+    .filter(Boolean);
+
+  return submissions.filter((submission) => {
+    const submissionServiceKeys = [submission.serviceId, submission.serviceName]
+      .map(normalizeServiceKey)
+      .filter(Boolean);
+
+    return submissionServiceKeys.some((submissionServiceKey) =>
+      serviceKeys.includes(submissionServiceKey),
+    );
+  });
+}
+
 function getServiceSubmissionStatusCounts(
   service: Service,
   submissions: Submission[],
 ): ServiceSubmissionStatusCount[] {
-  const serviceTitle = service.title.trim().toLowerCase();
-  const serviceSubmissions = submissions.filter((submission) => {
-    const submissionServiceName = submission.serviceName?.trim().toLowerCase();
-    return (
-      submission.serviceId === service.id || submissionServiceName === serviceTitle
-    );
-  });
+  const serviceSubmissions = getServiceSubmissions(service, submissions);
 
   return submissionStatuses.map((status) => ({
     ...status,
@@ -102,6 +120,188 @@ function getServiceSubmissionStatusCounts(
       (submission) => submission.status === status.value,
     ).length,
   }));
+}
+
+function ServicesAnalysis({
+  services,
+  submissions,
+}: {
+  services: Service[];
+  submissions: Submission[];
+}) {
+  const publishedServices = services.filter((service) => service.published);
+  const featuredServices = services.filter((service) => service.featured);
+  const statusTotals = submissionStatuses.map((status) => ({
+    ...status,
+    count: submissions.filter((submission) => submission.status === status.value)
+      .length,
+  }));
+  const serviceSubmissionRows = services
+    .map((service) => {
+      const serviceSubmissions = getServiceSubmissions(service, submissions);
+      return {
+        service,
+        total: serviceSubmissions.length,
+        statusCounts: getServiceSubmissionStatusCounts(service, submissions),
+      };
+    })
+    .filter(({ total }) => total > 0)
+    .sort((a, b) => b.total - a.total)
+    .slice(0, 5);
+
+  return (
+    <div className="space-y-6">
+      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+        <Card className="border-0 shadow-md shadow-black/5">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Total Services</CardTitle>
+            <Package className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <p className="text-2xl font-bold">{services.length}</p>
+            <p className="text-xs text-muted-foreground">
+              {publishedServices.length} published
+            </p>
+          </CardContent>
+        </Card>
+        <Card className="border-0 shadow-md shadow-black/5">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Featured Services</CardTitle>
+            <Sparkles className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <p className="text-2xl font-bold">{featuredServices.length}</p>
+            <p className="text-xs text-muted-foreground">
+              Highlighted on public pages
+            </p>
+          </CardContent>
+        </Card>
+        <Card className="border-0 shadow-md shadow-black/5">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Service Submissions</CardTitle>
+            <BarChart3 className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <p className="text-2xl font-bold">{submissions.length}</p>
+            <p className="text-xs text-muted-foreground">
+              Across service and contact flows
+            </p>
+          </CardContent>
+        </Card>
+        <Card className="border-0 shadow-md shadow-black/5">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Draft Services</CardTitle>
+            <Clock className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <p className="text-2xl font-bold">
+              {services.length - publishedServices.length}
+            </p>
+            <p className="text-xs text-muted-foreground">
+              Not visible publicly yet
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+
+      <Card className="border-0 shadow-xl shadow-black/5">
+        <CardHeader>
+          <CardTitle className="text-lg font-semibold">
+            Service Submission Status
+          </CardTitle>
+          <CardDescription>
+            Submission health across all services.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="grid gap-3 md:grid-cols-5">
+            {statusTotals.map(({ label, value, count, Icon, className }) => (
+              <div key={value} className={`rounded-xl p-4 shadow-sm ${className}`}>
+                <div className="flex items-center justify-between gap-3">
+                  <span className="flex items-center gap-2 text-sm font-semibold">
+                    <Icon className="h-4 w-4" />
+                    {label}
+                  </span>
+                  <span className="text-2xl font-bold tabular-nums">
+                    {count}
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card className="border-0 shadow-xl shadow-black/5">
+        <CardHeader>
+          <CardTitle className="text-lg font-semibold">
+            Top Services by Submissions
+          </CardTitle>
+          <CardDescription>
+            Each row includes the service total and status breakdown.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            {serviceSubmissionRows.length > 0 ? (
+              serviceSubmissionRows.map(({ service, total, statusCounts }, index) => (
+                <div
+                  key={service.id}
+                  className="rounded-xl bg-muted/20 p-4 shadow-sm shadow-black/5"
+                >
+                  <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4">
+                    <div className="min-w-0">
+                      <p className="truncate text-sm font-semibold text-primary">
+                        {service.title}
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        {service.category || "Uncategorized"}
+                      </p>
+                    </div>
+                    <span className="font-mono text-sm font-semibold tabular-nums">
+                      {total}
+                    </span>
+                  </div>
+                  <Progress
+                    value={
+                      submissions.length > 0 ? (total / submissions.length) * 100 : 0
+                    }
+                    className={`mt-3 h-2 ${[
+                      "[&>div]:bg-chart-1",
+                      "[&>div]:bg-chart-2",
+                      "[&>div]:bg-chart-3",
+                      "[&>div]:bg-chart-4",
+                      "[&>div]:bg-chart-5",
+                    ][index % 5]}`}
+                  />
+                  <div className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-5">
+                    {statusCounts
+                      .filter(({ count }) => count > 0)
+                      .map(({ label, value, count, Icon, className }) => (
+                        <div
+                          key={value}
+                          className={`flex items-center justify-between gap-2 rounded-lg px-3 py-2 text-xs font-semibold shadow-sm ${className}`}
+                        >
+                          <span className="flex items-center gap-1.5">
+                            <Icon className="h-3.5 w-3.5" />
+                            {label}
+                          </span>
+                          <span className="tabular-nums">{count}</span>
+                        </div>
+                      ))}
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div className="rounded-xl bg-muted/30 py-10 text-center text-sm text-muted-foreground">
+                No service submissions yet.
+              </div>
+            )}
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
 }
 
 const ServiceCard = ({
@@ -250,6 +450,9 @@ export default function ServicesClient() {
       title="Services"
       newItemButtonText="Add Service"
       newItemLink="/admin/services/new"
+      renderBeforeContent={(services) => (
+        <ServicesAnalysis services={services} submissions={submissions || []} />
+      )}
       renderItem={(service, onEdit, onDelete) => (
         <ServiceCard
           service={service}
