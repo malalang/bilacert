@@ -6,6 +6,7 @@ import type {
 import { CheckCircle2, ClipboardList, FileCheck2, ListChecks } from "lucide-react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import type { ReactNode } from "react";
 import { CTASection } from "@/components/service/CTASection";
 import { PricingPlans } from "@/components/service/PricingPlans";
 import { ProcessSteps } from "@/components/service/ProcessSteps";
@@ -26,7 +27,7 @@ interface DetailListCardProps {
   title: string;
   description: string;
   items: string[];
-  icon: React.ReactNode;
+  icon: ReactNode;
 }
 
 function DetailListCard({
