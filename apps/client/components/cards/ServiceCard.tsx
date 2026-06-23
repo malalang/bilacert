@@ -1,6 +1,6 @@
 import type { Service } from "@bilacert/contracts/service";
 import { Icon } from "@bilacert/shared/Icon";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, CheckCircle2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -23,6 +23,7 @@ interface ServiceCardProps {
 export default function ServiceCard({ service }: ServiceCardProps) {
   const imageUrl = getServiceImage(service);
   const description = service.shortDescription || service.description;
+  const includes = (service.includes || []).slice(0, 3);
 
   return (
     <Link href={service.href} className="group block h-full">
@@ -69,6 +70,22 @@ export default function ServiceCard({ service }: ServiceCardProps) {
               </span>
             )}
           </div>
+
+          {includes.length > 0 && (
+            <div className="mb-5 space-y-2">
+              <p className="text-xs font-bold uppercase tracking-wider text-gray-500">
+                Includes
+              </p>
+              <ul className="space-y-2 text-sm text-gray-600">
+                {includes.map((item) => (
+                  <li key={item} className="flex items-start gap-2">
+                    <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-accent" />
+                    <span className="line-clamp-1">{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
 
           <div className="mt-auto flex items-center justify-between gap-4 border-t border-gray-50 pt-4">
             {service.pricing ? (
