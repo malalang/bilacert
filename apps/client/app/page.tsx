@@ -1,8 +1,10 @@
 import { Icon } from "@bilacert/shared/Icon";
-import { ArrowRight, CheckCircle, Clock, Users } from "lucide-react";
+import { CheckCircle, Clock, Users } from "lucide-react";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import BlogCard from "@/components/cards/BlogCard";
+import ServiceCard from "@/components/cards/ServiceCard";
 import StructuredData from "@/components/StructuredData";
 import Testimonials from "@/components/Testimonials";
 import {
@@ -158,25 +160,9 @@ export default async function HomePage() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 items-stretch">
             {services.map((service) => (
-              <Link
-                key={service.id}
-                href={service.href}
-                className="bg-white p-6 rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 transform hover:-translate-y-2 group"
-              >
-                <div className="text-accent mb-4 group-hover:scale-110 transition-transform duration-200">
-                  <Icon name={service.icon || "Shield"} className="h-8 w-8" />
-                </div>
-                <h3 className="text-xl font-semibold text-primary mb-3">
-                  {service.title}
-                </h3>
-                <p className="text-gray-600 mb-4">{service.description}</p>
-                <div className="flex items-center text-accent font-medium">
-                  Learn More
-                  <ArrowRight className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform duration-200" />
-                </div>
-              </Link>
+              <ServiceCard key={service.id} service={service} />
             ))}
           </div>
         </div>
@@ -229,27 +215,7 @@ export default async function HomePage() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {blogPosts.map((post) => (
-              <Link
-                key={post.id}
-                href={`/blog/${post.slug}`}
-                className="bg-white p-6 rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 transform hover:-translate-y-2"
-              >
-                <div className="text-sm text-gray-500 mb-2">
-                  {new Date(post.createdAt).toLocaleDateString("en-ZA", {
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                  })}
-                </div>
-                <h3 className="text-xl font-semibold text-primary mb-3">
-                  {post.title}
-                </h3>
-                <p className="text-gray-600 mb-4">{post.excerpt}</p>
-                <div className="flex items-center text-accent font-medium">
-                  Read More
-                  <ArrowRight className="h-4 w-4 ml-2" />
-                </div>
-              </Link>
+              <BlogCard key={post.id} post={post} />
             ))}
           </div>
 
