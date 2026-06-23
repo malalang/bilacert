@@ -1,5 +1,6 @@
 "use client";
 
+import type { Service } from "@bilacert/contracts/service";
 import { useMemo } from "react";
 import { useBlogs } from "./useBlogs";
 import { useContacts } from "./useContacts";
@@ -14,15 +15,22 @@ const submissionStatuses = [
   "archived",
 ] as const;
 
-function matchesService(submissionServiceName: string | undefined, service: any) {
-  const normalizedSubmissionServiceName = submissionServiceName
-    ?.trim()
-    .toLowerCase();
+function normalizeServiceKey(value: string | undefined) {
+  return value?.trim().toLowerCase();
+}
+
+function matchesService(
+  submissionServiceName: string | undefined,
+  service: Service,
+) {
+  const normalizedSubmissionServiceName = normalizeServiceKey(
+    submissionServiceName,
+  );
 
   return (
-    normalizedSubmissionServiceName === service.id?.trim?.().toLowerCase?.() ||
-    normalizedSubmissionServiceName === service.slug?.trim?.().toLowerCase?.() ||
-    normalizedSubmissionServiceName === service.title?.trim?.().toLowerCase?.()
+    normalizedSubmissionServiceName === normalizeServiceKey(service.id) ||
+    normalizedSubmissionServiceName === normalizeServiceKey(service.slug) ||
+    normalizedSubmissionServiceName === normalizeServiceKey(service.title)
   );
 }
 
