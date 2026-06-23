@@ -1,8 +1,8 @@
-import type { BlogPost } from "@bilacert/shared/types";
 import { ArrowRight, Calendar, Clock, User } from "lucide-react";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import BlogCard from "@/components/cards/BlogCard";
 import { Badge } from "@/components/ui/badge";
 import { getCachedPublishedBlogs } from "../_lib/cached-public-data";
 
@@ -32,67 +32,6 @@ export const metadata: Metadata = {
 };
 
 export const revalidate = 0;
-
-const BlogCard = ({ post }: { post: BlogPost }) => {
-  return (
-    <div className="group relative flex flex-col overflow-hidden rounded-xl bg-white shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-lg border border-gray-100">
-      <Link
-        href={`/blog/${post.slug}`}
-        className="absolute inset-0 z-10"
-        aria-label={`View ${post.title}`}
-      >
-        <span className="sr-only">View Details</span>
-      </Link>
-
-      <div className="relative h-48 w-full overflow-hidden">
-        <Image
-          src={
-            post.featuredImage ||
-            `https://picsum.photos/seed/${post.id}/600/400`
-          }
-          alt={post.title}
-          fill
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          className="object-cover transition-transform duration-500 group-hover:scale-105"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-        <div className="absolute bottom-4 left-4">
-          {post.category && (
-            <Badge className="bg-accent hover:bg-accent-light text-white border-none shadow-sm">
-              {post.category}
-            </Badge>
-          )}
-        </div>
-      </div>
-
-      <div className="flex flex-col flex-grow p-6">
-        <h3 className="mb-2 text-xl font-bold text-primary group-hover:text-accent transition-colors duration-200 line-clamp-2">
-          {post.title}
-        </h3>
-        <p className="mb-4 text-sm text-gray-600 line-clamp-3 flex-grow leading-relaxed">
-          {post.excerpt}
-        </p>
-
-        <div className="mt-auto pt-4 border-t border-gray-50 flex items-center justify-between text-xs text-gray-500">
-          <div className="flex items-center gap-2">
-            <Calendar className="h-3.5 w-3.5 text-accent" />
-            <span>
-              {new Date(post.createdAt).toLocaleDateString("en-ZA", {
-                month: "short",
-                day: "numeric",
-                year: "numeric",
-              })}
-            </span>
-          </div>
-          <div className="flex items-center gap-1 text-accent font-bold group-hover:gap-1.5 transition-all duration-300">
-            <span>Read More</span>
-            <ArrowRight className="h-3.5 w-3.5" />
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
 
 export default async function BlogPage() {
   const categories = [
@@ -272,7 +211,7 @@ export default async function BlogPage() {
           {/* Posts Grid */}
           {regularPosts.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 lg:gap-10">
-              {regularPosts.map((post: BlogPost) => (
+              {regularPosts.map((post) => (
                 <BlogCard key={post.id} post={post} />
               ))}
             </div>
