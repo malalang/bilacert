@@ -5,6 +5,11 @@ const fallbackClientUrls = [
   "https://bilacert-malalang.vercel.app",
 ];
 
+type RevalidationAttemptFailure = {
+  url: string;
+  reason: string;
+};
+
 function splitClientUrls(value: string | undefined) {
   return (
     value
@@ -45,6 +50,7 @@ function getClientRevalidationUrls() {
 export async function triggerRevalidation(request: RevalidationRequest) {
   const secret = process.env.REVALIDATION_SECRET;
   const revalidationUrls = getClientRevalidationUrls();
+  const failedAttempts: RevalidationAttemptFailure[] = [];
 
   if (!secret) {
     console.warn(
@@ -73,20 +79,21 @@ export async function triggerRevalidation(request: RevalidationRequest) {
         };
       }
 
-      console.error(
-        "Client revalidation failed:",
-        revalidationUrl.origin,
-        response.status,
-        await response.text(),
-      );
+      failedAttempts.push({
+        url: revalidationUrl.origin,
+        reason: `${response.status}: ${await response.text()}`,
+      });
     } catch (error) {
-      console.error(
-        "Client revalidation request failed:",
-        revalidationUrl.origin,
-        error,
-      );
+      failedAttempts.push({
+        url: revalidationUrl.origin,
+        reason: error instanceof Error ? error.message : "Unknown request error",
+      });
     }
   }
+
+  console.error("Client revalidation failed for all configured URLs:", {
+    attempts: failedAttempts,
+  });
 
   return { ok: false, skipped: false };
 }
