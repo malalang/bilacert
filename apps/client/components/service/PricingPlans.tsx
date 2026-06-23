@@ -32,42 +32,64 @@ export function PricingPlans({
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">{subtitle}</p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch">
           {plans.map((plan, index) => (
             <div
               key={index}
-              className={`bg-white p-8 rounded-xl shadow-sm relative ${
-                plan.popular ? "ring-2 ring-accent" : ""
+              className={`relative flex h-full flex-col rounded-2xl p-8 transition-all duration-300 ${
+                plan.popular
+                  ? "-translate-y-3 bg-primary text-white shadow-2xl shadow-primary/25 ring-4 ring-accent/30"
+                  : "bg-white text-primary shadow-sm shadow-black/5"
               }`}
             >
               {plan.popular && (
-                <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                  <span className="bg-accent text-white px-4 py-1 rounded-full text-sm font-medium">
+                <div className="absolute -top-4 left-1/2 -translate-x-1/2">
+                  <span className="rounded-full bg-accent px-5 py-1.5 text-sm font-bold text-white shadow-lg shadow-accent/25">
                     Most Popular
                   </span>
                 </div>
               )}
-              <h3 className="text-2xl font-bold text-primary mb-2">
+              <h3
+                className={`text-2xl font-bold mb-2 ${
+                  plan.popular ? "text-white" : "text-primary"
+                }`}
+              >
                 {plan.title}
               </h3>
-              <p className="text-gray-600 mb-6">{plan.description}</p>
-              <div className="text-3xl font-bold text-primary mb-6">
+              <p
+                className={`mb-6 ${
+                  plan.popular ? "text-white/75" : "text-gray-600"
+                }`}
+              >
+                {plan.description}
+              </p>
+              <div
+                className={`text-4xl font-extrabold mb-6 ${
+                  plan.popular ? "text-accent-light" : "text-primary"
+                }`}
+              >
                 {plan.price}
               </div>
-              <ul className="space-y-3 mb-8">
+              <ul className="space-y-3 mb-8 flex-grow">
                 {plan.features.map((feature, featureIndex) => (
                   <li
                     key={featureIndex}
-                    className="flex items-center text-sm text-gray-600"
+                    className={`flex items-center text-sm ${
+                      plan.popular ? "text-white/85" : "text-gray-600"
+                    }`}
                   >
-                    <CheckCircleIcon className="h-4 w-4 text-accent mr-2 flex-shrink-0" />
+                    <CheckCircleIcon
+                      className={`h-4 w-4 mr-2 flex-shrink-0 ${
+                        plan.popular ? "text-accent-light" : "text-accent"
+                      }`}
+                    />
                     {feature}
                   </li>
                 ))}
               </ul>
               <Link
                 href={formPath}
-                className={`w-full px-4 py-3 rounded-lg font-medium text-center transition-colors duration-200 ${
+                className={`mt-auto inline-flex w-full items-center justify-center rounded-lg px-4 py-3 text-center font-bold transition-colors duration-200 ${
                   plan.popular
                     ? "bg-accent text-white hover:bg-accent-light"
                     : "bg-primary text-white hover:bg-primary-light"
