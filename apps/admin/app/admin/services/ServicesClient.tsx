@@ -37,7 +37,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Progress } from "@/components/ui/progress";
 import DeleteServiceDialog from "./DeleteServiceDialog";
 
 const SERVICE_IMAGE_FALLBACK = "/logo.jpg";
@@ -136,18 +135,6 @@ function ServicesAnalysis({
     count: submissions.filter((submission) => submission.status === status.value)
       .length,
   }));
-  const serviceSubmissionRows = services
-    .map((service) => {
-      const serviceSubmissions = getServiceSubmissions(service, submissions);
-      return {
-        service,
-        total: serviceSubmissions.length,
-        statusCounts: getServiceSubmissionStatusCounts(service, submissions),
-      };
-    })
-    .filter(({ total }) => total > 0)
-    .sort((a, b) => b.total - a.total)
-    .slice(0, 5);
 
   return (
     <div className="space-y-6">
@@ -228,75 +215,6 @@ function ServicesAnalysis({
                 </div>
               </div>
             ))}
-          </div>
-        </CardContent>
-      </Card>
-
-      <Card className="border-0 shadow-xl shadow-black/5">
-        <CardHeader>
-          <CardTitle className="text-lg font-semibold">
-            Top Services by Submissions
-          </CardTitle>
-          <CardDescription>
-            Each row includes the service total and status breakdown.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            {serviceSubmissionRows.length > 0 ? (
-              serviceSubmissionRows.map(({ service, total, statusCounts }, index) => (
-                <div
-                  key={service.id}
-                  className="rounded-xl bg-muted/20 p-4 shadow-sm shadow-black/5"
-                >
-                  <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4">
-                    <div className="min-w-0">
-                      <p className="truncate text-sm font-semibold text-primary">
-                        {service.title}
-                      </p>
-                      <p className="text-xs text-muted-foreground">
-                        {service.category || "Uncategorized"}
-                      </p>
-                    </div>
-                    <span className="font-mono text-sm font-semibold tabular-nums">
-                      {total}
-                    </span>
-                  </div>
-                  <Progress
-                    value={
-                      submissions.length > 0 ? (total / submissions.length) * 100 : 0
-                    }
-                    className={`mt-3 h-2 ${[
-                      "[&>div]:bg-chart-1",
-                      "[&>div]:bg-chart-2",
-                      "[&>div]:bg-chart-3",
-                      "[&>div]:bg-chart-4",
-                      "[&>div]:bg-chart-5",
-                    ][index % 5]}`}
-                  />
-                  <div className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-5">
-                    {statusCounts
-                      .filter(({ count }) => count > 0)
-                      .map(({ label, value, count, Icon, className }) => (
-                        <div
-                          key={value}
-                          className={`flex items-center justify-between gap-2 rounded-lg px-3 py-2 text-xs font-semibold shadow-sm ${className}`}
-                        >
-                          <span className="flex items-center gap-1.5">
-                            <Icon className="h-3.5 w-3.5" />
-                            {label}
-                          </span>
-                          <span className="tabular-nums">{count}</span>
-                        </div>
-                      ))}
-                  </div>
-                </div>
-              ))
-            ) : (
-              <div className="rounded-xl bg-muted/30 py-10 text-center text-sm text-muted-foreground">
-                No service submissions yet.
-              </div>
-            )}
           </div>
         </CardContent>
       </Card>
