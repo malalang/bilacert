@@ -61,15 +61,6 @@ const statusStyles: Record<
   },
 };
 
-const safeFormatDate = (
-  date: string | Date | undefined,
-  fallback = "Invalid date",
-) => {
-  if (!date) return fallback;
-  const d = typeof date === "string" ? parseISO(date) : date;
-  return isValid(d) ? format(d, "dd MMM yyyy, HH:mm") : fallback;
-};
-
 const compactFormatDate = (date: string | Date | undefined) => {
   if (!date) return "No date";
   const d = typeof date === "string" ? parseISO(date) : date;
@@ -150,7 +141,9 @@ function BlogInsightCard({ blog }: { blog: BlogPost }) {
     >
       <div className="relative h-28 w-32 shrink-0 overflow-hidden bg-muted">
         <Image
-          src={blog.featuredImage || `https://picsum.photos/seed/${blog.id}/600/400`}
+          src={
+            blog.featuredImage || `https://picsum.photos/seed/${blog.id}/600/400`
+          }
           alt={blog.title}
           fill
           className="object-cover transition-transform duration-300 group-hover:scale-105"
