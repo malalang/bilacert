@@ -21,6 +21,7 @@ interface AdminPageProps<T> {
     onEdit: (item: T) => void,
     onDelete: (item: T) => void,
   ) => React.ReactNode;
+  renderBeforeContent?: (data: T[]) => React.ReactNode;
   renderLoading?: () => React.ReactNode;
   renderEmpty?: () => React.ReactNode;
   DeleteDialog: React.FC<{
@@ -39,6 +40,7 @@ export default function AdminPage<
   newItemButtonText,
   newItemLink,
   renderItem,
+  renderBeforeContent,
   renderLoading,
   renderEmpty,
   DeleteDialog,
@@ -113,6 +115,10 @@ export default function AdminPage<
           </Link>
         </Button>
       </div>
+
+      {renderBeforeContent && !loading && (
+        <div className="mt-6">{renderBeforeContent(data)}</div>
+      )}
 
       <div className="mt-6">
         {loading ? (
