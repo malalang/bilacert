@@ -293,7 +293,7 @@ export default function DashboardClient() {
                       >
                         <div className="flex min-w-0 items-center gap-3">
                           <Icon
-                            name={item.icon as any}
+                            name={item.icon || "Package"}
                             className="h-5 w-5 shrink-0 text-muted-foreground"
                           />
                           <span className="truncate text-sm font-medium">
