@@ -1,9 +1,30 @@
 "use client";
 
 import { useMemo } from "react";
+import { useBlogs } from "./useBlogs";
 import { useContacts } from "./useContacts";
 import { useServices } from "./useServices";
 import { useSubmissions } from "./useSubmissions";
+
+const submissionStatuses = [
+  "pending",
+  "in-progress",
+  "completed",
+  "rejected",
+  "archived",
+] as const;
+
+function matchesService(submissionServiceName: string | undefined, service: any) {
+  const normalizedSubmissionServiceName = submissionServiceName
+    ?.trim()
+    .toLowerCase();
+
+  return (
+    normalizedSubmissionServiceName === service.id?.trim?.().toLowerCase?.() ||
+    normalizedSubmissionServiceName === service.slug?.trim?.().toLowerCase?.() ||
+    normalizedSubmissionServiceName === service.title?.trim?.().toLowerCase?.()
+  );
+}
 
 export function useDashboardData() {
   const {
@@ -21,34 +42,57 @@ export function useDashboardData() {
     loading: servicesLoading,
     error: servicesError,
   } = useServices();
+  const {
+    data: blogs,
+    loading: blogsLoading,
+    error: blogsError,
+  } = useBlogs();
 
-  const loading = submissionsLoading || contactsLoading || servicesLoading;
-  const error = submissionsError || contactsError || servicesError;
+  const loading =
+    submissionsLoading || contactsLoading || servicesLoading || blogsLoading;
+  const error = submissionsError || contactsError || servicesError || blogsError;
+
+  const statusCounts = useMemo(() => {
+    return submissionStatuses.map((status) => ({
+      status,
+      count: submissions?.filter((submission) => submission.status === status)
+        .length ?? 0,
+    }));
+  }, [submissions]);
 
   const stats = useMemo(() => {
     const totalSubmissions = submissions?.length ?? 0;
     const newApplications =
       submissions?.filter((s) => s.status === "pending").length ?? 0;
     const totalContacts = contacts?.length ?? 0;
+    const totalBlogs = blogs?.length ?? 0;
     const totalRevenue =
       submissions
         ?.filter((s) => s.status === "archived")
         .reduce((acc, submission) => {
-          const service = services?.find(
-            (s) => s.slug === submission.serviceName,
+          const service = services?.find((s) =>
+            matchesService(submission.serviceName, s),
           );
           return acc + (service?.pricing || 0);
         }, 0) ?? 0;
 
-    return { totalSubmissions, newApplications, totalContacts, totalRevenue };
-  }, [submissions, contacts, services]);
+    return {
+      totalSubmissions,
+      newApplications,
+      totalContacts,
+      totalBlogs,
+      totalRevenue,
+    };
+  }, [submissions, contacts, services, blogs]);
 
   const submissionsByService = useMemo(() => {
     if (!submissions || !services) return [];
     return services
       .map((service) => {
         const count = submissions.filter(
-          (s) => s.serviceName === service.slug,
+          (submission) =>
+            submission.serviceId === service.id ||
+            matchesService(submission.serviceName, service),
         ).length;
         return { ...service, submissions: count };
       })
@@ -82,5 +126,40 @@ export function useDashboardData() {
       .slice(0, 5);
   }, [submissions, contacts]);
 
-  return { loading, error, stats, submissionsByService, recentActivity };
+  const pendingSubmissions = useMemo(() => {
+    return (submissions || [])
+      .filter((submission) => submission.status === "pending")
+      .sort(
+        (a, b) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+      )
+      .slice(0, 5);
+  }, [submissions]);
+
+  const recentContacts = useMemo(() => {
+    return (contacts || [])
+      .sort(
+        (a, b) =>
+          new Date(b.submittedAt).getTime() - new Date(a.submittedAt).getTime(),
+      )
+      .slice(0, 5);
+  }, [contacts]);
+
+  const topViewedBlogs = useMemo(() => {
+    return (blogs || [])
+      .sort((a, b) => (b.viewsCount || 0) - (a.viewsCount || 0))
+      .slice(0, 3);
+  }, [blogs]);
+
+  return {
+    loading,
+    error,
+    stats,
+    statusCounts,
+    submissionsByService,
+    recentActivity,
+    pendingSubmissions,
+    recentContacts,
+    topViewedBlogs,
+  };
 }
