@@ -1,8 +1,8 @@
-import { Icon } from "@bilacert/shared/Icon";
-import { ArrowRight, CheckCircle, Clock, Users } from "lucide-react";
+import { CheckCircle, Clock, Users } from "lucide-react";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import ServiceCard from "@/components/cards/ServiceCard";
 import { Button } from "@/components/ui/button";
 import { getCachedServices } from "../_lib/cached-public-data";
 
@@ -89,61 +89,7 @@ export default async function ServicesPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch">
             {services.map((service) => (
-              <Link
-                key={service.id}
-                href={service.href}
-                className="group block h-full"
-              >
-                <div className="flex h-full flex-col rounded-xl border bg-card p-6 shadow-sm transition-all duration-300 hover:border-primary/30 hover:shadow-xl">
-                  <div className="mb-4 flex-shrink-0 text-accent">
-                    <Icon name={service.icon || "Shield"} className="h-8 w-8" />
-                  </div>
-                  <div className="flex flex-grow flex-col">
-                    <h3 className="text-xl font-bold text-primary mb-2">
-                      {service.title}
-                    </h3>
-                    <p className="mb-4 text-sm text-muted-foreground flex-grow">
-                      {service.description}
-                    </p>
-                    {service.includes &&
-                      (service.includes as string[]).length > 0 && (
-                        <div className="mb-4">
-                          <h4 className="mb-2 text-sm font-semibold text-card-foreground">
-                            Includes:
-                          </h4>
-                          <ul className="space-y-2 text-sm text-muted-foreground">
-                            {(service.includes as string[])
-                              .slice(0, 4)
-                              .map((item: string, index: number) => (
-                                <li
-                                  key={index}
-                                  className="flex items-center gap-2"
-                                >
-                                  <CheckCircle className="h-4 w-4 text-accent" />
-                                  <span>{item}</span>
-                                </li>
-                              ))}
-                          </ul>
-                        </div>
-                      )}
-                  </div>
-                  <div className="mt-auto pt-6">
-                    {service.pricing && (
-                      <p className="mb-4 text-lg font-semibold text-primary">
-                        From R
-                        {service.pricing.toLocaleString("en-ZA", {
-                          minimumFractionDigits: 0,
-                          maximumFractionDigits: 0,
-                        })}
-                      </p>
-                    )}
-                    <Button className="w-full bg-primary hover:bg-primary/90">
-                      Learn More
-                      <ArrowRight className="ml-2 h-4 w-4" />
-                    </Button>
-                  </div>
-                </div>
-              </Link>
+              <ServiceCard key={service.id} service={service} />
             ))}
           </div>
         </div>
