@@ -97,12 +97,23 @@ export function useDashboardData() {
     if (!submissions || !services) return [];
     return services
       .map((service) => {
-        const count = submissions.filter(
+        const serviceSubmissions = submissions.filter(
           (submission) =>
             submission.serviceId === service.id ||
             matchesService(submission.serviceName, service),
-        ).length;
-        return { ...service, submissions: count };
+        );
+        const statusCountsByService = submissionStatuses.map((status) => ({
+          status,
+          count: serviceSubmissions.filter(
+            (submission) => submission.status === status,
+          ).length,
+        }));
+
+        return {
+          ...service,
+          submissions: serviceSubmissions.length,
+          statusCounts: statusCountsByService,
+        };
       })
       .filter((service) => service.submissions > 0);
   }, [submissions, services]);
