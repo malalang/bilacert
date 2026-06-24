@@ -55,10 +55,28 @@ export default async function ServicesPage() {
     },
   ];
 
+  const heroHighlights = [
+    {
+      title: "Expert Compliance Guidance",
+      description: "ICASA, NRCS, licensing, and approval support.",
+      icon: <Users className="h-6 w-6 text-white" />,
+    },
+    {
+      title: "Streamlined Application Process",
+      description: "Clear steps, fewer delays, and proactive support.",
+      icon: <Clock className="h-6 w-6 text-white" />,
+    },
+    {
+      title: `${services.length} Active Services`,
+      description: "Purpose-built services for regulated businesses.",
+      icon: <CheckCircle className="h-6 w-6 text-white" />,
+    },
+  ];
+
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="relative text-white py-20">
+      <section className="relative overflow-hidden py-20 text-white lg:py-32">
         <Image
           src="/images/services/services-hero.svg"
           data-ai-hint="bilacert compliance services"
@@ -69,23 +87,61 @@ export default async function ServicesPage() {
           unoptimized
           className="object-cover"
         />
-        <div className="absolute inset-0 bg-black/40" />
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-3xl">
-            <h1 className="text-4xl lg:text-5xl font-bold mb-6">
-              Our Services
-            </h1>
-            <p className="text-xl text-gray-200 mb-8">
-              Comprehensive licensing and certification services to help your
-              business stay compliant and competitive in South Africa's
-              regulated industries.
-            </p>
+        <div className="absolute inset-0 bg-primary/75" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/45 via-primary/40 to-black/20" />
+        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2">
+            <div className="max-w-3xl">
+              <div className="mb-5 inline-flex items-center rounded-full bg-white/10 px-4 py-2 text-sm font-semibold text-accent-light shadow-lg shadow-black/10 backdrop-blur-sm">
+                Services built for South African compliance
+              </div>
+              <h1 className="mb-6 text-4xl font-bold leading-tight md:text-5xl lg:text-6xl">
+                Compliance Services That Move Your Business Forward
+              </h1>
+              <p className="mb-8 max-w-2xl text-lg leading-relaxed text-gray-100 md:text-xl">
+                Comprehensive licensing, certification, and regulatory approval
+                support for businesses that need clear guidance, faster
+                submissions, and reliable compliance outcomes.
+              </p>
+              <div className="flex flex-col gap-4 sm:flex-row">
+                <Link
+                  href="/contact"
+                  className="rounded-lg bg-accent px-8 py-4 text-center text-lg font-semibold text-white transition-all duration-200 hover:-translate-y-1 hover:bg-accent-light"
+                >
+                  Get Free Consultation
+                </Link>
+                <Link
+                  href="#services-grid"
+                  className="rounded-lg border-2 border-white px-8 py-4 text-center text-lg font-semibold text-white transition-all duration-200 hover:bg-white hover:text-primary"
+                >
+                  Explore Services
+                </Link>
+              </div>
+            </div>
+
+            <div className="hidden lg:block">
+              <div className="rounded-2xl bg-white/10 p-8 shadow-2xl shadow-black/20 backdrop-blur-sm">
+                <div className="space-y-6">
+                  {heroHighlights.map((item) => (
+                    <div key={item.title} className="flex items-center gap-4">
+                      <div className="rounded-lg bg-accent p-3 shadow-lg shadow-black/10">
+                        {item.icon}
+                      </div>
+                      <div>
+                        <h3 className="font-semibold">{item.title}</h3>
+                        <p className="text-gray-300">{item.description}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
       {/* Services Grid */}
-      <section className="py-20">
+      <section id="services-grid" className="py-20 scroll-mt-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch">
             {services.map((service) => (
