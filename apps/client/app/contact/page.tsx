@@ -1,6 +1,6 @@
 import { Clock, Mail, Phone } from "lucide-react";
 import type { Metadata } from "next";
-import Image from "next/image";
+import HeroSection from "@/components/HeroSection";
 import { businessInfo } from "@/lib/business";
 import ContactMessageForm from "./ContactMessageForm";
 
@@ -27,30 +27,43 @@ export const metadata: Metadata = {
 };
 
 export default function ContactPage() {
+  const heroHighlights = [
+    {
+      title: businessInfo.phone,
+      description: "Speak to a compliance specialist.",
+      icon: <Phone className="h-6 w-6 text-white" />,
+    },
+    {
+      title: businessInfo.email,
+      description: "Send your compliance questions.",
+      icon: <Mail className="h-6 w-6 text-white" />,
+    },
+    {
+      title: "Mon-Fri 08:00 - 16:30",
+      description: "Business hours for direct support.",
+      icon: <Clock className="h-6 w-6 text-white" />,
+    },
+  ];
+
   return (
     <div className="min-h-screen">
-      <section className="relative text-white py-20">
-        <Image
-          src="/herosetion/Contact-Us.jpg"
-          alt="Get in touch"
-          fill
-          priority
-          className="object-cover"
-        />
-        <div className="absolute inset-0 bg-black/40" />
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <h1 className="text-4xl lg:text-5xl font-bold mb-6">
-              Get in Touch
-            </h1>
-            <p className="text-xl text-gray-200 max-w-3xl mx-auto">
-              Ready to simplify your compliance journey? Contact our experts for
-              a free consultation and discover how we can help your business
-              navigate ICASA and NRCS requirements.
-            </p>
-          </div>
-        </div>
-      </section>
+      <HeroSection
+        imageSrc="/herosetion/Contact-Us.jpg"
+        imageAlt="Get in touch"
+        eyebrow="Contact Bilacert"
+        title="Get Expert Compliance Guidance"
+        description="Ready to simplify your compliance journey? Contact our experts for a free consultation and discover how we can help your business navigate ICASA and NRCS requirements."
+        actions={[
+          { label: "Call Now", href: businessInfo.telHref },
+          {
+            label: "WhatsApp Us",
+            href: businessInfo.whatsappHref,
+            variant: "secondary",
+            external: true,
+          },
+        ]}
+        highlights={heroHighlights}
+      />
 
       <section className="py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
