@@ -19,6 +19,7 @@ import {
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import AdminPage from "@/components/admin/AdminPage";
+import AnalysesHeader from "@/components/admin/AnalysesHeader";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -130,6 +131,7 @@ function ServicesAnalysis({
 }) {
   const publishedServices = services.filter((service) => service.published);
   const featuredServices = services.filter((service) => service.featured);
+  const draftServices = services.length - publishedServices.length;
   const statusTotals = submissionStatuses.map((status) => ({
     ...status,
     count: submissions.filter((submission) => submission.status === status.value)
@@ -138,58 +140,34 @@ function ServicesAnalysis({
 
   return (
     <div className="space-y-6">
-      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-        <Card className="border-0 shadow-md shadow-black/5">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Services</CardTitle>
-            <Package className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <p className="text-2xl font-bold">{services.length}</p>
-            <p className="text-xs text-muted-foreground">
-              {publishedServices.length} published
-            </p>
-          </CardContent>
-        </Card>
-        <Card className="border-0 shadow-md shadow-black/5">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Featured Services</CardTitle>
-            <Sparkles className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <p className="text-2xl font-bold">{featuredServices.length}</p>
-            <p className="text-xs text-muted-foreground">
-              Highlighted on public pages
-            </p>
-          </CardContent>
-        </Card>
-        <Card className="border-0 shadow-md shadow-black/5">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Service Submissions</CardTitle>
-            <BarChart3 className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <p className="text-2xl font-bold">{submissions.length}</p>
-            <p className="text-xs text-muted-foreground">
-              Across service and contact flows
-            </p>
-          </CardContent>
-        </Card>
-        <Card className="border-0 shadow-md shadow-black/5">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Draft Services</CardTitle>
-            <Clock className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <p className="text-2xl font-bold">
-              {services.length - publishedServices.length}
-            </p>
-            <p className="text-xs text-muted-foreground">
-              Not visible publicly yet
-            </p>
-          </CardContent>
-        </Card>
-      </div>
+      <AnalysesHeader
+        items={[
+          {
+            title: "Total Services",
+            value: services.length,
+            description: `${publishedServices.length.toLocaleString()} published`,
+            icon: <Package className="h-4 w-4 text-muted-foreground" />,
+          },
+          {
+            title: "Featured Services",
+            value: featuredServices.length,
+            description: "Highlighted on public pages",
+            icon: <Sparkles className="h-4 w-4 text-muted-foreground" />,
+          },
+          {
+            title: "Service Submissions",
+            value: submissions.length,
+            description: "Across service and contact flows",
+            icon: <BarChart3 className="h-4 w-4 text-muted-foreground" />,
+          },
+          {
+            title: "Draft Services",
+            value: draftServices,
+            description: "Not visible publicly yet",
+            icon: <Clock className="h-4 w-4 text-muted-foreground" />,
+          },
+        ]}
+      />
 
       <Card className="border-0 shadow-xl shadow-black/5">
         <CardHeader>
