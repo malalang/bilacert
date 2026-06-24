@@ -76,7 +76,7 @@ export default async function ServicesPage() {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="relative overflow-hidden py-20 text-white lg:py-32">
+      <section className="relative overflow-hidden py-14 text-white lg:py-20">
         <Image
           src="/images/services/services-hero.svg"
           data-ai-hint="bilacert compliance services"
@@ -90,18 +90,18 @@ export default async function ServicesPage() {
         <div className="absolute inset-0 bg-primary/75" />
         <div className="absolute inset-0 bg-gradient-to-r from-black/45 via-primary/40 to-black/20" />
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2">
+          <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-2">
             <div className="max-w-3xl">
-              <div className="mb-5 inline-flex items-center rounded-full bg-white/10 px-4 py-2 text-sm font-semibold text-accent-light shadow-lg shadow-black/10 backdrop-blur-sm">
+              <div className="mb-4 inline-flex items-center rounded-full bg-white/10 px-4 py-2 text-sm font-semibold text-accent-light shadow-lg shadow-black/10 backdrop-blur-sm">
                 Services built for South African compliance
               </div>
-              <h1 className="mb-6 text-4xl font-bold leading-tight md:text-5xl lg:text-6xl">
-                Compliance Services That Move Your Business Forward
+              <h1 className="mb-5 text-3xl font-bold leading-tight md:text-4xl lg:text-5xl">
+                Compliance Services for Your Business
               </h1>
-              <p className="mb-8 max-w-2xl text-lg leading-relaxed text-gray-100 md:text-xl">
-                Comprehensive licensing, certification, and regulatory approval
-                support for businesses that need clear guidance, faster
-                submissions, and reliable compliance outcomes.
+              <p className="mb-7 max-w-2xl text-base leading-relaxed text-gray-100 md:text-lg">
+                Licensing, certification, and regulatory approval support for
+                businesses that need clear guidance and reliable compliance
+                outcomes.
               </p>
               <div className="flex flex-col gap-4 sm:flex-row">
                 <Link
