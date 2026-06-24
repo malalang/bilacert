@@ -68,19 +68,22 @@ export default async function EditBlogPage({
   }
 
   return (
-    <div className="space-y-6">
-      <Button variant="outline" asChild>
-        <Link href="/admin/blogs">
-          <ArrowLeft className="mr-2 h-4 w-4" />
-          Back to Blogs
-        </Link>
-      </Button>
+    <div className="mx-auto max-w-5xl">
+      <div className="mb-4 flex items-center gap-4">
+        <Button variant="outline" size="sm" asChild>
+          <Link href={`/admin/blogs/${blog.id}`}>
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Cancel Edit
+          </Link>
+        </Button>
+      </div>
 
       <Card>
         <CardHeader>
           <CardTitle>Edit Blog Post</CardTitle>
           <CardDescription>
-            Update the details for "{blog.title}".
+            You are currently editing the details for:{" "}
+            <span className="font-semibold text-foreground">{blog.title}</span>
           </CardDescription>
         </CardHeader>
         <CardContent>
