@@ -481,12 +481,6 @@ export default function AnalysisClient() {
         <AnalysesHeader
           items={[
             {
-              title: "Total Submissions",
-              value: totalSubmissions,
-              description: "All submissions in selected range",
-              icon: <FileText className="h-4 w-4 text-muted-foreground" />,
-            },
-            {
               title: "Pending",
               value: pendingApplications,
               description: "Awaiting first response",
@@ -501,8 +495,14 @@ export default function AnalysisClient() {
             {
               title: "Rejected",
               value: rejectedApplications,
-              description: `${archivedApplications.toLocaleString()} archived`,
+              description: "Declined or not approved",
               icon: <XCircle className="h-4 w-4 text-muted-foreground" />,
+            },
+            {
+              title: "Archived",
+              value: archivedApplications,
+              description: "Stored for reference",
+              icon: <Archive className="h-4 w-4 text-muted-foreground" />,
             },
           ]}
         />
