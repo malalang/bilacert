@@ -4,7 +4,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { FaFacebook, FaLinkedin, FaTwitter } from "react-icons/fa";
-import HeroSection from "@/components/HeroSection";
 import { RelatedPosts } from "@/components/blog/RelatedPosts";
 import { StickyShare } from "@/components/blog/StickyShare";
 import { ViewTracker } from "@/components/blog/view";
@@ -23,6 +22,17 @@ interface Props {
   params: Promise<{
     slug: string;
   }>;
+}
+
+function normalizeArticleHtml(html: string | null | undefined) {
+  if (!html) return '<p class="text-slate-400 italic">No content to display yet...</p>';
+
+  return html
+    .replace(/<br\s*\/?>(\s*)/gi, " ")
+    .replace(/&nbsp;/gi, " ")
+    .replace(/([A-Za-z])[-‐‑‒–—]\s+([A-Za-z])/g, "$1$2")
+    .replace(/\s{2,}/g, " ")
+    .trim();
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -73,50 +83,50 @@ export default async function BlogPostPage({ params }: Props) {
     ? format(new Date(post.createdAt), "PP")
     : "Published insight";
   const authorName = post.authorName || "Bilacert Team";
-  const heroHighlights = [
-    {
-      title: authorName,
-      description: "Compliance insight author",
-      icon: <User className="h-6 w-6 text-white" />,
-    },
-    {
-      title: publishedDate,
-      description: "Published date",
-      icon: <Calendar className="h-6 w-6 text-white" />,
-    },
-    {
-      title: post.readTime || "Quick read",
-      description: "Estimated reading time",
-      icon: <Clock className="h-6 w-6 text-white" />,
-    },
-  ];
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-white">
       <ViewTracker slug={slug} />
       <StickyShare />
 
-      <HeroSection
-        imageSrc={post.featuredImage || "/herosetion/Blog.jpg"}
-        imageAlt={post.title}
-        eyebrow={post.category || "Bilacert Insight"}
-        title={post.title}
-        description={post.excerpt || "Expert compliance guidance from Bilacert."}
-        actions={[
-          { label: "Get Free Consultation", href: "/contact" },
-          { label: "View All Articles", href: "/blog", variant: "secondary" },
-        ]}
-        highlights={heroHighlights}
-      />
+      <section className="bg-secondary-gray py-12 md:py-16">
+        <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+          {post.category && (
+            <p className="mb-4 text-sm font-bold uppercase tracking-wider text-accent">
+              {post.category}
+            </p>
+          )}
+          <h1 className="mb-6 max-w-4xl text-3xl font-extrabold leading-tight tracking-tight text-primary md:text-5xl">
+            {post.title}
+          </h1>
+          {post.excerpt && (
+            <p className="mb-8 max-w-3xl text-lg leading-relaxed text-gray-600 md:text-xl">
+              {post.excerpt}
+            </p>
+          )}
+          <div className="flex flex-wrap items-center gap-4 text-sm font-medium text-gray-600">
+            <span className="inline-flex items-center gap-2">
+              <User className="h-4 w-4 text-accent" />
+              {authorName}
+            </span>
+            <span className="inline-flex items-center gap-2">
+              <Calendar className="h-4 w-4 text-accent" />
+              {publishedDate}
+            </span>
+            <span className="inline-flex items-center gap-2">
+              <Clock className="h-4 w-4 text-accent" />
+              {post.readTime || "Quick read"}
+            </span>
+          </div>
+        </div>
+      </section>
 
       <section className="py-14">
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
           <article
             className="bilacert-article"
             dangerouslySetInnerHTML={{
-              __html:
-                post.content ||
-                '<p class="text-slate-400 italic">No content to display yet...</p>',
+              __html: normalizeArticleHtml(post.content),
             }}
           />
 
