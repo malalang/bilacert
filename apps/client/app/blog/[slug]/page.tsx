@@ -1,5 +1,5 @@
 import { format } from "date-fns";
-import { ArrowLeft, Calendar, Clock, Folder, User } from "lucide-react";
+import { Calendar, Clock, Folder, User } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -95,17 +95,6 @@ export default async function BlogPostPage({ params }: Props) {
     <div className="min-h-screen">
       <ViewTracker slug={slug} />
       <StickyShare />
-      <div className="bg-white border-b">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <Link
-            href="/blog"
-            className="inline-flex items-center text-primary hover:text-primary-light transition-colors duration-200"
-          >
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Back to Blog
-          </Link>
-        </div>
-      </div>
 
       <HeroSection
         imageSrc={post.featuredImage || "/herosetion/Blog.jpg"}
