@@ -4,7 +4,6 @@ import type { BlogPost } from "@bilacert/shared/types";
 import { format } from "date-fns";
 import {
   ArrowLeft,
-  Calendar,
   Clock,
   Edit,
   Eye,
