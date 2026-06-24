@@ -1,9 +1,9 @@
 "use client";
 import DOMPurify from "isomorphic-dompurify";
 import dynamic from "next/dynamic";
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import "react-quill-new/dist/quill.snow.css";
-import Image from "next/image";
 import { Card, CardHeader } from "@/components/ui/card";
 
 const ReactQuill = dynamic(() => import("react-quill-new"), {
@@ -24,6 +24,154 @@ const modules = {
     ["clean"],
   ],
 };
+
+const bilacertArticlePreviewStyles = `
+  .bilacert-article {
+    color: #1f2937;
+    font-size: 1.0625rem;
+    line-height: 1.9;
+    max-width: 100%;
+    overflow-wrap: normal;
+    word-break: normal;
+  }
+
+  .bilacert-article p {
+    margin-bottom: 1.5rem;
+    overflow-wrap: normal;
+    text-wrap: pretty;
+    white-space: normal;
+    word-break: normal;
+  }
+
+  .bilacert-article h1,
+  .bilacert-article h2,
+  .bilacert-article h3,
+  .bilacert-article h4 {
+    color: #0a2b4c;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.2;
+    text-wrap: balance;
+  }
+
+  .bilacert-article h1 {
+    font-size: 2.5rem;
+    margin: 0 0 1.5rem;
+  }
+
+  .bilacert-article h2 {
+    font-size: 2rem;
+    margin: 3rem 0 1rem;
+  }
+
+  .bilacert-article h3 {
+    font-size: 1.5rem;
+    margin: 2rem 0 0.75rem;
+  }
+
+  .bilacert-article strong {
+    color: #334155;
+    font-weight: 800;
+  }
+
+  .bilacert-article a {
+    color: #1a4a6b;
+    font-weight: 700;
+    text-decoration: underline;
+    text-decoration-color: #f2994a;
+    text-underline-offset: 0.2em;
+  }
+
+  .bilacert-article ul,
+  .bilacert-article ol {
+    margin: 1.5rem 0 1.5rem 1.5rem;
+    padding-left: 1rem;
+  }
+
+  .bilacert-article ul {
+    list-style: disc;
+  }
+
+  .bilacert-article ol {
+    list-style: decimal;
+  }
+
+  .bilacert-article li {
+    margin-bottom: 0.75rem;
+    padding-left: 0.25rem;
+  }
+
+  .bilacert-article blockquote {
+    border-left: 4px solid #f2994a;
+    color: #475569;
+    font-size: 1.125rem;
+    font-style: italic;
+    margin: 2rem 0;
+    padding: 1rem 0 1rem 1.5rem;
+  }
+
+  .bilacert-article img,
+  .bilacert-article iframe,
+  .bilacert-article video {
+    border-radius: 1rem;
+    height: auto;
+    margin: 2rem auto;
+    max-width: 100%;
+  }
+
+  .bilacert-article pre {
+    background: #0a2b4c;
+    border-radius: 1rem;
+    color: white;
+    margin: 2rem 0;
+    overflow-x: auto;
+    padding: 1.25rem;
+    white-space: pre-wrap;
+  }
+
+  .bilacert-article code {
+    overflow-wrap: break-word;
+    white-space: pre-wrap;
+  }
+
+  .bilacert-article table {
+    display: block;
+    margin: 2rem 0;
+    max-width: 100%;
+    overflow-x: auto;
+    width: 100%;
+  }
+
+  .bilacert-article .ql-align-center {
+    text-align: center;
+  }
+
+  .bilacert-article .ql-align-right {
+    text-align: right;
+  }
+
+  .bilacert-article .ql-align-justify {
+    text-align: justify;
+  }
+
+  .bilacert-article .ql-size-small {
+    font-size: 0.875em;
+  }
+
+  .bilacert-article .ql-size-large {
+    font-size: 1.25em;
+  }
+
+  .bilacert-article .ql-size-huge {
+    font-size: 1.5em;
+  }
+
+  @media (min-width: 768px) {
+    .bilacert-article {
+      font-size: 1.125rem;
+    }
+  }
+`;
 
 interface BlogEditorProps {
   value: string;
@@ -87,7 +235,7 @@ export default function BlogEditor({
               }
               .ql-toolbar {
                 position: sticky;
-                top: 68px; /* Adjust this to match the header's height */
+                top: 68px;
                 z-index: 9;
                 border-top-left-radius: 12px;
                 border-top-right-radius: 12px;
@@ -109,6 +257,7 @@ export default function BlogEditor({
           </div>
         ) : (
           <div className="p-4 animate-in slide-in-from-bottom-2 duration-300">
+            <style>{bilacertArticlePreviewStyles}</style>
             {featuredImage && (
               <div className="mb-8">
                 <h2 className="text-lg font-bold mb-4 text-slate-800">
@@ -138,17 +287,7 @@ export default function BlogEditor({
             </div>
 
             <article
-              className="prose prose-slate prose-indigo max-w-none 
-                                       break-words overflow-wrap-anywhere
-                                       prose-headings:font-bold prose-headings:tracking-tight
-                                       prose-a:text-indigo-600 prose-img:rounded-2xl prose-img:shadow-lg
-                                       [&_iframe]:w-full [&_iframe]:aspect-video [&_iframe]:rounded-xl max-w-none 
-          [&>h1]:text-3xl [&>h1]:font-bold [&>h1]:mb-4 
-          [&>h2]:text-2xl [&>h2]:font-bold [&>h2]:mb-3 
-          [&>h3]:text-xl [&>h3]:font-bold [&>h3]:mb-2 
-          [&>p]:mb-4 [&>p]:leading-relaxed [&>p]:text-slate-700
-          [&>ul]:list-disc [&>ul]:ml-6 [&>ul]:my-4
-          [&>img]:rounded-lg"
+              className="bilacert-article"
               dangerouslySetInnerHTML={{
                 __html:
                   sanitized ||
