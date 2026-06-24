@@ -2,10 +2,11 @@
 
 import type { Contact } from "@bilacert/shared/types";
 import { useContacts } from "@bilacert/supabase/hooks/useContacts";
-import { MoreHorizontal } from "lucide-react";
+import { ClipboardList, Mail, MessageSquare, MoreHorizontal, Phone } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import AdminPage from "@/components/admin/AdminPage";
+import AnalysesHeader from "@/components/admin/AnalysesHeader";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -23,6 +24,43 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import DeleteContactDialog from "./DeleteContactDialog";
+
+function ContactsAnalysis({ contacts }: { contacts: Contact[] }) {
+  const contactsWithEmail = contacts.filter((contact) => contact.email);
+  const contactsWithPhone = contacts.filter((contact) => contact.phone);
+  const serviceInquiries = contacts.filter((contact) => contact.service);
+
+  return (
+    <AnalysesHeader
+      items={[
+        {
+          title: "Total Contacts",
+          value: contacts.length,
+          description: "All captured contact messages",
+          icon: <MessageSquare className="h-4 w-4 text-muted-foreground" />,
+        },
+        {
+          title: "Email Contacts",
+          value: contactsWithEmail.length,
+          description: "Contacts with email addresses",
+          icon: <Mail className="h-4 w-4 text-muted-foreground" />,
+        },
+        {
+          title: "Phone Contacts",
+          value: contactsWithPhone.length,
+          description: "Contacts with phone numbers",
+          icon: <Phone className="h-4 w-4 text-muted-foreground" />,
+        },
+        {
+          title: "Service Inquiries",
+          value: serviceInquiries.length,
+          description: "Messages linked to services",
+          icon: <ClipboardList className="h-4 w-4 text-muted-foreground" />,
+        },
+      ]}
+    />
+  );
+}
 
 const ContactCard = ({
   contact,
@@ -114,6 +152,7 @@ export default function ContactsClient() {
       title="Contacts"
       newItemButtonText="Add Contact"
       newItemLink="/admin/contacts/new"
+      renderBeforeContent={(contacts) => <ContactsAnalysis contacts={contacts} />}
       renderItem={(contact, onEdit, onDelete) => (
         <ContactCard contact={contact} onEdit={onEdit} onDelete={onDelete} />
       )}
