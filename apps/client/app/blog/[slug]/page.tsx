@@ -92,7 +92,7 @@ export default async function BlogPostPage({ params }: Props) {
   ];
 
   return (
-    <div className="min-h-screen overflow-x-hidden">
+    <div className="min-h-screen">
       <ViewTracker slug={slug} />
       <StickyShare />
 
@@ -112,18 +112,7 @@ export default async function BlogPostPage({ params }: Props) {
       <section className="py-14">
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
           <article
-            className="blog-article-content ql-editor prose prose-slate prose-indigo mx-auto max-w-none text-base md:text-lg
-            prose-headings:font-bold prose-headings:tracking-tight
-            prose-a:text-indigo-600 prose-img:rounded-2xl prose-img:shadow-lg
-            [&_iframe]:w-full [&_iframe]:aspect-video [&_iframe]:rounded-xl
-            [&>h1]:mb-6 [&>h1]:text-4xl [&>h1]:font-bold
-            [&>h2]:mb-5 [&>h2]:mt-10 [&>h2]:text-3xl [&>h2]:font-bold
-            [&>h3]:mb-4 [&>h3]:mt-8 [&>h3]:text-2xl [&>h3]:font-bold
-            [&>p]:mb-6 [&>p]:leading-8 [&>p]:text-slate-700
-            [&>ul]:my-6 [&>ul]:ml-6 [&>ul]:list-disc [&>ul]:leading-8
-            [&>ol]:my-6 [&>ol]:ml-6 [&>ol]:list-decimal [&>ol]:leading-8
-            [&>li]:mb-2 [&>li]:text-slate-700
-            [&>img]:rounded-lg"
+            className="bilacert-article"
             dangerouslySetInnerHTML={{
               __html:
                 post.content ||
