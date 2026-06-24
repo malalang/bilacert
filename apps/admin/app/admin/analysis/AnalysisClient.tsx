@@ -6,7 +6,6 @@ import type {
   Service,
   Submission,
   Testimonial,
-  User,
 } from "@bilacert/shared/types";
 import { createSupabaseBrowserClient } from "@bilacert/supabase/client";
 import { subYears } from "date-fns";
@@ -32,6 +31,7 @@ import {
   Package,
   Sparkles,
   XCircle,
+  type LucideIcon,
 } from "lucide-react";
 import {
   BlogViewsChart,
@@ -73,12 +73,49 @@ interface ChartData {
   archivedApplications: number;
 }
 
+const serviceActivityKeyOrder = [
+  "services_created",
+  "services_updated",
+  "services_published",
+  "services_featured",
+];
+const blogActivityKeyOrder = [
+  "blogs_created",
+  "blogs_published",
+  "blogs_updated",
+  "blogs_featured",
+  "blog_drafts_created",
+];
+
 function formatActivityLabel(key: string) {
   return key
     .replace(/-/g, "_")
     .split("_")
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(" ");
+}
+
+function metric(title: string, value: string | number, description: string, Icon: LucideIcon) {
+  return {
+    title,
+    value,
+    description,
+    icon: <Icon className="h-4 w-4 text-muted-foreground" />,
+  };
+}
+
+function availableKeys(allKeys: string[], keys: string[]) {
+  return keys.filter((key) => allKeys.includes(key));
+}
+
+function submissionActivityKeys(allKeys: string[]) {
+  return allKeys.filter(
+    (key) =>
+      key === "submissions_created" ||
+      key === "submissions_updated" ||
+      key.startsWith("submission_status_") ||
+      key.startsWith("form_type_"),
+  );
 }
 
 function AnalyticsSection({
@@ -101,141 +138,135 @@ function AnalyticsSection({
   );
 }
 
-function getStatusTotal(submissions: Submission[], status: string) {
+function SectionActivityCard({
+  title,
+  description,
+  data,
+  keys,
+}: {
+  title: string;
+  description: string;
+  data: { date: string; [key: string]: number | string }[];
+  keys: string[];
+}) {
+  if (keys.length === 0) return null;
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>{title}</CardTitle>
+        <p className="text-sm text-muted-foreground">{description}</p>
+      </CardHeader>
+      <CardContent>
+        <CombinedActivityChart data={data} keys={keys} />
+      </CardContent>
+    </Card>
+  );
+}
+
+function statusTotal(submissions: Submission[], status: string) {
   return submissions.filter((submission) => submission.status === status).length;
 }
 
 async function getAnalyticsData(
   dateRange: DateRange | undefined,
 ): Promise<ChartData> {
-  const queries = [
-    supabase
-      .from("blog_posts")
-      .select(
-        "createdAt,publishedAt,updatedAt,category,published,featured,viewsCount,title",
-      ),
-    supabase.from("contacts").select("submittedAt"),
-    supabase.from("services").select("createdAt,updatedAt,published,featured"),
-    supabase.from("testimonials").select("createdAt"),
-    supabase
-      .from("form_submissions")
-      .select("createdAt,updatedAt,serviceName,status,formType"),
-    supabase.from("users").select("createdAt,updatedAt,isActive,role"),
-  ];
-
-  const [
-    blogRes,
-    contactRes,
-    serviceRes,
-    testimonialRes,
-    submissionRes,
-    userRes,
-  ] = await Promise.all(queries);
+  const [blogRes, contactRes, serviceRes, testimonialRes, submissionRes] =
+    await Promise.all([
+      supabase
+        .from("blog_posts")
+        .select(
+          "createdAt,publishedAt,updatedAt,category,published,featured,viewsCount,title",
+        ),
+      supabase.from("contacts").select("submittedAt"),
+      supabase.from("services").select("createdAt,updatedAt,published,featured"),
+      supabase.from("testimonials").select("createdAt"),
+      supabase
+        .from("form_submissions")
+        .select("createdAt,updatedAt,serviceName,status,formType"),
+    ]);
 
   const blogs = (blogRes?.data as BlogPost[]) || [];
   const contacts = (contactRes?.data as Contact[]) || [];
   const services = (serviceRes?.data as Service[]) || [];
   const testimonials = (testimonialRes?.data as Testimonial[]) || [];
   const submissions = (submissionRes?.data as Submission[]) || [];
-  const users = (userRes?.data as User[]) || [];
-
-  const activity = new Map<string, { [key: string]: number }>();
+  const activity = new Map<string, Record<string, number>>();
   const activityKeys = new Set<string>();
 
-  const addToActivity = (dateStr: string | null | undefined, key: string) => {
-    if (!dateStr) return;
-    const activityDate = new Date(dateStr);
-    const date = activityDate.toISOString().split("T")[0];
+  const addActivity = (dateValue: string | null | undefined, key: string) => {
+    if (!dateValue) return;
+    const date = new Date(dateValue).toISOString().split("T")[0];
     if (!date) return;
-    const dayData = activity.get(date) ?? {};
-    activity.set(date, { ...dayData, [key]: (dayData[key] ?? 0) + 1 });
+    const day = activity.get(date) ?? {};
+    activity.set(date, { ...day, [key]: (day[key] ?? 0) + 1 });
     activityKeys.add(key);
   };
 
-  for (const b of blogs) {
-    addToActivity(b.createdAt, "blogs_created");
-    addToActivity(b.publishedAt, "blogs_published");
-    addToActivity(b.updatedAt, "blogs_updated");
-    if (b.featured) addToActivity(b.updatedAt ?? b.createdAt, "blogs_featured");
-    if (!b.published) addToActivity(b.createdAt, "blog_drafts_created");
-  }
-  for (const c of contacts) addToActivity(c.submittedAt, "contacts_submitted");
-  for (const s of services) {
-    addToActivity(s.createdAt, "services_created");
-    addToActivity(s.updatedAt, "services_updated");
-    if (s.published)
-      addToActivity(s.updatedAt ?? s.createdAt, "services_published");
-    if (s.featured) addToActivity(s.updatedAt ?? s.createdAt, "services_featured");
-  }
-  for (const t of testimonials)
-    addToActivity(t.createdAt, "testimonials_created");
-  for (const s of submissions) {
-    addToActivity(s.createdAt, "submissions_created");
-    addToActivity(s.updatedAt, "submissions_updated");
-    addToActivity(s.createdAt, `submission_status_${s.status}`);
-    addToActivity(s.createdAt, `form_type_${s.formType}`);
-  }
-  for (const u of users) {
-    addToActivity(u.createdAt, "users_created");
-    addToActivity(u.updatedAt, "users_updated");
-    if (u.isActive) addToActivity(u.updatedAt ?? u.createdAt, "active_users");
-    addToActivity(u.createdAt, `user_role_${u.role}`);
-  }
+  blogs.forEach((blog) => {
+    addActivity(blog.createdAt, "blogs_created");
+    addActivity(blog.publishedAt, "blogs_published");
+    addActivity(blog.updatedAt, "blogs_updated");
+    if (blog.featured) addActivity(blog.updatedAt ?? blog.createdAt, "blogs_featured");
+    if (!blog.published) addActivity(blog.createdAt, "blog_drafts_created");
+  });
+  contacts.forEach((contact) => addActivity(contact.submittedAt, "contacts_submitted"));
+  services.forEach((service) => {
+    addActivity(service.createdAt, "services_created");
+    addActivity(service.updatedAt, "services_updated");
+    if (service.published) addActivity(service.updatedAt ?? service.createdAt, "services_published");
+    if (service.featured) addActivity(service.updatedAt ?? service.createdAt, "services_featured");
+  });
+  testimonials.forEach((testimonial) => addActivity(testimonial.createdAt, "testimonials_created"));
+  submissions.forEach((submission) => {
+    addActivity(submission.createdAt, "submissions_created");
+    addActivity(submission.updatedAt, "submissions_updated");
+    addActivity(submission.createdAt, `submission_status_${submission.status}`);
+    addActivity(submission.createdAt, `form_type_${submission.formType}`);
+  });
 
   const combinedActivity = Array.from(activity.entries())
-    .map(([date, dailyData]) => {
-      const completeDailyData: {
-        date: string;
-        [key: string]: number | string;
-      } = { date };
+    .map(([date, day]) => {
+      const row: { date: string; [key: string]: number | string } = { date };
       activityKeys.forEach((key) => {
-        completeDailyData[key] = dailyData[key] ?? 0;
+        row[key] = day[key] ?? 0;
       });
-      return completeDailyData;
+      return row;
     })
     .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
-  const fromDate = dateRange?.from;
-  const toDate = dateRange?.to;
-  const filteredSubmissions = submissions.filter((s) => {
-    const date = new Date(s.createdAt);
-    return (!fromDate || date >= fromDate) && (!toDate || date <= toDate);
-  });
-  const filteredBlogs = blogs.filter((b) => {
-    const date = new Date(b.createdAt);
-    return (!fromDate || date >= fromDate) && (!toDate || date <= toDate);
-  });
-  const filteredServices = services.filter((s) => {
-    const date = new Date(s.createdAt);
-    return (!fromDate || date >= fromDate) && (!toDate || date <= toDate);
-  });
+  const inDateRange = (dateValue: string | null | undefined) => {
+    if (!dateValue) return false;
+    const date = new Date(dateValue);
+    return (!dateRange?.from || date >= dateRange.from) && (!dateRange?.to || date <= dateRange.to);
+  };
+  const filteredSubmissions = submissions.filter((submission) => inDateRange(submission.createdAt));
+  const filteredBlogs = blogs.filter((blog) => inDateRange(blog.createdAt));
+  const filteredServices = services.filter((service) => inDateRange(service.createdAt));
 
   const dailyCounts = new Map<string, number>();
-  for (const { createdAt } of filteredSubmissions) {
-    if (!createdAt) continue;
-    const date = new Date(createdAt as string)
-      .toISOString()
-      .split("T")[0] as string;
+  filteredSubmissions.forEach(({ createdAt }) => {
+    const date = new Date(createdAt).toISOString().split("T")[0] as string;
     dailyCounts.set(date, (dailyCounts.get(date) ?? 0) + 1);
-  }
+  });
   const submissionsByDay = Array.from(dailyCounts.entries())
     .map(([date, count]) => ({ date, count }))
     .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
   const serviceCounts = new Map<string, number>();
-  for (const { serviceName } of filteredSubmissions) {
-    const aService = (serviceName || "Uncategorized") as string;
-    serviceCounts.set(aService, (serviceCounts.get(aService) ?? 0) + 1);
-  }
+  filteredSubmissions.forEach(({ serviceName }) => {
+    const key = serviceName || "Uncategorized";
+    serviceCounts.set(key, (serviceCounts.get(key) ?? 0) + 1);
+  });
   const submissionsByService = Array.from(serviceCounts.entries()).map(
     ([serviceName, count]) => ({ serviceName, count }),
   );
 
   const categoryCounts = new Map<string, number>();
-  for (const { category } of filteredBlogs) {
-    const contentType = (category || "Uncategorized") as string;
-    categoryCounts.set(contentType, (categoryCounts.get(contentType) ?? 0) + 1);
-  }
+  filteredBlogs.forEach(({ category }) => {
+    const key = category || "Uncategorized";
+    categoryCounts.set(key, (categoryCounts.get(key) ?? 0) + 1);
+  });
   const contentBreakdown = Array.from(categoryCounts.entries()).map(
     ([contentType, count]) => ({ contentType, count }),
   );
@@ -246,63 +277,36 @@ async function getAnalyticsData(
     .slice(0, 10);
 
   const statusCounts = new Map<string, number>();
-  for (const { status } of filteredSubmissions) {
-    const aStatus = (status || "Unknown") as string;
-    statusCounts.set(aStatus, (statusCounts.get(aStatus) ?? 0) + 1);
-  }
+  filteredSubmissions.forEach(({ status }) => {
+    const key = status || "Unknown";
+    statusCounts.set(key, (statusCounts.get(key) ?? 0) + 1);
+  });
   const submissionStatus = Array.from(statusCounts.entries()).map(
     ([status, count]) => ({ status, count }),
   );
 
-  const allServiceKeys = [
-    ...new Set(
-      filteredSubmissions.map(
-        (s) => (s.serviceName || "Uncategorized") as string,
-      ),
-    ),
-  ];
-  const allStatusKeys = [
-    ...new Set(
-      filteredSubmissions.map((s) => (s.status || "Unknown") as string),
-    ),
-  ];
-  const detailedCounts = new Map<
-    string,
-    { total: number } & Record<string, number>
-  >();
-
-  for (const { createdAt, serviceName, status } of filteredSubmissions) {
-    if (!createdAt) continue;
-    const date = new Date(createdAt as string)
-      .toISOString()
-      .split("T")[0] as string;
-    if (!detailedCounts.has(date)) {
-      const initial: { total: number } & Record<string, number> = { total: 0 };
-      for (const k of allServiceKeys) initial[k] = 0;
-      for (const k of allStatusKeys) initial[k] = 0;
-      detailedCounts.set(date, initial);
-    }
-    const dayData = detailedCounts.get(date)!;
-    dayData.total += 1;
-    dayData[(serviceName || "Uncategorized") as string]! += 1;
-    dayData[(status || "Unknown") as string]! += 1;
-  }
+  const serviceKeys = Array.from(
+    new Set(filteredSubmissions.map((submission) => submission.serviceName || "Uncategorized")),
+  );
+  const statusKeys = Array.from(
+    new Set(filteredSubmissions.map((submission) => submission.status || "Unknown")),
+  );
+  const detailedCounts = new Map<string, { total: number } & Record<string, number>>();
+  filteredSubmissions.forEach(({ createdAt, serviceName, status }) => {
+    const date = new Date(createdAt).toISOString().split("T")[0] as string;
+    if (!detailedCounts.has(date)) detailedCounts.set(date, { total: 0 });
+    const day = detailedCounts.get(date)!;
+    day.total += 1;
+    day[serviceName || "Uncategorized"] = (day[serviceName || "Uncategorized"] ?? 0) + 1;
+    day[status || "Unknown"] = (day[status || "Unknown"] ?? 0) + 1;
+  });
   const detailedSubmissions = Array.from(detailedCounts.entries())
     .map(([date, data]) => ({ date, ...data }))
     .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
-  const publishedContent = filteredBlogs.filter(
-    (blog) => blog.published,
-  ).length;
-  const totalSubmissions = filteredSubmissions.length;
-  const totalViews = filteredBlogs.reduce(
-    (acc, { viewsCount }) => acc + (viewsCount ?? 0),
-    0,
-  );
-  const publishedServices = filteredServices.filter(
-    (service) => service.published,
-  ).length;
-  const pendingApplications = getStatusTotal(filteredSubmissions, "pending");
+  const publishedServices = filteredServices.filter((service) => service.published).length;
+  const publishedContent = filteredBlogs.filter((blog) => blog.published).length;
+  const totalViews = filteredBlogs.reduce((sum, blog) => sum + (blog.viewsCount ?? 0), 0);
 
   return {
     submissionsByDay,
@@ -313,23 +317,22 @@ async function getAnalyticsData(
     detailedSubmissions,
     combinedActivity,
     combinedActivityKeys: Array.from(activityKeys),
-    serviceKeys: allServiceKeys,
-    statusKeys: allStatusKeys,
-    totalSubmissions,
+    serviceKeys,
+    statusKeys,
+    totalSubmissions: filteredSubmissions.length,
     publishedContent,
     totalViews,
     totalServices: filteredServices.length,
     publishedServices,
-    featuredServices: filteredServices.filter((service) => service.featured)
-      .length,
+    featuredServices: filteredServices.filter((service) => service.featured).length,
     draftServices: filteredServices.length - publishedServices,
     totalBlogs: filteredBlogs.length,
     featuredBlogs: filteredBlogs.filter((blog) => blog.featured).length,
     draftBlogs: filteredBlogs.filter((blog) => !blog.published).length,
-    pendingApplications,
-    processingApplications: getStatusTotal(filteredSubmissions, "in-progress"),
-    rejectedApplications: getStatusTotal(filteredSubmissions, "rejected"),
-    archivedApplications: getStatusTotal(filteredSubmissions, "archived"),
+    pendingApplications: statusTotal(filteredSubmissions, "pending"),
+    processingApplications: statusTotal(filteredSubmissions, "in-progress"),
+    rejectedApplications: statusTotal(filteredSubmissions, "rejected"),
+    archivedApplications: statusTotal(filteredSubmissions, "archived"),
   };
 }
 
@@ -345,22 +348,17 @@ export default function AnalysisClient() {
   useEffect(() => {
     async function fetchData() {
       setLoading(true);
-      const data = await getAnalyticsData(dateRange);
-      setChartData(data);
+      setChartData(await getAnalyticsData(dateRange));
       setLoading(false);
     }
     fetchData();
   }, [dateRange]);
 
   useEffect(() => {
-    if (chartData?.combinedActivityKeys) {
-      setVisibleKeys(chartData.combinedActivityKeys);
-    }
+    if (chartData?.combinedActivityKeys) setVisibleKeys(chartData.combinedActivityKeys);
   }, [chartData]);
 
-  if (loading || !chartData) {
-    return <AnalysisLoading />;
-  }
+  if (loading || !chartData) return <AnalysisLoading />;
 
   const {
     submissionsByDay,
@@ -396,8 +394,7 @@ export default function AnalysisClient() {
         <div>
           <h1 className="text-3xl font-bold">Analysis Dashboard</h1>
           <p className="text-muted-foreground">
-            Live insights into services, submissions, blogs, and platform
-            activity.
+            Live insights into services, submissions, blogs, and platform activity.
           </p>
         </div>
         <DateRangePicker date={dateRange} onDateChange={setDateRange} />
@@ -405,232 +402,120 @@ export default function AnalysisClient() {
 
       <AnalysesHeader
         items={[
-          {
-            title: "Total Services",
-            value: totalServices,
-            description: `${publishedServices.toLocaleString()} published`,
-            icon: <Package className="h-4 w-4 text-muted-foreground" />,
-          },
-          {
-            title: "Total Blogs",
-            value: totalBlogs,
-            description: `${publishedContent.toLocaleString()} published`,
-            icon: <Newspaper className="h-4 w-4 text-muted-foreground" />,
-          },
-          {
-            title: "Total Submissions",
-            value: totalSubmissions,
-            description: "Submission volume in selected range",
-            icon: <FileText className="h-4 w-4 text-muted-foreground" />,
-          },
-          {
-            title: "Pending Applications",
-            value: pendingApplications,
-            description: `${totalViews.toLocaleString()} total blog views`,
-            icon: <Clock className="h-4 w-4 text-muted-foreground" />,
-          },
+          metric("Total Services", totalServices, `${publishedServices.toLocaleString()} published`, Package),
+          metric("Total Blogs", totalBlogs, `${publishedContent.toLocaleString()} published`, Newspaper),
+          metric("Total Submissions", totalSubmissions, "Submission volume in selected range", FileText),
+          metric("Pending Applications", pendingApplications, `${totalViews.toLocaleString()} total blog views`, Clock),
         ]}
       />
 
-      <AnalyticsSection
-        title="Services Analysis"
-        description="Monitor service catalog health and how services drive form submissions."
-      >
+      <Card>
+        <CardHeader>
+          <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
+            <div>
+              <CardTitle>Overview Combined Activity</CardTitle>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Full-platform activity across services, submissions, blogs, contacts, and testimonials.
+              </p>
+            </div>
+            <Button type="button" variant="outline" size="sm" onClick={() => setVisibleKeys(sortedActivityKeys)}>
+              Show All
+            </Button>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className="mb-6 rounded-xl bg-muted/30 p-4 shadow-sm shadow-black/5">
+            <ToggleGroup multiple value={visibleKeys} onValueChange={setVisibleKeys} aria-label="Filter overview combined activity chart">
+              {sortedActivityKeys.map((key) => (
+                <ToggleGroupItem key={key} value={key}>
+                  {formatActivityLabel(key)}
+                </ToggleGroupItem>
+              ))}
+            </ToggleGroup>
+          </div>
+          <CombinedActivityChart data={combinedActivity} keys={visibleKeys} />
+        </CardContent>
+      </Card>
+
+      <AnalyticsSection title="Services Analysis" description="Monitor service catalog health and how services drive form submissions.">
         <AnalysesHeader
           items={[
-            {
-              title: "Total Services",
-              value: totalServices,
-              description: `${publishedServices.toLocaleString()} published`,
-              icon: <Package className="h-4 w-4 text-muted-foreground" />,
-            },
-            {
-              title: "Featured Services",
-              value: featuredServices,
-              description: "Highlighted on public pages",
-              icon: <Sparkles className="h-4 w-4 text-muted-foreground" />,
-            },
-            {
-              title: "Service Submissions",
-              value: totalSubmissions,
-              description: "Submission volume in selected range",
-              icon: <BarChart3 className="h-4 w-4 text-muted-foreground" />,
-            },
-            {
-              title: "Draft Services",
-              value: draftServices,
-              description: "Not visible publicly yet",
-              icon: <Clock className="h-4 w-4 text-muted-foreground" />,
-            },
+            metric("Total Services", totalServices, `${publishedServices.toLocaleString()} published`, Package),
+            metric("Featured Services", featuredServices, "Highlighted on public pages", Sparkles),
+            metric("Service Submissions", totalSubmissions, "Submission volume in selected range", BarChart3),
+            metric("Draft Services", draftServices, "Not visible publicly yet", Clock),
           ]}
         />
         <Card>
-          <CardHeader>
-            <CardTitle>Submissions by Service</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <SubmissionsBarChart data={submissionsByService} />
-          </CardContent>
+          <CardHeader><CardTitle>Submissions by Service</CardTitle></CardHeader>
+          <CardContent><SubmissionsBarChart data={submissionsByService} /></CardContent>
         </Card>
+        <SectionActivityCard
+          title="Services Combined Activity"
+          description="Service creation, update, publishing, and featured activity over time."
+          data={combinedActivity}
+          keys={availableKeys(combinedActivityKeys, serviceActivityKeyOrder)}
+        />
       </AnalyticsSection>
 
-      <AnalyticsSection
-        title="Submission Analysis"
-        description="Track submission volume, status mix, and detailed service/status trends."
-      >
+      <AnalyticsSection title="Submission Analysis" description="Track submission volume, status mix, and detailed service/status trends.">
         <AnalysesHeader
           items={[
-            {
-              title: "Pending",
-              value: pendingApplications,
-              description: "Awaiting first response",
-              icon: <Clock className="h-4 w-4 text-muted-foreground" />,
-            },
-            {
-              title: "Processing",
-              value: processingApplications,
-              description: "Currently being handled",
-              icon: <Inbox className="h-4 w-4 text-muted-foreground" />,
-            },
-            {
-              title: "Rejected",
-              value: rejectedApplications,
-              description: "Declined or not approved",
-              icon: <XCircle className="h-4 w-4 text-muted-foreground" />,
-            },
-            {
-              title: "Archived",
-              value: archivedApplications,
-              description: "Stored for reference",
-              icon: <Archive className="h-4 w-4 text-muted-foreground" />,
-            },
+            metric("Pending", pendingApplications, "Awaiting first response", Clock),
+            metric("Processing", processingApplications, "Currently being handled", Inbox),
+            metric("Rejected", rejectedApplications, "Declined or not approved", XCircle),
+            metric("Archived", archivedApplications, "Stored for reference", Archive),
           ]}
         />
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
           <Card>
-            <CardHeader>
-              <CardTitle>Submissions Over Time</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <SubmissionsLineChart data={submissionsByDay} />
-            </CardContent>
+            <CardHeader><CardTitle>Submissions Over Time</CardTitle></CardHeader>
+            <CardContent><SubmissionsLineChart data={submissionsByDay} /></CardContent>
           </Card>
           <Card>
-            <CardHeader>
-              <CardTitle>Submission Status</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <SubmissionStatusPieChart data={submissionStatus} />
-            </CardContent>
+            <CardHeader><CardTitle>Submission Status</CardTitle></CardHeader>
+            <CardContent><SubmissionStatusPieChart data={submissionStatus} /></CardContent>
           </Card>
         </div>
         <Card>
-          <CardHeader>
-            <CardTitle>Detailed Submissions</CardTitle>
-          </CardHeader>
+          <CardHeader><CardTitle>Detailed Submissions</CardTitle></CardHeader>
           <CardContent>
-            <DetailedSubmissionsChart
-              data={detailedSubmissions}
-              serviceKeys={serviceKeys}
-              statusKeys={statusKeys}
-            />
+            <DetailedSubmissionsChart data={detailedSubmissions} serviceKeys={serviceKeys} statusKeys={statusKeys} />
           </CardContent>
         </Card>
+        <SectionActivityCard
+          title="Submissions Combined Activity"
+          description="Submission creation, update, status, and form-type activity over time."
+          data={combinedActivity}
+          keys={submissionActivityKeys(combinedActivityKeys)}
+        />
       </AnalyticsSection>
 
-      <AnalyticsSection
-        title="Blogs Analysis"
-        description="Review blog publishing, category coverage, and view performance."
-      >
+      <AnalyticsSection title="Blogs Analysis" description="Review blog publishing, category coverage, and view performance.">
         <AnalysesHeader
           items={[
-            {
-              title: "Total Blogs",
-              value: totalBlogs,
-              description: `${publishedContent.toLocaleString()} published`,
-              icon: <Newspaper className="h-4 w-4 text-muted-foreground" />,
-            },
-            {
-              title: "Published Blogs",
-              value: publishedContent,
-              description: `${draftBlogs.toLocaleString()} drafts in range`,
-              icon: <FileText className="h-4 w-4 text-muted-foreground" />,
-            },
-            {
-              title: "Blog Views",
-              value: totalViews,
-              description: "Views across posts in range",
-              icon: <Eye className="h-4 w-4 text-muted-foreground" />,
-            },
-            {
-              title: "Featured Blogs",
-              value: featuredBlogs,
-              description: "Promoted content in range",
-              icon: <Sparkles className="h-4 w-4 text-muted-foreground" />,
-            },
+            metric("Total Blogs", totalBlogs, `${publishedContent.toLocaleString()} published`, Newspaper),
+            metric("Published Blogs", publishedContent, `${draftBlogs.toLocaleString()} drafts in range`, FileText),
+            metric("Blog Views", totalViews, "Views across posts in range", Eye),
+            metric("Featured Blogs", featuredBlogs, "Promoted content in range", Sparkles),
           ]}
         />
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
           <Card>
-            <CardHeader>
-              <CardTitle>Content Breakdown</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <ContentBarChart data={contentBreakdown} />
-            </CardContent>
+            <CardHeader><CardTitle>Content Breakdown</CardTitle></CardHeader>
+            <CardContent><ContentBarChart data={contentBreakdown} /></CardContent>
           </Card>
           <Card>
-            <CardHeader>
-              <CardTitle>Blog Views</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <BlogViewsChart data={blogViews} />
-            </CardContent>
+            <CardHeader><CardTitle>Blog Views</CardTitle></CardHeader>
+            <CardContent><BlogViewsChart data={blogViews} /></CardContent>
           </Card>
         </div>
-      </AnalyticsSection>
-
-      <AnalyticsSection
-        title="Combined Activity"
-        description="Compare broader platform events over time with expanded activity filters."
-      >
-        <Card>
-          <CardHeader>
-            <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
-              <div>
-                <CardTitle>Combined Activity</CardTitle>
-                <p className="mt-1 text-sm text-muted-foreground">
-                  Toggle activity types to compare platform events over time.
-                </p>
-              </div>
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                onClick={() => setVisibleKeys(sortedActivityKeys)}
-              >
-                Show All
-              </Button>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="mb-6 rounded-xl bg-muted/30 p-4 shadow-sm shadow-black/5">
-              <ToggleGroup
-                multiple
-                value={visibleKeys}
-                onValueChange={setVisibleKeys}
-                aria-label="Filter combined activity chart"
-              >
-                {sortedActivityKeys.map((key) => (
-                  <ToggleGroupItem key={key} value={key}>
-                    {formatActivityLabel(key)}
-                  </ToggleGroupItem>
-                ))}
-              </ToggleGroup>
-            </div>
-            <CombinedActivityChart data={combinedActivity} keys={visibleKeys} />
-          </CardContent>
-        </Card>
+        <SectionActivityCard
+          title="Blogs Combined Activity"
+          description="Blog creation, publishing, update, featured, and draft activity over time."
+          data={combinedActivity}
+          keys={availableKeys(combinedActivityKeys, blogActivityKeyOrder)}
+        />
       </AnalyticsSection>
     </div>
   );
