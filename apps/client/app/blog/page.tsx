@@ -1,7 +1,8 @@
-import { ArrowRight, Calendar, Clock, User } from "lucide-react";
+import { ArrowRight, BookOpen, Calendar, Clock, User } from "lucide-react";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import HeroSection from "@/components/HeroSection";
 import BlogCard from "@/components/cards/BlogCard";
 import { Badge } from "@/components/ui/badge";
 import { getCachedPublishedBlogs } from "../_lib/cached-public-data";
@@ -61,34 +62,38 @@ export default async function BlogPage() {
 
   const featuredPost = blogPosts[0];
   const regularPosts = blogPosts.slice(1);
+  const heroHighlights = [
+    {
+      title: `${blogPosts.length} Published Insights`,
+      description: "Guides and updates for regulated businesses.",
+      icon: <BookOpen className="h-6 w-6 text-white" />,
+    },
+    {
+      title: "Regulatory Updates",
+      description: "ICASA, NRCS, licensing, and approval guidance.",
+      icon: <Calendar className="h-6 w-6 text-white" />,
+    },
+    {
+      title: "Practical Reading",
+      description: "Actionable advice from compliance specialists.",
+      icon: <Clock className="h-6 w-6 text-white" />,
+    },
+  ];
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Hero Section */}
-      <section className="relative text-white py-20 md:py-24 lg:py-32 overflow-hidden">
-        <Image
-          src="/herosetion/Blog.jpg"
-          alt="Compliance Insights & Updates"
-          fill
-          priority
-          className="object-cover"
-        />
-        <div className="absolute inset-0 bg-primary/70 backdrop-blur-[1px]" />
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-3xl">
-            <Badge className="bg-accent text-white mb-6 px-4 py-1.5 text-xs uppercase tracking-wider font-bold border-none">
-              Insights Hub
-            </Badge>
-            <h1 className="text-3xl md:text-5xl lg:text-6xl font-extrabold mb-6 leading-tight">
-              Compliance Insights <br className="hidden md:block" /> & Updates
-            </h1>
-            <p className="text-lg md:text-xl text-gray-100 max-w-2xl leading-relaxed">
-              Stay informed with the latest compliance news, regulatory updates,
-              and expert insights to keep your business ahead of the curve.
-            </p>
-          </div>
-        </div>
-      </section>
+      <HeroSection
+        imageSrc="/herosetion/Blog.jpg"
+        imageAlt="Compliance Insights & Updates"
+        eyebrow="Insights Hub"
+        title="Compliance Insights & Updates"
+        description="Stay informed with the latest compliance news, regulatory updates, and expert guidance to keep your business ahead of the curve."
+        actions={[
+          { label: "Read Latest Articles", href: "#latest-articles" },
+          { label: "Ask an Expert", href: "/contact", variant: "secondary" },
+        ]}
+        highlights={heroHighlights}
+      />
 
       {/* Featured Post */}
       {featuredPost && (
@@ -182,7 +187,7 @@ export default async function BlogPage() {
       )}
 
       {/* Blog Posts Grid */}
-      <section className="py-16 md:py-24">
+      <section id="latest-articles" className="py-16 md:py-24 scroll-mt-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
             <div className="max-w-2xl">
