@@ -92,7 +92,7 @@ export default async function BlogPostPage({ params }: Props) {
   ];
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen overflow-x-hidden">
       <ViewTracker slug={slug} />
       <StickyShare />
 
@@ -112,8 +112,8 @@ export default async function BlogPostPage({ params }: Props) {
       <section className="py-14">
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
           <article
-            className="prose prose-slate prose-indigo mx-auto max-w-none text-base md:text-lg text-balance
-            prose-headings:font-bold prose-headings:tracking-tight prose-headings:text-balance
+            className="blog-article-content ql-editor prose prose-slate prose-indigo mx-auto max-w-none text-base md:text-lg
+            prose-headings:font-bold prose-headings:tracking-tight
             prose-a:text-indigo-600 prose-img:rounded-2xl prose-img:shadow-lg
             [&_iframe]:w-full [&_iframe]:aspect-video [&_iframe]:rounded-xl
             [&>h1]:mb-6 [&>h1]:text-4xl [&>h1]:font-bold
