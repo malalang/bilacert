@@ -112,9 +112,8 @@ export default async function BlogPostPage({ params }: Props) {
       <section className="py-14">
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
           <article
-            className="prose prose-slate prose-indigo mx-auto max-w-none text-base md:text-lg
-            break-words overflow-wrap-anywhere
-            prose-headings:font-bold prose-headings:tracking-tight
+            className="prose prose-slate prose-indigo mx-auto max-w-none text-base md:text-lg text-balance
+            prose-headings:font-bold prose-headings:tracking-tight prose-headings:text-balance
             prose-a:text-indigo-600 prose-img:rounded-2xl prose-img:shadow-lg
             [&_iframe]:w-full [&_iframe]:aspect-video [&_iframe]:rounded-xl
             [&>h1]:mb-6 [&>h1]:text-4xl [&>h1]:font-bold
