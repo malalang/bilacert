@@ -18,7 +18,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
-import AdminPage from "@/components/admin/AdminPage";
 import AnalysesHeader from "@/components/admin/AnalysesHeader";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -108,12 +107,8 @@ function BlogsAnalysis({ blogs }: { blogs: BlogPost[] }) {
       <div className="grid gap-4 lg:grid-cols-[2fr_1fr]">
         <Card className="border-0 shadow-xl shadow-black/5">
           <CardHeader>
-            <CardTitle className="text-lg font-semibold">
-              Blog Performance
-            </CardTitle>
-            <CardDescription>
-              Top posts ranked by recorded public views.
-            </CardDescription>
+            <CardTitle className="text-lg font-semibold">Blog Performance</CardTitle>
+            <CardDescription>Top posts ranked by recorded public views.</CardDescription>
           </CardHeader>
           <CardContent>
             {topBlogs.length > 0 ? (
@@ -131,9 +126,7 @@ function BlogsAnalysis({ blogs }: { blogs: BlogPost[] }) {
                         {blog.title}
                       </Link>
                       <div className="mt-2 flex flex-wrap gap-2">
-                        {blog.category && (
-                          <Badge variant="secondary">{blog.category}</Badge>
-                        )}
+                        {blog.category && <Badge variant="secondary">{blog.category}</Badge>}
                         <Badge variant={blog.published ? "default" : "outline"}>
                           {blog.published ? "Published" : "Draft"}
                         </Badge>
@@ -148,18 +141,14 @@ function BlogsAnalysis({ blogs }: { blogs: BlogPost[] }) {
                 ))}
               </div>
             ) : (
-              <p className="text-sm text-muted-foreground">
-                No blog performance data yet.
-              </p>
+              <p className="text-sm text-muted-foreground">No blog performance data yet.</p>
             )}
           </CardContent>
         </Card>
 
         <Card className="border-0 shadow-xl shadow-black/5">
           <CardHeader>
-            <CardTitle className="text-lg font-semibold">
-              Category Coverage
-            </CardTitle>
+            <CardTitle className="text-lg font-semibold">Category Coverage</CardTitle>
             <CardDescription>Most-used blog categories.</CardDescription>
           </CardHeader>
           <CardContent>
@@ -176,9 +165,7 @@ function BlogsAnalysis({ blogs }: { blogs: BlogPost[] }) {
                 ))}
               </div>
             ) : (
-              <p className="text-sm text-muted-foreground">
-                No categories assigned yet.
-              </p>
+              <p className="text-sm text-muted-foreground">No categories assigned yet.</p>
             )}
           </CardContent>
         </Card>
@@ -187,67 +174,31 @@ function BlogsAnalysis({ blogs }: { blogs: BlogPost[] }) {
   );
 }
 
-const BlogCard = ({
-  blog,
-  onEdit,
-  onDelete,
-}: {
-  blog: BlogPost;
-  onEdit: (blog: BlogPost) => void;
-  onDelete: (blog: BlogPost) => void;
-}) => {
+const BlogCard = ({ blog, onEdit, onDelete }: { blog: BlogPost; onEdit: (blog: BlogPost) => void; onDelete: (blog: BlogPost) => void }) => {
   const router = useRouter();
   return (
-    <div
-      key={blog.id}
-      className="group relative flex flex-col overflow-hidden rounded-xl bg-white shadow-sm shadow-black/5 transition-all duration-300 hover:-translate-y-2 hover:shadow-xl hover:shadow-black/10"
-    >
-      <Link
-        href={`/admin/blogs/${blog.id}`}
-        className="absolute inset-0 z-10"
-        aria-label={`View ${blog.title}`}
-      >
+    <div key={blog.id} className="group relative flex flex-col overflow-hidden rounded-xl bg-white shadow-sm shadow-black/5 transition-all duration-300 hover:-translate-y-2 hover:shadow-xl hover:shadow-black/10">
+      <Link href={`/admin/blogs/${blog.id}`} className="absolute inset-0 z-10" aria-label={`View ${blog.title}`}>
         <span className="sr-only">View Details</span>
       </Link>
       <div className="absolute top-4 right-4 z-20">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-8 w-8 rounded-full bg-background/60 backdrop-blur-sm hover:bg-background"
-              onClick={(e) => e.preventDefault()}
-            >
+            <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full bg-background/60 backdrop-blur-sm hover:bg-background" onClick={(e) => e.preventDefault()}>
               <span className="sr-only">Open menu</span>
               <MoreHorizontal className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={(e) => {
-                e.preventDefault();
-                router.push(`/admin/blogs/${blog.id}`);
-              }}
-            >
+            <DropdownMenuItem onClick={(e) => { e.preventDefault(); router.push(`/admin/blogs/${blog.id}`); }}>
               View
             </DropdownMenuItem>
-            <DropdownMenuItem
-              onClick={(e) => {
-                e.preventDefault();
-                onEdit(blog);
-              }}
-            >
+            <DropdownMenuItem onClick={(e) => { e.preventDefault(); onEdit(blog); }}>
               Edit
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem
-              className="text-destructive focus:bg-destructive/10 focus:text-destructive"
-              onClick={(e) => {
-                e.preventDefault();
-                onDelete(blog);
-              }}
-            >
+            <DropdownMenuItem className="text-destructive focus:bg-destructive/10 focus:text-destructive" onClick={(e) => { e.preventDefault(); onDelete(blog); }}>
               Delete
             </DropdownMenuItem>
           </DropdownMenuContent>
@@ -255,14 +206,7 @@ const BlogCard = ({
       </div>
 
       <div className="relative h-48 w-full">
-        <Image
-          src={
-            blog.featuredImage || `https://picsum.photos/seed/${blog.id}/600/400`
-          }
-          alt={blog.title}
-          fill
-          className="object-cover transition-transform duration-300 group-hover:scale-105"
-        />
+        <Image src={blog.featuredImage || `https://picsum.photos/seed/${blog.id}/600/400`} alt={blog.title} fill className="object-cover transition-transform duration-300 group-hover:scale-105" />
         <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
         <div className="absolute bottom-4 left-4">
           {blog.category && <Badge variant="secondary">{blog.category}</Badge>}
@@ -270,16 +214,10 @@ const BlogCard = ({
       </div>
 
       <div className="flex flex-col flex-grow p-6">
-        <h3 className="mb-2 text-xl font-semibold text-primary line-clamp-2">
-          {blog.title}
-        </h3>
-        <p className="mb-4 text-sm text-muted-foreground line-clamp-3 flex-grow">
-          {blog.excerpt}
-        </p>
+        <h3 className="mb-2 text-xl font-semibold text-primary line-clamp-2">{blog.title}</h3>
+        <p className="mb-4 text-sm text-muted-foreground line-clamp-3 flex-grow">{blog.excerpt}</p>
         <div className="mt-auto flex items-center justify-between gap-3 text-xs text-muted-foreground">
-          <Badge variant={blog.published ? "default" : "outline"}>
-            {blog.published ? "Published" : "Draft"}
-          </Badge>
+          <Badge variant={blog.published ? "default" : "outline"}>{blog.published ? "Published" : "Draft"}</Badge>
           <div className="flex flex-wrap items-center justify-end gap-x-3 gap-y-1">
             <div className="flex items-center gap-1.5">
               <Eye className="h-4 w-4" />
@@ -299,11 +237,9 @@ const BlogCard = ({
 export default function BlogsClient() {
   const { data: blogs, loading, error, refresh } = useBlogs();
   const router = useRouter();
-
   const [searchQuery, setSearchQuery] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("all");
   const [statusTab, setStatusTab] = useState("all");
-
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [selectedBlog, setSelectedBlog] = useState<BlogPost | null>(null);
 
@@ -319,17 +255,9 @@ export default function BlogsClient() {
     return blogs.filter((blog) => {
       const matchesSearch =
         blog.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        (blog.excerpt?.toLowerCase().includes(searchQuery.toLowerCase()) ??
-          false);
-
-      const matchesCategory =
-        categoryFilter === "all" || blog.category === categoryFilter;
-
-      const matchesStatus =
-        statusTab === "all" ||
-        (statusTab === "published" && blog.published) ||
-        (statusTab === "draft" && !blog.published);
-
+        (blog.excerpt?.toLowerCase().includes(searchQuery.toLowerCase()) ?? false);
+      const matchesCategory = categoryFilter === "all" || blog.category === categoryFilter;
+      const matchesStatus = statusTab === "all" || (statusTab === "published" && blog.published) || (statusTab === "draft" && !blog.published);
       return matchesSearch && matchesCategory && matchesStatus;
     });
   }, [blogs, searchQuery, categoryFilter, statusTab]);
@@ -362,9 +290,7 @@ export default function BlogsClient() {
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Blogs</h1>
-          <p className="text-muted-foreground">
-            Manage your blog posts and content.
-          </p>
+          <p className="text-muted-foreground">Manage your blog posts and content.</p>
         </div>
         <Button asChild>
           <Link href="/admin/blogs/new">
@@ -377,27 +303,17 @@ export default function BlogsClient() {
       <BlogsAnalysis blogs={blogs} />
 
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-b pb-4">
-        <Tabs
-          defaultValue="all"
-          className="w-full sm:w-auto"
-          onValueChange={setStatusTab}
-        >
+        <Tabs defaultValue="all" className="w-full sm:w-auto" onValueChange={setStatusTab}>
           <TabsList>
             <TabsTrigger value="all">All</TabsTrigger>
             <TabsTrigger value="published">Published</TabsTrigger>
             <TabsTrigger value="draft">Drafts</TabsTrigger>
           </TabsList>
         </Tabs>
-
         <div className="flex items-center gap-2">
           <div className="relative w-full sm:w-64">
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder="Search blogs..."
-              className="pl-8"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
+            <Input placeholder="Search blogs..." className="pl-8" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
           </div>
           <Select value={categoryFilter} onValueChange={setCategoryFilter}>
             <SelectTrigger className="w-[180px]">
@@ -407,9 +323,7 @@ export default function BlogsClient() {
             <SelectContent>
               <SelectItem value="all">All Categories</SelectItem>
               {categories.map((cat) => (
-                <SelectItem key={cat} value={cat}>
-                  {cat}
-                </SelectItem>
+                <SelectItem key={cat} value={cat}>{cat}</SelectItem>
               ))}
             </SelectContent>
           </Select>
@@ -419,10 +333,7 @@ export default function BlogsClient() {
       {loading ? (
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
           {Array.from({ length: 6 }).map((_, i) => (
-            <div
-              key={i}
-              className="h-[400px] w-full animate-pulse rounded-xl bg-muted"
-            ></div>
+            <div key={i} className="h-[400px] w-full animate-pulse rounded-xl bg-muted"></div>
           ))}
         </div>
       ) : filteredBlogs.length === 0 ? (
@@ -431,20 +342,9 @@ export default function BlogsClient() {
             <Search className="h-10 w-10 text-muted-foreground" />
           </div>
           <h3 className="text-xl font-semibold">No blogs found</h3>
-          <p className="text-muted-foreground max-w-xs mx-auto mt-2">
-            We couldn't find any blogs matching your current filters. Try
-            adjusting your search or category.
-          </p>
+          <p className="text-muted-foreground max-w-xs mx-auto mt-2">No blogs match the current filters.</p>
           {(searchQuery || categoryFilter !== "all" || statusTab !== "all") && (
-            <Button
-              variant="outline"
-              className="mt-6"
-              onClick={() => {
-                setSearchQuery("");
-                setCategoryFilter("all");
-                setStatusTab("all");
-              }}
-            >
+            <Button variant="outline" className="mt-6" onClick={() => { setSearchQuery(""); setCategoryFilter("all"); setStatusTab("all"); }}>
               Clear all filters
             </Button>
           )}
@@ -452,23 +352,13 @@ export default function BlogsClient() {
       ) : (
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
           {filteredBlogs.map((blog) => (
-            <BlogCard
-              key={blog.id}
-              blog={blog}
-              onEdit={handleEdit}
-              onDelete={handleDelete}
-            />
+            <BlogCard key={blog.id} blog={blog} onEdit={handleEdit} onDelete={handleDelete} />
           ))}
         </div>
       )}
 
       {isDeleteDialogOpen && (
-        <DeleteBlogDialog
-          isOpen={isDeleteDialogOpen}
-          onClose={() => setIsDeleteDialogOpen(false)}
-          onDeleted={onDeleted}
-          blog={selectedBlog}
-        />
+        <DeleteBlogDialog isOpen={isDeleteDialogOpen} onClose={() => setIsDeleteDialogOpen(false)} onDeleted={onDeleted} blog={selectedBlog} />
       )}
     </div>
   );
