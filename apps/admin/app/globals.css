@@ -158,3 +158,40 @@
     @apply bg-muted-foreground/30;
   }
 }
+
+@layer components {
+  .prose.overflow-wrap-anywhere,
+  .prose.break-words {
+    overflow-wrap: normal !important;
+    text-wrap: pretty;
+    word-break: normal !important;
+  }
+
+  .prose.overflow-wrap-anywhere p,
+  .prose.break-words p,
+  .prose.overflow-wrap-anywhere li,
+  .prose.break-words li {
+    overflow-wrap: normal !important;
+    text-wrap: pretty;
+    white-space: normal;
+    word-break: normal !important;
+  }
+
+  .prose.overflow-wrap-anywhere h1,
+  .prose.break-words h1,
+  .prose.overflow-wrap-anywhere h2,
+  .prose.break-words h2,
+  .prose.overflow-wrap-anywhere h3,
+  .prose.break-words h3 {
+    text-wrap: balance;
+  }
+
+  .prose.overflow-wrap-anywhere pre,
+  .prose.break-words pre,
+  .prose.overflow-wrap-anywhere code,
+  .prose.break-words code {
+    overflow-x: auto;
+    overflow-wrap: break-word;
+    white-space: pre-wrap;
+  }
+}
