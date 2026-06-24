@@ -13,6 +13,7 @@ import { subYears } from "date-fns";
 import type { ReactNode } from "react";
 import { useEffect, useState } from "react";
 import type { DateRange } from "react-day-picker";
+import AnalysesHeader from "@/components/admin/AnalysesHeader";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DateRangePicker } from "@/components/ui/DateRangePicker";
@@ -20,6 +21,18 @@ import {
   ToggleGroup,
   ToggleGroupItem,
 } from "@/components/ui/toggle-group";
+import {
+  Archive,
+  BarChart3,
+  Clock,
+  Eye,
+  FileText,
+  Inbox,
+  Newspaper,
+  Package,
+  Sparkles,
+  XCircle,
+} from "lucide-react";
 import {
   BlogViewsChart,
   CombinedActivityChart,
@@ -50,9 +63,14 @@ interface ChartData {
   totalServices: number;
   publishedServices: number;
   featuredServices: number;
+  draftServices: number;
   totalBlogs: number;
   featuredBlogs: number;
   draftBlogs: number;
+  pendingApplications: number;
+  processingApplications: number;
+  rejectedApplications: number;
+  archivedApplications: number;
 }
 
 function formatActivityLabel(key: string) {
@@ -83,26 +101,8 @@ function AnalyticsSection({
   );
 }
 
-function MetricCard({
-  title,
-  value,
-  description,
-}: {
-  title: string;
-  value: number;
-  description: string;
-}) {
-  return (
-    <Card className="border-0 shadow-md shadow-black/5">
-      <CardHeader>
-        <CardTitle className="text-sm font-medium">{title}</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <p className="text-4xl font-bold">{value.toLocaleString()}</p>
-        <p className="mt-1 text-xs text-muted-foreground">{description}</p>
-      </CardContent>
-    </Card>
-  );
+function getStatusTotal(submissions: Submission[], status: string) {
+  return submissions.filter((submission) => submission.status === status).length;
 }
 
 async function getAnalyticsData(
@@ -299,6 +299,10 @@ async function getAnalyticsData(
     (acc, { viewsCount }) => acc + (viewsCount ?? 0),
     0,
   );
+  const publishedServices = filteredServices.filter(
+    (service) => service.published,
+  ).length;
+  const pendingApplications = getStatusTotal(filteredSubmissions, "pending");
 
   return {
     submissionsByDay,
@@ -315,13 +319,17 @@ async function getAnalyticsData(
     publishedContent,
     totalViews,
     totalServices: filteredServices.length,
-    publishedServices: filteredServices.filter((service) => service.published)
-      .length,
+    publishedServices,
     featuredServices: filteredServices.filter((service) => service.featured)
       .length,
+    draftServices: filteredServices.length - publishedServices,
     totalBlogs: filteredBlogs.length,
     featuredBlogs: filteredBlogs.filter((blog) => blog.featured).length,
     draftBlogs: filteredBlogs.filter((blog) => !blog.published).length,
+    pendingApplications,
+    processingApplications: getStatusTotal(filteredSubmissions, "in-progress"),
+    rejectedApplications: getStatusTotal(filteredSubmissions, "rejected"),
+    archivedApplications: getStatusTotal(filteredSubmissions, "archived"),
   };
 }
 
@@ -371,9 +379,14 @@ export default function AnalysisClient() {
     totalServices,
     publishedServices,
     featuredServices,
+    draftServices,
     totalBlogs,
     featuredBlogs,
     draftBlogs,
+    pendingApplications,
+    processingApplications,
+    rejectedApplications,
+    archivedApplications,
   } = chartData;
   const sortedActivityKeys = [...combinedActivityKeys].sort();
 
@@ -390,27 +403,67 @@ export default function AnalysisClient() {
         <DateRangePicker date={dateRange} onDateChange={setDateRange} />
       </header>
 
+      <AnalysesHeader
+        items={[
+          {
+            title: "Total Services",
+            value: totalServices,
+            description: `${publishedServices.toLocaleString()} published`,
+            icon: <Package className="h-4 w-4 text-muted-foreground" />,
+          },
+          {
+            title: "Total Blogs",
+            value: totalBlogs,
+            description: `${publishedContent.toLocaleString()} published`,
+            icon: <Newspaper className="h-4 w-4 text-muted-foreground" />,
+          },
+          {
+            title: "Total Submissions",
+            value: totalSubmissions,
+            description: "Submission volume in selected range",
+            icon: <FileText className="h-4 w-4 text-muted-foreground" />,
+          },
+          {
+            title: "Pending Applications",
+            value: pendingApplications,
+            description: `${totalViews.toLocaleString()} total blog views`,
+            icon: <Clock className="h-4 w-4 text-muted-foreground" />,
+          },
+        ]}
+      />
+
       <AnalyticsSection
         title="Services Analysis"
         description="Monitor service catalog health and how services drive form submissions."
       >
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-          <MetricCard
-            title="Total Services"
-            value={totalServices}
-            description={`${publishedServices.toLocaleString()} published`}
-          />
-          <MetricCard
-            title="Featured Services"
-            value={featuredServices}
-            description="Highlighted on public pages"
-          />
-          <MetricCard
-            title="Service Submissions"
-            value={totalSubmissions}
-            description="Submission volume in selected range"
-          />
-        </div>
+        <AnalysesHeader
+          items={[
+            {
+              title: "Total Services",
+              value: totalServices,
+              description: `${publishedServices.toLocaleString()} published`,
+              icon: <Package className="h-4 w-4 text-muted-foreground" />,
+            },
+            {
+              title: "Featured Services",
+              value: featuredServices,
+              description: "Highlighted on public pages",
+              icon: <Sparkles className="h-4 w-4 text-muted-foreground" />,
+            },
+            {
+              title: "Service Submissions",
+              value: totalSubmissions,
+              description: "Submission volume in selected range",
+              icon: <BarChart3 className="h-4 w-4 text-muted-foreground" />,
+            },
+            {
+              title: "Draft Services",
+              value: draftServices,
+              description: "Not visible publicly yet",
+              icon: <Clock className="h-4 w-4 text-muted-foreground" />,
+            },
+          ]}
+        />
         <Card>
           <CardHeader>
             <CardTitle>Submissions by Service</CardTitle>
@@ -425,6 +478,34 @@ export default function AnalysisClient() {
         title="Submission Analysis"
         description="Track submission volume, status mix, and detailed service/status trends."
       >
+        <AnalysesHeader
+          items={[
+            {
+              title: "Total Submissions",
+              value: totalSubmissions,
+              description: "All submissions in selected range",
+              icon: <FileText className="h-4 w-4 text-muted-foreground" />,
+            },
+            {
+              title: "Pending",
+              value: pendingApplications,
+              description: "Awaiting first response",
+              icon: <Clock className="h-4 w-4 text-muted-foreground" />,
+            },
+            {
+              title: "Processing",
+              value: processingApplications,
+              description: "Currently being handled",
+              icon: <Inbox className="h-4 w-4 text-muted-foreground" />,
+            },
+            {
+              title: "Rejected",
+              value: rejectedApplications,
+              description: `${archivedApplications.toLocaleString()} archived`,
+              icon: <XCircle className="h-4 w-4 text-muted-foreground" />,
+            },
+          ]}
+        />
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
           <Card>
             <CardHeader>
@@ -461,23 +542,34 @@ export default function AnalysisClient() {
         title="Blogs Analysis"
         description="Review blog publishing, category coverage, and view performance."
       >
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-          <MetricCard
-            title="Published Content"
-            value={publishedContent}
-            description={`${draftBlogs.toLocaleString()} drafts in range`}
-          />
-          <MetricCard
-            title="Featured Blogs"
-            value={featuredBlogs}
-            description={`${totalBlogs.toLocaleString()} total posts in range`}
-          />
-          <MetricCard
-            title="Total Views"
-            value={totalViews}
-            description="Views across posts in range"
-          />
-        </div>
+        <AnalysesHeader
+          items={[
+            {
+              title: "Total Blogs",
+              value: totalBlogs,
+              description: `${publishedContent.toLocaleString()} published`,
+              icon: <Newspaper className="h-4 w-4 text-muted-foreground" />,
+            },
+            {
+              title: "Published Blogs",
+              value: publishedContent,
+              description: `${draftBlogs.toLocaleString()} drafts in range`,
+              icon: <FileText className="h-4 w-4 text-muted-foreground" />,
+            },
+            {
+              title: "Blog Views",
+              value: totalViews,
+              description: "Views across posts in range",
+              icon: <Eye className="h-4 w-4 text-muted-foreground" />,
+            },
+            {
+              title: "Featured Blogs",
+              value: featuredBlogs,
+              description: "Promoted content in range",
+              icon: <Sparkles className="h-4 w-4 text-muted-foreground" />,
+            },
+          ]}
+        />
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
           <Card>
             <CardHeader>
