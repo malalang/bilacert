@@ -109,19 +109,21 @@ export default async function BlogPostPage({ params }: Props) {
         highlights={heroHighlights}
       />
 
-      <section className="py-12">
-        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+      <section className="py-14">
+        <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
           <article
-            className="prose prose-slate prose-indigo mx-auto max-w-none text-sm
+            className="prose prose-slate prose-indigo mx-auto max-w-none text-base md:text-lg
             break-words overflow-wrap-anywhere
             prose-headings:font-bold prose-headings:tracking-tight
             prose-a:text-indigo-600 prose-img:rounded-2xl prose-img:shadow-lg
             [&_iframe]:w-full [&_iframe]:aspect-video [&_iframe]:rounded-xl
-            [&>h1]:text-3xl [&>h1]:font-bold [&>h1]:mb-4
-            [&>h2]:text-2xl [&>h2]:font-bold [&>h2]:mb-3
-            [&>h3]:text-xl [&>h3]:font-bold [&>h3]:mb-2
-            [&>p]:mb-4 [&>p]:leading-relaxed [&>p]:text-slate-700
-            [&>ul]:list-disc [&>ul]:ml-6 [&>ul]:my-4
+            [&>h1]:mb-6 [&>h1]:text-4xl [&>h1]:font-bold
+            [&>h2]:mb-5 [&>h2]:mt-10 [&>h2]:text-3xl [&>h2]:font-bold
+            [&>h3]:mb-4 [&>h3]:mt-8 [&>h3]:text-2xl [&>h3]:font-bold
+            [&>p]:mb-6 [&>p]:leading-8 [&>p]:text-slate-700
+            [&>ul]:my-6 [&>ul]:ml-6 [&>ul]:list-disc [&>ul]:leading-8
+            [&>ol]:my-6 [&>ol]:ml-6 [&>ol]:list-decimal [&>ol]:leading-8
+            [&>li]:mb-2 [&>li]:text-slate-700
             [&>img]:rounded-lg"
             dangerouslySetInnerHTML={{
               __html:
