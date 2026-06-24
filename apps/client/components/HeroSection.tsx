@@ -16,14 +16,15 @@ interface HeroHighlight {
 }
 
 interface HeroSectionProps {
-  imageSrc: string;
-  imageAlt: string;
+  imageSrc?: string;
+  imageAlt?: string;
   eyebrow?: string;
   title: string;
-  description: string;
+  description?: string;
   actions?: HeroAction[];
   highlights?: HeroHighlight[];
   imageUnoptimized?: boolean;
+  variant?: "image" | "plain";
 }
 
 function HeroLink({ action }: { action: HeroAction }) {
@@ -52,6 +53,43 @@ function HeroLink({ action }: { action: HeroAction }) {
   );
 }
 
+function PlainHeroSection({
+  eyebrow,
+  title,
+  description,
+  highlights,
+}: Pick<HeroSectionProps, "eyebrow" | "title" | "description" | "highlights">) {
+  return (
+    <section className="bg-secondary-gray py-12 md:py-16">
+      <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+        {eyebrow && (
+          <p className="mb-4 text-sm font-bold uppercase tracking-wider text-accent">
+            {eyebrow}
+          </p>
+        )}
+        <h1 className="mb-6 max-w-4xl text-3xl font-extrabold leading-tight tracking-tight text-primary md:text-5xl">
+          {title}
+        </h1>
+        {description && (
+          <p className="mb-8 max-w-3xl text-lg leading-relaxed text-gray-600 md:text-xl">
+            {description}
+          </p>
+        )}
+        {highlights && highlights.length > 0 && (
+          <div className="flex flex-wrap items-center gap-4 text-sm font-medium text-gray-600">
+            {highlights.map((item) => (
+              <span key={item.title} className="inline-flex items-center gap-2">
+                <span className="text-accent">{item.icon}</span>
+                {item.title}
+              </span>
+            ))}
+          </div>
+        )}
+      </div>
+    </section>
+  );
+}
+
 export default function HeroSection({
   imageSrc,
   imageAlt,
@@ -61,8 +99,24 @@ export default function HeroSection({
   actions = [],
   highlights = [],
   imageUnoptimized = false,
+  variant = "image",
 }: HeroSectionProps) {
   const hasHighlights = highlights.length > 0;
+
+  if (variant === "plain") {
+    return (
+      <PlainHeroSection
+        eyebrow={eyebrow}
+        title={title}
+        description={description}
+        highlights={highlights}
+      />
+    );
+  }
+
+  if (!imageSrc || !imageAlt) {
+    throw new Error("HeroSection image variant requires imageSrc and imageAlt.");
+  }
 
   return (
     <section className="relative overflow-hidden py-14 text-white lg:py-20">
@@ -94,9 +148,11 @@ export default function HeroSection({
             <h1 className="mb-5 text-3xl font-bold leading-tight md:text-4xl lg:text-5xl">
               {title}
             </h1>
-            <p className="mb-7 text-base leading-relaxed text-gray-100 md:text-lg">
-              {description}
-            </p>
+            {description && (
+              <p className="mb-7 text-base leading-relaxed text-gray-100 md:text-lg">
+                {description}
+              </p>
+            )}
             {actions.length > 0 && (
               <div
                 className={
