@@ -29,6 +29,7 @@ import {
 import ImageUpload from "@/components/ui/ImageUpload";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { upsertBlog } from "./actions";
@@ -122,221 +123,246 @@ export default function BlogForm({ blog }: BlogFormProps) {
   return (
     <Form {...form}>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
-        <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
-          <div className="space-y-6 lg:col-span-2">
-            <Card>
-              <CardHeader>
-                <CardTitle>Core Details</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <FormField
-                  control={form.control}
-                  name="title"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Title</FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder="e.g., My Awesome Blog Post"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="slug"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Slug</FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder="e.g., my-awesome-blog-post"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="excerpt"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Excerpt</FormLabel>
-                      <FormControl>
-                        <Textarea
-                          placeholder="A short summary of the post."
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </CardContent>
-            </Card>
+        <div className="grid gap-4 md:grid-cols-[1fr_250px] lg:grid-cols-3 lg:gap-8">
+          <div className="grid auto-rows-max items-start gap-4 lg:col-span-2 lg:gap-8">
+            <Tabs defaultValue="core">
+              <TabsList className="flex h-auto flex-wrap justify-start">
+                <TabsTrigger value="core">Core Details</TabsTrigger>
+                <TabsTrigger value="media">Media</TabsTrigger>
+                <TabsTrigger value="content">Content</TabsTrigger>
+                <TabsTrigger value="seo">SEO</TabsTrigger>
+              </TabsList>
 
-            <Card>
-              <CardHeader>
-                <CardTitle>Media</CardTitle>
-                <CardDescription>
-                  Upload local images or pick from Pexels
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <FormField
-                    control={form.control}
-                    name="featuredImage"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Featured Image</FormLabel>
-                        <FormControl>
-                          <ImageUpload
-                            bucket="blogs"
-                            initialUrl={field.value}
-                            onUpload={(url) => field.onChange(url)}
-                            onRemove={() => field.onChange("")}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="thumbnail"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Thumbnail Image</FormLabel>
-                        <FormControl>
-                          <ImageUpload
-                            bucket="blogs"
-                            initialUrl={field.value}
-                            onUpload={(url) => field.onChange(url)}
-                            onRemove={() => field.onChange("")}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-
-                <div className="border-t pt-6">
-                  <h3 className="text-sm font-medium mb-4">
-                    Pexels Image Picker
-                  </h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="space-y-2">
-                      <p className="text-xs text-muted-foreground">
-                        Quick pick for Featured Image
-                      </p>
-                      <PexelsImagePicker
-                        onSelect={(url) => setValue("featuredImage", url)}
-                        currentImageUrl={watch("featuredImage")}
-                        suggestions={[
-                          title,
-                          watch("category"),
-                          ...(watch("tags") || "")
-                            .split(",")
-                            .map((t) => t.trim()),
-                        ].filter((t): t is string => !!t)}
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <p className="text-xs text-muted-foreground">
-                        Quick pick for Thumbnail
-                      </p>
-                      <PexelsImagePicker
-                        onSelect={(url) => setValue("thumbnail", url)}
-                        currentImageUrl={watch("thumbnail")}
-                        suggestions={[
-                          title,
-                          watch("category"),
-                          ...(watch("tags") || "")
-                            .split(",")
-                            .map((t) => t.trim()),
-                        ].filter((t): t is string => !!t)}
-                      />
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            <FormField
-              control={form.control}
-              name="content"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Content</FormLabel>
-                  <FormControl>
-                    <BlogEditor
-                      featuredImage={watch("featuredImage")}
-                      onImageSelect={(url) => setValue("featuredImage", url)}
-                      value={field.value ?? ""}
-                      onChange={field.onChange}
-                      title={title}
+              <TabsContent value="core" className="mt-4">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Core Details</CardTitle>
+                    <CardDescription>
+                      Define the public-facing title, URL, and summary for this
+                      article.
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <FormField
+                      control={form.control}
+                      name="title"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Title</FormLabel>
+                          <FormControl>
+                            <Input
+                              placeholder="e.g., My Awesome Blog Post"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
                     />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                    <FormField
+                      control={form.control}
+                      name="slug"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Slug</FormLabel>
+                          <FormControl>
+                            <Input
+                              placeholder="e.g., my-awesome-blog-post"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="excerpt"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Excerpt</FormLabel>
+                          <FormControl>
+                            <Textarea
+                              placeholder="A short summary of the post."
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </CardContent>
+                </Card>
+              </TabsContent>
 
-            <Card>
-              <CardHeader>
-                <CardTitle>SEO</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
+              <TabsContent value="media" className="mt-4">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Media</CardTitle>
+                    <CardDescription>
+                      Upload local images or pick from Pexels.
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <FormField
+                        control={form.control}
+                        name="featuredImage"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Featured Image</FormLabel>
+                            <FormControl>
+                              <ImageUpload
+                                bucket="blogs"
+                                initialUrl={field.value}
+                                onUpload={(url) => field.onChange(url)}
+                                onRemove={() => field.onChange("")}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name="thumbnail"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Thumbnail Image</FormLabel>
+                            <FormControl>
+                              <ImageUpload
+                                bucket="blogs"
+                                initialUrl={field.value}
+                                onUpload={(url) => field.onChange(url)}
+                                onRemove={() => field.onChange("")}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+
+                    <div className="border-t pt-6">
+                      <h3 className="text-sm font-medium mb-4">
+                        Pexels Image Picker
+                      </h3>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="space-y-2">
+                          <p className="text-xs text-muted-foreground">
+                            Quick pick for Featured Image
+                          </p>
+                          <PexelsImagePicker
+                            onSelect={(url) => setValue("featuredImage", url)}
+                            currentImageUrl={watch("featuredImage")}
+                            suggestions={[
+                              title,
+                              watch("category"),
+                              ...(watch("tags") || "")
+                                .split(",")
+                                .map((t) => t.trim()),
+                            ].filter((t): t is string => !!t)}
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <p className="text-xs text-muted-foreground">
+                            Quick pick for Thumbnail
+                          </p>
+                          <PexelsImagePicker
+                            onSelect={(url) => setValue("thumbnail", url)}
+                            currentImageUrl={watch("thumbnail")}
+                            suggestions={[
+                              title,
+                              watch("category"),
+                              ...(watch("tags") || "")
+                                .split(",")
+                                .map((t) => t.trim()),
+                            ].filter((t): t is string => !!t)}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+
+              <TabsContent value="content" className="mt-4">
                 <FormField
                   control={form.control}
-                  name="seoTitle"
+                  name="content"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>SEO Title</FormLabel>
+                      <FormLabel>Content</FormLabel>
                       <FormControl>
-                        <Input {...field} />
+                        <BlogEditor
+                          featuredImage={watch("featuredImage")}
+                          onImageSelect={(url) => setValue("featuredImage", url)}
+                          value={field.value ?? ""}
+                          onChange={field.onChange}
+                          title={title}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
-                <FormField
-                  control={form.control}
-                  name="seoDescription"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>SEO Description</FormLabel>
-                      <FormControl>
-                        <Textarea {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="seoKeywords"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>SEO Keywords (comma separated)</FormLabel>
-                      <FormControl>
-                        <Input {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </CardContent>
-            </Card>
+              </TabsContent>
+
+              <TabsContent value="seo" className="mt-4">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>SEO</CardTitle>
+                    <CardDescription>
+                      Configure metadata for search and social previews.
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <FormField
+                      control={form.control}
+                      name="seoTitle"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>SEO Title</FormLabel>
+                          <FormControl>
+                            <Input {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="seoDescription"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>SEO Description</FormLabel>
+                          <FormControl>
+                            <Textarea {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="seoKeywords"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>SEO Keywords (comma separated)</FormLabel>
+                          <FormControl>
+                            <Input {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </CardContent>
+                </Card>
+              </TabsContent>
+            </Tabs>
           </div>
-          <div className="space-y-6 lg:col-span-1">
+
+          <div className="grid auto-rows-max items-start gap-4 lg:gap-8">
             <Card>
               <CardHeader>
                 <CardTitle>Publishing</CardTitle>
@@ -349,9 +375,7 @@ export default function BlogForm({ blog }: BlogFormProps) {
                     <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
                       <div className="space-y-0.5">
                         <FormLabel>Published</FormLabel>
-                        <FormDescription>
-                          Make this post visible.
-                        </FormDescription>
+                        <FormDescription>Make this post visible.</FormDescription>
                       </div>
                       <FormControl>
                         <Switch
@@ -445,6 +469,7 @@ export default function BlogForm({ blog }: BlogFormProps) {
             </Card>
           </div>
         </div>
+
         <div className="flex justify-end gap-4">
           <Button type="button" variant="outline" asChild>
             <Link href="/admin/blogs">Cancel</Link>
