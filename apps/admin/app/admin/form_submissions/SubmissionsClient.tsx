@@ -16,6 +16,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { useState } from "react";
+import AnalysesHeader from "@/components/admin/AnalysesHeader";
 import {
   Card,
   CardContent,
@@ -70,6 +71,13 @@ const submissionStatuses: {
 
 function normalizeServiceKey(value: string | undefined) {
   return value?.trim().toLowerCase();
+}
+
+function getSubmissionStatusTotal(
+  submissions: Submission[],
+  status: SubmissionStatus,
+) {
+  return submissions.filter((submission) => submission.status === status).length;
 }
 
 function getServiceSubmissions(service: Service, submissions: Submission[]) {
@@ -221,7 +229,8 @@ export default function SubmissionsClient() {
     );
   }
 
-  const filtered = (submissions || []).filter((s) => {
+  const allSubmissions = submissions || [];
+  const filtered = allSubmissions.filter((s) => {
     const term = search.toLowerCase();
     const matchesSearch =
       s.fullName?.toLowerCase().includes(term) ||
@@ -271,9 +280,38 @@ export default function SubmissionsClient() {
         </div>
       </div>
 
+      <AnalysesHeader
+        items={[
+          {
+            title: "Pending",
+            value: getSubmissionStatusTotal(allSubmissions, "pending"),
+            description: "Awaiting first response",
+            icon: <Clock className="h-4 w-4 text-muted-foreground" />,
+          },
+          {
+            title: "Processing",
+            value: getSubmissionStatusTotal(allSubmissions, "in-progress"),
+            description: "Currently being handled",
+            icon: <Inbox className="h-4 w-4 text-muted-foreground" />,
+          },
+          {
+            title: "Rejected",
+            value: getSubmissionStatusTotal(allSubmissions, "rejected"),
+            description: "Declined or not approved",
+            icon: <XCircle className="h-4 w-4 text-muted-foreground" />,
+          },
+          {
+            title: "Archived",
+            value: getSubmissionStatusTotal(allSubmissions, "archived"),
+            description: "Stored for reference",
+            icon: <Archive className="h-4 w-4 text-muted-foreground" />,
+          },
+        ]}
+      />
+
       <TopServicesBySubmissions
         services={services || []}
-        submissions={submissions || []}
+        submissions={allSubmissions}
       />
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
