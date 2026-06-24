@@ -1,4 +1,5 @@
-import Image from "next/image";
+import { CheckCircle, HelpCircle, MessageCircle } from "lucide-react";
+import HeroSection from "@/components/HeroSection";
 import StructuredData from "@/components/StructuredData";
 import FAQAccordion, { type FaqCategory } from "./FAQAccordion";
 
@@ -135,32 +136,43 @@ export default function FAQContent() {
       })),
     ),
   };
+  const totalQuestions = faqCategories.reduce(
+    (count, category) => count + category.questions.length,
+    0,
+  );
+  const heroHighlights = [
+    {
+      title: `${totalQuestions} Common Questions`,
+      description: "Clear answers across our compliance services.",
+      icon: <HelpCircle className="h-6 w-6 text-white" />,
+    },
+    {
+      title: `${faqCategories.length} Help Categories`,
+      description: "Organized by approval, process, and pricing topics.",
+      icon: <CheckCircle className="h-6 w-6 text-white" />,
+    },
+    {
+      title: "Need More Help?",
+      description: "Our compliance experts are ready to assist.",
+      icon: <MessageCircle className="h-6 w-6 text-white" />,
+    },
+  ];
 
   return (
     <div className="min-h-screen">
       <StructuredData type="FAQ" data={faqData} />
-      <section className="relative text-white py-20">
-        <Image
-          src="/herosetion/FAQ.jpg"
-          alt="Frequently Asked Questions"
-          fill
-          priority
-          className="object-cover"
-        />
-        <div className="absolute inset-0 bg-black/40" />
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <h1 className="text-4xl lg:text-5xl font-bold mb-6">
-              Frequently Asked Questions
-            </h1>
-            <p className="text-xl text-gray-200 max-w-3xl mx-auto">
-              Find answers to common questions about ICASA and NRCS compliance,
-              type approvals, licensing, and regulatory requirements in South
-              Africa.
-            </p>
-          </div>
-        </div>
-      </section>
+      <HeroSection
+        imageSrc="/herosetion/FAQ.jpg"
+        imageAlt="Frequently Asked Questions"
+        eyebrow="Compliance Help Centre"
+        title="Frequently Asked Questions"
+        description="Find clear answers about ICASA and NRCS compliance, type approvals, licensing, and regulatory requirements in South Africa."
+        actions={[
+          { label: "Contact Us", href: "/contact" },
+          { label: "Explore Services", href: "/services", variant: "secondary" },
+        ]}
+        highlights={heroHighlights}
+      />
 
       <FAQAccordion faqCategories={faqCategories} />
 
