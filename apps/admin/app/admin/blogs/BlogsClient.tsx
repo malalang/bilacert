@@ -18,6 +18,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
+import AdminPage from "@/components/admin/AdminPage";
+import AnalysesHeader from "@/components/admin/AnalysesHeader";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -74,50 +76,34 @@ function BlogsAnalysis({ blogs }: { blogs: BlogPost[] }) {
 
   return (
     <div className="space-y-4">
-      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-        <Card className="border-0 shadow-md shadow-black/5">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Blogs</CardTitle>
-            <Newspaper className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <p className="text-2xl font-bold">{blogs.length}</p>
-            <p className="text-xs text-muted-foreground">
-              {publishedBlogs.length} published
-            </p>
-          </CardContent>
-        </Card>
-        <Card className="border-0 shadow-md shadow-black/5">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Published Blogs</CardTitle>
-            <FileText className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <p className="text-2xl font-bold">{publishedBlogs.length}</p>
-            <p className="text-xs text-muted-foreground">Visible publicly</p>
-          </CardContent>
-        </Card>
-        <Card className="border-0 shadow-md shadow-black/5">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Blog Views</CardTitle>
-            <Eye className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <p className="text-2xl font-bold">{totalViews.toLocaleString()}</p>
-            <p className="text-xs text-muted-foreground">Across all posts</p>
-          </CardContent>
-        </Card>
-        <Card className="border-0 shadow-md shadow-black/5">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Featured Blogs</CardTitle>
-            <Sparkles className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <p className="text-2xl font-bold">{featuredBlogs.length}</p>
-            <p className="text-xs text-muted-foreground">Promoted content</p>
-          </CardContent>
-        </Card>
-      </div>
+      <AnalysesHeader
+        items={[
+          {
+            title: "Total Blogs",
+            value: blogs.length,
+            description: `${publishedBlogs.length.toLocaleString()} published`,
+            icon: <Newspaper className="h-4 w-4 text-muted-foreground" />,
+          },
+          {
+            title: "Published Blogs",
+            value: publishedBlogs.length,
+            description: "Visible publicly",
+            icon: <FileText className="h-4 w-4 text-muted-foreground" />,
+          },
+          {
+            title: "Blog Views",
+            value: totalViews,
+            description: "Across all posts",
+            icon: <Eye className="h-4 w-4 text-muted-foreground" />,
+          },
+          {
+            title: "Featured Blogs",
+            value: featuredBlogs.length,
+            description: "Promoted content",
+            icon: <Sparkles className="h-4 w-4 text-muted-foreground" />,
+          },
+        ]}
+      />
 
       <div className="grid gap-4 lg:grid-cols-[2fr_1fr]">
         <Card className="border-0 shadow-xl shadow-black/5">
