@@ -13,6 +13,7 @@ import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
 import { upsertService } from "../../actions";
 import CoreDetailsForm from "../../components/CoreDetailsForm";
@@ -225,15 +226,34 @@ export default function ServiceForm({ service }: ServiceFormProps) {
   return (
     <Form {...form}>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
-        <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
-          <div className="space-y-6 lg:col-span-2">
-            <CoreDetailsForm form={form} />
-            <FeaturesForm form={form} />
-            <PricingPlansForm form={form} />
-            <ProcessStepsForm form={form} />
-            <SuccessStoryForm form={form} />
+        <div className="grid gap-4 md:grid-cols-[1fr_250px] lg:grid-cols-3 lg:gap-8">
+          <div className="grid auto-rows-max items-start gap-4 lg:col-span-2 lg:gap-8">
+            <Tabs defaultValue="core">
+              <TabsList className="flex h-auto flex-wrap justify-start">
+                <TabsTrigger value="core">Core Details</TabsTrigger>
+                <TabsTrigger value="features">Features</TabsTrigger>
+                <TabsTrigger value="pricing">Pricing</TabsTrigger>
+                <TabsTrigger value="process">Process</TabsTrigger>
+                <TabsTrigger value="success">Success Story</TabsTrigger>
+              </TabsList>
+              <TabsContent value="core" className="mt-4">
+                <CoreDetailsForm form={form} />
+              </TabsContent>
+              <TabsContent value="features" className="mt-4">
+                <FeaturesForm form={form} />
+              </TabsContent>
+              <TabsContent value="pricing" className="mt-4">
+                <PricingPlansForm form={form} />
+              </TabsContent>
+              <TabsContent value="process" className="mt-4">
+                <ProcessStepsForm form={form} />
+              </TabsContent>
+              <TabsContent value="success" className="mt-4">
+                <SuccessStoryForm form={form} />
+              </TabsContent>
+            </Tabs>
           </div>
-          <div className="space-y-6 lg:col-span-1">
+          <div className="grid auto-rows-max items-start gap-4 lg:gap-8">
             <PublishingForm form={form} />
             <DetailsForm form={form} />
             <SeoForm form={form} />
