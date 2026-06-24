@@ -10,18 +10,18 @@ import {
   Calendar,
   CheckCircle2,
   Clock,
-  DollarSign,
   Eye,
   Inbox,
   MessageSquare,
   Newspaper,
+  Package,
   Users,
   XCircle,
   type LucideIcon,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import StatCard from "@/components/admin/StatCard";
+import AnalysesHeader from "@/components/admin/AnalysesHeader";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
@@ -237,37 +237,34 @@ export default function DashboardClient() {
 
   return (
     <div className="space-y-8">
-      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-5">
-        <StatCard
-          title="Total Submissions"
-          value={loading ? "..." : `${stats.totalSubmissions}`}
-          icon={<Icon name="Package" className="h-4 w-4" />}
-        />
-        <StatCard
-          title="Pending Applications"
-          value={loading ? "..." : `${stats.newApplications}`}
-          icon={<BarChartIcon className="h-4 w-4" />}
-        />
-        <StatCard
-          title="Total Contacts"
-          value={loading ? "..." : `${stats.totalContacts}`}
-          icon={<Users className="h-4 w-4" />}
-        />
-        <StatCard
-          title="Total Blogs"
-          value={loading ? "..." : `${stats.totalBlogs}`}
-          icon={<Newspaper className="h-4 w-4" />}
-        />
-        <StatCard
-          title="Total Revenue"
-          value={
-            loading
-              ? "..."
-              : `R ${stats.totalRevenue.toLocaleString("en-ZA", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
-          }
-          icon={<DollarSign className="h-4 w-4" />}
-        />
-      </div>
+      <AnalysesHeader
+        items={[
+          {
+            title: "Total Submissions",
+            value: loading ? "..." : stats.totalSubmissions,
+            description: "All form submissions",
+            icon: <Package className="h-4 w-4 text-muted-foreground" />,
+          },
+          {
+            title: "Total Contacts",
+            value: loading ? "..." : stats.totalContacts,
+            description: "Captured contact messages",
+            icon: <Users className="h-4 w-4 text-muted-foreground" />,
+          },
+          {
+            title: "Total Blogs",
+            value: loading ? "..." : stats.totalBlogs,
+            description: "Content library posts",
+            icon: <Newspaper className="h-4 w-4 text-muted-foreground" />,
+          },
+          {
+            title: "Pending Applications",
+            value: loading ? "..." : stats.newApplications,
+            description: "Applications awaiting action",
+            icon: <BarChartIcon className="h-4 w-4 text-muted-foreground" />,
+          },
+        ]}
+      />
 
       <Card className="border-0 shadow-xl shadow-black/5">
         <CardHeader>
