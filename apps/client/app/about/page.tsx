@@ -8,7 +8,7 @@ import {
   Zap,
 } from "lucide-react";
 import type { Metadata } from "next";
-import Image from "next/image";
+import HeroSection from "@/components/HeroSection";
 
 export const metadata: Metadata = {
   title: "About Us",
@@ -101,30 +101,38 @@ export default function AboutPage() {
     },
   ];
 
+  const heroHighlights = [
+    {
+      title: "Trusted Compliance Partner",
+      description: "Clear support for ICASA and NRCS approvals.",
+      icon: <Shield className="h-6 w-6 text-white" />,
+    },
+    {
+      title: "Simple, Guided Process",
+      description: "We turn complex requirements into clear next steps.",
+      icon: <Target className="h-6 w-6 text-white" />,
+    },
+    {
+      title: "Reliable Support",
+      description: "Guidance from consultation through approval.",
+      icon: <CheckCircle className="h-6 w-6 text-white" />,
+    },
+  ];
+
   return (
     <div className="min-h-screen">
-      {/* Hero Section */}
-      <section className="relative text-white py-20">
-        <Image
-          src="/herosetion/About-Us.jpg"
-          alt="About Bilacert"
-          fill
-          priority
-          className="object-cover"
-        />
-        <div className="absolute inset-0 bg-black/40" />
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <h1 className="text-4xl lg:text-5xl font-bold mb-6">
-              About Bilacert
-            </h1>
-            <p className="text-xl lg:text-2xl text-gray-200 max-w-4xl mx-auto">
-              Your trusted compliance partner, simplifying ICASA and NRCS
-              approvals for South African businesses since day one.
-            </p>
-          </div>
-        </div>
-      </section>
+      <HeroSection
+        imageSrc="/herosetion/About-Us.jpg"
+        imageAlt="About Bilacert"
+        eyebrow="About Bilacert"
+        title="Your Trusted Compliance Partner"
+        description="We simplify ICASA and NRCS approvals for South African businesses with clear guidance, efficient processes, and reliable support."
+        actions={[
+          { label: "Start Your Journey", href: "/contact" },
+          { label: "View Services", href: "/services", variant: "secondary" },
+        ]}
+        highlights={heroHighlights}
+      />
 
       {/* Mission & Purpose */}
       <section className="py-20">
