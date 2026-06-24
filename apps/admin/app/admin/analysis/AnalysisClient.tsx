@@ -46,13 +46,62 @@ interface ChartData {
   totalSubmissions: number;
   publishedContent: number;
   totalViews: number;
+  totalServices: number;
+  publishedServices: number;
+  featuredServices: number;
+  totalBlogs: number;
+  featuredBlogs: number;
+  draftBlogs: number;
 }
 
 function formatActivityLabel(key: string) {
   return key
+    .replace(/-/g, "_")
     .split("_")
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(" ");
+}
+
+function AnalyticsSection({
+  title,
+  description,
+  children,
+}: {
+  title: string;
+  description: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <section className="space-y-4">
+      <div>
+        <h2 className="text-2xl font-bold tracking-tight">{title}</h2>
+        <p className="text-sm text-muted-foreground">{description}</p>
+      </div>
+      {children}
+    </section>
+  );
+}
+
+function MetricCard({
+  title,
+  value,
+  description,
+}: {
+  title: string;
+  value: number;
+  description: string;
+}) {
+  return (
+    <Card className="border-0 shadow-md shadow-black/5">
+      <CardHeader>
+        <CardTitle className="text-sm font-medium">{title}</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <p className="text-4xl font-bold">{value.toLocaleString()}</p>
+        <p className="mt-1 text-xs text-muted-foreground">{description}</p>
+      </CardContent>
+    </Card>
+  );
 }
 
 async function getAnalyticsData(
@@ -62,15 +111,15 @@ async function getAnalyticsData(
     supabase
       .from("blog_posts")
       .select(
-        "createdAt,publishedAt,updatedAt,category,published,viewsCount,title",
+        "createdAt,publishedAt,updatedAt,category,published,featured,viewsCount,title",
       ),
     supabase.from("contacts").select("submittedAt"),
-    supabase.from("services").select("createdAt,updatedAt"),
+    supabase.from("services").select("createdAt,updatedAt,published,featured"),
     supabase.from("testimonials").select("createdAt"),
     supabase
       .from("form_submissions")
-      .select("createdAt,updatedAt,serviceName,status"),
-    supabase.from("users").select("createdAt"),
+      .select("createdAt,updatedAt,serviceName,status,formType"),
+    supabase.from("users").select("createdAt,updatedAt,isActive,role"),
   ];
 
   const [
@@ -106,19 +155,31 @@ async function getAnalyticsData(
     addToActivity(b.createdAt, "blogs_created");
     addToActivity(b.publishedAt, "blogs_published");
     addToActivity(b.updatedAt, "blogs_updated");
+    if (b.featured) addToActivity(b.updatedAt ?? b.createdAt, "blogs_featured");
+    if (!b.published) addToActivity(b.createdAt, "blog_drafts_created");
   }
   for (const c of contacts) addToActivity(c.submittedAt, "contacts_submitted");
   for (const s of services) {
     addToActivity(s.createdAt, "services_created");
     addToActivity(s.updatedAt, "services_updated");
+    if (s.published)
+      addToActivity(s.updatedAt ?? s.createdAt, "services_published");
+    if (s.featured) addToActivity(s.updatedAt ?? s.createdAt, "services_featured");
   }
   for (const t of testimonials)
     addToActivity(t.createdAt, "testimonials_created");
   for (const s of submissions) {
     addToActivity(s.createdAt, "submissions_created");
     addToActivity(s.updatedAt, "submissions_updated");
+    addToActivity(s.createdAt, `submission_status_${s.status}`);
+    addToActivity(s.createdAt, `form_type_${s.formType}`);
   }
-  for (const u of users) addToActivity(u.createdAt, "users_created");
+  for (const u of users) {
+    addToActivity(u.createdAt, "users_created");
+    addToActivity(u.updatedAt, "users_updated");
+    if (u.isActive) addToActivity(u.updatedAt ?? u.createdAt, "active_users");
+    addToActivity(u.createdAt, `user_role_${u.role}`);
+  }
 
   const combinedActivity = Array.from(activity.entries())
     .map(([date, dailyData]) => {
@@ -141,6 +202,10 @@ async function getAnalyticsData(
   });
   const filteredBlogs = blogs.filter((b) => {
     const date = new Date(b.createdAt);
+    return (!fromDate || date >= fromDate) && (!toDate || date <= toDate);
+  });
+  const filteredServices = services.filter((s) => {
+    const date = new Date(s.createdAt);
     return (!fromDate || date >= fromDate) && (!toDate || date <= toDate);
   });
 
@@ -248,6 +313,14 @@ async function getAnalyticsData(
     totalSubmissions,
     publishedContent,
     totalViews,
+    totalServices: filteredServices.length,
+    publishedServices: filteredServices.filter((service) => service.published)
+      .length,
+    featuredServices: filteredServices.filter((service) => service.featured)
+      .length,
+    totalBlogs: filteredBlogs.length,
+    featuredBlogs: filteredBlogs.filter((blog) => blog.featured).length,
+    draftBlogs: filteredBlogs.filter((blog) => !blog.published).length,
   };
 }
 
@@ -294,57 +367,49 @@ export default function AnalysisClient() {
     totalSubmissions,
     publishedContent,
     totalViews,
+    totalServices,
+    publishedServices,
+    featuredServices,
+    totalBlogs,
+    featuredBlogs,
+    draftBlogs,
   } = chartData;
   const sortedActivityKeys = [...combinedActivityKeys].sort();
 
   return (
-    <div className="space-y-6">
-      <header className="flex items-start justify-between">
+    <div className="space-y-10">
+      <header className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
         <div>
           <h1 className="text-3xl font-bold">Analysis Dashboard</h1>
           <p className="text-muted-foreground">
-            Live insights into submissions and content performance.
+            Live insights into services, submissions, blogs, and platform
+            activity.
           </p>
         </div>
         <DateRangePicker date={dateRange} onDateChange={setDateRange} />
       </header>
 
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-        <Card>
-          <CardHeader>
-            <CardTitle>Total Submissions</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-4xl font-bold">{totalSubmissions}</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle>Published Content</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-4xl font-bold">{publishedContent}</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle>Total Views</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-4xl font-bold">{totalViews}</p>
-          </CardContent>
-        </Card>
-      </div>
-
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-        <Card>
-          <CardHeader>
-            <CardTitle>Submissions Over Time</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <SubmissionsLineChart data={submissionsByDay} />
-          </CardContent>
-        </Card>
+      <AnalyticsSection
+        title="Services Analysis"
+        description="Monitor service catalog health and how services drive form submissions."
+      >
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+          <MetricCard
+            title="Total Services"
+            value={totalServices}
+            description={`${publishedServices.toLocaleString()} published`}
+          />
+          <MetricCard
+            title="Featured Services"
+            value={featuredServices}
+            description="Highlighted on public pages"
+          />
+          <MetricCard
+            title="Service Submissions"
+            value={totalSubmissions}
+            description="Submission volume in selected range"
+          />
+        </div>
         <Card>
           <CardHeader>
             <CardTitle>Submissions by Service</CardTitle>
@@ -353,85 +418,127 @@ export default function AnalysisClient() {
             <SubmissionsBarChart data={submissionsByService} />
           </CardContent>
         </Card>
-      </div>
+      </AnalyticsSection>
 
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+      <AnalyticsSection
+        title="Submission Analysis"
+        description="Track submission volume, status mix, and detailed service/status trends."
+      >
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+          <Card>
+            <CardHeader>
+              <CardTitle>Submissions Over Time</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <SubmissionsLineChart data={submissionsByDay} />
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle>Submission Status</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <SubmissionStatusPieChart data={submissionStatus} />
+            </CardContent>
+          </Card>
+        </div>
         <Card>
           <CardHeader>
-            <CardTitle>Content Breakdown</CardTitle>
+            <CardTitle>Detailed Submissions</CardTitle>
           </CardHeader>
           <CardContent>
-            <ContentBarChart data={contentBreakdown} />
+            <DetailedSubmissionsChart
+              data={detailedSubmissions}
+              serviceKeys={serviceKeys}
+              statusKeys={statusKeys}
+            />
           </CardContent>
         </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle>Submission Status</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <SubmissionStatusPieChart data={submissionStatus} />
-          </CardContent>
-        </Card>
-        <Card className="lg:col-span-2">
-          <CardHeader>
-            <CardTitle>Blog Views</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <BlogViewsChart data={blogViews} />
-          </CardContent>
-        </Card>
-      </div>
+      </AnalyticsSection>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Detailed Submissions</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <DetailedSubmissionsChart
-            data={detailedSubmissions}
-            serviceKeys={serviceKeys}
-            statusKeys={statusKeys}
+      <AnalyticsSection
+        title="Blogs Analysis"
+        description="Review blog publishing, category coverage, and view performance."
+      >
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+          <MetricCard
+            title="Published Content"
+            value={publishedContent}
+            description={`${draftBlogs.toLocaleString()} drafts in range`}
           />
-        </CardContent>
-      </Card>
+          <MetricCard
+            title="Featured Blogs"
+            value={featuredBlogs}
+            description={`${totalBlogs.toLocaleString()} total posts in range`}
+          />
+          <MetricCard
+            title="Total Views"
+            value={totalViews}
+            description="Views across posts in range"
+          />
+        </div>
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+          <Card>
+            <CardHeader>
+              <CardTitle>Content Breakdown</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ContentBarChart data={contentBreakdown} />
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle>Blog Views</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <BlogViewsChart data={blogViews} />
+            </CardContent>
+          </Card>
+        </div>
+      </AnalyticsSection>
 
-      <Card>
-        <CardHeader>
-          <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
-            <div>
-              <CardTitle>Combined Activity</CardTitle>
-              <p className="mt-1 text-sm text-muted-foreground">
-                Toggle activity types to compare platform events over time.
-              </p>
+      <AnalyticsSection
+        title="Combined Activity"
+        description="Compare broader platform events over time with expanded activity filters."
+      >
+        <Card>
+          <CardHeader>
+            <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
+              <div>
+                <CardTitle>Combined Activity</CardTitle>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  Toggle activity types to compare platform events over time.
+                </p>
+              </div>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => setVisibleKeys(sortedActivityKeys)}
+              >
+                Show All
+              </Button>
             </div>
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={() => setVisibleKeys(sortedActivityKeys)}
-            >
-              Show All
-            </Button>
-          </div>
-        </CardHeader>
-        <CardContent>
-          <div className="mb-6 rounded-xl bg-muted/30 p-4 shadow-sm shadow-black/5">
-            <ToggleGroup
-              multiple
-              value={visibleKeys}
-              onValueChange={setVisibleKeys}
-              aria-label="Filter combined activity chart"
-            >
-              {sortedActivityKeys.map((key) => (
-                <ToggleGroupItem key={key} value={key}>
-                  {formatActivityLabel(key)}
-                </ToggleGroupItem>
-              ))}
-            </ToggleGroup>
-          </div>
-          <CombinedActivityChart data={combinedActivity} keys={visibleKeys} />
-        </CardContent>
-      </Card>
+          </CardHeader>
+          <CardContent>
+            <div className="mb-6 rounded-xl bg-muted/30 p-4 shadow-sm shadow-black/5">
+              <ToggleGroup
+                multiple
+                value={visibleKeys}
+                onValueChange={setVisibleKeys}
+                aria-label="Filter combined activity chart"
+              >
+                {sortedActivityKeys.map((key) => (
+                  <ToggleGroupItem key={key} value={key}>
+                    {formatActivityLabel(key)}
+                  </ToggleGroupItem>
+                ))}
+              </ToggleGroup>
+            </div>
+            <CombinedActivityChart data={combinedActivity} keys={visibleKeys} />
+          </CardContent>
+        </Card>
+      </AnalyticsSection>
     </div>
   );
 }
