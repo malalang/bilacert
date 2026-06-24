@@ -1,13 +1,12 @@
 import { format } from "date-fns";
-import { ArrowLeft, Calendar, Clock, Folder, Tag, User } from "lucide-react";
+import { ArrowLeft, Calendar, Clock, Folder, User } from "lucide-react";
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { FaFacebook, FaLinkedin, FaTwitter } from "react-icons/fa";
+import HeroSection from "@/components/HeroSection";
 import { RelatedPosts } from "@/components/blog/RelatedPosts";
 import { StickyShare } from "@/components/blog/StickyShare";
-import { TableOfContents } from "@/components/blog/TableOfContents";
 import { ViewTracker } from "@/components/blog/view";
 import {
   getCachedBlogBySlug,
@@ -70,6 +69,27 @@ export default async function BlogPostPage({ params }: Props) {
   const relatedPosts = post.category
     ? await getCachedBlogPostsByCategory(post.category, 3)
     : [];
+  const publishedDate = post.createdAt
+    ? format(new Date(post.createdAt), "PP")
+    : "Published insight";
+  const authorName = post.authorName || "Bilacert Team";
+  const heroHighlights = [
+    {
+      title: authorName,
+      description: "Compliance insight author",
+      icon: <User className="h-6 w-6 text-white" />,
+    },
+    {
+      title: publishedDate,
+      description: "Published date",
+      icon: <Calendar className="h-6 w-6 text-white" />,
+    },
+    {
+      title: post.readTime || "Quick read",
+      description: "Estimated reading time",
+      icon: <Clock className="h-6 w-6 text-white" />,
+    },
+  ];
 
   return (
     <div className="min-h-screen">
@@ -87,110 +107,59 @@ export default async function BlogPostPage({ params }: Props) {
         </div>
       </div>
 
-      <section className="py-12 bg-secondary-gray">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            {post.category && (
-              <div className="inline-block bg-accent text-white px-4 py-2 rounded-full text-sm font-medium mb-4">
-                {post.category}
-              </div>
-            )}
-            <h1 className="text-4xl lg:text-5xl font-bold text-primary mb-6">
-              {post.title}
-            </h1>
-            {post.excerpt && (
-              <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
-                {post.excerpt}
-              </p>
-            )}
-            <div className="flex items-center justify-center space-x-6 text-gray-600">
-              <div className="flex items-center space-x-2">
-                <User className="h-5 w-5" />
-                <span>{post.authorName}</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <Calendar className="h-5 w-5" />
-                <span>
-                  {post.createdAt && format(new Date(post.createdAt), "PP")}
-                </span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <Clock className="h-5 w-5" />
-                <span>{post.readTime}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {post.featuredImage && (
-        <div className="relative h-64 md:h-96 max-w-5xl mx-auto my-8 rounded-lg overflow-hidden">
-          <Image
-            src={post.featuredImage}
-            alt={post.title}
-            fill
-            className="object-cover"
-          />
-        </div>
-      )}
+      <HeroSection
+        imageSrc={post.featuredImage || "/herosetion/Blog.jpg"}
+        imageAlt={post.title}
+        eyebrow={post.category || "Bilacert Insight"}
+        title={post.title}
+        description={post.excerpt || "Expert compliance guidance from Bilacert."}
+        actions={[
+          { label: "Get Free Consultation", href: "/contact" },
+          { label: "View All Articles", href: "/blog", variant: "secondary" },
+        ]}
+        highlights={heroHighlights}
+      />
 
       <section className="py-12">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-row-reverse">
-          <div className="w-1/4 pl-8 sticky top-24 self-start">
-            <TableOfContents content={post.content || ""} />
-          </div>
-          <div className="w-3/4">
-            <div className="mt-6 border-t pt-6 max-w-[256] sm:max-w-lg  md:max-w-xl lg:max-w-3xl mx-auto">
-              <article
-                className="prose prose-slate prose-indigo text-sm
-                                       break-words overflow-wrap-anywhere
-                                       prose-headings:font-bold prose-headings:tracking-tight
-                                       prose-a:text-indigo-600 prose-img:rounded-2xl prose-img:shadow-lg
-                                       [&_iframe]:w-full [&_iframe]:aspect-video [&_iframe]:rounded-xl 
-          [&>h1]:text-3xl [&>h1]:font-bold [&>h1]:mb-4 
-          [&>h2]:text-2xl [&>h2]:font-bold [&>h2]:mb-3 
-          [&>h3]:text-xl [&>h3]:font-bold [&>h3]:mb-2 
-          [&>p]:mb-4 [&>p]:leading-relaxed [&>p]:text-slate-700
-          [&>ul]:list-disc [&>ul]:ml-6 [&>ul]:my-4
-          [&>img]:rounded-lg"
-                dangerouslySetInnerHTML={{
-                  __html:
-                    post.content ||
-                    '<p class="text-slate-400 italic">No content to display yet...</p>',
-                }}
-              />
-            </div>
+        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+          <article
+            className="prose prose-slate prose-indigo mx-auto max-w-none text-sm
+            break-words overflow-wrap-anywhere
+            prose-headings:font-bold prose-headings:tracking-tight
+            prose-a:text-indigo-600 prose-img:rounded-2xl prose-img:shadow-lg
+            [&_iframe]:w-full [&_iframe]:aspect-video [&_iframe]:rounded-xl
+            [&>h1]:text-3xl [&>h1]:font-bold [&>h1]:mb-4
+            [&>h2]:text-2xl [&>h2]:font-bold [&>h2]:mb-3
+            [&>h3]:text-xl [&>h3]:font-bold [&>h3]:mb-2
+            [&>p]:mb-4 [&>p]:leading-relaxed [&>p]:text-slate-700
+            [&>ul]:list-disc [&>ul]:ml-6 [&>ul]:my-4
+            [&>img]:rounded-lg"
+            dangerouslySetInnerHTML={{
+              __html:
+                post.content ||
+                '<p class="text-slate-400 italic">No content to display yet...</p>',
+            }}
+          />
 
-            <div className="bg-white rounded-xl shadow-sm p-8 lg:p-12 mt-8">
-              <div className="flex items-center space-x-4">
-                <div className="flex items-center space-x-2">
-                  <Folder className="h-5 w-5 text-gray-600" />
-                  <span className="text-gray-600">{post.category}</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Tag className="h-5 w-5 text-gray-600" />
-                  {/* {(post.tags || []).map((tag: string) => (
-                                <span key={tag} className="text-gray-600">{tag}</span>
-                            ))} */}
-                </div>
+          {post.category && (
+            <div className="mt-10 rounded-xl bg-white p-6 shadow-sm shadow-black/5">
+              <div className="flex items-center gap-2 text-gray-600">
+                <Folder className="h-5 w-5" />
+                <span>{post.category}</span>
               </div>
             </div>
-          </div>
+          )}
         </div>
       </section>
 
       {/* CTA Section */}
       <section className="py-8 md:py-12 bg-secondary-gray">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Reduced padding on mobile (p-5) and increased it on larger screens (md:p-8) */}
           <div className="bg-white rounded-xl shadow-sm p-5 md:p-8 text-center">
             <h3 className="text-xl md:text-2xl font-bold text-primary mb-4">
               Found this helpful?
             </h3>
 
-            {/* Changed to a vertical grid on mobile (grid grid-cols-1 gap-3) 
-        and switched back to a flex row on medium screens (md:flex md:space-x-4)
-      */}
             <div className="grid grid-cols-1 gap-3 md:flex md:justify-center md:space-x-4 md:gap-0 mb-8">
               <button
                 type="button"
@@ -216,7 +185,6 @@ export default async function BlogPostPage({ params }: Props) {
             </div>
 
             <div className="border-t pt-8">
-              {/* Added w-full on mobile and md:w-auto to make the CTA thumb-friendly */}
               <Link
                 href="/contact"
                 className="bg-primary text-white px-6 py-3 rounded-lg font-semibold inline-block w-full md:w-auto text-center"
