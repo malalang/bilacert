@@ -6,10 +6,13 @@ import { format, isValid, parseISO } from "date-fns";
 import {
   Calendar,
   Eye,
+  FileText,
   Filter,
   MoreHorizontal,
+  Newspaper,
   PlusCircle,
   Search,
+  Sparkles,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -17,6 +20,13 @@ import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -45,6 +55,151 @@ const safeFormatDate = (
   const d = typeof date === "string" ? parseISO(date) : date;
   return isValid(d) ? format(d, dateFormat) : fallback;
 };
+
+function BlogsAnalysis({ blogs }: { blogs: BlogPost[] }) {
+  const publishedBlogs = blogs.filter((blog) => blog.published);
+  const featuredBlogs = blogs.filter((blog) => blog.featured);
+  const totalViews = blogs.reduce((sum, blog) => sum + (blog.viewsCount ?? 0), 0);
+  const topBlogs = [...blogs]
+    .sort((a, b) => (b.viewsCount ?? 0) - (a.viewsCount ?? 0))
+    .slice(0, 5);
+  const categoryCounts = blogs.reduce<Map<string, number>>((counts, blog) => {
+    const category = blog.category || "Uncategorized";
+    counts.set(category, (counts.get(category) ?? 0) + 1);
+    return counts;
+  }, new Map());
+  const topCategories = [...categoryCounts.entries()]
+    .sort(([, a], [, b]) => b - a)
+    .slice(0, 5);
+
+  return (
+    <div className="space-y-4">
+      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+        <Card className="border-0 shadow-md shadow-black/5">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Total Blogs</CardTitle>
+            <Newspaper className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <p className="text-2xl font-bold">{blogs.length}</p>
+            <p className="text-xs text-muted-foreground">
+              {publishedBlogs.length} published
+            </p>
+          </CardContent>
+        </Card>
+        <Card className="border-0 shadow-md shadow-black/5">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Published Blogs</CardTitle>
+            <FileText className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <p className="text-2xl font-bold">{publishedBlogs.length}</p>
+            <p className="text-xs text-muted-foreground">Visible publicly</p>
+          </CardContent>
+        </Card>
+        <Card className="border-0 shadow-md shadow-black/5">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Blog Views</CardTitle>
+            <Eye className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <p className="text-2xl font-bold">{totalViews.toLocaleString()}</p>
+            <p className="text-xs text-muted-foreground">Across all posts</p>
+          </CardContent>
+        </Card>
+        <Card className="border-0 shadow-md shadow-black/5">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Featured Blogs</CardTitle>
+            <Sparkles className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <p className="text-2xl font-bold">{featuredBlogs.length}</p>
+            <p className="text-xs text-muted-foreground">Promoted content</p>
+          </CardContent>
+        </Card>
+      </div>
+
+      <div className="grid gap-4 lg:grid-cols-[2fr_1fr]">
+        <Card className="border-0 shadow-xl shadow-black/5">
+          <CardHeader>
+            <CardTitle className="text-lg font-semibold">
+              Blog Performance
+            </CardTitle>
+            <CardDescription>
+              Top posts ranked by recorded public views.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            {topBlogs.length > 0 ? (
+              <div className="space-y-3">
+                {topBlogs.map((blog) => (
+                  <div
+                    key={blog.id}
+                    className="flex flex-col gap-3 rounded-xl border bg-background p-4 shadow-sm shadow-black/5 md:flex-row md:items-center md:justify-between"
+                  >
+                    <div className="min-w-0">
+                      <Link
+                        href={`/admin/blogs/${blog.id}`}
+                        className="font-semibold text-primary hover:text-primary/80"
+                      >
+                        {blog.title}
+                      </Link>
+                      <div className="mt-2 flex flex-wrap gap-2">
+                        {blog.category && (
+                          <Badge variant="secondary">{blog.category}</Badge>
+                        )}
+                        <Badge variant={blog.published ? "default" : "outline"}>
+                          {blog.published ? "Published" : "Draft"}
+                        </Badge>
+                        {blog.featured && <Badge variant="outline">Featured</Badge>}
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2 text-sm font-semibold text-muted-foreground">
+                      <Eye className="h-4 w-4" />
+                      {(blog.viewsCount ?? 0).toLocaleString()} views
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-sm text-muted-foreground">
+                No blog performance data yet.
+              </p>
+            )}
+          </CardContent>
+        </Card>
+
+        <Card className="border-0 shadow-xl shadow-black/5">
+          <CardHeader>
+            <CardTitle className="text-lg font-semibold">
+              Category Coverage
+            </CardTitle>
+            <CardDescription>Most-used blog categories.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            {topCategories.length > 0 ? (
+              <div className="space-y-3">
+                {topCategories.map(([category, count]) => (
+                  <div
+                    key={category}
+                    className="flex items-center justify-between rounded-xl bg-muted/40 px-4 py-3 text-sm"
+                  >
+                    <span className="font-medium">{category}</span>
+                    <Badge variant="secondary">{count}</Badge>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-sm text-muted-foreground">
+                No categories assigned yet.
+              </p>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  );
+}
 
 const BlogCard = ({
   blog,
@@ -232,6 +387,8 @@ export default function BlogsClient() {
           </Link>
         </Button>
       </div>
+
+      <BlogsAnalysis blogs={blogs} />
 
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-b pb-4">
         <Tabs
