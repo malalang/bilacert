@@ -98,6 +98,10 @@ function formatActivityLabel(key: string) {
     .join(" ");
 }
 
+function truncateBlogTitle(title: string) {
+  return title.length > 38 ? `${title.slice(0, 38)}...` : title;
+}
+
 function metric(
   title: string,
   value: string | number,
@@ -161,6 +165,8 @@ function FilterableLineCard({
   height = 400,
   className = "",
   showLegend = true,
+  formatKeyLabel = formatActivityLabel,
+  seriesNameFormatter,
 }: {
   title: string;
   description: string;
@@ -169,6 +175,8 @@ function FilterableLineCard({
   height?: number;
   className?: string;
   showLegend?: boolean;
+  formatKeyLabel?: (key: string) => string;
+  seriesNameFormatter?: (key: string) => string;
 }) {
   const [visibleKeys, setVisibleKeys] = useState(keys);
   const keySignature = keys.join("|");
@@ -195,7 +203,7 @@ function FilterableLineCard({
           >
             {keys.map((key) => (
               <ToggleGroupItem key={key} value={key}>
-                {formatActivityLabel(key)}
+                {formatKeyLabel(key)}
               </ToggleGroupItem>
             ))}
           </ToggleGroup>
@@ -205,6 +213,7 @@ function FilterableLineCard({
           keys={visibleKeys}
           height={height}
           showLegend={showLegend}
+          seriesNameFormatter={seriesNameFormatter}
         />
       </CardContent>
     </Card>
@@ -299,6 +308,7 @@ async function getAnalyticsData(
   const filteredSubmissions = submissions.filter((submission) => inDateRange(submission.createdAt));
   const filteredBlogs = blogs.filter((blog) => inDateRange(blog.createdAt));
   const filteredServices = services.filter((service) => inDateRange(service.createdAt));
+  const blogsWithViews = filteredBlogs.filter((blog) => (blog.viewsCount ?? 0) > 0);
 
   const submissionDayCounts = new Map<string, number>();
   const submissionServiceCounts = new Map<string, number>();
@@ -334,10 +344,12 @@ async function getAnalyticsData(
   const blogViewPostDayCounts = new Map<string, Record<string, number>>();
   filteredBlogs.forEach((blog) => {
     const category = blog.category || "Uncategorized";
+    categoryCounts.set(category, (categoryCounts.get(category) ?? 0) + 1);
+  });
+  blogsWithViews.forEach((blog) => {
     const views = blog.viewsCount ?? 0;
     const date = dateKey(blog.updatedAt ?? blog.createdAt);
-    categoryCounts.set(category, (categoryCounts.get(category) ?? 0) + 1);
-    if (!date || views <= 0) return;
+    if (!date) return;
     blogViewDayCounts.set(date, (blogViewDayCounts.get(date) ?? 0) + views);
     const day = blogViewPostDayCounts.get(date) ?? {};
     blogViewPostDayCounts.set(date, { ...day, [blog.title]: (day[blog.title] ?? 0) + views });
@@ -352,7 +364,7 @@ async function getAnalyticsData(
   const blogViewsByDay = Array.from(blogViewDayCounts.entries())
     .map(([date, views]) => ({ date, views }))
     .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
-  const blogViewKeys = Array.from(new Set(filteredBlogs.map((blog) => blog.title)));
+  const blogViewKeys = Array.from(new Set(blogsWithViews.map((blog) => blog.title)));
   const blogViewsByPostOverTime = Array.from(blogViewPostDayCounts.entries())
     .map(([date, day]) => {
       const row: { date: string; [key: string]: number | string } = { date };
@@ -602,6 +614,8 @@ export default function AnalysisClient() {
             height={300}
             className="lg:col-span-2"
             showLegend={false}
+            formatKeyLabel={truncateBlogTitle}
+            seriesNameFormatter={truncateBlogTitle}
           />
         </div>
         <FilterableLineCard
