@@ -97,10 +97,12 @@ export const FilteredLineChart = ({
   data = [],
   keys = [],
   height = 400,
+  showLegend = true,
 }: {
   data?: { date: string; [key: string]: number | string }[];
   keys?: string[];
   height?: number;
+  showLegend?: boolean;
 }) => (
   <ResponsiveContainer width="100%" height={height}>
     <LineChart data={data}>
@@ -108,7 +110,7 @@ export const FilteredLineChart = ({
       <XAxis dataKey="date" stroke="#888" fontSize={12} />
       <YAxis stroke="#888" fontSize={12} />
       <Tooltip content={<CustomTooltip />} />
-      <Legend />
+      {showLegend && <Legend />}
       {keys.map((key, index) => (
         <Line
           key={key}
