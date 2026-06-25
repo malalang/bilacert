@@ -98,11 +98,13 @@ export const FilteredLineChart = ({
   keys = [],
   height = 400,
   showLegend = true,
+  seriesNameFormatter = formatSeriesName,
 }: {
   data?: { date: string; [key: string]: number | string }[];
   keys?: string[];
   height?: number;
   showLegend?: boolean;
+  seriesNameFormatter?: (key: string) => string;
 }) => (
   <ResponsiveContainer width="100%" height={height}>
     <LineChart data={data}>
@@ -116,7 +118,7 @@ export const FilteredLineChart = ({
           key={key}
           type="monotone"
           dataKey={key}
-          name={formatSeriesName(key)}
+          name={seriesNameFormatter(key)}
           stroke={COLORS[index % COLORS.length]}
           strokeWidth={2}
           dot={false}
