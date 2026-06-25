@@ -29,11 +29,23 @@ const COLORS = [
   "#17becf",
 ];
 
+const truncateLabel = (value: string, maxLength = 24) => {
+  if (!value) return "";
+  return value.length > maxLength ? `${value.slice(0, maxLength)}...` : value;
+};
+
+const formatSeriesName = (key: string) =>
+  key
+    .replace(/-/g, "_")
+    .split("_")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+
 const CustomTooltip = ({ active, payload, label }: any) => {
   if (active && payload && payload.length) {
     const data = payload[0].payload;
     return (
-      <div className="bg-white/80 backdrop-blur-sm p-3 border border-slate-200 rounded-lg shadow-lg text-slate-700">
+      <div className="rounded-lg border border-slate-200 bg-white/80 p-3 text-slate-700 shadow-lg backdrop-blur-sm">
         <p className="font-bold">{label || data.name || data.author}</p>
         {payload.map((p: any, i: number) => (
           <p
@@ -70,7 +82,7 @@ export const DetailedSubmissionsChart = ({
             key={key}
             type="monotone"
             dataKey={key}
-            name={key.charAt(0).toUpperCase() + key.slice(1).replace("_", " ")}
+            name={formatSeriesName(key)}
             stroke={COLORS[index % COLORS.length]}
             strokeWidth={2}
             dot={false}
@@ -80,6 +92,37 @@ export const DetailedSubmissionsChart = ({
     </ResponsiveContainer>
   );
 };
+
+export const FilteredLineChart = ({
+  data = [],
+  keys = [],
+  height = 400,
+}: {
+  data?: { date: string; [key: string]: number | string }[];
+  keys?: string[];
+  height?: number;
+}) => (
+  <ResponsiveContainer width="100%" height={height}>
+    <LineChart data={data}>
+      <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
+      <XAxis dataKey="date" stroke="#888" fontSize={12} />
+      <YAxis stroke="#888" fontSize={12} />
+      <Tooltip content={<CustomTooltip />} />
+      <Legend />
+      {keys.map((key, index) => (
+        <Line
+          key={key}
+          type="monotone"
+          dataKey={key}
+          name={formatSeriesName(key)}
+          stroke={COLORS[index % COLORS.length]}
+          strokeWidth={2}
+          dot={false}
+        />
+      ))}
+    </LineChart>
+  </ResponsiveContainer>
+);
 
 export const SubmissionsLineChart = ({
   data = [],
@@ -181,10 +224,11 @@ export const BlogViewsChart = ({
       <YAxis
         dataKey="title"
         type="category"
-        width={150}
+        width={110}
         stroke="#888"
         fontSize={10}
         interval={0}
+        tickFormatter={(value) => truncateLabel(String(value), 18)}
       />
       <Tooltip content={<CustomTooltip />} />
       <Bar dataKey="views" name="Views" fill="#ff8042" radius={[0, 4, 4, 0]}>
@@ -262,31 +306,47 @@ export const SubmissionStatusPieChart = ({
   </ResponsiveContainer>
 );
 
+export const SubmissionsByServicePieChart = ({
+  data = [],
+}: {
+  data?: { serviceName: string; count: number }[];
+}) => (
+  <ResponsiveContainer width="100%" height={300}>
+    <PieChart>
+      <Pie
+        data={data}
+        dataKey="count"
+        nameKey="serviceName"
+        cx="50%"
+        cy="50%"
+        outerRadius={100}
+        label
+      >
+        {data.map((_entry, index) => (
+          <Cell
+            key={`cell-${_entry.serviceName}`}
+            fill={COLORS[index % COLORS.length]}
+          />
+        ))}
+      </Pie>
+      <Tooltip content={<CustomTooltip />} />
+      <Legend />
+    </PieChart>
+  </ResponsiveContainer>
+);
+
+export const BlogViewsLineChart = ({
+  data = [],
+  keys = ["views"],
+}: {
+  data?: { date: string; [key: string]: number | string }[];
+  keys?: string[];
+}) => <FilteredLineChart data={data} keys={keys} height={300} />;
+
 export const CombinedActivityChart = ({
   data = [],
   keys = [],
 }: {
   data?: { date: string; [key: string]: number | string }[];
   keys?: string[];
-}) => (
-  <ResponsiveContainer width="100%" height={400}>
-    <LineChart data={data}>
-      <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
-      <XAxis dataKey="date" stroke="#888" fontSize={12} />
-      <YAxis stroke="#888" fontSize={12} />
-      <Tooltip content={<CustomTooltip />} />
-      <Legend />
-      {keys.map((key, index) => (
-        <Line
-          key={key}
-          type="monotone"
-          dataKey={key}
-          name={key.charAt(0).toUpperCase() + key.slice(1).replace("_", " ")}
-          stroke={COLORS[index % COLORS.length]}
-          strokeWidth={2}
-          dot={false}
-        />
-      ))}
-    </LineChart>
-  </ResponsiveContainer>
-);
+}) => <FilteredLineChart data={data} keys={keys} height={400} />;
