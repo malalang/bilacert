@@ -159,12 +159,16 @@ function FilterableLineCard({
   data,
   keys,
   height = 400,
+  className = "",
+  showLegend = true,
 }: {
   title: string;
   description: string;
   data: { date: string; [key: string]: number | string }[];
   keys: string[];
   height?: number;
+  className?: string;
+  showLegend?: boolean;
 }) {
   const [visibleKeys, setVisibleKeys] = useState(keys);
   const keySignature = keys.join("|");
@@ -176,7 +180,7 @@ function FilterableLineCard({
   if (keys.length === 0) return null;
 
   return (
-    <Card>
+    <Card className={className}>
       <CardHeader>
         <CardTitle>{title}</CardTitle>
         <p className="text-sm text-muted-foreground">{description}</p>
@@ -196,7 +200,12 @@ function FilterableLineCard({
             ))}
           </ToggleGroup>
         </div>
-        <FilteredLineChart data={data} keys={visibleKeys} height={height} />
+        <FilteredLineChart
+          data={data}
+          keys={visibleKeys}
+          height={height}
+          showLegend={showLegend}
+        />
       </CardContent>
     </Card>
   );
@@ -573,15 +582,15 @@ export default function AnalysisClient() {
           ]}
         />
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-          <Card>
+          <Card className="lg:col-span-2">
             <CardHeader><CardTitle>Content Breakdown</CardTitle></CardHeader>
             <CardContent><ContentBarChart data={contentBreakdown} /></CardContent>
           </Card>
-          <Card>
+          <Card className="lg:col-span-2">
             <CardHeader><CardTitle>Blog Views</CardTitle></CardHeader>
             <CardContent><BlogViewsChart data={blogViews} /></CardContent>
           </Card>
-          <Card>
+          <Card className="lg:col-span-2">
             <CardHeader><CardTitle>Views Over Time</CardTitle></CardHeader>
             <CardContent><BlogViewsLineChart data={blogViewsByDay} /></CardContent>
           </Card>
@@ -591,6 +600,8 @@ export default function AnalysisClient() {
             data={blogViewsByPostOverTime}
             keys={blogViewKeys}
             height={300}
+            className="lg:col-span-2"
+            showLegend={false}
           />
         </div>
         <FilterableLineCard
