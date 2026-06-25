@@ -35,11 +35,13 @@ import {
 } from "lucide-react";
 import {
   BlogViewsChart,
+  BlogViewsLineChart,
   CombinedActivityChart,
   ContentBarChart,
-  DetailedSubmissionsChart,
+  FilteredLineChart,
   SubmissionStatusPieChart,
   SubmissionsBarChart,
+  SubmissionsByServicePieChart,
   SubmissionsLineChart,
 } from "./charts";
 import AnalysisLoading from "./loading";
@@ -51,12 +53,14 @@ interface ChartData {
   submissionsByService: { serviceName: string; count: number }[];
   contentBreakdown: { contentType: string; count: number }[];
   blogViews: { title: string; views: number }[];
+  blogViewsByDay: { date: string; views: number }[];
+  blogViewsByPostOverTime: { date: string; [key: string]: number | string }[];
+  blogViewKeys: string[];
   submissionStatus: { status: string; count: number }[];
-  detailedSubmissions: { date: string; [key: string]: number | string }[];
+  submissionsOverTimeByService: { date: string; [key: string]: number | string }[];
   combinedActivity: { date: string; [key: string]: number | string }[];
   combinedActivityKeys: string[];
   serviceKeys: string[];
-  statusKeys: string[];
   totalSubmissions: number;
   publishedContent: number;
   totalViews: number;
@@ -77,14 +81,13 @@ const serviceActivityKeyOrder = [
   "services_created",
   "services_updated",
   "services_published",
-  "services_featured",
+  "service_submissions",
 ];
 const blogActivityKeyOrder = [
   "blogs_created",
   "blogs_published",
   "blogs_updated",
-  "blogs_featured",
-  "blog_drafts_created",
+  "blog_views_total",
 ];
 
 function formatActivityLabel(key: string) {
@@ -95,7 +98,12 @@ function formatActivityLabel(key: string) {
     .join(" ");
 }
 
-function metric(title: string, value: string | number, description: string, Icon: LucideIcon) {
+function metric(
+  title: string,
+  value: string | number,
+  description: string,
+  Icon: LucideIcon,
+) {
   return {
     title,
     value,
@@ -113,9 +121,16 @@ function submissionActivityKeys(allKeys: string[]) {
     (key) =>
       key === "submissions_created" ||
       key === "submissions_updated" ||
-      key.startsWith("submission_status_") ||
-      key.startsWith("form_type_"),
+      key.startsWith("submission_status_"),
   );
+}
+
+function overviewActivityKeys(allKeys: string[]) {
+  return [
+    ...availableKeys(allKeys, serviceActivityKeyOrder),
+    ...submissionActivityKeys(allKeys),
+    ...availableKeys(allKeys, blogActivityKeyOrder),
+  ];
 }
 
 function AnalyticsSection({
@@ -138,17 +153,26 @@ function AnalyticsSection({
   );
 }
 
-function SectionActivityCard({
+function FilterableLineCard({
   title,
   description,
   data,
   keys,
+  height = 400,
 }: {
   title: string;
   description: string;
   data: { date: string; [key: string]: number | string }[];
   keys: string[];
+  height?: number;
 }) {
+  const [visibleKeys, setVisibleKeys] = useState(keys);
+  const keySignature = keys.join("|");
+
+  useEffect(() => {
+    setVisibleKeys(keys);
+  }, [keySignature, keys]);
+
   if (keys.length === 0) return null;
 
   return (
@@ -158,7 +182,21 @@ function SectionActivityCard({
         <p className="text-sm text-muted-foreground">{description}</p>
       </CardHeader>
       <CardContent>
-        <CombinedActivityChart data={data} keys={keys} />
+        <div className="mb-6 rounded-xl bg-muted/30 p-4 shadow-sm shadow-black/5">
+          <ToggleGroup
+            multiple
+            value={visibleKeys}
+            onValueChange={setVisibleKeys}
+            aria-label={`Filter ${title}`}
+          >
+            {keys.map((key) => (
+              <ToggleGroupItem key={key} value={key}>
+                {formatActivityLabel(key)}
+              </ToggleGroupItem>
+            ))}
+          </ToggleGroup>
+        </div>
+        <FilteredLineChart data={data} keys={visibleKeys} height={height} />
       </CardContent>
     </Card>
   );
@@ -166,6 +204,12 @@ function SectionActivityCard({
 
 function statusTotal(submissions: Submission[], status: string) {
   return submissions.filter((submission) => submission.status === status).length;
+}
+
+function dateKey(dateValue: string | null | undefined) {
+  if (!dateValue) return null;
+  const date = new Date(dateValue).toISOString().split("T")[0];
+  return date || null;
 }
 
 async function getAnalyticsData(
@@ -176,14 +220,14 @@ async function getAnalyticsData(
       supabase
         .from("blog_posts")
         .select(
-          "createdAt,publishedAt,updatedAt,category,published,featured,viewsCount,title",
+          "id,title,slug,createdAt,publishedAt,updatedAt,category,published,featured,viewsCount",
         ),
       supabase.from("contacts").select("submittedAt"),
       supabase.from("services").select("createdAt,updatedAt,published,featured"),
       supabase.from("testimonials").select("createdAt"),
       supabase
         .from("form_submissions")
-        .select("createdAt,updatedAt,serviceName,status,formType"),
+        .select("createdAt,updatedAt,serviceName,status"),
     ]);
 
   const blogs = (blogRes?.data as BlogPost[]) || [];
@@ -194,35 +238,38 @@ async function getAnalyticsData(
   const activity = new Map<string, Record<string, number>>();
   const activityKeys = new Set<string>();
 
-  const addActivity = (dateValue: string | null | undefined, key: string) => {
-    if (!dateValue) return;
-    const date = new Date(dateValue).toISOString().split("T")[0];
+  const addActivity = (
+    dateValue: string | null | undefined,
+    key: string,
+    value = 1,
+  ) => {
+    const date = dateKey(dateValue);
     if (!date) return;
     const day = activity.get(date) ?? {};
-    activity.set(date, { ...day, [key]: (day[key] ?? 0) + 1 });
+    activity.set(date, { ...day, [key]: (day[key] ?? 0) + value });
     activityKeys.add(key);
   };
 
   blogs.forEach((blog) => {
+    const views = blog.viewsCount ?? 0;
     addActivity(blog.createdAt, "blogs_created");
     addActivity(blog.publishedAt, "blogs_published");
     addActivity(blog.updatedAt, "blogs_updated");
-    if (blog.featured) addActivity(blog.updatedAt ?? blog.createdAt, "blogs_featured");
     if (!blog.published) addActivity(blog.createdAt, "blog_drafts_created");
+    if (views > 0) addActivity(blog.updatedAt ?? blog.createdAt, "blog_views_total", views);
   });
   contacts.forEach((contact) => addActivity(contact.submittedAt, "contacts_submitted"));
   services.forEach((service) => {
     addActivity(service.createdAt, "services_created");
     addActivity(service.updatedAt, "services_updated");
     if (service.published) addActivity(service.updatedAt ?? service.createdAt, "services_published");
-    if (service.featured) addActivity(service.updatedAt ?? service.createdAt, "services_featured");
   });
   testimonials.forEach((testimonial) => addActivity(testimonial.createdAt, "testimonials_created"));
   submissions.forEach((submission) => {
+    addActivity(submission.createdAt, "service_submissions");
     addActivity(submission.createdAt, "submissions_created");
     addActivity(submission.updatedAt, "submissions_updated");
     addActivity(submission.createdAt, `submission_status_${submission.status}`);
-    addActivity(submission.createdAt, `form_type_${submission.formType}`);
   });
 
   const combinedActivity = Array.from(activity.entries())
@@ -244,37 +291,68 @@ async function getAnalyticsData(
   const filteredBlogs = blogs.filter((blog) => inDateRange(blog.createdAt));
   const filteredServices = services.filter((service) => inDateRange(service.createdAt));
 
-  const dailyCounts = new Map<string, number>();
-  filteredSubmissions.forEach(({ createdAt }) => {
-    const date = new Date(createdAt).toISOString().split("T")[0] as string;
-    dailyCounts.set(date, (dailyCounts.get(date) ?? 0) + 1);
+  const submissionDayCounts = new Map<string, number>();
+  const submissionServiceCounts = new Map<string, number>();
+  const submissionServiceDayCounts = new Map<string, Record<string, number>>();
+  filteredSubmissions.forEach(({ createdAt, serviceName }) => {
+    const date = dateKey(createdAt);
+    if (!date) return;
+    const service = serviceName || "Uncategorized";
+    submissionDayCounts.set(date, (submissionDayCounts.get(date) ?? 0) + 1);
+    submissionServiceCounts.set(service, (submissionServiceCounts.get(service) ?? 0) + 1);
+    const day = submissionServiceDayCounts.get(date) ?? {};
+    submissionServiceDayCounts.set(date, { ...day, [service]: (day[service] ?? 0) + 1 });
   });
-  const submissionsByDay = Array.from(dailyCounts.entries())
+  const submissionsByDay = Array.from(submissionDayCounts.entries())
     .map(([date, count]) => ({ date, count }))
     .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
-
-  const serviceCounts = new Map<string, number>();
-  filteredSubmissions.forEach(({ serviceName }) => {
-    const key = serviceName || "Uncategorized";
-    serviceCounts.set(key, (serviceCounts.get(key) ?? 0) + 1);
-  });
-  const submissionsByService = Array.from(serviceCounts.entries()).map(
+  const submissionsByService = Array.from(submissionServiceCounts.entries()).map(
     ([serviceName, count]) => ({ serviceName, count }),
   );
+  const serviceKeys = Array.from(submissionServiceCounts.keys());
+  const submissionsOverTimeByService = Array.from(submissionServiceDayCounts.entries())
+    .map(([date, day]) => {
+      const row: { date: string; [key: string]: number | string } = { date };
+      serviceKeys.forEach((key) => {
+        row[key] = day[key] ?? 0;
+      });
+      return row;
+    })
+    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
   const categoryCounts = new Map<string, number>();
-  filteredBlogs.forEach(({ category }) => {
-    const key = category || "Uncategorized";
-    categoryCounts.set(key, (categoryCounts.get(key) ?? 0) + 1);
+  const blogViewDayCounts = new Map<string, number>();
+  const blogViewPostDayCounts = new Map<string, Record<string, number>>();
+  filteredBlogs.forEach((blog) => {
+    const category = blog.category || "Uncategorized";
+    const views = blog.viewsCount ?? 0;
+    const date = dateKey(blog.updatedAt ?? blog.createdAt);
+    categoryCounts.set(category, (categoryCounts.get(category) ?? 0) + 1);
+    if (!date || views <= 0) return;
+    blogViewDayCounts.set(date, (blogViewDayCounts.get(date) ?? 0) + views);
+    const day = blogViewPostDayCounts.get(date) ?? {};
+    blogViewPostDayCounts.set(date, { ...day, [blog.title]: (day[blog.title] ?? 0) + views });
   });
   const contentBreakdown = Array.from(categoryCounts.entries()).map(
     ([contentType, count]) => ({ contentType, count }),
   );
-
   const blogViews = filteredBlogs
     .map(({ title, viewsCount }) => ({ title, views: viewsCount ?? 0 }))
     .sort((a, b) => b.views - a.views)
     .slice(0, 10);
+  const blogViewsByDay = Array.from(blogViewDayCounts.entries())
+    .map(([date, views]) => ({ date, views }))
+    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+  const blogViewKeys = Array.from(new Set(filteredBlogs.map((blog) => blog.title)));
+  const blogViewsByPostOverTime = Array.from(blogViewPostDayCounts.entries())
+    .map(([date, day]) => {
+      const row: { date: string; [key: string]: number | string } = { date };
+      blogViewKeys.forEach((key) => {
+        row[key] = day[key] ?? 0;
+      });
+      return row;
+    })
+    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
   const statusCounts = new Map<string, number>();
   filteredSubmissions.forEach(({ status }) => {
@@ -285,25 +363,6 @@ async function getAnalyticsData(
     ([status, count]) => ({ status, count }),
   );
 
-  const serviceKeys = Array.from(
-    new Set(filteredSubmissions.map((submission) => submission.serviceName || "Uncategorized")),
-  );
-  const statusKeys = Array.from(
-    new Set(filteredSubmissions.map((submission) => submission.status || "Unknown")),
-  );
-  const detailedCounts = new Map<string, { total: number } & Record<string, number>>();
-  filteredSubmissions.forEach(({ createdAt, serviceName, status }) => {
-    const date = new Date(createdAt).toISOString().split("T")[0] as string;
-    if (!detailedCounts.has(date)) detailedCounts.set(date, { total: 0 });
-    const day = detailedCounts.get(date)!;
-    day.total += 1;
-    day[serviceName || "Uncategorized"] = (day[serviceName || "Uncategorized"] ?? 0) + 1;
-    day[status || "Unknown"] = (day[status || "Unknown"] ?? 0) + 1;
-  });
-  const detailedSubmissions = Array.from(detailedCounts.entries())
-    .map(([date, data]) => ({ date, ...data }))
-    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
-
   const publishedServices = filteredServices.filter((service) => service.published).length;
   const publishedContent = filteredBlogs.filter((blog) => blog.published).length;
   const totalViews = filteredBlogs.reduce((sum, blog) => sum + (blog.viewsCount ?? 0), 0);
@@ -313,12 +372,14 @@ async function getAnalyticsData(
     submissionsByService,
     contentBreakdown,
     blogViews,
+    blogViewsByDay,
+    blogViewsByPostOverTime,
+    blogViewKeys,
     submissionStatus,
-    detailedSubmissions,
+    submissionsOverTimeByService,
     combinedActivity,
     combinedActivityKeys: Array.from(activityKeys),
     serviceKeys,
-    statusKeys,
     totalSubmissions: filteredSubmissions.length,
     publishedContent,
     totalViews,
@@ -355,7 +416,9 @@ export default function AnalysisClient() {
   }, [dateRange]);
 
   useEffect(() => {
-    if (chartData?.combinedActivityKeys) setVisibleKeys(chartData.combinedActivityKeys);
+    if (chartData?.combinedActivityKeys) {
+      setVisibleKeys(overviewActivityKeys(chartData.combinedActivityKeys));
+    }
   }, [chartData]);
 
   if (loading || !chartData) return <AnalysisLoading />;
@@ -365,12 +428,14 @@ export default function AnalysisClient() {
     submissionsByService,
     contentBreakdown,
     blogViews,
+    blogViewsByDay,
+    blogViewsByPostOverTime,
+    blogViewKeys,
     submissionStatus,
-    detailedSubmissions,
+    submissionsOverTimeByService,
     combinedActivity,
     combinedActivityKeys,
     serviceKeys,
-    statusKeys,
     totalSubmissions,
     publishedContent,
     totalViews,
@@ -386,7 +451,10 @@ export default function AnalysisClient() {
     rejectedApplications,
     archivedApplications,
   } = chartData;
-  const sortedActivityKeys = [...combinedActivityKeys].sort();
+  const overviewKeys = overviewActivityKeys(combinedActivityKeys);
+  const serviceActivityKeys = availableKeys(combinedActivityKeys, serviceActivityKeyOrder);
+  const submissionKeys = submissionActivityKeys(combinedActivityKeys);
+  const blogActivityKeys = availableKeys(combinedActivityKeys, blogActivityKeyOrder);
 
   return (
     <div className="space-y-10">
@@ -415,10 +483,10 @@ export default function AnalysisClient() {
             <div>
               <CardTitle>Overview Combined Activity</CardTitle>
               <p className="mt-1 text-sm text-muted-foreground">
-                Full-platform activity across services, submissions, blogs, contacts, and testimonials.
+                All section activity for services, submissions, and blogs.
               </p>
             </div>
-            <Button type="button" variant="outline" size="sm" onClick={() => setVisibleKeys(sortedActivityKeys)}>
+            <Button type="button" variant="outline" size="sm" onClick={() => setVisibleKeys(overviewKeys)}>
               Show All
             </Button>
           </div>
@@ -426,7 +494,7 @@ export default function AnalysisClient() {
         <CardContent>
           <div className="mb-6 rounded-xl bg-muted/30 p-4 shadow-sm shadow-black/5">
             <ToggleGroup multiple value={visibleKeys} onValueChange={setVisibleKeys} aria-label="Filter overview combined activity chart">
-              {sortedActivityKeys.map((key) => (
+              {overviewKeys.map((key) => (
                 <ToggleGroupItem key={key} value={key}>
                   {formatActivityLabel(key)}
                 </ToggleGroupItem>
@@ -437,7 +505,7 @@ export default function AnalysisClient() {
         </CardContent>
       </Card>
 
-      <AnalyticsSection title="Services Analysis" description="Monitor service catalog health and how services drive form submissions.">
+      <AnalyticsSection title="Services Analysis" description="Monitor service catalog health and service-driven activity.">
         <AnalysesHeader
           items={[
             metric("Total Services", totalServices, `${publishedServices.toLocaleString()} published`, Package),
@@ -450,15 +518,15 @@ export default function AnalysisClient() {
           <CardHeader><CardTitle>Submissions by Service</CardTitle></CardHeader>
           <CardContent><SubmissionsBarChart data={submissionsByService} /></CardContent>
         </Card>
-        <SectionActivityCard
+        <FilterableLineCard
           title="Services Combined Activity"
-          description="Service creation, update, publishing, and featured activity over time."
+          description="Service creation, update, publishing, and service submission activity over time."
           data={combinedActivity}
-          keys={availableKeys(combinedActivityKeys, serviceActivityKeyOrder)}
+          keys={serviceActivityKeys}
         />
       </AnalyticsSection>
 
-      <AnalyticsSection title="Submission Analysis" description="Track submission volume, status mix, and detailed service/status trends.">
+      <AnalyticsSection title="Submission Analysis" description="Track submission volume, status mix, and service trends.">
         <AnalysesHeader
           items={[
             metric("Pending", pendingApplications, "Awaiting first response", Clock),
@@ -467,31 +535,35 @@ export default function AnalysisClient() {
             metric("Archived", archivedApplications, "Stored for reference", Archive),
           ]}
         />
+        <Card>
+          <CardHeader><CardTitle>Submissions Over Time</CardTitle></CardHeader>
+          <CardContent><SubmissionsLineChart data={submissionsByDay} /></CardContent>
+        </Card>
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-          <Card>
-            <CardHeader><CardTitle>Submissions Over Time</CardTitle></CardHeader>
-            <CardContent><SubmissionsLineChart data={submissionsByDay} /></CardContent>
-          </Card>
           <Card>
             <CardHeader><CardTitle>Submission Status</CardTitle></CardHeader>
             <CardContent><SubmissionStatusPieChart data={submissionStatus} /></CardContent>
           </Card>
+          <Card>
+            <CardHeader><CardTitle>Submissions by Service</CardTitle></CardHeader>
+            <CardContent><SubmissionsByServicePieChart data={submissionsByService} /></CardContent>
+          </Card>
         </div>
-        <Card>
-          <CardHeader><CardTitle>Detailed Submissions</CardTitle></CardHeader>
-          <CardContent>
-            <DetailedSubmissionsChart data={detailedSubmissions} serviceKeys={serviceKeys} statusKeys={statusKeys} />
-          </CardContent>
-        </Card>
-        <SectionActivityCard
+        <FilterableLineCard
+          title="Submissions Over Time per Service"
+          description="Submission volume split by service with selectable service filters."
+          data={submissionsOverTimeByService}
+          keys={serviceKeys}
+        />
+        <FilterableLineCard
           title="Submissions Combined Activity"
-          description="Submission creation, update, status, and form-type activity over time."
+          description="Submission creation, update, and status activity over time."
           data={combinedActivity}
-          keys={submissionActivityKeys(combinedActivityKeys)}
+          keys={submissionKeys}
         />
       </AnalyticsSection>
 
-      <AnalyticsSection title="Blogs Analysis" description="Review blog publishing, category coverage, and view performance.">
+      <AnalyticsSection title="Blogs Analysis" description="Review blog publishing, views, categories, and content activity.">
         <AnalysesHeader
           items={[
             metric("Total Blogs", totalBlogs, `${publishedContent.toLocaleString()} published`, Newspaper),
@@ -509,12 +581,23 @@ export default function AnalysisClient() {
             <CardHeader><CardTitle>Blog Views</CardTitle></CardHeader>
             <CardContent><BlogViewsChart data={blogViews} /></CardContent>
           </Card>
+          <Card>
+            <CardHeader><CardTitle>Views Over Time</CardTitle></CardHeader>
+            <CardContent><BlogViewsLineChart data={blogViewsByDay} /></CardContent>
+          </Card>
+          <FilterableLineCard
+            title="Views Over Time per Blog"
+            description="Recorded view totals split by blog post."
+            data={blogViewsByPostOverTime}
+            keys={blogViewKeys}
+            height={300}
+          />
         </div>
-        <SectionActivityCard
+        <FilterableLineCard
           title="Blogs Combined Activity"
-          description="Blog creation, publishing, update, featured, and draft activity over time."
+          description="Blog creation, publishing, update, and view activity over time."
           data={combinedActivity}
-          keys={availableKeys(combinedActivityKeys, blogActivityKeyOrder)}
+          keys={blogActivityKeys}
         />
       </AnalyticsSection>
     </div>
