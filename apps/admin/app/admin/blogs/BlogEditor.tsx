@@ -32,7 +32,13 @@ const bilacertArticlePreviewStyles = `
     line-height: 1.9;
     max-width: 100%;
     overflow-wrap: normal;
+    position: relative;
     word-break: normal;
+    z-index: 0;
+  }
+
+  .bilacert-article * {
+    max-width: 100%;
   }
 
   .bilacert-article p {
@@ -114,6 +120,7 @@ const bilacertArticlePreviewStyles = `
   .bilacert-article iframe,
   .bilacert-article video {
     border-radius: 1rem;
+    display: block;
     height: auto;
     margin: 2rem auto;
     max-width: 100%;
@@ -195,10 +202,20 @@ export default function BlogEditor({
     setSanitized(DOMPurify.sanitize(value));
   }, [value]);
 
+  useEffect(() => {
+    document
+      .querySelectorAll<HTMLButtonElement>(
+        ".bilacert-blog-editor .ql-toolbar button",
+      )
+      .forEach((button) => {
+        button.type = "button";
+      });
+  }, [view]);
+
   return (
-    <Card className="max-w-5xl w-full mx-auto p-4 md:p-8">
-      <CardHeader className="flex items-center justify-between bg-white sticky top-0 z-10 py-2 border-b border-slate-100">
-        <div className="flex bg-slate-100 p-1 rounded-xl">
+    <Card className="bilacert-blog-editor relative z-0 mx-auto w-full max-w-5xl overflow-hidden p-4 md:p-8">
+      <CardHeader className="flex flex-col gap-3 border-b border-slate-100 bg-white py-2 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-wrap gap-1 rounded-xl bg-slate-100 p-1">
           <button
             type="button"
             onClick={() => setView("edit")}
@@ -224,27 +241,26 @@ export default function BlogEditor({
         </div>
       </CardHeader>
 
-      <div className="w-full">
+      <div className="relative z-0 w-full overflow-hidden">
         {view === "edit" ? (
-          <div className="animate-in fade-in duration-300 rounded-2xl border border-slate-200 shadow-sm ">
+          <div className="animate-in fade-in duration-300 overflow-hidden rounded-2xl border border-slate-200 shadow-sm">
             <style>{`
-              .ql-container {
+              .bilacert-blog-editor .ql-container {
                 font-size: 16px;
                 border-bottom-left-radius: 12px;
                 border-bottom-right-radius: 12px;
               }
-              .ql-toolbar {
-                position: sticky;
-                top: 68px;
-                z-index: 9;
+              .bilacert-blog-editor .ql-toolbar {
                 border-top-left-radius: 12px;
                 border-top-right-radius: 12px;
                 border-color: #f1f5f9 !important;
                 background: #f8fafc;
                 border-bottom: 1px solid #f1f5f9;
               }
-              .ql-editor {
+              .bilacert-blog-editor .ql-editor {
                 min-height: 400px;
+                max-width: 100%;
+                overflow-wrap: break-word;
               }
             `}</style>
             <ReactQuill
@@ -256,10 +272,10 @@ export default function BlogEditor({
             />
           </div>
         ) : (
-          <div className="p-4 animate-in slide-in-from-bottom-2 duration-300">
+          <div className="relative z-0 animate-in slide-in-from-bottom-2 overflow-hidden rounded-2xl bg-white p-4 duration-300">
             <style>{bilacertArticlePreviewStyles}</style>
             {featuredImage && (
-              <div className="mb-8">
+              <div className="mb-8 overflow-hidden">
                 <h2 className="text-lg font-bold mb-4 text-slate-800">
                   Featured Image
                 </h2>
@@ -277,7 +293,7 @@ export default function BlogEditor({
               <h1 className="text-2xl font-black text-slate-900 mb-4 tracking-tight leading-tight">
                 {title || "Untitled Post"}
               </h1>
-              <div className="flex items-center gap-3 text-slate-400 text-sm">
+              <div className="flex flex-wrap items-center gap-3 text-slate-400 text-sm">
                 <span className="bg-slate-100 px-2 py-1 rounded">Preview</span>
                 <span>•</span>
                 <span>{new Date().toLocaleDateString()}</span>
