@@ -6,8 +6,8 @@ import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useTransition } from "react";
-import { useForm } from "react-hook-form";
+import { useEffect, useState, useTransition } from "react";
+import { type FieldErrors, useForm } from "react-hook-form";
 import PexelsImagePicker from "@/components/PexelsImagePicker";
 import { Button } from "@/components/ui/button";
 import {
@@ -47,14 +47,27 @@ const slugify = (str: string) =>
     .replace(/[\s_-]+/g, "-")
     .replace(/^-+|-+$/g, "");
 
+type BlogEditorTab = "core" | "media" | "content" | "seo";
+
+function getTabForError(fieldName: string): BlogEditorTab {
+  if (["featuredImage", "thumbnail"].includes(fieldName)) return "media";
+  if (fieldName === "content") return "content";
+  if (["seoTitle", "seoDescription", "seoKeywords"].includes(fieldName)) {
+    return "seo";
+  }
+  return "core";
+}
+
 export default function BlogForm({ blog }: BlogFormProps) {
   const { toast } = useToast();
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
+  const [activeTab, setActiveTab] = useState<BlogEditorTab>("core");
 
   const form = useForm<BlogFormValues>({
     resolver: standardSchemaResolver(blogSchema),
     defaultValues: {
+      id: blog?.id,
       title: "",
       slug: "",
       authorName: "Bilacert Team",
@@ -88,6 +101,7 @@ export default function BlogForm({ blog }: BlogFormProps) {
     if (blog) {
       reset({
         ...blog,
+        id: blog.id,
         authorName: blog.authorName || "Bilacert Team",
         readTime: blog.readTime || "5 min read",
         tags: blog.tags || "",
@@ -104,7 +118,10 @@ export default function BlogForm({ blog }: BlogFormProps) {
 
   const onSubmit = (values: BlogFormValues) => {
     startTransition(async () => {
-      const result = await upsertBlog(values);
+      const result = await upsertBlog({
+        ...values,
+        id: blog?.id ?? values.id,
+      });
       if (result.error) {
         toast({
           variant: "destructive",
@@ -116,16 +133,27 @@ export default function BlogForm({ blog }: BlogFormProps) {
           title: "Blog post saved",
         });
         router.push("/admin/blogs");
+        router.refresh();
       }
+    });
+  };
+
+  const onInvalid = (errors: FieldErrors<BlogFormValues>) => {
+    const firstField = Object.keys(errors)[0] ?? "title";
+    setActiveTab(getTabForError(firstField));
+    toast({
+      variant: "destructive",
+      title: "Blog post was not saved",
+      description: "Please fix the highlighted field and try again.",
     });
   };
 
   return (
     <Form {...form}>
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
+      <form onSubmit={handleSubmit(onSubmit, onInvalid)} className="space-y-8">
         <div className="grid gap-4 md:grid-cols-[1fr_250px] lg:grid-cols-3 lg:gap-8">
           <div className="grid auto-rows-max items-start gap-4 lg:col-span-2 lg:gap-8">
-            <Tabs defaultValue="core">
+            <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as BlogEditorTab)}>
               <TabsList className="flex h-auto flex-wrap justify-start">
                 <TabsTrigger value="core">Core Details</TabsTrigger>
                 <TabsTrigger value="media">Media</TabsTrigger>
