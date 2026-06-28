@@ -2,8 +2,9 @@
 
 import { blogSchema } from "@bilacert/contracts/blog";
 import {
+  createBlog as createBlogMutation,
   deleteBlog as deleteBlogMutation,
-  upsertBlog as upsertBlogMutation,
+  updateBlog as updateBlogMutation,
 } from "@bilacert/supabase/Mutations/blogs";
 import { revalidatePath } from "next/cache";
 import { v4 as uuidv4 } from "uuid";
@@ -24,9 +25,10 @@ export async function upsertBlog(values: unknown) {
   }
 
   const { id, ...rest } = parsedValues.data;
+  const isUpdate = Boolean(id);
   const now = new Date().toISOString();
 
-  const dataToUpsert = {
+  const blogData = {
     id: id || uuidv4(),
     title: rest.title,
     slug: rest.slug,
@@ -47,21 +49,24 @@ export async function upsertBlog(values: unknown) {
     updatedAt: now,
   };
 
-  console.log("[bilacert-admin/blogs] upsert start", {
-    id: dataToUpsert.id,
-    mode: id ? "update" : "create",
-    slug: dataToUpsert.slug,
-    published: dataToUpsert.published,
-    featured: dataToUpsert.featured,
-    titleLength: dataToUpsert.title.length,
-    contentLength: dataToUpsert.content.length,
-    hasFeaturedImage: Boolean(dataToUpsert.featuredImage),
-    hasThumbnail: Boolean(dataToUpsert.thumbnail),
+  console.log("[bilacert-admin/blogs] save start", {
+    id: blogData.id,
+    mode: isUpdate ? "update" : "create",
+    slug: blogData.slug,
+    published: blogData.published,
+    featured: blogData.featured,
+    titleLength: blogData.title.length,
+    contentLength: blogData.content.length,
+    hasFeaturedImage: Boolean(blogData.featuredImage),
+    hasThumbnail: Boolean(blogData.thumbnail),
   });
 
   try {
-    const result = await upsertBlogMutation(dataToUpsert);
-    console.log("[bilacert-admin/blogs] upsert mutation success", {
+    const result = isUpdate
+      ? await updateBlogMutation(blogData.id, blogData)
+      : await createBlogMutation(blogData);
+
+    console.log("[bilacert-admin/blogs] save mutation success", {
       id: result.data.id,
       slug: result.data.slug,
       revalidate: result.revalidate,
@@ -75,17 +80,21 @@ export async function upsertBlog(values: unknown) {
 
     revalidatePath("/admin/blogs");
     revalidatePath(`/admin/blogs/${result.data.id}`);
+    revalidatePath(`/admin/blogs/${result.data.slug}`);
     revalidatePath(`/admin/blogs/${result.data.id}/edit`);
+    revalidatePath(`/admin/blogs/${result.data.slug}/edit`);
     console.log("[bilacert-admin/blogs] admin paths revalidated", {
       id: result.data.id,
+      slug: result.data.slug,
     });
 
     return { error: null, blog: result.data };
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unknown error";
-    console.error("[bilacert-admin/blogs] upsert failed", {
-      id: dataToUpsert.id,
-      slug: dataToUpsert.slug,
+    console.error("[bilacert-admin/blogs] save failed", {
+      id: blogData.id,
+      slug: blogData.slug,
+      mode: isUpdate ? "update" : "create",
       message,
     });
     return { error: `Database error: ${message}`, blog: null };
