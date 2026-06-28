@@ -18,13 +18,14 @@ export const metadata = {
   description: "Edit an existing blog post.",
 };
 
-async function getBlog(id: string): Promise<BlogPost | null> {
+async function getBlog(identifier: string): Promise<BlogPost | null> {
   const supabase = await createSupabaseServerClient();
   const { data, error } = await supabase
     .from("blog_posts")
     .select("*")
-    .eq("id", id)
-    .single();
+    .or(`id.eq.${identifier},slug.eq.${identifier}`)
+    .limit(1)
+    .maybeSingle();
 
   if (error || !data) {
     return null;
@@ -71,7 +72,7 @@ export default async function EditBlogPage({
     <div className="mx-auto max-w-5xl">
       <div className="mb-4 flex items-center gap-4">
         <Button variant="outline" size="sm" asChild>
-          <Link href={`/admin/blogs/${blog.id}`}>
+          <Link href={`/admin/blogs/${blog.slug}`}>
             <ArrowLeft className="mr-2 h-4 w-4" />
             Cancel Edit
           </Link>
@@ -82,7 +83,7 @@ export default async function EditBlogPage({
         <CardHeader>
           <CardTitle>Edit Blog Post</CardTitle>
           <CardDescription>
-            You are currently editing the details for:{" "}
+            You are currently editing the details for: {" "}
             <span className="font-semibold text-foreground">{blog.title}</span>
           </CardDescription>
         </CardHeader>
