@@ -58,6 +58,27 @@ function getTabForError(fieldName: string): BlogEditorTab {
   return "core";
 }
 
+function getBlogFormValues(blog?: BlogPost | null): BlogFormValues {
+  return {
+    id: blog?.id,
+    title: blog?.title ?? "",
+    slug: blog?.slug ?? "",
+    authorName: blog?.authorName ?? "Bilacert Team",
+    readTime: blog?.readTime ?? "5 min read",
+    category: blog?.category ?? "",
+    tags: blog?.tags ?? "",
+    excerpt: blog?.excerpt ?? "",
+    content: blog?.content ?? "",
+    published: blog?.published ?? false,
+    featuredImage: blog?.featuredImage ?? "",
+    thumbnail: blog?.thumbnail ?? "",
+    featured: blog?.featured ?? false,
+    seoTitle: blog?.seoTitle ?? "",
+    seoDescription: blog?.seoDescription ?? "",
+    seoKeywords: blog?.seoKeywords ?? "",
+  };
+}
+
 export default function BlogForm({ blog }: BlogFormProps) {
   const { toast } = useToast();
   const router = useRouter();
@@ -66,24 +87,7 @@ export default function BlogForm({ blog }: BlogFormProps) {
 
   const form = useForm<BlogFormValues>({
     resolver: standardSchemaResolver(blogSchema),
-    defaultValues: {
-      id: blog?.id,
-      title: "",
-      slug: "",
-      authorName: "Bilacert Team",
-      readTime: "5 min read",
-      category: "",
-      tags: "",
-      excerpt: "",
-      content: "",
-      published: false,
-      featuredImage: "",
-      thumbnail: "",
-      featured: false,
-      seoTitle: "",
-      seoDescription: "",
-      seoKeywords: "",
-    },
+    defaultValues: getBlogFormValues(blog),
   });
 
   const { handleSubmit, reset, watch, setValue } = form;
@@ -99,20 +103,7 @@ export default function BlogForm({ blog }: BlogFormProps) {
 
   useEffect(() => {
     if (blog) {
-      reset({
-        ...blog,
-        id: blog.id,
-        authorName: blog.authorName || "Bilacert Team",
-        readTime: blog.readTime || "5 min read",
-        tags: blog.tags || "",
-        excerpt: blog.excerpt || "",
-        content: blog.content || "",
-        featuredImage: blog.featuredImage || "",
-        thumbnail: blog.thumbnail || "",
-        seoTitle: blog.seoTitle || "",
-        seoDescription: blog.seoDescription || "",
-        seoKeywords: blog.seoKeywords || "",
-      });
+      reset(getBlogFormValues(blog));
     }
   }, [blog, reset]);
 
@@ -122,19 +113,21 @@ export default function BlogForm({ blog }: BlogFormProps) {
         ...values,
         id: blog?.id ?? values.id,
       });
-      if (result.error) {
+      if (result.error || !result.blog) {
         toast({
           variant: "destructive",
           title: "Error saving blog post",
-          description: result.error,
+          description: result.error ?? "The blog save did not return a saved post.",
         });
-      } else {
-        toast({
-          title: "Blog post saved",
-        });
-        router.push("/admin/blogs");
-        router.refresh();
+        return;
       }
+
+      toast({
+        title: "Blog post saved",
+        description: "Your changes were saved successfully.",
+      });
+      router.push(`/admin/blogs/${result.blog.id}`);
+      router.refresh();
     });
   };
 
