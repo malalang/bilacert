@@ -79,6 +79,29 @@ function getBlogFormValues(blog?: BlogPost | null): BlogFormValues {
   };
 }
 
+function getBlogLogPayload(values: BlogFormValues) {
+  return {
+    id: values.id,
+    slug: values.slug,
+    published: values.published,
+    featured: values.featured,
+    titleLength: values.title.length,
+    excerptLength: values.excerpt.length,
+    contentLength: values.content.length,
+    hasFeaturedImage: Boolean(values.featuredImage),
+    hasThumbnail: Boolean(values.thumbnail),
+  };
+}
+
+function getErrorSummary(errors: FieldErrors<BlogFormValues>) {
+  return Object.fromEntries(
+    Object.entries(errors).map(([field, error]) => [
+      field,
+      typeof error?.message === "string" ? error.message : "Invalid value",
+    ]),
+  );
+}
+
 export default function BlogForm({ blog }: BlogFormProps) {
   const { toast } = useToast();
   const router = useRouter();
@@ -103,37 +126,76 @@ export default function BlogForm({ blog }: BlogFormProps) {
 
   useEffect(() => {
     if (blog) {
-      reset(getBlogFormValues(blog));
+      const normalizedValues = getBlogFormValues(blog);
+      console.log("[bilacert-admin/blogs] form reset", {
+        ...getBlogLogPayload(normalizedValues),
+        isEditing: true,
+      });
+      reset(normalizedValues);
     }
   }, [blog, reset]);
 
   const onSubmit = (values: BlogFormValues) => {
+    const payload = {
+      ...values,
+      id: blog?.id ?? values.id,
+    };
+
+    console.log("[bilacert-admin/blogs] form submit start", {
+      ...getBlogLogPayload(payload),
+      activeTab,
+      isEditing,
+    });
+
     startTransition(async () => {
-      const result = await upsertBlog({
-        ...values,
-        id: blog?.id ?? values.id,
-      });
-      if (result.error || !result.blog) {
+      try {
+        const result = await upsertBlog(payload);
+        console.log("[bilacert-admin/blogs] form submit result", {
+          hasError: Boolean(result.error),
+          error: result.error,
+          blogId: result.blog?.id,
+          blogSlug: result.blog?.slug,
+        });
+
+        if (result.error || !result.blog) {
+          toast({
+            variant: "destructive",
+            title: "Error saving blog post",
+            description:
+              result.error ?? "The blog save did not return a saved post.",
+          });
+          return;
+        }
+
+        toast({
+          title: "Blog post saved",
+          description: "Your changes were saved successfully.",
+        });
+        router.push(`/admin/blogs/${result.blog.id}`);
+        router.refresh();
+      } catch (error) {
+        const message = error instanceof Error ? error.message : "Unknown error";
+        console.error("[bilacert-admin/blogs] form submit threw", {
+          ...getBlogLogPayload(payload),
+          message,
+        });
         toast({
           variant: "destructive",
           title: "Error saving blog post",
-          description: result.error ?? "The blog save did not return a saved post.",
+          description: message,
         });
-        return;
       }
-
-      toast({
-        title: "Blog post saved",
-        description: "Your changes were saved successfully.",
-      });
-      router.push(`/admin/blogs/${result.blog.id}`);
-      router.refresh();
     });
   };
 
   const onInvalid = (errors: FieldErrors<BlogFormValues>) => {
     const firstField = Object.keys(errors)[0] ?? "title";
     setActiveTab(getTabForError(firstField));
+    console.warn("[bilacert-admin/blogs] form validation failed", {
+      firstField,
+      activeTab,
+      errors: getErrorSummary(errors),
+    });
     toast({
       variant: "destructive",
       title: "Blog post was not saved",
@@ -146,7 +208,10 @@ export default function BlogForm({ blog }: BlogFormProps) {
       <form onSubmit={handleSubmit(onSubmit, onInvalid)} className="space-y-8">
         <div className="grid gap-4 md:grid-cols-[1fr_250px] lg:grid-cols-3 lg:gap-8">
           <div className="grid auto-rows-max items-start gap-4 lg:col-span-2 lg:gap-8">
-            <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as BlogEditorTab)}>
+            <Tabs
+              value={activeTab}
+              onValueChange={(value) => setActiveTab(value as BlogEditorTab)}
+            >
               <TabsList className="flex h-auto flex-wrap justify-start">
                 <TabsTrigger value="core">Core Details</TabsTrigger>
                 <TabsTrigger value="media">Media</TabsTrigger>
