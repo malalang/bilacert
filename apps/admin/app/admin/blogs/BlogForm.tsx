@@ -85,9 +85,9 @@ function getBlogLogPayload(values: BlogFormValues) {
     slug: values.slug,
     published: values.published,
     featured: values.featured,
-    titleLength: values.title.length,
-    excerptLength: values.excerpt.length,
-    contentLength: values.content.length,
+    titleLength: (values.title ?? "").length,
+    excerptLength: (values.excerpt ?? "").length,
+    contentLength: (values.content ?? "").length,
     hasFeaturedImage: Boolean(values.featuredImage),
     hasThumbnail: Boolean(values.thumbnail),
   };
