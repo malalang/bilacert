@@ -13,12 +13,12 @@ export async function upsertBlog(values: unknown) {
   const parsedValues = blogSchema.safeParse(values);
 
   if (!parsedValues.success) {
-    return { error: parsedValues.error.message };
+    return { error: parsedValues.error.message, blog: null };
   }
 
   const { id, ...rest } = parsedValues.data;
+  const now = new Date().toISOString();
 
-  // Map form values to DB schema camelCase
   const dataToUpsert = {
     id: id || uuidv4(),
     title: rest.title,
@@ -30,25 +30,28 @@ export async function upsertBlog(values: unknown) {
     excerpt: rest.excerpt,
     content: rest.content,
     published: rest.published,
+    publishedAt: rest.published ? now : null,
     featuredImage: rest.featuredImage,
     thumbnail: rest.thumbnail,
     featured: rest.featured,
     seoTitle: rest.seoTitle,
     seoDescription: rest.seoDescription,
     seoKeywords: rest.seoKeywords,
+    updatedAt: now,
   };
 
   try {
     const result = await upsertBlogMutation(dataToUpsert);
     await triggerRevalidation(result.revalidate);
+    revalidatePath("/admin/blogs");
+    revalidatePath(`/admin/blogs/${result.data.id}`);
+    revalidatePath(`/admin/blogs/${result.data.id}/edit`);
+
+    return { error: null, blog: result.data };
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unknown error";
-    return { error: `Database error: ${message}` };
+    return { error: `Database error: ${message}`, blog: null };
   }
-
-  revalidatePath("/admin/blogs");
-
-  return { error: null };
 }
 
 export async function deleteBlog(blogId: string) {
