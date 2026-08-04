@@ -190,12 +190,30 @@ export default function BlogForm({ blog }: BlogFormProps) {
 
   const onInvalid = (errors: FieldErrors<BlogFormValues>) => {
     const firstField = Object.keys(errors)[0] ?? "title";
-    setActiveTab(getTabForError(firstField));
+    const targetTab = getTabForError(firstField);
+    // Switch to the tab containing the first invalid field
+    setActiveTab(targetTab);
+
     console.warn("[bilacert-admin/blogs] form validation failed", {
       firstField,
-      activeTab,
+      targetTab,
       errors: getErrorSummary(errors),
     });
+
+    // After tab switch, attempt to focus the first invalid input so the user sees it.
+    // Timeout gives the TabsContent a chance to mount its fields.
+    setTimeout(() => {
+      try {
+        const el = document.querySelector(`[name="${firstField}"]`) as HTMLElement | null;
+        if (el) {
+          el.scrollIntoView({ behavior: "smooth", block: "center" });
+          el.focus();
+        }
+      } catch (e) {
+        // ignore
+      }
+    }, 100);
+
     toast({
       variant: "destructive",
       title: "Blog post was not saved",
