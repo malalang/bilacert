@@ -1,5 +1,5 @@
 import type { Testimonial } from "@bilacert/shared/types";
-import { createSupabaseServerClient } from "../server";
+import { createSupabasePublicClient } from "../server";
 import type { Database } from "../supabaseType";
 
 type TestimonialRow = Database["public"]["Tables"]["testimonials"]["Row"];
@@ -13,7 +13,7 @@ function normalizeTestimonial(row: TestimonialRow): Testimonial {
 }
 
 export async function getPublishedTestimonials(): Promise<Testimonial[]> {
-  const supabase = await createSupabaseServerClient();
+  const supabase = createSupabasePublicClient();
   const { data, error } = await supabase
     .from("testimonials")
     .select("id, postUrl, createdAt")

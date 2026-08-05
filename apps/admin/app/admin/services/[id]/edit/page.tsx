@@ -1,5 +1,5 @@
 import type { Service } from "@bilacert/contracts/service";
-import { createSupabaseAdminClient } from "@bilacert/supabase/admin";
+import { createSupabaseServerClient } from "@bilacert/supabase/server";
 import { normalizeService } from "@bilacert/supabase/Queries/services";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
@@ -20,7 +20,7 @@ export const metadata = {
 };
 
 async function getService(id: string): Promise<Service | null> {
-  const supabase = createSupabaseAdminClient();
+  const supabase = await createSupabaseServerClient();
   const { data, error } = await supabase
     .from("services")
     .select("*")

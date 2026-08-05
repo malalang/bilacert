@@ -2,7 +2,7 @@
 
 import { contactSchema } from "@bilacert/contracts/contact";
 import type { Contact } from "@bilacert/shared/types";
-import { createSupabaseAdminClient } from "@bilacert/supabase/admin";
+import { createSupabaseServerClient } from "@bilacert/supabase/server";
 import {
   deleteContact as deleteContactMutation,
   upsertContact as upsertContactMutation,
@@ -10,7 +10,7 @@ import {
 import { revalidatePath } from "next/cache";
 
 export async function getContacts() {
-  const supabase = createSupabaseAdminClient();
+  const supabase = await createSupabaseServerClient();
   const { data, error } = await supabase
     .from("contacts")
     .select("*")
