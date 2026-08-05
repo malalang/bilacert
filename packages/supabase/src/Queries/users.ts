@@ -1,7 +1,7 @@
-import { createSupabaseAdminClient } from "../admin";
+import { createSupabaseServerClient } from "../server";
 
 export async function getUserRole(userId: string) {
-  const supabase = createSupabaseAdminClient();
+  const supabase = await createSupabaseServerClient();
   const { data, error } = await supabase
     .from("users")
     .select("role")

@@ -1,11 +1,11 @@
-import { createSupabaseAdminClient } from "../admin";
 import { CACHE_TAGS, mutationResult } from "../cache";
+import { createSupabaseServerClient } from "../server";
 import type { Database } from "../supabaseType";
 
 type ContactInsert = Database["public"]["Tables"]["contacts"]["Insert"];
 
 export async function createContact(data: ContactInsert) {
-  const supabase = createSupabaseAdminClient();
+  const supabase = await createSupabaseServerClient();
   const { data: contact, error } = await supabase
     .from("contacts")
     .insert([data])
@@ -21,7 +21,7 @@ export async function createContact(data: ContactInsert) {
 }
 
 export async function upsertContact(data: ContactInsert) {
-  const supabase = createSupabaseAdminClient();
+  const supabase = await createSupabaseServerClient();
   const { data: contact, error } = await supabase
     .from("contacts")
     .upsert(data)
@@ -37,7 +37,7 @@ export async function upsertContact(data: ContactInsert) {
 }
 
 export async function deleteContact(id: string) {
-  const supabase = createSupabaseAdminClient();
+  const supabase = await createSupabaseServerClient();
   const { error } = await supabase.from("contacts").delete().eq("id", id);
   if (error) throw new Error(error.message);
 

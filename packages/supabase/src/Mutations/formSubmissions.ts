@@ -1,5 +1,5 @@
-import { createSupabaseAdminClient } from "../admin";
 import { CACHE_TAGS, mutationResult } from "../cache";
+import { createSupabaseServerClient } from "../server";
 import type { Database } from "../supabaseType";
 
 type SubmissionInsert =
@@ -8,7 +8,7 @@ type SubmissionUpdate =
   Database["public"]["Tables"]["form_submissions"]["Update"];
 
 export async function createFormSubmission(data: SubmissionInsert) {
-  const supabase = createSupabaseAdminClient();
+  const supabase = await createSupabaseServerClient();
   const { data: submission, error } = await supabase
     .from("form_submissions")
     .insert([data])
@@ -24,7 +24,7 @@ export async function createFormSubmission(data: SubmissionInsert) {
 }
 
 export async function updateFormSubmission(id: string, data: SubmissionUpdate) {
-  const supabase = createSupabaseAdminClient();
+  const supabase = await createSupabaseServerClient();
   const { data: submission, error } = await supabase
     .from("form_submissions")
     .update(data)

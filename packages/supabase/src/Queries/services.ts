@@ -1,5 +1,5 @@
 import type { Service } from "@bilacert/contracts/service";
-import { createSupabaseBrowserClient } from "../client";
+import { createSupabaseServerClient } from "../server";
 import type { Database } from "../supabaseType";
 
 type ServiceRow = Database["public"]["Tables"]["services"]["Row"];
@@ -52,7 +52,7 @@ export function normalizeService(row: ServiceRow): Service {
 }
 
 export async function getPublishedServices(): Promise<Service[]> {
-  const supabase = createSupabaseBrowserClient();
+  const supabase = await createSupabaseServerClient();
   const { data, error } = await supabase
     .from("services")
     .select("*")
@@ -68,7 +68,7 @@ export async function getPublishedServices(): Promise<Service[]> {
 }
 
 export async function getFeaturedServices(): Promise<Service[]> {
-  const supabase = createSupabaseBrowserClient();
+  const supabase = await createSupabaseServerClient();
   const { data, error } = await supabase
     .from("services")
     .select("*")
@@ -86,7 +86,7 @@ export async function getFeaturedServices(): Promise<Service[]> {
 }
 
 export async function getServiceBySlug(slug: string): Promise<Service | null> {
-  const supabase = createSupabaseBrowserClient();
+  const supabase = await createSupabaseServerClient();
   const { data, error } = await supabase
     .from("services")
     .select("*")
@@ -103,7 +103,7 @@ export async function getServiceBySlug(slug: string): Promise<Service | null> {
 export async function getAllPublishedServiceSlugs(): Promise<
   { slug: string }[]
 > {
-  const supabase = createSupabaseBrowserClient();
+  const supabase = await createSupabaseServerClient();
   const { data, error } = await supabase
     .from("services")
     .select("slug")

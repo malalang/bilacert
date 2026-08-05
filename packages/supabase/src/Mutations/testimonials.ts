@@ -1,11 +1,11 @@
-import { createSupabaseAdminClient } from "../admin";
 import { CACHE_PATHS, CACHE_TAGS, mutationResult } from "../cache";
+import { createSupabaseServerClient } from "../server";
 import type { Database } from "../supabaseType";
 
 type TestimonialInsert = Database["public"]["Tables"]["testimonials"]["Insert"];
 
 export async function upsertTestimonial(data: TestimonialInsert) {
-  const supabase = createSupabaseAdminClient();
+  const supabase = await createSupabaseServerClient();
   const { data: testimonial, error } = await supabase
     .from("testimonials")
     .upsert(data)
@@ -22,7 +22,7 @@ export async function upsertTestimonial(data: TestimonialInsert) {
 }
 
 export async function deleteTestimonial(id: string) {
-  const supabase = createSupabaseAdminClient();
+  const supabase = await createSupabaseServerClient();
   const { error } = await supabase.from("testimonials").delete().eq("id", id);
   if (error) throw new Error(error.message);
 

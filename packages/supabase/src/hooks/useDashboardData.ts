@@ -50,21 +50,19 @@ export function useDashboardData() {
     loading: servicesLoading,
     error: servicesError,
   } = useServices();
-  const {
-    data: blogs,
-    loading: blogsLoading,
-    error: blogsError,
-  } = useBlogs();
+  const { data: blogs, loading: blogsLoading, error: blogsError } = useBlogs();
 
   const loading =
     submissionsLoading || contactsLoading || servicesLoading || blogsLoading;
-  const error = submissionsError || contactsError || servicesError || blogsError;
+  const error =
+    submissionsError || contactsError || servicesError || blogsError;
 
   const statusCounts = useMemo(() => {
     return submissionStatuses.map((status) => ({
       status,
-      count: submissions?.filter((submission) => submission.status === status)
-        .length ?? 0,
+      count:
+        submissions?.filter((submission) => submission.status === status)
+          .length ?? 0,
     }));
   }, [submissions]);
 

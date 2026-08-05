@@ -1,5 +1,5 @@
-import { createSupabaseAdminClient } from "../admin";
 import { CACHE_PATHS, CACHE_TAGS, mutationResult } from "../cache";
+import { createSupabaseServerClient } from "../server";
 import type { Database } from "../supabaseType";
 
 type ServiceInsert = Database["public"]["Tables"]["services"]["Insert"];
@@ -9,9 +9,13 @@ function uniqueValues(values: string[]) {
 }
 
 export async function upsertService(data: ServiceInsert) {
-  const supabase = createSupabaseAdminClient();
+  const supabase = await createSupabaseServerClient();
   const { data: existing, error: readError } = data.id
-    ? await supabase.from("services").select("slug").eq("id", data.id).maybeSingle()
+    ? await supabase
+        .from("services")
+        .select("slug")
+        .eq("id", data.id)
+        .maybeSingle()
     : { data: null, error: null };
 
   if (readError) throw new Error(readError.message);
@@ -44,7 +48,7 @@ export async function upsertService(data: ServiceInsert) {
 }
 
 export async function deleteService(id: string) {
-  const supabase = createSupabaseAdminClient();
+  const supabase = await createSupabaseServerClient();
   const { data: existing, error: readError } = await supabase
     .from("services")
     .select("slug")

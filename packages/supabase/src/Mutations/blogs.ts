@@ -1,4 +1,3 @@
-import { createSupabaseAdminClient } from "../admin";
 import { CACHE_PATHS, CACHE_TAGS, mutationResult } from "../cache";
 import { createSupabaseServerClient } from "../server";
 import type { Database } from "../supabaseType";
@@ -55,7 +54,7 @@ export async function incrementBlogPostViews(slug: string): Promise<void> {
 }
 
 export async function createBlog(data: BlogInsert) {
-  const supabase = createSupabaseAdminClient();
+  const supabase = await createSupabaseServerClient();
   const { error } = await supabase.from("blog_posts").insert(data);
 
   if (error) throw new Error(error.message);
@@ -64,7 +63,7 @@ export async function createBlog(data: BlogInsert) {
 }
 
 export async function updateBlog(id: string, data: BlogInsert) {
-  const supabase = createSupabaseAdminClient();
+  const supabase = await createSupabaseServerClient();
   const { id: _ignoredId, ...updateData }: BlogUpdate = data;
   const blog = blogResultFromInput(data);
 
@@ -84,7 +83,9 @@ export async function updateBlog(id: string, data: BlogInsert) {
     if (updateBySlug.error) throw new Error(updateBySlug.error.message);
 
     if ((updateBySlug.count ?? 0) === 0) {
-      throw new Error(`No blog post matched id "${id}" or slug "${data.slug}".`);
+      throw new Error(
+        `No blog post matched id "${id}" or slug "${data.slug}".`,
+      );
     }
   }
 
@@ -92,7 +93,7 @@ export async function updateBlog(id: string, data: BlogInsert) {
 }
 
 export async function deleteBlog(id: string) {
-  const supabase = createSupabaseAdminClient();
+  const supabase = await createSupabaseServerClient();
   const { data: existing, error: readError } = await supabase
     .from("blog_posts")
     .select("slug")

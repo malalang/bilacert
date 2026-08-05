@@ -1,7 +1,7 @@
-import { createSupabaseAdminClient } from "../admin";
+import { createSupabaseServerClient } from "../server";
 
 export async function getFormSubmissionById(id: string) {
-  const supabase = createSupabaseAdminClient();
+  const supabase = await createSupabaseServerClient();
   const { data, error } = await supabase
     .from("form_submissions")
     .select("*")
