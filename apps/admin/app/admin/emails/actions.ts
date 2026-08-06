@@ -8,6 +8,7 @@ import {
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { getAdminAccess } from "@/lib/adminAccess";
+import { getSafeEmailReturnPath } from "@/lib/emailNavigation";
 import {
   getZohoMailAccount,
   submitZohoMailMessage,
@@ -18,6 +19,7 @@ export async function submitEmailAction(
   _previousState: EmailComposeActionState,
   formData: FormData,
 ): Promise<EmailComposeActionState> {
+  const returnTo = getSafeEmailReturnPath(formData.get("returnTo"));
   const access = await getAdminAccess();
 
   if (!access.allowed) {
@@ -61,6 +63,13 @@ export async function submitEmailAction(
   }
 
   revalidatePath("/admin/emails");
+  if (returnTo) {
+    revalidatePath(returnTo);
+    redirect(
+      `${returnTo}?emailStatus=${parsed.data.intent === "draft" ? "draft" : "sent"}`,
+    );
+  }
+
   redirect(
     parsed.data.intent === "draft"
       ? "/admin/emails?draftSaved=1"

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { getAdminAccess } from "@/lib/adminAccess";
+import { getSafeEmailReturnPath } from "@/lib/emailNavigation";
 import {
   getZohoMailAccount,
   getZohoMailConfigurationStatus,
@@ -22,7 +23,12 @@ export const metadata = {
 };
 
 type ComposeEmailPageProps = {
-  searchParams: Promise<{ to?: string; subject?: string }>;
+  searchParams: Promise<{
+    to?: string;
+    subject?: string;
+    content?: string;
+    returnTo?: string;
+  }>;
 };
 
 function safeInitialValue(value: string | undefined, maxLength: number) {
@@ -63,14 +69,15 @@ export default async function ComposeEmailPage({
   }
 
   const query = await searchParams;
+  const returnTo = getSafeEmailReturnPath(query.returnTo);
 
   return (
     <div className="mx-auto max-w-4xl space-y-6">
       <div>
         <Button asChild variant="ghost" className="mb-3 -ml-3">
-          <Link href="/admin/emails">
+          <Link href={returnTo ?? "/admin/emails"}>
             <ArrowLeft className="h-4 w-4" />
-            Back to email
+            {returnTo ? "Back to submission" : "Back to email"}
           </Link>
         </Button>
         <h1 className="text-3xl font-bold tracking-tight">Compose email</h1>
@@ -83,6 +90,8 @@ export default async function ComposeEmailPage({
         fromAddress={fromAddress}
         initialToAddress={safeInitialValue(query.to, 4_000)}
         initialSubject={safeInitialValue(query.subject, 998)}
+        initialContent={safeInitialValue(query.content, 200_000)}
+        returnTo={returnTo ?? undefined}
       />
     </div>
   );

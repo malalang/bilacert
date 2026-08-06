@@ -2,9 +2,51 @@ import type { Submission } from "@bilacert/shared/types";
 import { createSupabaseBrowserClient } from "@bilacert/supabase/client";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import SubmissionDetails from "../SubmissionDetails";
 
 const supabase = createSupabaseBrowserClient();
+
+type SubmissionDetailsPageProps = {
+  params: Promise<{ id: string }>;
+  searchParams: Promise<{ emailStatus?: string }>;
+};
+
+function getSubmissionTopic(submission: Submission) {
+  const topic =
+    submission.serviceName?.trim() ||
+    submission.formType.replace(/[-_]+/g, " ").trim() ||
+    "Bilacert";
+
+  return topic.replace(/\b(nrcs|loa|icasa|ecns|ecs|vhf)\b/gi, (value) =>
+    value.toUpperCase(),
+  );
+}
+
+function getEmailComposeHref(submission: Submission): string | null {
+  const emailAddress = submission.email.trim();
+  if (!emailAddress) return null;
+
+  const topic = getSubmissionTopic(submission);
+  const company = submission.company?.trim();
+  const content = [
+    `Hi ${submission.fullName},`,
+    "",
+    `We have received your submission for ${topic}.`,
+    ...(company ? ["", `Company: ${company}`] : []),
+    "",
+    "Kind regards,",
+    "Bilacert Team",
+  ].join("\n");
+  const query = new URLSearchParams({
+    to: emailAddress,
+    subject: `Bilacert submission: ${topic}`,
+    content,
+    returnTo: `/admin/form_submissions/${submission.id}`,
+  });
+
+  return `/admin/emails/compose?${query.toString()}`;
+}
 
 async function getSubmission(id: string): Promise<Submission | null> {
   const { data, error } = await supabase
@@ -56,15 +98,38 @@ export async function generateMetadata({
 
 export default async function SubmissionDetailsPage({
   params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
-  const { id } = await params;
+  searchParams,
+}: SubmissionDetailsPageProps) {
+  const [{ id }, query] = await Promise.all([params, searchParams]);
   const submission = await getSubmission(id);
 
   if (!submission) {
     notFound();
   }
 
-  return <SubmissionDetails submission={submission} />;
+  const emailStatus =
+    query.emailStatus === "sent" || query.emailStatus === "draft"
+      ? query.emailStatus
+      : null;
+
+  return (
+    <div className="space-y-6">
+      {emailStatus && (
+        <Alert className="border-emerald-200 bg-emerald-50 text-emerald-900">
+          <AlertTitle>
+            {emailStatus === "sent" ? "Email sent" : "Draft saved"}
+          </AlertTitle>
+          <AlertDescription>
+            {emailStatus === "sent"
+              ? `Your email to ${submission.fullName} was sent through Zoho Mail.`
+              : `Your email to ${submission.fullName} was saved in Zoho Drafts.`}
+          </AlertDescription>
+        </Alert>
+      )}
+      <SubmissionDetails
+        submission={submission}
+        emailComposeHref={getEmailComposeHref(submission)}
+      />
+    </div>
+  );
 }

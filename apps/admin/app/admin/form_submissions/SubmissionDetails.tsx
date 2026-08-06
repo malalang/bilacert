@@ -2,7 +2,7 @@
 
 import type { Submission } from "@bilacert/shared/types";
 import { format } from "date-fns";
-import { ArrowLeft, Edit, Phone, Trash2 } from "lucide-react";
+import { ArrowLeft, Edit, Mail, Phone, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -20,10 +20,12 @@ import DeleteSubmissionDialog from "./DeleteSubmissionDialog";
 
 interface SubmissionDetailsProps {
   submission: Submission;
+  emailComposeHref: string | null;
 }
 
 export default function SubmissionDetails({
   submission,
+  emailComposeHref,
 }: SubmissionDetailsProps) {
   const router = useRouter();
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
@@ -65,14 +67,21 @@ export default function SubmissionDetails({
   return (
     <>
       <div className="space-y-6">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <Button variant="outline" asChild>
             <Link href="/admin/form_submissions">
               <ArrowLeft className="mr-2 h-4 w-4" />
               Back to Submissions
             </Link>
           </Button>
-          <div className="flex gap-2">
+          <div className="flex flex-wrap gap-2">
+            {emailComposeHref && (
+              <Button variant="outline" asChild>
+                <Link href={emailComposeHref}>
+                  <Mail className="mr-2 h-4 w-4" /> Email Client
+                </Link>
+              </Button>
+            )}
             <Button asChild>
               <Link href={`/admin/form_submissions/${submission.id}/edit`}>
                 <Edit className="mr-2 h-4 w-4" /> Edit
@@ -118,9 +127,19 @@ export default function SubmissionDetails({
                   <h4 className="text-sm font-medium text-muted-foreground">
                     Client Email
                   </h4>
-                  <p className="text-sm text-card-foreground">
-                    {submission.email}
-                  </p>
+                  {emailComposeHref ? (
+                    <Link
+                      href={emailComposeHref}
+                      className="flex items-center gap-2 text-sm text-primary transition-colors hover:underline"
+                    >
+                      <Mail className="h-4 w-4" />
+                      {submission.email}
+                    </Link>
+                  ) : (
+                    <p className="text-sm text-card-foreground">
+                      {submission.email}
+                    </p>
+                  )}
                 </div>
                 {submission.phone && (
                   <div>

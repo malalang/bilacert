@@ -29,10 +29,14 @@ export default function EmailComposer({
   fromAddress,
   initialToAddress = "",
   initialSubject = "",
+  initialContent = "",
+  returnTo,
 }: {
   fromAddress: string;
   initialToAddress?: string;
   initialSubject?: string;
+  initialContent?: string;
+  returnTo?: string;
 }) {
   const [state, formAction, isPending] = useActionState(
     submitEmailAction,
@@ -41,6 +45,7 @@ export default function EmailComposer({
 
   return (
     <form action={formAction}>
+      {returnTo && <input type="hidden" name="returnTo" value={returnTo} />}
       <Card className="border border-border/70 shadow-xl shadow-black/5">
         <CardHeader>
           <CardTitle>New message</CardTitle>
@@ -123,6 +128,7 @@ export default function EmailComposer({
               name="content"
               rows={16}
               className="min-h-72 resize-y"
+              defaultValue={initialContent}
               aria-invalid={Boolean(state.fieldErrors?.content)}
               required
             />
