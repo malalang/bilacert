@@ -67,26 +67,15 @@ export async function updateBlog(id: string, data: BlogInsert) {
   const { id: _ignoredId, ...updateData }: BlogUpdate = data;
   const blog = blogResultFromInput(data);
 
-  const updateById = await supabase
+  const { count, error } = await supabase
     .from("blog_posts")
     .update(updateData, { count: "exact" })
     .eq("id", id);
 
-  if (updateById.error) throw new Error(updateById.error.message);
+  if (error) throw new Error(error.message);
 
-  if ((updateById.count ?? 0) === 0) {
-    const updateBySlug = await supabase
-      .from("blog_posts")
-      .update(updateData, { count: "exact" })
-      .eq("slug", data.slug);
-
-    if (updateBySlug.error) throw new Error(updateBySlug.error.message);
-
-    if ((updateBySlug.count ?? 0) === 0) {
-      throw new Error(
-        `No blog post matched id "${id}" or slug "${data.slug}".`,
-      );
-    }
+  if ((count ?? 0) === 0) {
+    throw new Error(`No blog post matched id "${id}".`);
   }
 
   return blogMutationResult(blog);
