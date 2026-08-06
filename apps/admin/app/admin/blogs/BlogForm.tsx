@@ -37,6 +37,7 @@ import BlogEditor from "./BlogEditor";
 
 interface BlogFormProps {
   blog?: BlogPost | null;
+  blogId?: string;
 }
 
 const slugify = (str: string) =>
@@ -102,7 +103,7 @@ function getErrorSummary(errors: FieldErrors<BlogFormValues>) {
   );
 }
 
-export default function BlogForm({ blog }: BlogFormProps) {
+export default function BlogForm({ blog, blogId }: BlogFormProps) {
   const { toast } = useToast();
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
@@ -138,7 +139,7 @@ export default function BlogForm({ blog }: BlogFormProps) {
   const onSubmit = (values: BlogFormValues) => {
     const payload = {
       ...values,
-      id: blog?.id ?? values.id,
+      id: blogId ?? blog?.id ?? values.id,
     };
 
     console.log("[bilacert-admin/blogs] form submit start", {
