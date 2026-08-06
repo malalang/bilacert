@@ -64,18 +64,33 @@ export async function createBlog(data: BlogInsert) {
 
 export async function updateBlog(id: string, data: BlogInsert) {
   const supabase = await createSupabaseServerClient();
+  const {
+    data: { user },
+    error: authError,
+  } = await supabase.auth.getUser();
+
+  if (authError || !user) {
+    throw new Error(
+      "Your admin session is not available to the server. Please sign out and log in again.",
+    );
+  }
+
   const { id: _ignoredId, ...updateData }: BlogUpdate = data;
   const blog = blogResultFromInput(data);
 
-  const { count, error } = await supabase
+  const { data: updatedBlog, error } = await supabase
     .from("blog_posts")
-    .update(updateData, { count: "exact" })
-    .eq("id", id);
+    .update(updateData)
+    .eq("id", id)
+    .select("id")
+    .maybeSingle();
 
   if (error) throw new Error(error.message);
 
-  if ((count ?? 0) === 0) {
-    throw new Error(`No blog post matched id "${id}".`);
+  if (!updatedBlog) {
+    throw new Error(
+      `The authenticated user is not permitted to update blog post "${id}". Check the blog_posts UPDATE policy.`,
+    );
   }
 
   return blogMutationResult(blog);
