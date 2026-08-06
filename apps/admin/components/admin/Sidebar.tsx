@@ -8,6 +8,7 @@ import {
   FileText,
   LayoutDashboard,
   LogOut,
+  Mail,
   MessageSquare,
   Settings,
   Users,
@@ -34,6 +35,7 @@ const navItems = [
   { href: "/admin/analysis", icon: BarChart, label: "Analysis" },
   { href: "/admin/services", icon: Briefcase, label: "Services" },
   { href: "/admin/blogs", icon: FileText, label: "Blogs" },
+  { href: "/admin/emails", icon: Mail, label: "Email" },
   { href: "/admin/testimonials", icon: MessageSquare, label: "Testimonials" },
   { href: "/admin/contacts", icon: Users, label: "Contacts" },
   {
