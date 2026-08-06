@@ -1,4 +1,5 @@
 import { type CookieOptions, createServerClient } from "@supabase/ssr";
+import { createClient } from "@supabase/supabase-js";
 import { cookies } from "next/headers";
 import type { Database } from "./supabaseType";
 
@@ -43,5 +44,10 @@ export function createSupabasePublicClient() {
     throw new Error("Supabase URL and/or anonymous key not provided.");
   }
 
-  return createServerClient<Database>(supabaseUrl, supabaseAnonKey);
+  return createClient<Database>(supabaseUrl, supabaseAnonKey, {
+    auth: {
+      autoRefreshToken: false,
+      persistSession: false,
+    },
+  });
 }
