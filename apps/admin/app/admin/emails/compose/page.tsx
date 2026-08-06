@@ -70,6 +70,11 @@ export default async function ComposeEmailPage({
 
   const query = await searchParams;
   const returnTo = getSafeEmailReturnPath(query.returnTo);
+  const returnLabel = returnTo?.startsWith("/admin/contacts/")
+    ? "Back to contact"
+    : returnTo
+      ? "Back to submission"
+      : "Back to email";
 
   return (
     <div className="mx-auto max-w-4xl space-y-6">
@@ -77,7 +82,7 @@ export default async function ComposeEmailPage({
         <Button asChild variant="ghost" className="mb-3 -ml-3">
           <Link href={returnTo ?? "/admin/emails"}>
             <ArrowLeft className="h-4 w-4" />
-            {returnTo ? "Back to submission" : "Back to email"}
+            {returnLabel}
           </Link>
         </Button>
         <h1 className="text-3xl font-bold tracking-tight">Compose email</h1>

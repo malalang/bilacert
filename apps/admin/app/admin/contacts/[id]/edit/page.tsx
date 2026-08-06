@@ -35,6 +35,7 @@ async function getContact(id: string): Promise<Contact | null> {
     name: data.name,
     email: data.email,
     phone: data.phone,
+    service: data.service,
     message: data.message,
     submittedAt: data.submittedAt,
   } as Contact;

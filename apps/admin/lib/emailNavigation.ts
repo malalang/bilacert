@@ -1,7 +1,33 @@
-import type { Submission } from "@bilacert/shared/types";
+import type { Contact, Submission } from "@bilacert/shared/types";
 
-const submissionDetailPathPattern =
-  /^\/admin\/form_submissions\/[A-Za-z0-9_-]+$/;
+const emailReturnPathPattern =
+  /^\/admin\/(?:contacts|form_submissions)\/[A-Za-z0-9_-]+$/;
+
+export function getContactEmailComposeHref(contact: Contact): string | null {
+  const emailAddress = contact.email.trim();
+  if (!emailAddress) return null;
+
+  const name = contact.name?.trim() || "there";
+  const service = contact.service?.trim();
+  const content = [
+    `Hi ${name},`,
+    "",
+    service
+      ? `Thank you for contacting Bilacert regarding ${service}. We are following up on your enquiry.`
+      : "Thank you for contacting Bilacert. We are following up on your enquiry.",
+    "",
+    "Kind regards,",
+    "Bilacert Team",
+  ].join("\n");
+  const query = new URLSearchParams({
+    to: emailAddress,
+    subject: service ? `Bilacert enquiry: ${service}` : "Your Bilacert enquiry",
+    content,
+    returnTo: `/admin/contacts/${contact.id}`,
+  });
+
+  return `/admin/emails/compose?${query.toString()}`;
+}
 
 function getSubmissionTopic(submission: Submission) {
   const topic =
@@ -45,5 +71,5 @@ export function getSafeEmailReturnPath(value: unknown): string | null {
   if (typeof value !== "string") return null;
 
   const path = value.trim();
-  return submissionDetailPathPattern.test(path) ? path : null;
+  return emailReturnPathPattern.test(path) ? path : null;
 }

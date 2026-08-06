@@ -2,33 +2,22 @@
 
 import type { Contact } from "@bilacert/shared/types";
 import { useContacts } from "@bilacert/supabase/hooks/useContacts";
-import { ClipboardList, Mail, MessageSquare, MoreHorizontal, Phone } from "lucide-react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { ClipboardList, Mail, MessageSquare, Phone } from "lucide-react";
 import AdminPage from "@/components/admin/AdminPage";
 import AnalysesHeader from "@/components/admin/AnalysesHeader";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import ContactCard from "./ContactCard";
 import DeleteContactDialog from "./DeleteContactDialog";
 
 function ContactsAnalysis({ contacts }: { contacts: Contact[] }) {
-  const contactsWithEmail = contacts.filter((contact) => contact.email);
-  const contactsWithPhone = contacts.filter((contact) => contact.phone);
-  const serviceInquiries = contacts.filter((contact) => contact.service);
+  const totals = contacts.reduce(
+    (summary, contact) => {
+      if (contact.email?.trim()) summary.withEmail += 1;
+      if (contact.phone?.trim()) summary.withPhone += 1;
+      if (contact.service?.trim()) summary.serviceInquiries += 1;
+      return summary;
+    },
+    { withEmail: 0, withPhone: 0, serviceInquiries: 0 },
+  );
 
   return (
     <AnalysesHeader
@@ -41,19 +30,19 @@ function ContactsAnalysis({ contacts }: { contacts: Contact[] }) {
         },
         {
           title: "Email Contacts",
-          value: contactsWithEmail.length,
+          value: totals.withEmail,
           description: "Contacts with email addresses",
           icon: <Mail className="h-4 w-4 text-muted-foreground" />,
         },
         {
           title: "Phone Contacts",
-          value: contactsWithPhone.length,
+          value: totals.withPhone,
           description: "Contacts with phone numbers",
           icon: <Phone className="h-4 w-4 text-muted-foreground" />,
         },
         {
           title: "Service Inquiries",
-          value: serviceInquiries.length,
+          value: totals.serviceInquiries,
           description: "Messages linked to services",
           icon: <ClipboardList className="h-4 w-4 text-muted-foreground" />,
         },
@@ -62,88 +51,26 @@ function ContactsAnalysis({ contacts }: { contacts: Contact[] }) {
   );
 }
 
-const ContactCard = ({
-  contact,
-  onEdit,
-  onDelete,
+function ContactDeleteDialogAdapter({
+  isOpen,
+  onClose,
+  onDeleted,
+  item,
 }: {
-  contact: Contact;
-  onEdit: (contact: Contact) => void;
-  onDelete: (contact: Contact) => void;
-}) => {
-  const router = useRouter();
+  isOpen: boolean;
+  onClose: () => void;
+  onDeleted: () => void;
+  item: Contact | null;
+}) {
   return (
-    <div key={contact.id} className="group relative">
-      <Link
-        href={`/admin/contacts/${contact.id}`}
-        className="absolute inset-0 z-10"
-        aria-label={`View ${contact.name}`}
-      >
-        <span className="sr-only">View Details</span>
-      </Link>
-      <Card className="flex h-full flex-col transition-all duration-300 group-hover:shadow-lg group-hover:border-primary/50">
-        <CardHeader>
-          <div className="flex justify-between items-start">
-            <CardTitle className="text-lg line-clamp-2">
-              {contact.name}
-            </CardTitle>
-            <div className="relative z-20">
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    className="h-8 w-8 p-0"
-                    onClick={(e) => e.preventDefault()}
-                  >
-                    <span className="sr-only">Open menu</span>
-                    <MoreHorizontal className="h-4 w-4" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                  <DropdownMenuItem
-                    onClick={(e) => {
-                      e.preventDefault();
-                      router.push(`/admin/contacts/${contact.id}`);
-                    }}
-                  >
-                    View Details
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    onClick={(e) => {
-                      e.preventDefault();
-                      onEdit(contact);
-                    }}
-                  >
-                    Edit
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem
-                    className="text-destructive focus:bg-destructive/10 focus:text-destructive"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      onDelete(contact);
-                    }}
-                  >
-                    Delete
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
-          </div>
-        </CardHeader>
-        <CardContent className="space-y-4 flex-grow">
-          <p className="text-sm text-muted-foreground line-clamp-3">
-            {contact.message}
-          </p>
-        </CardContent>
-        <CardFooter>
-          <p className="text-sm font-semibold">{contact.email}</p>
-        </CardFooter>
-      </Card>
-    </div>
+    <DeleteContactDialog
+      isOpen={isOpen}
+      onClose={onClose}
+      onDeleted={onDeleted}
+      contact={item}
+    />
   );
-};
+}
 
 export default function ContactsClient() {
   return (
@@ -152,11 +79,13 @@ export default function ContactsClient() {
       title="Contacts"
       newItemButtonText="Add Contact"
       newItemLink="/admin/contacts/new"
-      renderBeforeContent={(contacts) => <ContactsAnalysis contacts={contacts} />}
-      renderItem={(contact, onEdit, onDelete) => (
-        <ContactCard contact={contact} onEdit={onEdit} onDelete={onDelete} />
+      renderBeforeContent={(contacts) => (
+        <ContactsAnalysis contacts={contacts} />
       )}
-      DeleteDialog={DeleteContactDialog as any}
+      renderItem={(contact, _onEdit, onDelete) => (
+        <ContactCard contact={contact} onDelete={onDelete} />
+      )}
+      DeleteDialog={ContactDeleteDialogAdapter}
     />
   );
 }
