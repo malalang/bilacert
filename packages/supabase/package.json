@@ -1,0 +1,25 @@
+{
+  "name": "@bilacert/supabase",
+  "version": "0.0.0",
+  "private": true,
+  "exports": {
+    "./client": "./src/client.ts",
+    "./server": "./src/server.ts",
+    "./cache": "./src/cache.ts",
+    "./middleware": "./src/middleware.ts",
+    "./supabaseType": "./src/supabaseType.ts",
+    "./Queries/*": "./src/Queries/*.ts",
+    "./Mutations/*": "./src/Mutations/*.ts",
+    "./hooks/*": "./src/hooks/*.ts"
+  },
+  "dependencies": {
+    "@bilacert/contracts": "workspace:*",
+    "@bilacert/shared": "workspace:*",
+    "@supabase/ssr": "catalog:",
+    "@supabase/supabase-js": "catalog:",
+    "typescript": "catalog:"
+  },
+  "scripts": {
+    "supabase:types": "supabase gen types typescript --local > src/supabaseType.ts"
+  }
+}

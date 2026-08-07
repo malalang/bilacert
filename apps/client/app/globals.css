@@ -1,0 +1,248 @@
+@import "tailwindcss";
+/* @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap'); */
+
+:root {
+  /* Bilacert Color Palette */
+  --primary-blue: #0a2b4c;
+  --primary-blue-light: #1a4a6b;
+  --secondary-white: #ffffff;
+  --secondary-gray: #f8f9fa;
+  --accent-orange: #f2994a;
+  --accent-orange-light: #f4b366;
+  --text-dark: #1a1a1a;
+  --text-gray: #6b7280;
+  --text-light: #9ca3af;
+
+  /* Background and foreground */
+  --background: var(--secondary-white);
+  --foreground: var(--text-dark);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: "Inter", system-ui, -apple-system, sans-serif;
+  --font-mono: "Fira Code", monospace;
+
+  /* Custom Bilacert colors */
+  --color-primary: var(--primary-blue);
+  --color-primary-light: var(--primary-blue-light);
+  --color-secondary: var(--secondary-white);
+  --color-secondary-gray: var(--secondary-gray);
+  --color-accent: var(--accent-orange);
+  --color-accent-light: var(--accent-orange-light);
+  --color-text-dark: var(--text-dark);
+  --color-text-gray: var(--text-gray);
+  --color-text-light: var(--text-light);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: "Inter", system-ui, -apple-system, sans-serif;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Custom utility classes */
+.text-primary {
+  color: var(--primary-blue);
+}
+
+.bg-primary {
+  background-color: var(--primary-blue);
+}
+
+.text-accent {
+  color: var(--accent-orange);
+}
+
+.bg-accent {
+  background-color: var(--accent-orange);
+}
+
+.bg-secondary-gray {
+  background-color: var(--secondary-gray);
+}
+
+/* Published blog article typography. */
+.bilacert-article {
+  color: #1f2937;
+  font-size: 1.0625rem;
+  line-height: 1.9;
+  max-width: 100%;
+  overflow-wrap: normal;
+  word-break: normal;
+}
+
+.bilacert-article p {
+  margin-bottom: 1.5rem;
+  overflow-wrap: normal;
+  text-wrap: pretty;
+  white-space: normal;
+  word-break: normal;
+}
+
+.bilacert-article h1,
+.bilacert-article h2,
+.bilacert-article h3,
+.bilacert-article h4 {
+  color: var(--primary-blue);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.2;
+  text-wrap: balance;
+}
+
+.bilacert-article h1 {
+  font-size: 2.5rem;
+  margin: 0 0 1.5rem;
+}
+
+.bilacert-article h2 {
+  font-size: 2rem;
+  margin: 3rem 0 1rem;
+}
+
+.bilacert-article h3 {
+  font-size: 1.5rem;
+  margin: 2rem 0 0.75rem;
+}
+
+.bilacert-article strong {
+  color: #334155;
+  font-weight: 800;
+}
+
+.bilacert-article a {
+  color: var(--primary-blue-light);
+  font-weight: 700;
+  text-decoration: underline;
+  text-decoration-color: var(--accent-orange);
+  text-underline-offset: 0.2em;
+}
+
+.bilacert-article ul,
+.bilacert-article ol {
+  margin: 1.5rem 0 1.5rem 1.5rem;
+  padding-left: 1rem;
+}
+
+.bilacert-article ul {
+  list-style: disc;
+}
+
+.bilacert-article ol {
+  list-style: decimal;
+}
+
+.bilacert-article li {
+  margin-bottom: 0.75rem;
+  padding-left: 0.25rem;
+}
+
+.bilacert-article blockquote {
+  border-left: 4px solid var(--accent-orange);
+  color: #475569;
+  font-size: 1.125rem;
+  font-style: italic;
+  margin: 2rem 0;
+  padding: 1rem 0 1rem 1.5rem;
+}
+
+.bilacert-article img,
+.bilacert-article iframe,
+.bilacert-article video {
+  border-radius: 1rem;
+  height: auto;
+  margin: 2rem auto;
+  max-width: 100%;
+}
+
+.bilacert-article pre {
+  background: #0a2b4c;
+  border-radius: 1rem;
+  color: white;
+  margin: 2rem 0;
+  overflow-x: auto;
+  padding: 1.25rem;
+  white-space: pre-wrap;
+}
+
+.bilacert-article code {
+  overflow-wrap: break-word;
+  white-space: pre-wrap;
+}
+
+.bilacert-article table {
+  display: block;
+  margin: 2rem 0;
+  max-width: 100%;
+  overflow-x: auto;
+  width: 100%;
+}
+
+.bilacert-article .ql-align-center {
+  text-align: center;
+}
+
+.bilacert-article .ql-align-right {
+  text-align: right;
+}
+
+.bilacert-article .ql-align-justify {
+  text-align: justify;
+}
+
+.bilacert-article .ql-size-small {
+  font-size: 0.875em;
+}
+
+.bilacert-article .ql-size-large {
+  font-size: 1.25em;
+}
+
+.bilacert-article .ql-size-huge {
+  font-size: 1.5em;
+}
+
+@media (min-width: 768px) {
+  .bilacert-article {
+    font-size: 1.125rem;
+  }
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Focus styles for accessibility */
+*:focus {
+  outline: 2px solid var(--accent-orange);
+  outline-offset: 2px;
+}
+
+/* Button hover effects */
+.btn-primary {
+  background-color: var(--primary-blue);
+  color: white;
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-blue-light);
+  transform: translateY(-1px);
+}
+
+.btn-accent {
+  background-color: var(--accent-orange);
+  color: white;
+  transition: all 0.3s ease;
+}
+
+.btn-accent:hover {
+  background-color: var(--accent-orange-light);
+  transform: translateY(-1px);
+}
