@@ -29,6 +29,10 @@ export default function Header() {
                 <Phone className="h-4 w-4" />
                 <span>{businessInfo.phone}</span>
               </div>
+              <div className="flex items-center space-x-2">
+                <Mail className="h-4 w-4" />
+                <span>{businessInfo.email}</span>
+              </div>
             </div>
             <div className="hidden md:block">
               <span>{businessInfo.tagline}</span>
