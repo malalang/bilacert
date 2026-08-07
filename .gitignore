@@ -1,6 +1,13 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
-
+SUPABASE_SECRET_KEY=''
+ 
+REVALIDATION_SECRET=''
+ 
+ENABLE_EXPERIMENTAL_COREPACK=1
+ 
+PEXELS_API_KEY=''
+ 
 # dependencies
 /node_modules
 /.pnp
