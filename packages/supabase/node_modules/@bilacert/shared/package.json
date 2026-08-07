@@ -1,0 +1,15 @@
+{
+  "name": "@bilacert/shared",
+  "version": "0.0.0",
+  "private": true,
+  "exports": {
+    "./cn": "./src/utils/cn.ts",
+    "./Icon": "./src/components/Icon.tsx",
+    "./types": "./src/types/domain.ts"
+  },
+  "dependencies": {
+    "clsx": "catalog:",
+    "tailwind-merge": "catalog:",
+    "typescript": "catalog:"
+  }
+}
