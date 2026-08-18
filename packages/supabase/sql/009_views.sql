@@ -1,0 +1,1 @@
+-- No user-defined views exist in the public schema of the live Bilacert project.
