@@ -1,0 +1,2 @@
+-- Schema-only snapshot: no application data is copied from production.
+-- Add safe, non-secret reference data here when required.
