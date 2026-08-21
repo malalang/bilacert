@@ -5,6 +5,7 @@
   "exports": {
     "./blog": "./src/blog.ts",
     "./contact": "./src/contact.ts",
+    "./email": "./src/email.ts",
     "./formSubmission": "./src/formSubmission.ts",
     "./service": "./src/service.ts",
     "./testimonial": "./src/testimonial.ts",
