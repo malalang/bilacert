@@ -26,6 +26,11 @@ export default function Footer() {
   const quickLinks = [
     { name: "About Us", href: "/about" },
     { name: "Our Services", href: "/services" },
+    { name: "South Africa Market Access", href: "/south-africa-market-access" },
+    {
+      name: "South African Local Representative",
+      href: "/south-africa-local-representative",
+    },
     { name: "Blog", href: "/blog" },
     { name: "FAQ", href: "/faq" },
     { name: "Contact", href: "/contact" },
