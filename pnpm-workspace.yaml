@@ -6,7 +6,7 @@ catalog:
   "next": "16.2.7"
   "react": "19.2.4"
   "react-dom": "19.2.4"
-  "typescript": "5.9.2"
+  "typescript": "5.9.3"
   "postcss": "^8.5.14"
   "zod": "^4.4.3"
   "lucide-react": "^1.17.0"
@@ -60,3 +60,4 @@ catalog:
   "@radix-ui/react-alert-dialog": "^1.1.6"
   "biome": "2.2.0"
   "@biomejs/biome": "2.2.0"
+  "babel-plugin-react-compiler": "1.0.0"

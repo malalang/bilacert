@@ -9,7 +9,8 @@
     "lint": "biome check .",
     "lint:fix": "biome check --write .",
     "format": "biome format --write .",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf .next"
   },
   "dependencies": {
     "@bilacert/shared": "workspace:*",
@@ -72,6 +73,6 @@
     "@biomejs/biome": "catalog:",
     "@types/react-dom": "catalog:",
     "@tailwindcss/postcss": "catalog:",
-    "babel-plugin-react-compiler": "1.0.0"
+    "babel-plugin-react-compiler": "catalog:"
   }
 }

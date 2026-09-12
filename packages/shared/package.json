@@ -7,6 +7,9 @@
     "./Icon": "./src/components/Icon.tsx",
     "./types": "./src/types/domain.ts"
   },
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
   "dependencies": {
     "clsx": "catalog:",
     "tailwind-merge": "catalog:",
