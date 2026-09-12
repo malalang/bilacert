@@ -93,6 +93,9 @@ catalogs:
     '@types/react-dom':
       specifier: 19.2.3
       version: 19.2.3
+    babel-plugin-react-compiler:
+      specifier: 1.0.0
+      version: 1.0.0
     class-variance-authority:
       specifier: ^0.7.1
       version: 0.7.1
@@ -136,8 +139,8 @@ catalogs:
       specifier: ^1.0.7
       version: 1.0.7
     typescript:
-      specifier: 5.9.2
-      version: 5.9.2
+      specifier: 5.9.3
+      version: 5.9.3
     uuid:
       specifier: ^13.0.0
       version: 13.0.2
@@ -150,7 +153,7 @@ importers:
   .:
     devDependencies:
       turbo:
-        specifier: latest
+        specifier: ^2.9.14
         version: 2.9.18
 
   apps/admin:
@@ -325,14 +328,14 @@ importers:
         specifier: 'catalog:'
         version: 19.2.3(@types/react@19.2.4)
       babel-plugin-react-compiler:
-        specifier: 1.0.0
+        specifier: 'catalog:'
         version: 1.0.0
       tailwindcss:
         specifier: 'catalog:'
         version: 4.3.0
       typescript:
         specifier: 'catalog:'
-        version: 5.9.2
+        version: 5.9.3
 
   apps/client:
     dependencies:
@@ -419,14 +422,14 @@ importers:
         specifier: 'catalog:'
         version: 19.2.3(@types/react@19.2.4)
       babel-plugin-react-compiler:
-        specifier: 1.0.0
+        specifier: 'catalog:'
         version: 1.0.0
       tailwindcss:
         specifier: 'catalog:'
         version: 4.3.0
       typescript:
         specifier: 'catalog:'
-        version: 5.9.2
+        version: 5.9.3
 
   packages/contracts:
     dependencies:
@@ -439,7 +442,7 @@ importers:
         version: link:../typescript-config
       typescript:
         specifier: 'catalog:'
-        version: 5.9.2
+        version: 5.9.3
 
   packages/shared:
     dependencies:
@@ -451,7 +454,7 @@ importers:
         version: 3.6.0
       typescript:
         specifier: 'catalog:'
-        version: 5.9.2
+        version: 5.9.3
 
   packages/supabase:
     dependencies:
@@ -469,7 +472,7 @@ importers:
         version: 2.107.0
       typescript:
         specifier: 'catalog:'
-        version: 5.9.2
+        version: 5.9.3
 
   packages/typescript-config: {}
 
@@ -905,6 +908,7 @@ packages:
   '@google-cloud/opentelemetry-cloud-monitoring-exporter@0.19.0':
     resolution: {integrity: sha512-5SOPXwC6RET4ZvXxw5D97dp8fWpqWEunHrzrUUGXhG4UAeedQe1KvYV8CK+fnaAbN2l2ha6QDYspT6z40TVY0g==}
     engines: {node: '>=14'}
+    deprecated: Google Cloud Platform now supports native OpenTelemetry Protocol (OTLP) endpoints via the Telemetry API. Please follow https://github.com/GoogleCloudPlatform/opentelemetry-operations-js/blob/main/MIGRATION.md
     peerDependencies:
       '@opentelemetry/api': ^1.0.0
       '@opentelemetry/core': ^1.0.0
@@ -914,6 +918,7 @@ packages:
   '@google-cloud/opentelemetry-cloud-trace-exporter@2.4.1':
     resolution: {integrity: sha512-Dq2IyAyA9PCjbjLOn86i2byjkYPC59b5ic8k/L4q5bBWH0Jro8lzMs8C0G5pJfqh2druj8HF+oAIAlSdWQ+Z9Q==}
     engines: {node: '>=14'}
+    deprecated: Google Cloud Platform now supports native OpenTelemetry Protocol (OTLP) endpoints via the Telemetry API. Please follow https://github.com/GoogleCloudPlatform/opentelemetry-operations-js/blob/main/MIGRATION.md
     peerDependencies:
       '@opentelemetry/api': ^1.0.0
       '@opentelemetry/core': ^1.0.0
@@ -923,6 +928,7 @@ packages:
   '@google-cloud/opentelemetry-resource-util@2.4.0':
     resolution: {integrity: sha512-/7ujlMoKtDtrbQlJihCjQnm31n2s2RTlvJqcSbt2jV3OkCzPAdo3u31Q13HNugqtIRUSk7bUoLx6AzhURkhW4w==}
     engines: {node: '>=14'}
+    deprecated: Google Cloud Platform now supports native OpenTelemetry Protocol (OTLP) endpoints via the Telemetry API. Please follow https://github.com/GoogleCloudPlatform/opentelemetry-operations-js/blob/main/MIGRATION.md
     peerDependencies:
       '@opentelemetry/resources': ^1.0.0
 
@@ -1534,6 +1540,7 @@ packages:
   '@opentelemetry/propagation-utils@0.30.16':
     resolution: {integrity: sha512-ZVQ3Z/PQ+2GQlrBfbMMMT0U7MzvYZLCPP800+ooyaBqm4hMvuQHfP028gB9/db0mwkmyEAMad9houukUVxhwcw==}
     engines: {node: '>=14'}
+    deprecated: The use of process spans has been removed from Messaging Semantic Conventions. It is now recommended to connect pub/sub spans via Span Links. See https://opentelemetry.io/docs/specs/semconv/messaging/messaging-spans/ for details.
     peerDependencies:
       '@opentelemetry/api': ^1.0.0
 
@@ -4422,8 +4429,8 @@ packages:
     resolution: {integrity: sha512-TkRKr9sUTxEH8MdfuCSP7VizJyzRNMjj2J2do2Jr3Kym598JVdEksuzPQCnlFPW4ky9Q+iA+ma9BGm06XQBy8g==}
     engines: {node: '>= 0.6'}
 
-  typescript@5.9.2:
-    resolution: {integrity: sha512-CWBzXQrc/qOkhidw1OzBTQuYRbfyxDXJMVJ1XNwUHGROVmuaeiEm3OslpZ1RV96d7SKKjZKrSJu3+t/xlw3R9A==}
+  typescript@5.9.3:
+    resolution: {integrity: sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw==}
     engines: {node: '>=14.17'}
     hasBin: true
 
@@ -9694,7 +9701,7 @@ snapshots:
       media-typer: 0.3.0
       mime-types: 2.1.35
 
-  typescript@5.9.2: {}
+  typescript@5.9.3: {}
 
   uglify-js@3.19.3:
     optional: true
