@@ -1,6 +1,6 @@
 import type { Service } from "@bilacert/contracts/service";
-import { createSupabaseServerClient } from "@bilacert/supabase/server";
 import { normalizeService } from "@bilacert/supabase/Queries/services";
+import { createSupabaseServerClient } from "@bilacert/supabase/server";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";

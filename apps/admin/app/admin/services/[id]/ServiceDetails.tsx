@@ -63,7 +63,9 @@ export default function ServiceDetails({ service }: ServiceDetailsProps) {
   const renderPricingPlans = (plans: PricingPlan[] | undefined) => {
     if (!plans || plans.length === 0)
       return (
-        <p className="text-sm text-muted-foreground">No pricing plans defined.</p>
+        <p className="text-sm text-muted-foreground">
+          No pricing plans defined.
+        </p>
       );
     return (
       <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -96,7 +98,9 @@ export default function ServiceDetails({ service }: ServiceDetailsProps) {
   const renderProcessSteps = (steps: ProcessStep[] | undefined) => {
     if (!steps || steps.length === 0)
       return (
-        <p className="text-sm text-muted-foreground">No process steps defined.</p>
+        <p className="text-sm text-muted-foreground">
+          No process steps defined.
+        </p>
       );
     return (
       <div className="relative mt-5 pl-6">
@@ -125,7 +129,9 @@ export default function ServiceDetails({ service }: ServiceDetailsProps) {
   const renderSuccessStory = (story: SuccessStory | undefined) => {
     if (!story)
       return (
-        <p className="text-sm text-muted-foreground">No success story defined.</p>
+        <p className="text-sm text-muted-foreground">
+          No success story defined.
+        </p>
       );
     return (
       <Card className="mt-4 bg-muted/40 shadow-sm shadow-black/5">
@@ -134,19 +140,25 @@ export default function ServiceDetails({ service }: ServiceDetailsProps) {
             <h5 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
               Scenario
             </h5>
-            <p className="mt-1 text-sm text-card-foreground">{story.scenario}</p>
+            <p className="mt-1 text-sm text-card-foreground">
+              {story.scenario}
+            </p>
           </div>
           <div>
             <h5 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
               Challenge
             </h5>
-            <p className="mt-1 text-sm text-card-foreground">{story.challenge}</p>
+            <p className="mt-1 text-sm text-card-foreground">
+              {story.challenge}
+            </p>
           </div>
           <div>
             <h5 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
               Solution
             </h5>
-            <p className="mt-1 text-sm text-card-foreground">{story.solution}</p>
+            <p className="mt-1 text-sm text-card-foreground">
+              {story.solution}
+            </p>
           </div>
           <div>
             <h5 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
@@ -291,7 +303,10 @@ export default function ServiceDetails({ service }: ServiceDetailsProps) {
                       Icon
                     </h4>
                     <div className="mt-2 flex items-center gap-2 rounded-xl bg-background px-3 py-2 shadow-sm shadow-black/5">
-                      <Icon name={service.icon} className="h-5 w-5 text-accent" />
+                      <Icon
+                        name={service.icon}
+                        className="h-5 w-5 text-accent"
+                      />
                       <p className="font-mono text-sm text-card-foreground">
                         {service.icon}
                       </p>
@@ -366,7 +381,9 @@ export default function ServiceDetails({ service }: ServiceDetailsProps) {
                 </div>
               </div>
             )}
-            {(service.seoTitle || service.seoDescription || service.seoKeywords) && (
+            {(service.seoTitle ||
+              service.seoDescription ||
+              service.seoKeywords) && (
               <div className="mt-8 rounded-2xl bg-muted/20 p-5 shadow-sm shadow-black/5">
                 <h3 className="mb-4 text-lg font-semibold">SEO</h3>
                 <div className="grid gap-6 md:grid-cols-2">

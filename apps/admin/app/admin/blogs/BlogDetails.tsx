@@ -181,7 +181,8 @@ const bilacertArticleDetailsStyles = `
 `;
 
 function normalizeArticleHtml(html: string | null | undefined) {
-  if (!html) return '<p class="text-slate-400 italic">No content to display yet...</p>';
+  if (!html)
+    return '<p class="text-slate-400 italic">No content to display yet...</p>';
 
   return html
     .replace(/<br\s*\/?>(\s*)/gi, " ")
@@ -301,7 +302,9 @@ export default function BlogDetails({ blog }: BlogDetailsProps) {
                   <Badge variant={blog.featured ? "default" : "secondary"}>
                     {blog.featured ? "Featured" : "Not Featured"}
                   </Badge>
-                  {blog.category && <Badge variant="outline">{blog.category}</Badge>}
+                  {blog.category && (
+                    <Badge variant="outline">{blog.category}</Badge>
+                  )}
                 </div>
                 <CardTitle className="max-w-4xl text-3xl leading-tight">
                   {blog.title}
@@ -446,7 +449,8 @@ export default function BlogDetails({ blog }: BlogDetailsProps) {
               <div>
                 <CardTitle className="text-lg">Content Preview</CardTitle>
                 <CardDescription>
-                  Public article content rendered with the Bilacert article style.
+                  Public article content rendered with the Bilacert article
+                  style.
                 </CardDescription>
               </div>
               <Button asChild>

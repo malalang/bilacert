@@ -2,8 +2,8 @@ import { ArrowRight, BookOpen, Calendar, Clock, User } from "lucide-react";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import HeroSection from "@/components/HeroSection";
 import BlogCard from "@/components/cards/BlogCard";
+import HeroSection from "@/components/HeroSection";
 import { Badge } from "@/components/ui/badge";
 import { getCachedPublishedBlogs } from "../_lib/cached-public-data";
 

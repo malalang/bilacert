@@ -169,7 +169,11 @@ export default function FAQContent() {
         description="Find clear answers about ICASA and NRCS compliance, type approvals, licensing, and regulatory requirements in South Africa."
         actions={[
           { label: "Contact Us", href: "/contact" },
-          { label: "Explore Services", href: "/services", variant: "secondary" },
+          {
+            label: "Explore Services",
+            href: "/services",
+            variant: "secondary",
+          },
         ]}
         highlights={heroHighlights}
       />

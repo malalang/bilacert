@@ -1,5 +1,5 @@
 {
-  "extends": "@bilacert/typescript-config/base.json",
+  "extends": "@bilacert/typescript-config/nextjs.json",
   "compilerOptions": {
     "outDir": "dist",
     "rootDir": "src"

@@ -82,7 +82,7 @@ export default async function EditBlogPage({
         <CardHeader>
           <CardTitle>Edit Blog Post</CardTitle>
           <CardDescription>
-            You are currently editing the details for: {" "}
+            You are currently editing the details for:{" "}
             <span className="font-semibold text-foreground">{blog.title}</span>
           </CardDescription>
         </CardHeader>

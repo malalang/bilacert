@@ -2,7 +2,6 @@
 
 import { Icon } from "@bilacert/shared/Icon";
 import type { BlogPost, Contact, Submission } from "@bilacert/shared/types";
-import { useDashboardData } from "@bilacert/supabase/hooks/useDashboardData";
 import { format, isValid, parseISO } from "date-fns";
 import {
   Archive,
@@ -12,12 +11,12 @@ import {
   Clock,
   Eye,
   Inbox,
+  type LucideIcon,
   MessageSquare,
   Newspaper,
   Package,
   Users,
   XCircle,
-  type LucideIcon,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -25,6 +24,7 @@ import AnalysesHeader from "@/components/admin/AnalysesHeader";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
+import { useDashboardData } from "@/lib/hooks/useDashboardData";
 
 const statusStyles: Record<
   string,
@@ -142,7 +142,8 @@ function BlogInsightCard({ blog }: { blog: BlogPost }) {
       <div className="relative h-28 w-32 shrink-0 overflow-hidden bg-muted">
         <Image
           src={
-            blog.featuredImage || `https://picsum.photos/seed/${blog.id}/600/400`
+            blog.featuredImage ||
+            `https://picsum.photos/seed/${blog.id}/600/400`
           }
           alt={blog.title}
           fill
@@ -152,7 +153,9 @@ function BlogInsightCard({ blog }: { blog: BlogPost }) {
       <div className="flex min-w-0 flex-1 flex-col justify-between p-4">
         <div>
           <div className="mb-2 flex flex-wrap items-center gap-2">
-            {blog.category && <Badge variant="secondary">{blog.category}</Badge>}
+            {blog.category && (
+              <Badge variant="secondary">{blog.category}</Badge>
+            )}
             <Badge variant={blog.published ? "default" : "outline"}>
               {blog.published ? "Published" : "Draft"}
             </Badge>
@@ -340,7 +343,8 @@ export default function DashboardClient() {
                           <Progress
                             value={
                               stats.totalSubmissions > 0
-                                ? (item.submissions / stats.totalSubmissions) * 100
+                                ? (item.submissions / stats.totalSubmissions) *
+                                  100
                                 : 0
                             }
                             className={`h-2 ${progressColorClasses[index % progressColorClasses.length]}`}

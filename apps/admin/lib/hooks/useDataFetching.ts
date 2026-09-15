@@ -1,8 +1,11 @@
 "use client";
 
+import {
+  createSupabaseBrowserClient,
+  isSupabaseConfigured,
+} from "@bilacert/supabase/client";
+import type { Database } from "@bilacert/supabase/supabaseType";
 import { useCallback, useEffect, useState } from "react";
-import { createSupabaseBrowserClient, isSupabaseConfigured } from "../client";
-import type { Database } from "../supabaseType";
 
 type PublicTableName = keyof Database["public"]["Tables"] & string;
 

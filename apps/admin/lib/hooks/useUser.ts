@@ -1,8 +1,11 @@
 "use client";
 
+import {
+  createSupabaseBrowserClient,
+  isSupabaseConfigured,
+} from "@bilacert/supabase/client";
 import type { Session, User } from "@supabase/supabase-js";
 import { useEffect, useState } from "react";
-import { createSupabaseBrowserClient, isSupabaseConfigured } from "../client";
 
 export function useUser() {
   const [user, setUser] = useState<User | null>(null);

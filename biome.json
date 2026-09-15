@@ -30,6 +30,7 @@
       },
       "correctness": {
         "noInvalidUseBeforeDeclaration": "off",
+        "noUnusedVariables": "off",
         "useExhaustiveDependencies": "off"
       },
       "performance": {

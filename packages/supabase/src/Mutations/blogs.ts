@@ -77,7 +77,9 @@ async function createAuthorizedBlogAdminClient() {
     .maybeSingle();
 
   if (profileError) {
-    throw new Error(`Unable to verify admin permissions: ${profileError.message}`);
+    throw new Error(
+      `Unable to verify admin permissions: ${profileError.message}`,
+    );
   }
 
   const metadataRole =
@@ -87,7 +89,9 @@ async function createAuthorizedBlogAdminClient() {
   const role = (profile?.role ?? metadataRole ?? "").trim().toLowerCase();
 
   if (profile?.isActive === false || !ADMIN_ROLES.has(role)) {
-    throw new Error("Only active administrator accounts can manage blog posts.");
+    throw new Error(
+      "Only active administrator accounts can manage blog posts.",
+    );
   }
 
   return adminClient;

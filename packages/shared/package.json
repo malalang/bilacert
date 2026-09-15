@@ -12,7 +12,13 @@
   },
   "dependencies": {
     "clsx": "catalog:",
+    "lucide-react": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
     "tailwind-merge": "catalog:",
     "typescript": "catalog:"
+  },
+  "devDependencies": {
+    "@bilacert/typescript-config": "workspace:*"
   }
 }

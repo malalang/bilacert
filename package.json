@@ -14,6 +14,7 @@
     "gen:types": "pnpm --filter @bilacert/supabase supabase:types"
   },
   "devDependencies": {
-    "turbo": "^2.9.14"
+    "@biomejs/biome": "catalog:",
+    "turbo": "catalog:"
   }
 }

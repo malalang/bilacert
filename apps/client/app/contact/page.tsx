@@ -112,8 +112,8 @@ export default function ContactPage() {
             Need Immediate Assistance?
           </h2>
           <p className="text-xl text-gray-600 mb-8">
-            For urgent compliance matters, call us directly at {businessInfo.phone} or
-            reach out via WhatsApp for instant support.
+            For urgent compliance matters, call us directly at{" "}
+            {businessInfo.phone} or reach out via WhatsApp for instant support.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a

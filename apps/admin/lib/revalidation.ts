@@ -86,7 +86,8 @@ export async function triggerRevalidation(request: RevalidationRequest) {
     } catch (error) {
       failedAttempts.push({
         url: revalidationUrl.origin,
-        reason: error instanceof Error ? error.message : "Unknown request error",
+        reason:
+          error instanceof Error ? error.message : "Unknown request error",
       });
     }
   }

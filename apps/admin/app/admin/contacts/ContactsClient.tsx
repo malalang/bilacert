@@ -1,10 +1,10 @@
 "use client";
 
 import type { Contact } from "@bilacert/shared/types";
-import { useContacts } from "@bilacert/supabase/hooks/useContacts";
 import { ClipboardList, Mail, MessageSquare, Phone } from "lucide-react";
 import AdminPage from "@/components/admin/AdminPage";
 import AnalysesHeader from "@/components/admin/AnalysesHeader";
+import { useContacts } from "@/lib/hooks/useContacts";
 import ContactCard from "./ContactCard";
 import DeleteContactDialog from "./DeleteContactDialog";
 

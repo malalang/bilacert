@@ -1,7 +1,6 @@
 "use client";
 
 import type { Testimonial } from "@bilacert/shared/types";
-import { useTestimonials } from "@bilacert/supabase/hooks/useTestimonials";
 import { format } from "date-fns";
 import { MoreHorizontal } from "lucide-react";
 import Link from "next/link";
@@ -23,6 +22,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useTestimonials } from "@/lib/hooks/useTestimonials";
 import DeleteTestimonialDialog from "./DeleteTestimonialDialog";
 import TestimonialEmbed from "./TestimonialEmbed";
 

@@ -115,7 +115,9 @@ export default function HeroSection({
   }
 
   if (!imageSrc || !imageAlt) {
-    throw new Error("HeroSection image variant requires imageSrc and imageAlt.");
+    throw new Error(
+      "HeroSection image variant requires imageSrc and imageAlt.",
+    );
   }
 
   return (
@@ -162,7 +164,10 @@ export default function HeroSection({
                 }
               >
                 {actions.map((action) => (
-                  <HeroLink key={`${action.label}-${action.href}`} action={action} />
+                  <HeroLink
+                    key={`${action.label}-${action.href}`}
+                    action={action}
+                  />
                 ))}
               </div>
             )}

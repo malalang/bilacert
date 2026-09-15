@@ -13,7 +13,10 @@ const ToggleGroupContext = React.createContext<ToggleGroupContextValue | null>(
   null,
 );
 
-type ToggleGroupProps = Omit<React.HTMLAttributes<HTMLDivElement>, "onChange"> & {
+type ToggleGroupProps = Omit<
+  React.HTMLAttributes<HTMLDivElement>,
+  "onChange"
+> & {
   value?: string[];
   defaultValue?: string[];
   onValueChange?: (value: string[]) => void;

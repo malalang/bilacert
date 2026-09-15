@@ -22,7 +22,8 @@ export default function BlogCard({ post }: BlogCardProps) {
       <div className="relative h-48 w-full overflow-hidden">
         <Image
           src={
-            post.featuredImage || `https://picsum.photos/seed/${post.id}/600/400`
+            post.featuredImage ||
+            `https://picsum.photos/seed/${post.id}/600/400`
           }
           alt={post.title}
           fill

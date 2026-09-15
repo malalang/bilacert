@@ -1,7 +1,6 @@
 "use client";
 
 import { createSupabaseBrowserClient } from "@bilacert/supabase/client";
-import { useUser } from "@bilacert/supabase/hooks/useUser";
 import { ChevronDown, LogOut, User as UserIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -26,6 +25,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { useToast } from "@/hooks/use-toast";
+import { useUser } from "@/lib/hooks/useUser";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 
 const supabase = createSupabaseBrowserClient();

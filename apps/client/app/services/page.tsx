@@ -1,8 +1,8 @@
 import { CheckCircle, Clock, Users } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
-import HeroSection from "@/components/HeroSection";
 import ServiceCard from "@/components/cards/ServiceCard";
+import HeroSection from "@/components/HeroSection";
 import { Button } from "@/components/ui/button";
 import { getCachedServices } from "../_lib/cached-public-data";
 
@@ -84,7 +84,11 @@ export default async function ServicesPage() {
         description="Licensing, certification, and regulatory approval support for businesses that need clear guidance and reliable compliance outcomes."
         actions={[
           { label: "Get Free Consultation", href: "/contact" },
-          { label: "Explore Services", href: "#services-grid", variant: "secondary" },
+          {
+            label: "Explore Services",
+            href: "#services-grid",
+            variant: "secondary",
+          },
         ]}
         highlights={heroHighlights}
       />

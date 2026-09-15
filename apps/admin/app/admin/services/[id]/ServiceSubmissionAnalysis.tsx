@@ -2,20 +2,20 @@
 
 import type { Service } from "@bilacert/contracts/service";
 import type { Submission, SubmissionStatus } from "@bilacert/shared/types";
-import { useSubmissions } from "@bilacert/supabase/hooks/useSubmissions";
 import {
   Archive,
   CheckCircle2,
   Clock,
   Inbox,
-  XCircle,
   type LucideIcon,
+  XCircle,
 } from "lucide-react";
 import { useMemo, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useSubmissions } from "@/lib/hooks/useSubmissions";
+import { SubmissionsLineChart } from "../../analysis/charts";
 import DeleteSubmissionDialog from "../../form_submissions/DeleteSubmissionDialog";
 import SubmissionCard from "../../form_submissions/SubmissionCard";
-import { SubmissionsLineChart } from "../../analysis/charts";
 
 type StatusConfig = {
   label: string;
@@ -63,7 +63,8 @@ function getServiceSubmissions(service: Service, submissions: Submission[]) {
   return submissions.filter((submission) => {
     const submissionServiceName = submission.serviceName?.trim().toLowerCase();
     return (
-      submission.serviceId === service.id || submissionServiceName === serviceTitle
+      submission.serviceId === service.id ||
+      submissionServiceName === serviceTitle
     );
   });
 }
@@ -139,10 +140,7 @@ export default function ServiceSubmissionAnalysis({
 
       <div className="grid gap-3 md:grid-cols-5">
         {statusCounts.map(({ label, value, count, Icon, className }) => (
-          <div
-            key={value}
-            className={`rounded-xl p-4 shadow-sm ${className}`}
-          >
+          <div key={value} className={`rounded-xl p-4 shadow-sm ${className}`}>
             <div className="flex items-center justify-between gap-3">
               <div className="flex items-center gap-2">
                 <Icon className="h-4 w-4" />

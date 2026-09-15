@@ -4,10 +4,10 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { FaFacebook, FaLinkedin, FaTwitter } from "react-icons/fa";
-import HeroSection from "@/components/HeroSection";
 import { RelatedPosts } from "@/components/blog/RelatedPosts";
 import { StickyShare } from "@/components/blog/StickyShare";
 import { ViewTracker } from "@/components/blog/view";
+import HeroSection from "@/components/HeroSection";
 import {
   getCachedBlogBySlug,
   getCachedBlogPostsByCategory,
@@ -26,7 +26,8 @@ interface Props {
 }
 
 function normalizeArticleHtml(html: string | null | undefined) {
-  if (!html) return '<p class="text-slate-400 italic">No content to display yet...</p>';
+  if (!html)
+    return '<p class="text-slate-400 italic">No content to display yet...</p>';
 
   return html
     .replace(/<br\s*\/?>(\s*)/gi, " ")
@@ -112,7 +113,9 @@ export default async function BlogPostPage({ params }: Props) {
         imageAlt={post.title}
         eyebrow={post.category || "Bilacert Insight"}
         title={post.title}
-        description={post.excerpt || "Expert compliance guidance from Bilacert."}
+        description={
+          post.excerpt || "Expert compliance guidance from Bilacert."
+        }
         actions={[
           { label: "Get Free Consultation", href: "/contact" },
           { label: "View All Articles", href: "/blog", variant: "secondary" },

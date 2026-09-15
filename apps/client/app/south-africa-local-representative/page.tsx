@@ -1,5 +1,3 @@
-import type { Metadata } from "next";
-import Link from "next/link";
 import {
   ArrowRight,
   CheckCircle2,
@@ -10,6 +8,8 @@ import {
   ShieldCheck,
   TestTube2,
 } from "lucide-react";
+import type { Metadata } from "next";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
 export const metadata: Metadata = {
@@ -91,10 +91,10 @@ export default function SouthAfricaLocalRepresentativePage() {
               Your Regulatory Representative in South Africa
             </h1>
             <p className="mt-6 max-w-3xl text-lg leading-8 text-gray-200 sm:text-xl">
-              Expand into the South African market with a trusted local compliance
-              partner. BILACERT represents international manufacturers, test
-              laboratories and certification partners for ICASA and NRCS regulatory
-              processes.
+              Expand into the South African market with a trusted local
+              compliance partner. BILACERT represents international
+              manufacturers, test laboratories and certification partners for
+              ICASA and NRCS regulatory processes.
             </p>
             <div className="mt-10 flex flex-col gap-4 sm:flex-row">
               <Button size="lg" asChild>
@@ -103,8 +103,15 @@ export default function SouthAfricaLocalRepresentativePage() {
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
-              <Button size="lg" variant="outline" asChild className="border-white/30 bg-transparent text-white hover:bg-white/10 hover:text-white">
-                <Link href="/south-africa-market-access">Explore Market Access</Link>
+              <Button
+                size="lg"
+                variant="outline"
+                asChild
+                className="border-white/30 bg-transparent text-white hover:bg-white/10 hover:text-white"
+              >
+                <Link href="/south-africa-market-access">
+                  Explore Market Access
+                </Link>
               </Button>
             </div>
           </div>
@@ -121,9 +128,10 @@ export default function SouthAfricaLocalRepresentativePage() {
               Navigate South African regulation with confidence
             </h2>
             <p className="mt-5 text-lg leading-8 text-gray-600">
-              International companies do not need to navigate South African regulatory
-              processes alone. BILACERT provides local compliance support from technical
-              document review through regulatory submission, approval and ongoing support.
+              International companies do not need to navigate South African
+              regulatory processes alone. BILACERT provides local compliance
+              support from technical document review through regulatory
+              submission, approval and ongoing support.
             </p>
           </div>
 
@@ -131,12 +139,19 @@ export default function SouthAfricaLocalRepresentativePage() {
             {capabilities.map((item) => {
               const Icon = item.icon;
               return (
-                <article key={item.title} className="rounded-2xl border border-gray-200 bg-white p-7 shadow-sm transition-shadow hover:shadow-md">
+                <article
+                  key={item.title}
+                  className="rounded-2xl border border-gray-200 bg-white p-7 shadow-sm transition-shadow hover:shadow-md"
+                >
                   <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-accent/10 text-accent">
                     <Icon className="h-6 w-6" />
                   </div>
-                  <h3 className="text-xl font-semibold text-primary">{item.title}</h3>
-                  <p className="mt-3 leading-7 text-gray-600">{item.description}</p>
+                  <h3 className="text-xl font-semibold text-primary">
+                    {item.title}
+                  </h3>
+                  <p className="mt-3 leading-7 text-gray-600">
+                    {item.description}
+                  </p>
                 </article>
               );
             })}
@@ -155,13 +170,18 @@ export default function SouthAfricaLocalRepresentativePage() {
                 Are You an International Testing Laboratory?
               </h2>
               <p className="mt-5 text-lg leading-8 text-gray-600">
-                Partner with BILACERT to provide your clients with a complete South
-                African market-access solution. Your laboratory handles testing.
-                <span className="font-semibold text-primary"> BILACERT handles South Africa.</span>
+                Partner with BILACERT to provide your clients with a complete
+                South African market-access solution. Your laboratory handles
+                testing.
+                <span className="font-semibold text-primary">
+                  {" "}
+                  BILACERT handles South Africa.
+                </span>
               </p>
               <p className="mt-4 leading-7 text-gray-600">
-                When your clients require ICASA Type Approval, NRCS LOA or South African
-                regulatory guidance, BILACERT can act as your local compliance partner.
+                When your clients require ICASA Type Approval, NRCS LOA or South
+                African regulatory guidance, BILACERT can act as your local
+                compliance partner.
               </p>
             </div>
 
@@ -192,9 +212,9 @@ export default function SouthAfricaLocalRepresentativePage() {
               Need a South African Regulatory Partner?
             </h2>
             <p className="mx-auto mt-5 max-w-2xl text-lg leading-8 text-gray-200">
-              Send us your product datasheet and available test reports. Our compliance
-              team will assess the South African regulatory requirements and advise on the
-              next steps.
+              Send us your product datasheet and available test reports. Our
+              compliance team will assess the South African regulatory
+              requirements and advise on the next steps.
             </p>
             <div className="mt-8 flex flex-col justify-center gap-4 sm:flex-row">
               <Button size="lg" asChild>
@@ -203,8 +223,15 @@ export default function SouthAfricaLocalRepresentativePage() {
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
-              <Button size="lg" variant="outline" asChild className="border-white/30 bg-transparent text-white hover:bg-white/10 hover:text-white">
-                <Link href="/south-africa-market-access">South Africa Market Access</Link>
+              <Button
+                size="lg"
+                variant="outline"
+                asChild
+                className="border-white/30 bg-transparent text-white hover:bg-white/10 hover:text-white"
+              >
+                <Link href="/south-africa-market-access">
+                  South Africa Market Access
+                </Link>
               </Button>
             </div>
           </div>
@@ -215,8 +242,8 @@ export default function SouthAfricaLocalRepresentativePage() {
         <div className="mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
           <p className="text-sm leading-6 text-gray-500">
             BILACERT is positioned as an independent regulatory consultancy and
-            representative. This page does not imply accreditation by, affiliation with,
-            or endorsement by ICASA or NRCS.
+            representative. This page does not imply accreditation by,
+            affiliation with, or endorsement by ICASA or NRCS.
           </p>
         </div>
       </section>

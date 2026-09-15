@@ -2,8 +2,6 @@
 
 import type { Service } from "@bilacert/contracts/service";
 import type { Submission, SubmissionStatus } from "@bilacert/shared/types";
-import { useServices } from "@bilacert/supabase/hooks/useServices";
-import { useSubmissions } from "@bilacert/supabase/hooks/useSubmissions";
 import {
   Archive,
   BarChart3,
@@ -11,9 +9,9 @@ import {
   Clock,
   Inbox,
   LayoutGrid,
+  type LucideIcon,
   Search,
   XCircle,
-  type LucideIcon,
 } from "lucide-react";
 import { useState } from "react";
 import AnalysesHeader from "@/components/admin/AnalysesHeader";
@@ -28,6 +26,8 @@ import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useServices } from "@/lib/hooks/useServices";
+import { useSubmissions } from "@/lib/hooks/useSubmissions";
 import DeleteSubmissionDialog from "./DeleteSubmissionDialog";
 import SubmissionCard from "./SubmissionCard";
 
@@ -77,7 +77,8 @@ function getSubmissionStatusTotal(
   submissions: Submission[],
   status: SubmissionStatus,
 ) {
-  return submissions.filter((submission) => submission.status === status).length;
+  return submissions.filter((submission) => submission.status === status)
+    .length;
 }
 
 function getServiceSubmissions(service: Service, submissions: Submission[]) {
@@ -139,52 +140,60 @@ function TopServicesBySubmissions({
       <CardContent>
         <div className="space-y-4">
           {serviceSubmissionRows.length > 0 ? (
-            serviceSubmissionRows.map(({ service, total, statusCounts }, index) => (
-              <div
-                key={service.id}
-                className="rounded-xl bg-muted/20 p-4 shadow-sm shadow-black/5"
-              >
-                <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4">
-                  <div className="min-w-0">
-                    <p className="truncate text-sm font-semibold text-primary">
-                      {service.title}
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      {service.category || "Uncategorized"}
-                    </p>
+            serviceSubmissionRows.map(
+              ({ service, total, statusCounts }, index) => (
+                <div
+                  key={service.id}
+                  className="rounded-xl bg-muted/20 p-4 shadow-sm shadow-black/5"
+                >
+                  <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4">
+                    <div className="min-w-0">
+                      <p className="truncate text-sm font-semibold text-primary">
+                        {service.title}
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        {service.category || "Uncategorized"}
+                      </p>
+                    </div>
+                    <span className="font-mono text-sm font-semibold tabular-nums">
+                      {total}
+                    </span>
                   </div>
-                  <span className="font-mono text-sm font-semibold tabular-nums">
-                    {total}
-                  </span>
+                  <Progress
+                    value={
+                      submissions.length > 0
+                        ? (total / submissions.length) * 100
+                        : 0
+                    }
+                    className={`mt-3 h-2 ${
+                      [
+                        "[&>div]:bg-chart-1",
+                        "[&>div]:bg-chart-2",
+                        "[&>div]:bg-chart-3",
+                        "[&>div]:bg-chart-4",
+                        "[&>div]:bg-chart-5",
+                      ][index % 5]
+                    }`}
+                  />
+                  <div className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-5">
+                    {statusCounts
+                      .filter(({ count }) => count > 0)
+                      .map(({ label, value, count, Icon, className }) => (
+                        <div
+                          key={value}
+                          className={`flex items-center justify-between gap-2 rounded-lg px-3 py-2 text-xs font-semibold shadow-sm ${className}`}
+                        >
+                          <span className="flex items-center gap-1.5">
+                            <Icon className="h-3.5 w-3.5" />
+                            {label}
+                          </span>
+                          <span className="tabular-nums">{count}</span>
+                        </div>
+                      ))}
+                  </div>
                 </div>
-                <Progress
-                  value={submissions.length > 0 ? (total / submissions.length) * 100 : 0}
-                  className={`mt-3 h-2 ${[
-                    "[&>div]:bg-chart-1",
-                    "[&>div]:bg-chart-2",
-                    "[&>div]:bg-chart-3",
-                    "[&>div]:bg-chart-4",
-                    "[&>div]:bg-chart-5",
-                  ][index % 5]}`}
-                />
-                <div className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-5">
-                  {statusCounts
-                    .filter(({ count }) => count > 0)
-                    .map(({ label, value, count, Icon, className }) => (
-                      <div
-                        key={value}
-                        className={`flex items-center justify-between gap-2 rounded-lg px-3 py-2 text-xs font-semibold shadow-sm ${className}`}
-                      >
-                        <span className="flex items-center gap-1.5">
-                          <Icon className="h-3.5 w-3.5" />
-                          {label}
-                        </span>
-                        <span className="tabular-nums">{count}</span>
-                      </div>
-                    ))}
-                </div>
-              </div>
-            ))
+              ),
+            )
           ) : (
             <div className="rounded-xl bg-muted/30 py-10 text-center text-sm text-muted-foreground">
               No service submissions yet.

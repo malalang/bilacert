@@ -10,7 +10,9 @@ export function RelatedPosts({ posts }: RelatedPostsProps) {
     <section className="py-12 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-10 max-w-2xl">
-          <h2 className="text-3xl font-bold text-primary mb-3">Related Posts</h2>
+          <h2 className="text-3xl font-bold text-primary mb-3">
+            Related Posts
+          </h2>
           <p className="text-gray-600">
             Continue reading more compliance insights and practical guidance.
           </p>

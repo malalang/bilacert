@@ -69,7 +69,10 @@ export function WhatIsSection({
                     {licenseTypes.map((type) => {
                       const Icon = getServiceIcon(type.icon);
                       return (
-                        <div key={type.title} className="flex items-start space-x-4">
+                        <div
+                          key={type.title}
+                          className="flex items-start space-x-4"
+                        >
                           <div className="bg-accent p-2 rounded-lg">
                             <Icon className="h-6 w-6 text-white" />
                           </div>

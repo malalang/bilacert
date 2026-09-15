@@ -2,11 +2,11 @@
 
 import { contactSchema } from "@bilacert/contracts/contact";
 import type { Contact } from "@bilacert/shared/types";
-import { createSupabaseServerClient } from "@bilacert/supabase/server";
 import {
   deleteContact as deleteContactMutation,
   upsertContact as upsertContactMutation,
 } from "@bilacert/supabase/Mutations/contacts";
+import { createSupabaseServerClient } from "@bilacert/supabase/server";
 import { revalidatePath } from "next/cache";
 
 export async function getContacts() {

@@ -175,7 +175,8 @@ export default function BlogForm({ blog, blogId }: BlogFormProps) {
         router.push(`/admin/blogs/${result.blog.id}`);
         router.refresh();
       } catch (error) {
-        const message = error instanceof Error ? error.message : "Unknown error";
+        const message =
+          error instanceof Error ? error.message : "Unknown error";
         console.error("[bilacert-admin/blogs] form submit threw", {
           ...getBlogLogPayload(payload),
           message,
@@ -205,7 +206,9 @@ export default function BlogForm({ blog, blogId }: BlogFormProps) {
     // Timeout gives the TabsContent a chance to mount its fields.
     setTimeout(() => {
       try {
-        const el = document.querySelector(`[name="${firstField}"]`) as HTMLElement | null;
+        const el = document.querySelector(
+          `[name="${firstField}"]`,
+        ) as HTMLElement | null;
         if (el) {
           el.scrollIntoView({ behavior: "smooth", block: "center" });
           el.focus();
@@ -401,7 +404,9 @@ export default function BlogForm({ blog, blogId }: BlogFormProps) {
                       <FormControl>
                         <BlogEditor
                           featuredImage={watch("featuredImage")}
-                          onImageSelect={(url) => setValue("featuredImage", url)}
+                          onImageSelect={(url) =>
+                            setValue("featuredImage", url)
+                          }
                           value={field.value ?? ""}
                           onChange={field.onChange}
                           title={title}
@@ -480,7 +485,9 @@ export default function BlogForm({ blog, blogId }: BlogFormProps) {
                     <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
                       <div className="space-y-0.5">
                         <FormLabel>Published</FormLabel>
-                        <FormDescription>Make this post visible.</FormDescription>
+                        <FormDescription>
+                          Make this post visible.
+                        </FormDescription>
                       </div>
                       <FormControl>
                         <Switch

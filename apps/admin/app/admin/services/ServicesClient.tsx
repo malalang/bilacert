@@ -2,19 +2,17 @@
 
 import type { Service } from "@bilacert/contracts/service";
 import type { Submission, SubmissionStatus } from "@bilacert/shared/types";
-import { useServices } from "@bilacert/supabase/hooks/useServices";
-import { useSubmissions } from "@bilacert/supabase/hooks/useSubmissions";
 import {
   Archive,
   BarChart3,
   CheckCircle2,
   Clock,
   Inbox,
+  type LucideIcon,
   MoreHorizontal,
   Package,
   Sparkles,
   XCircle,
-  type LucideIcon,
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -38,6 +36,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useServices } from "@/lib/hooks/useServices";
+import { useSubmissions } from "@/lib/hooks/useSubmissions";
 import DeleteServiceDialog from "./DeleteServiceDialog";
 
 const SERVICE_IMAGE_FALLBACK = "/logo.jpg";
@@ -134,8 +134,9 @@ function ServicesAnalysis({
   const draftServices = services.length - publishedServices.length;
   const statusTotals = submissionStatuses.map((status) => ({
     ...status,
-    count: submissions.filter((submission) => submission.status === status.value)
-      .length,
+    count: submissions.filter(
+      (submission) => submission.status === status.value,
+    ).length,
   }));
 
   return (
@@ -181,7 +182,10 @@ function ServicesAnalysis({
         <CardContent>
           <div className="grid gap-3 md:grid-cols-5">
             {statusTotals.map(({ label, value, count, Icon, className }) => (
-              <div key={value} className={`rounded-xl p-4 shadow-sm ${className}`}>
+              <div
+                key={value}
+                className={`rounded-xl p-4 shadow-sm ${className}`}
+              >
                 <div className="flex items-center justify-between gap-3">
                   <span className="flex items-center gap-2 text-sm font-semibold">
                     <Icon className="h-4 w-4" />
@@ -213,7 +217,9 @@ const ServiceCard = ({
 }) => {
   const router = useRouter();
   const imageUrl =
-    service.thumbnail?.trim() || service.image?.trim() || SERVICE_IMAGE_FALLBACK;
+    service.thumbnail?.trim() ||
+    service.image?.trim() ||
+    SERVICE_IMAGE_FALLBACK;
   const visibleSubmissionStatusCounts = submissionStatusCounts.filter(
     ({ count }) => count > 0,
   );
@@ -321,7 +327,9 @@ const ServiceCard = ({
                 )}
               </div>
             ) : (
-              <p className="text-xs text-muted-foreground">No submissions yet</p>
+              <p className="text-xs text-muted-foreground">
+                No submissions yet
+              </p>
             )}
           </div>
         </CardContent>

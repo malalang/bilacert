@@ -1,6 +1,6 @@
 import {
-  revalidationPayloadSchema,
   type RevalidationMode,
+  revalidationPayloadSchema,
 } from "@bilacert/contracts/revalidation";
 import { revalidatePath, revalidateTag } from "next/cache";
 import { type NextRequest, NextResponse } from "next/server";
@@ -30,17 +30,17 @@ export async function POST(request: NextRequest) {
   }
 
   const body = parsed.data;
-  const tags = [
-    ...(body.tags ?? []),
-    ...(body.tag ? [body.tag] : []),
-  ].filter((tag) => tag.length > 0);
+  const tags = [...(body.tags ?? []), ...(body.tag ? [body.tag] : [])].filter(
+    (tag) => tag.length > 0,
+  );
   const paths = [
     ...(body.paths ?? []),
     ...(body.path ? [body.path] : []),
   ].filter((path) => path.length > 0 && path.startsWith("/"));
   const uniqueTags = [...new Set(tags)];
   const uniquePaths = [...new Set(paths)];
-  const mode: RevalidationMode = body.mode === "immediate" ? "immediate" : "max";
+  const mode: RevalidationMode =
+    body.mode === "immediate" ? "immediate" : "max";
 
   if (uniqueTags.length === 0 && uniquePaths.length === 0) {
     return NextResponse.json(

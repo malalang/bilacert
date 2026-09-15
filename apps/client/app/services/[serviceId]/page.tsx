@@ -3,7 +3,12 @@ import type {
   ProcessStep,
   SuccessStory as TSuccessStory,
 } from "@bilacert/shared/types";
-import { CheckCircle2, ClipboardList, FileCheck2, ListChecks } from "lucide-react";
+import {
+  CheckCircle2,
+  ClipboardList,
+  FileCheck2,
+  ListChecks,
+} from "lucide-react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
@@ -49,7 +54,10 @@ function DetailListCard({
       </p>
       <ul className="space-y-3">
         {items.map((item) => (
-          <li key={item} className="flex items-start gap-3 text-sm text-gray-700">
+          <li
+            key={item}
+            className="flex items-start gap-3 text-sm text-gray-700"
+          >
             <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-accent" />
             <span>{item}</span>
           </li>

@@ -138,6 +138,9 @@ catalogs:
     tailwindcss-animate:
       specifier: ^1.0.7
       version: 1.0.7
+    turbo:
+      specifier: ^2.9.14
+      version: 2.9.18
     typescript:
       specifier: 5.9.3
       version: 5.9.3
@@ -152,8 +155,11 @@ importers:
 
   .:
     devDependencies:
+      '@biomejs/biome':
+        specifier: 'catalog:'
+        version: 2.2.0
       turbo:
-        specifier: ^2.9.14
+        specifier: 'catalog:'
         version: 2.9.18
 
   apps/admin:
@@ -449,12 +455,25 @@ importers:
       clsx:
         specifier: 'catalog:'
         version: 2.1.1
+      lucide-react:
+        specifier: 'catalog:'
+        version: 1.17.0(react@19.2.4)
+      react:
+        specifier: 'catalog:'
+        version: 19.2.4
+      react-dom:
+        specifier: 'catalog:'
+        version: 19.2.4(react@19.2.4)
       tailwind-merge:
         specifier: 'catalog:'
         version: 3.6.0
       typescript:
         specifier: 'catalog:'
         version: 5.9.3
+    devDependencies:
+      '@bilacert/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
 
   packages/supabase:
     dependencies:
@@ -473,6 +492,10 @@ importers:
       typescript:
         specifier: 'catalog:'
         version: 5.9.3
+    devDependencies:
+      '@bilacert/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
 
   packages/typescript-config: {}
 
