@@ -213,7 +213,7 @@ export default function BlogForm({ blog, blogId }: BlogFormProps) {
           el.scrollIntoView({ behavior: "smooth", block: "center" });
           el.focus();
         }
-      } catch (e) {
+      } catch (_e) {
         // ignore
       }
     }, 100);

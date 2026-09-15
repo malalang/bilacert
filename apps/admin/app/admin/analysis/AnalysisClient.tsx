@@ -181,9 +181,10 @@ function FilterableLineCard({
   const [visibleKeys, setVisibleKeys] = useState(keys);
   const keySignature = keys.join("|");
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: keySignature represents keys stability
   useEffect(() => {
     setVisibleKeys(keys);
-  }, [keySignature, keys]);
+  }, [keySignature]);
 
   if (keys.length === 0) return null;
 
@@ -280,18 +281,18 @@ async function getAnalyticsData(
     if (views > 0)
       addActivity(blog.updatedAt ?? blog.createdAt, "blog_views_total", views);
   });
-  contacts.forEach((contact) =>
-    addActivity(contact.submittedAt, "contacts_submitted"),
-  );
+  contacts.forEach((contact) => {
+    addActivity(contact.submittedAt, "contacts_submitted");
+  });
   services.forEach((service) => {
     addActivity(service.createdAt, "services_created");
     addActivity(service.updatedAt, "services_updated");
     if (service.published)
       addActivity(service.updatedAt ?? service.createdAt, "services_published");
   });
-  testimonials.forEach((testimonial) =>
-    addActivity(testimonial.createdAt, "testimonials_created"),
-  );
+  testimonials.forEach((testimonial) => {
+    addActivity(testimonial.createdAt, "testimonials_created");
+  });
   submissions.forEach((submission) => {
     addActivity(submission.createdAt, "service_submissions");
     addActivity(submission.createdAt, "submissions_created");

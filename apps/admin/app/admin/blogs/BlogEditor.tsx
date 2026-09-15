@@ -210,7 +210,7 @@ export default function BlogEditor({
       .forEach((button) => {
         button.type = "button";
       });
-  }, [view]);
+  }, []);
 
   return (
     <Card className="bilacert-blog-editor relative z-0 mx-auto w-full max-w-5xl overflow-hidden p-4 md:p-8">
