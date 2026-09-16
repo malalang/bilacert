@@ -1,6 +1,6 @@
 "use client";
 
-import type { SubmissionType } from "@bilacert/shared/types";
+import type { SubmissionType } from "@bilacert/contracts/formSubmission";
 import { createSupabaseBrowserClient } from "@bilacert/supabase/client";
 import { Loader2 } from "lucide-react";
 import { useState } from "react";

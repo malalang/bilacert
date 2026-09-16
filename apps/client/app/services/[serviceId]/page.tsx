@@ -2,7 +2,7 @@ import type {
   PricingPlanType,
   ProcessStepType,
   SuccessStoryType as TSuccessStory,
-} from "@bilacert/shared/types";
+} from "@bilacert/contracts/service";
 import {
   CheckCircle2,
   ClipboardList,

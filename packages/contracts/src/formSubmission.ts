@@ -73,3 +73,22 @@ export const formSubmissionPayloadSchema = z.object({
 export type FormSubmissionInputType = z.infer<
   typeof formSubmissionPayloadSchema
 >;
+
+export interface SubmissionType {
+  id: string;
+  formType: FormType;
+  status: SubmissionStatus;
+  serviceId?: string;
+  serviceName?: string;
+  fullName: string;
+  email: string;
+  phone?: string;
+  company?: string;
+  industry?: string;
+  details?: unknown;
+  internalNotes?: string;
+  assignedTo?: string;
+  createdAt: string;
+  updatedAt: string;
+  completedAt?: string;
+}

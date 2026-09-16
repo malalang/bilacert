@@ -4,8 +4,7 @@
   "private": true,
   "exports": {
     "./cn": "./src/utils/cn.ts",
-    "./Icon": "./src/components/Icon.tsx",
-    "./types": "./src/types/domain.ts"
+    "./Icon": "./src/components/Icon.tsx"
   },
   "scripts": {
     "typecheck": "tsc --noEmit"

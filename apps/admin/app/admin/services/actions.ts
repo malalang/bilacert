@@ -1,5 +1,6 @@
 "use server";
 
+import type { ActionResult } from "@bilacert/contracts/actionResult";
 import { serviceSchema } from "@bilacert/contracts/service";
 import {
   deleteService as deleteServiceMutation,
@@ -8,11 +9,11 @@ import {
 import { revalidatePath } from "next/cache";
 import { triggerRevalidation } from "@/lib/revalidation";
 
-export async function upsertService(values: unknown) {
+export async function upsertService(values: unknown): Promise<ActionResult> {
   const parsedValues = serviceSchema.safeParse(values);
 
   if (!parsedValues.success) {
-    return { error: parsedValues.error.message };
+    return { ok: false, error: parsedValues.error.message };
   }
 
   const {
@@ -48,24 +49,24 @@ export async function upsertService(values: unknown) {
     await triggerRevalidation(result.revalidate);
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unknown error";
-    return { error: `Database error: ${message}` };
+    return { ok: false, error: `Database error: ${message}` };
   }
 
   revalidatePath("/admin/services");
 
-  return { error: null };
+  return { ok: true };
 }
 
-export async function deleteService(serviceId: string) {
+export async function deleteService(serviceId: string): Promise<ActionResult> {
   try {
     const result = await deleteServiceMutation(serviceId);
     await triggerRevalidation(result.revalidate);
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unknown error";
-    return { error: `Database error: ${message}` };
+    return { ok: false, error: `Database error: ${message}` };
   }
 
   revalidatePath("/admin/services");
 
-  return { error: null };
+  return { ok: true };
 }

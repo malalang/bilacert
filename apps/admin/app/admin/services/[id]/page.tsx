@@ -1,5 +1,5 @@
+import type { BlogRowType as BlogType } from "@bilacert/contracts/blog";
 import type { ServiceType } from "@bilacert/contracts/service";
-import type { BlogType } from "@bilacert/shared/types";
 import { createSupabaseBrowserClient } from "@bilacert/supabase/client";
 import { normalizeService } from "@bilacert/supabase/Queries/services";
 import { Eye } from "lucide-react";

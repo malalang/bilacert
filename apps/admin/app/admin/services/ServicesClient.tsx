@@ -1,10 +1,10 @@
 "use client";
 
-import type { ServiceType } from "@bilacert/contracts/service";
 import type {
   SubmissionStatus,
   SubmissionType,
-} from "@bilacert/shared/types";
+} from "@bilacert/contracts/formSubmission";
+import type { ServiceType } from "@bilacert/contracts/service";
 import {
   Archive,
   BarChart3,

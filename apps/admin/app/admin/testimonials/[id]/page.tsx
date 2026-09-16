@@ -1,4 +1,4 @@
-import type { TestimonialType } from "@bilacert/shared/types";
+import type { TestimonialType } from "@bilacert/contracts/testimonial";
 import { createSupabaseBrowserClient } from "@bilacert/supabase/client";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";

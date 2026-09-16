@@ -1,6 +1,6 @@
 "use client";
 
-import type { TestimonialType } from "@bilacert/shared/types";
+import type { TestimonialType } from "@bilacert/contracts/testimonial";
 import { Loader2 } from "lucide-react";
 import { useState } from "react";
 import {
@@ -37,7 +37,7 @@ export default function DeleteTestimonialDialog({
     try {
       const result = await deleteTestimonial(testimonial.id);
 
-      if (result.error) {
+      if (!result.ok) {
         throw new Error(result.error);
       }
 

@@ -1,22 +1,11 @@
+import { requireAdminUser } from "../auth";
 import { CACHE_PATHS, CACHE_TAGS, mutationResult } from "../cache";
-import {
-  createSupabaseAdminClient,
-  createSupabaseServerClient,
-} from "../server";
+import { createSupabaseServerClient } from "../server";
 import type { Database } from "../supabaseType";
 
 type BlogRow = Database["public"]["Tables"]["blog_posts"]["Row"];
 type BlogInsert = Database["public"]["Tables"]["blog_posts"]["Insert"];
 type BlogUpdate = Database["public"]["Tables"]["blog_posts"]["Update"];
-
-const ADMIN_ROLES = new Set([
-  "admin",
-  "administrator",
-  "owner",
-  "super-admin",
-  "super_admin",
-  "superadmin",
-]);
 
 function blogResultFromInput(data: BlogInsert): BlogRow {
   return {
@@ -56,47 +45,6 @@ function blogMutationResult(blog: BlogRow) {
   });
 }
 
-async function createAuthorizedBlogAdminClient() {
-  const sessionClient = await createSupabaseServerClient();
-  const {
-    data: { user },
-    error: authError,
-  } = await sessionClient.auth.getUser();
-
-  if (authError || !user) {
-    throw new Error(
-      "Your admin session is not available to the server. Please sign out and log in again.",
-    );
-  }
-
-  const adminClient = createSupabaseAdminClient();
-  const { data: profile, error: profileError } = await adminClient
-    .from("users")
-    .select("role,isActive")
-    .eq("id", user.id)
-    .maybeSingle();
-
-  if (profileError) {
-    throw new Error(
-      `Unable to verify admin permissions: ${profileError.message}`,
-    );
-  }
-
-  const metadataRole =
-    typeof user.app_metadata?.role === "string"
-      ? user.app_metadata.role
-      : undefined;
-  const role = (profile?.role ?? metadataRole ?? "").trim().toLowerCase();
-
-  if (profile?.isActive === false || !ADMIN_ROLES.has(role)) {
-    throw new Error(
-      "Only active administrator accounts can manage blog posts.",
-    );
-  }
-
-  return adminClient;
-}
-
 export async function incrementBlogPostViews(slug: string): Promise<void> {
   const supabase = await createSupabaseServerClient();
   const { error } = await supabase.rpc("increment_views", { post_slug: slug });
@@ -107,7 +55,7 @@ export async function incrementBlogPostViews(slug: string): Promise<void> {
 }
 
 export async function createBlog(data: BlogInsert) {
-  const supabase = await createAuthorizedBlogAdminClient();
+  const supabase = await requireAdminUser();
   const { error } = await supabase.from("blog_posts").insert(data);
 
   if (error) throw new Error(error.message);
@@ -116,7 +64,7 @@ export async function createBlog(data: BlogInsert) {
 }
 
 export async function updateBlog(id: string, data: BlogInsert) {
-  const supabase = await createAuthorizedBlogAdminClient();
+  const supabase = await requireAdminUser();
   const { id: _ignoredId, ...updateData }: BlogUpdate = data;
   const blog = blogResultFromInput(data);
 
@@ -137,7 +85,7 @@ export async function updateBlog(id: string, data: BlogInsert) {
 }
 
 export async function deleteBlog(id: string) {
-  const supabase = await createAuthorizedBlogAdminClient();
+  const supabase = await requireAdminUser();
   const { data: existing, error: readError } = await supabase
     .from("blog_posts")
     .select("slug")

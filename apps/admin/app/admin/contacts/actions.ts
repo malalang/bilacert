@@ -1,7 +1,8 @@
 "use server";
 
+import type { ActionResult } from "@bilacert/contracts/actionResult";
+import type { ContactType } from "@bilacert/contracts/contact";
 import { contactSchema } from "@bilacert/contracts/contact";
-import type { ContactType } from "@bilacert/shared/types";
 import {
   deleteContact as deleteContactMutation,
   upsertContact as upsertContactMutation,
@@ -23,11 +24,14 @@ export async function getContacts() {
   return data as ContactType[];
 }
 
-export async function upsertContact(values: unknown, contactId?: string) {
+export async function upsertContact(
+  values: unknown,
+  contactId?: string,
+): Promise<ActionResult<ContactType>> {
   const parsedValues = contactSchema.safeParse(values);
 
   if (!parsedValues.success) {
-    return { error: parsedValues.error.message };
+    return { ok: false, error: parsedValues.error.message };
   }
 
   let data: ContactType;
@@ -38,29 +42,31 @@ export async function upsertContact(values: unknown, contactId?: string) {
     data = result.data as ContactType;
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unknown error";
-    return { error: `Database error: ${message}` };
+    return { ok: false, error: `Database error: ${message}` };
   }
 
   revalidatePath("/admin/contacts");
   revalidatePath(`/admin/contacts/${data.id}`);
 
   return {
+    ok: true,
     data,
     message: `Contact ${contactId ? "updated" : "created"} successfully!`,
   };
 }
 
-export async function deleteContact(contactId: string) {
+export async function deleteContact(contactId: string): Promise<ActionResult> {
   try {
     await deleteContactMutation(contactId);
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unknown error";
-    return { error: `Database error: ${message}` };
+    return { ok: false, error: `Database error: ${message}` };
   }
 
   revalidatePath("/admin/contacts");
 
   return {
+    ok: true,
     message: "Contact deleted successfully!",
   };
 }

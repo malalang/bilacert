@@ -1,4 +1,4 @@
-import type { TestimonialType } from "@bilacert/shared/types";
+import type { TestimonialType } from "@bilacert/contracts/testimonial";
 import { createSupabaseBrowserClient } from "@bilacert/supabase/client";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";

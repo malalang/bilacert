@@ -1,3 +1,4 @@
+import { requireAdminUser } from "../auth";
 import { CACHE_TAGS, mutationResult } from "../cache";
 import { createSupabaseServerClient } from "../server";
 import type { Database } from "../supabaseType";
@@ -21,7 +22,7 @@ export async function createContact(data: ContactInsert) {
 }
 
 export async function upsertContact(data: ContactInsert) {
-  const supabase = await createSupabaseServerClient();
+  const supabase = await requireAdminUser();
   const { data: contact, error } = await supabase
     .from("contacts")
     .upsert(data)
@@ -37,7 +38,7 @@ export async function upsertContact(data: ContactInsert) {
 }
 
 export async function deleteContact(id: string) {
-  const supabase = await createSupabaseServerClient();
+  const supabase = await requireAdminUser();
   const { error } = await supabase.from("contacts").delete().eq("id", id);
   if (error) throw new Error(error.message);
 

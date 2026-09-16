@@ -1,12 +1,10 @@
 "use client";
 
-import type {
-  BlogType,
-  ContactType,
-  ServiceType,
-  SubmissionType,
-  TestimonialType,
-} from "@bilacert/shared/types";
+import type { BlogRowType as BlogType } from "@bilacert/contracts/blog";
+import type { ContactType } from "@bilacert/contracts/contact";
+import type { SubmissionType } from "@bilacert/contracts/formSubmission";
+import type { ServiceType } from "@bilacert/contracts/service";
+import type { TestimonialType } from "@bilacert/contracts/testimonial";
 import { createSupabaseBrowserClient } from "@bilacert/supabase/client";
 import { subYears } from "date-fns";
 import {

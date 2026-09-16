@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 export const pricingPlanSchema = z.object({
+  name: z.string().optional(),
   title: z.string().min(1, "Title is required"),
   description: z.string().default(""),
   price: z.string().min(1, "Price is required"),
@@ -17,10 +18,10 @@ export const processStepSchema = z.object({
 });
 
 export const successStorySchema = z.object({
-  scenario: z.string().optional(),
-  challenge: z.string().optional(),
-  solution: z.string().optional(),
-  result: z.string().optional(),
+  scenario: z.string().min(1, "Scenario is required"),
+  challenge: z.string().min(1, "Challenge is required"),
+  solution: z.string().min(1, "Solution is required"),
+  result: z.string().min(1, "Result is required"),
 });
 
 export const serviceSchema = z.object({

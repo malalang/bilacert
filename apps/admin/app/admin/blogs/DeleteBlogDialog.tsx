@@ -1,6 +1,6 @@
 "use client";
 
-import type { BlogType } from "@bilacert/shared/types";
+import type { BlogRowType as BlogType } from "@bilacert/contracts/blog";
 import { Loader2 } from "lucide-react";
 import { useState } from "react";
 import {
@@ -39,7 +39,7 @@ export default function DeleteBlogDialog({
     try {
       const result = await deleteBlog(blog.id);
 
-      if (result.error) {
+      if (!result.ok) {
         throw new Error(result.error);
       }
 

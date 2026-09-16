@@ -1,10 +1,10 @@
 "use client";
 
+import type { SubmissionType } from "@bilacert/contracts/formSubmission";
 import {
   type FormSubmissionType,
   submissionSchema,
 } from "@bilacert/contracts/formSubmission";
-import type { SubmissionType } from "@bilacert/shared/types";
 import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
@@ -87,14 +87,14 @@ export default function SubmissionForm({ submission }: SubmissionFormProps) {
       }
       const result = await upsertSubmission(values, submission.id);
 
-      if (result.error) {
+      if (!result.ok) {
         throw new Error(result.error);
       }
 
       toast({
         title: result.message,
       });
-      router.push(`/admin/form_submissions/${submission.id}`);
+      router.push(`/admin/formSubmissions/${submission.id}`);
       router.refresh();
     } catch (error: any) {
       toast({
@@ -285,8 +285,8 @@ export default function SubmissionForm({ submission }: SubmissionFormProps) {
             <Link
               href={
                 submission.id
-                  ? `/admin/form_submissions/${submission.id}`
-                  : "/admin/form_submissions"
+                  ? `/admin/formSubmissions/${submission.id}`
+                  : "/admin/formSubmissions"
               }
             >
               Cancel

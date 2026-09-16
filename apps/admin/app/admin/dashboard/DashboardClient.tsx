@@ -1,11 +1,9 @@
 "use client";
 
+import type { BlogRowType as BlogType } from "@bilacert/contracts/blog";
+import type { ContactType } from "@bilacert/contracts/contact";
+import type { SubmissionType } from "@bilacert/contracts/formSubmission";
 import { Icon } from "@bilacert/shared/Icon";
-import type {
-  BlogType,
-  ContactType,
-  SubmissionType,
-} from "@bilacert/shared/types";
 import { format, isValid, parseISO } from "date-fns";
 import {
   Archive,
@@ -74,7 +72,7 @@ const compactFormatDate = (date: string | Date | undefined) => {
 function PendingSubmissionItem({ submission }: { submission: SubmissionType }) {
   return (
     <Link
-      href={`/admin/form_submissions/${submission.id}`}
+      href={`/admin/formSubmissions/${submission.id}`}
       className="block rounded-xl bg-background p-3 shadow-sm shadow-black/5 transition-all hover:-translate-y-0.5 hover:shadow-md hover:shadow-black/10"
     >
       <div className="flex items-start gap-3">

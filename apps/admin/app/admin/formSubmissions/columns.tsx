@@ -1,6 +1,6 @@
 "use client";
 
-import type { SubmissionType } from "@bilacert/shared/types";
+import type { SubmissionType } from "@bilacert/contracts/formSubmission";
 import type { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
@@ -92,12 +92,12 @@ export const columns = ({
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem asChild>
-              <Link href={`/admin/form_submissions/${submission.id}`}>
+              <Link href={`/admin/formSubmissions/${submission.id}`}>
                 View Details
               </Link>
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
-              <Link href={`/admin/form_submissions/${submission.id}/edit`}>
+              <Link href={`/admin/formSubmissions/${submission.id}/edit`}>
                 Edit
               </Link>
             </DropdownMenuItem>

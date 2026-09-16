@@ -1,4 +1,4 @@
-import type { BlogType } from "@bilacert/shared/types";
+import type { BlogRowType as BlogType } from "@bilacert/contracts/blog";
 import { ArrowRight, Calendar } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";

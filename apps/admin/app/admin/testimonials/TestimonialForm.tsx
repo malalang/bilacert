@@ -1,10 +1,10 @@
 "use client";
 
 import {
+  type TestimonialInput,
   type TestimonialType,
   testimonialSchema,
 } from "@bilacert/contracts/testimonial";
-import type { TestimonialType as SharedTestimonialType } from "@bilacert/shared/types";
 import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
@@ -25,7 +25,7 @@ import { useToast } from "@/hooks/use-toast";
 import { upsertTestimonial } from "./actions";
 
 interface TestimonialFormProps {
-  testimonial?: SharedTestimonialType | null;
+  testimonial?: TestimonialType | null;
 }
 
 export default function TestimonialForm({ testimonial }: TestimonialFormProps) {
@@ -33,7 +33,7 @@ export default function TestimonialForm({ testimonial }: TestimonialFormProps) {
   const router = useRouter();
   const isEditing = !!testimonial;
 
-  const form = useForm<TestimonialType>({
+  const form = useForm<TestimonialInput>({
     resolver: standardSchemaResolver(testimonialSchema),
     defaultValues: {
       postUrl: "",
@@ -58,11 +58,11 @@ export default function TestimonialForm({ testimonial }: TestimonialFormProps) {
     }
   }, [testimonial, reset]);
 
-  const onSubmit = async (values: TestimonialType) => {
+  const onSubmit = async (values: TestimonialInput) => {
     try {
       const result = await upsertTestimonial(values);
 
-      if (result.error) {
+      if (!result.ok) {
         throw new Error(result.error);
       }
 

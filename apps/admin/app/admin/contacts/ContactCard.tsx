@@ -1,6 +1,6 @@
 "use client";
 
-import type { ContactType } from "@bilacert/shared/types";
+import type { ContactType } from "@bilacert/contracts/contact";
 import {
   CalendarClock,
   Edit,

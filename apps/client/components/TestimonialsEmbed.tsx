@@ -1,6 +1,6 @@
 "use client";
 
-import type { TestimonialType } from "@bilacert/shared/types";
+import type { TestimonialType } from "@bilacert/contracts/testimonial";
 import { useEffect } from "react";
 
 type TestimonialEmbed = Pick<TestimonialType, "id" | "postUrl">;

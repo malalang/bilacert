@@ -1,6 +1,6 @@
 "use client";
 
-import type { ContactType } from "@bilacert/shared/types";
+import type { ContactType } from "@bilacert/contracts/contact";
 import { ClipboardList, Mail, MessageSquare, Phone } from "lucide-react";
 import AdminPage from "@/components/admin/AdminPage";
 import AnalysesHeader from "@/components/admin/AnalysesHeader";

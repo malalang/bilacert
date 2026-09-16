@@ -1,6 +1,6 @@
 "use client";
 
-import type { SubmissionType } from "@bilacert/shared/types";
+import type { SubmissionType } from "@bilacert/contracts/formSubmission";
 import { format } from "date-fns";
 import { ArrowLeft, Edit, Mail, Phone, Trash2 } from "lucide-react";
 import Link from "next/link";
@@ -42,7 +42,7 @@ export default function SubmissionDetails({
 
   const onDeleted = () => {
     setIsDeleteDialogOpen(false);
-    router.push("/admin/form_submissions");
+    router.push("/admin/formSubmissions");
     router.refresh();
   };
 
@@ -69,7 +69,7 @@ export default function SubmissionDetails({
       <div className="space-y-6">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <Button variant="outline" asChild>
-            <Link href="/admin/form_submissions">
+            <Link href="/admin/formSubmissions">
               <ArrowLeft className="mr-2 h-4 w-4" />
               Back to Submissions
             </Link>
@@ -83,7 +83,7 @@ export default function SubmissionDetails({
               </Button>
             )}
             <Button asChild>
-              <Link href={`/admin/form_submissions/${submission.id}/edit`}>
+              <Link href={`/admin/formSubmissions/${submission.id}/edit`}>
                 <Edit className="mr-2 h-4 w-4" /> Edit
               </Link>
             </Button>

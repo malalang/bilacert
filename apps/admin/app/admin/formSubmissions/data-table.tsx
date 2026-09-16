@@ -1,6 +1,6 @@
 "use client";
 
-import type { SubmissionType } from "@bilacert/shared/types";
+import type { SubmissionType } from "@bilacert/contracts/formSubmission";
 import {
   type ColumnDef,
   flexRender,
@@ -53,7 +53,7 @@ export function DataTable<TData, TValue>({
   const handleRowClick = (row: Row<TData>) => {
     const submission = row.original as SubmissionType;
     if (submission?.id) {
-      router.push(`/admin/form_submissions/${submission.id}`);
+      router.push(`/admin/formSubmissions/${submission.id}`);
     }
   };
 

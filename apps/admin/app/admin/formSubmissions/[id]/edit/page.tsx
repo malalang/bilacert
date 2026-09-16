@@ -1,4 +1,4 @@
-import type { SubmissionType } from "@bilacert/shared/types";
+import type { SubmissionType } from "@bilacert/contracts/formSubmission";
 import { createSupabaseBrowserClient } from "@bilacert/supabase/client";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
@@ -66,7 +66,7 @@ export default async function EditSubmissionPage({
   return (
     <div className="space-y-6">
       <Button variant="outline" asChild>
-        <Link href={`/admin/form_submissions/${submission.id}`}>
+        <Link href={`/admin/formSubmissions/${submission.id}`}>
           <ArrowLeft className="mr-2 h-4 w-4" />
           Back to Submission
         </Link>

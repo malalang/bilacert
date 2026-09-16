@@ -1,5 +1,5 @@
+import { requireAdminUser } from "../auth";
 import { CACHE_PATHS, CACHE_TAGS, mutationResult } from "../cache";
-import { createSupabaseServerClient } from "../server";
 import type { Database } from "../supabaseType";
 
 type ServiceInsert = Database["public"]["Tables"]["services"]["Insert"];
@@ -9,7 +9,7 @@ function uniqueValues(values: string[]) {
 }
 
 export async function upsertService(data: ServiceInsert) {
-  const supabase = await createSupabaseServerClient();
+  const supabase = await requireAdminUser();
   const { data: existing, error: readError } = data.id
     ? await supabase
         .from("services")
@@ -48,7 +48,7 @@ export async function upsertService(data: ServiceInsert) {
 }
 
 export async function deleteService(id: string) {
-  const supabase = await createSupabaseServerClient();
+  const supabase = await requireAdminUser();
   const { data: existing, error: readError } = await supabase
     .from("services")
     .select("slug")

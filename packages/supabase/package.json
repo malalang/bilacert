@@ -8,6 +8,7 @@
     "./cache": "./src/cache.ts",
     "./middleware": "./src/middleware.ts",
     "./supabaseType": "./src/supabaseType.ts",
+    "./auth": "./src/auth.ts",
     "./Queries/*": "./src/Queries/*.ts",
     "./Mutations/*": "./src/Mutations/*.ts"
   },

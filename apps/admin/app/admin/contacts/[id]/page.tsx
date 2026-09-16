@@ -1,4 +1,4 @@
-import type { ContactType } from "@bilacert/shared/types";
+import type { ContactType } from "@bilacert/contracts/contact";
 import { createSupabaseServerClient } from "@bilacert/supabase/server";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";

@@ -28,3 +28,27 @@ export const blogSchema = z.object({
 });
 
 export type BlogType = z.infer<typeof blogSchema>;
+
+export interface BlogRowType {
+  id: string;
+  title: string;
+  slug: string;
+  excerpt?: string;
+  content?: string;
+  category?: string;
+  tags?: string;
+  readTime?: string;
+  seoTitle?: string;
+  seoDescription?: string;
+  seoKeywords?: string;
+  featuredImage?: string;
+  thumbnail?: string;
+  published: boolean;
+  publishedAt?: string;
+  featured: boolean;
+  authorId?: string;
+  authorName?: string;
+  viewsCount?: number;
+  createdAt: string;
+  updatedAt?: string;
+}

@@ -1,4 +1,4 @@
-import type { BlogType } from "@bilacert/shared/types";
+import type { BlogRowType as BlogType } from "@bilacert/contracts/blog";
 import { createSupabaseServerClient } from "@bilacert/supabase/server";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";

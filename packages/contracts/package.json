@@ -9,8 +9,10 @@
     "./formSubmission": "./src/formSubmission.ts",
     "./service": "./src/service.ts",
     "./testimonial": "./src/testimonial.ts",
+    "./user": "./src/user.ts",
     "./actionResult": "./src/actionResult.ts",
-    "./revalidation": "./src/revalidation.ts"
+    "./revalidation": "./src/revalidation.ts",
+    "./env": "./src/env.ts"
   },
   "scripts": {
     "build": "tsc",

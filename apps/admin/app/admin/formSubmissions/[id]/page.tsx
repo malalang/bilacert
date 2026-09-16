@@ -1,4 +1,4 @@
-import type { SubmissionType } from "@bilacert/shared/types";
+import type { SubmissionType } from "@bilacert/contracts/formSubmission";
 import { createSupabaseBrowserClient } from "@bilacert/supabase/client";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";

@@ -1,7 +1,7 @@
 "use client";
 
+import type { ServiceType } from "@bilacert/contracts/service";
 import { type ServiceInput, serviceSchema } from "@bilacert/contracts/service";
-import type { ServiceType } from "@bilacert/shared/types";
 import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import { Loader2, PlusCircle, Trash2 } from "lucide-react";
 import Link from "next/link";
@@ -218,7 +218,7 @@ export default function ServiceForm({ service }: ServiceFormProps) {
 
       const result = await upsertService(processedValues);
 
-      if (result.error) {
+      if (!result.ok) {
         throw new Error(result.error);
       }
 

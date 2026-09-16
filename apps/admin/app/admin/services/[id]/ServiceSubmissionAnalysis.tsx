@@ -1,10 +1,10 @@
 "use client";
 
-import type { ServiceType } from "@bilacert/contracts/service";
 import type {
   SubmissionStatus,
   SubmissionType,
-} from "@bilacert/shared/types";
+} from "@bilacert/contracts/formSubmission";
+import type { ServiceType } from "@bilacert/contracts/service";
 import {
   Archive,
   CheckCircle2,
@@ -17,8 +17,8 @@ import { useMemo, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useSubmissions } from "@/lib/hooks/useSubmissions";
 import { SubmissionsLineChart } from "../../analysis/charts";
-import DeleteSubmissionDialog from "../../form_submissions/DeleteSubmissionDialog";
-import SubmissionCard from "../../form_submissions/SubmissionCard";
+import DeleteSubmissionDialog from "../../formSubmissions/DeleteSubmissionDialog";
+import SubmissionCard from "../../formSubmissions/SubmissionCard";
 
 type StatusConfig = {
   label: string;

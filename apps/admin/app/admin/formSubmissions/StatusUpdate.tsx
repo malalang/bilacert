@@ -1,6 +1,6 @@
 "use client";
 
-import type { SubmissionType } from "@bilacert/shared/types";
+import type { SubmissionType } from "@bilacert/contracts/formSubmission";
 import { Loader2 } from "lucide-react";
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
@@ -42,7 +42,7 @@ export default function StatusUpdate({ submission }: StatusUpdateProps) {
       }
       const result = await updateSubmissionStatus(submission.id, newStatus);
 
-      if (result.error) throw new Error(result.error);
+      if (!result.ok) throw new Error(result.error);
 
       setCurrentStatus(newStatus as SubmissionType["status"]);
       toast({

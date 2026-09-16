@@ -1,5 +1,6 @@
 "use server";
 
+import type { ActionResult } from "@bilacert/contracts/actionResult";
 import { testimonialSchema } from "@bilacert/contracts/testimonial";
 import {
   deleteTestimonial as deleteTestimonialMutation,
@@ -8,11 +9,13 @@ import {
 import { revalidatePath } from "next/cache";
 import { triggerRevalidation } from "@/lib/revalidation";
 
-export async function upsertTestimonial(values: unknown) {
+export async function upsertTestimonial(
+  values: unknown,
+): Promise<ActionResult> {
   const parsedValues = testimonialSchema.safeParse(values);
 
   if (!parsedValues.success) {
-    return { error: parsedValues.error.message };
+    return { ok: false, error: parsedValues.error.message };
   }
 
   const { id, ...rest } = parsedValues.data;
@@ -24,24 +27,26 @@ export async function upsertTestimonial(values: unknown) {
     await triggerRevalidation(result.revalidate);
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unknown error";
-    return { error: `Database error: ${message}` };
+    return { ok: false, error: `Database error: ${message}` };
   }
 
   revalidatePath("/admin/testimonials");
 
-  return { error: null };
+  return { ok: true };
 }
 
-export async function deleteTestimonial(testimonialId: string) {
+export async function deleteTestimonial(
+  testimonialId: string,
+): Promise<ActionResult> {
   try {
     const result = await deleteTestimonialMutation(testimonialId);
     await triggerRevalidation(result.revalidate);
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unknown error";
-    return { error: `Database error: ${message}` };
+    return { ok: false, error: `Database error: ${message}` };
   }
 
   revalidatePath("/admin/testimonials");
 
-  return { error: null };
+  return { ok: true };
 }

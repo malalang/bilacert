@@ -1,10 +1,10 @@
 "use client";
 
+import type { ContactType } from "@bilacert/contracts/contact";
 import {
   type ContactMessageType as ContactFormValues,
   contactSchema,
 } from "@bilacert/contracts/contact";
-import type { ContactType } from "@bilacert/shared/types";
 import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
@@ -66,7 +66,7 @@ export default function ContactForm({ contact }: ContactFormProps) {
     try {
       const result = await upsertContact(values, contact?.id);
 
-      if (result.error) {
+      if (!result.ok) {
         throw new Error(result.error);
       }
 

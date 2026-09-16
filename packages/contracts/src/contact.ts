@@ -9,3 +9,13 @@ export const contactSchema = z.object({
 });
 
 export type ContactMessageType = z.infer<typeof contactSchema>;
+
+export interface ContactType {
+  id: string;
+  name?: string;
+  email: string;
+  phone?: string;
+  service?: string;
+  message?: string;
+  submittedAt: string;
+}

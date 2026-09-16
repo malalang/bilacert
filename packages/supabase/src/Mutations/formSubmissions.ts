@@ -1,3 +1,4 @@
+import { requireAdminUser } from "../auth";
 import { CACHE_TAGS, mutationResult } from "../cache";
 import { createSupabaseServerClient } from "../server";
 import type { Database } from "../supabaseType";
@@ -24,7 +25,7 @@ export async function createFormSubmission(data: SubmissionInsert) {
 }
 
 export async function updateFormSubmission(id: string, data: SubmissionUpdate) {
-  const supabase = await createSupabaseServerClient();
+  const supabase = await requireAdminUser();
   const { data: submission, error } = await supabase
     .from("form_submissions")
     .update(data)

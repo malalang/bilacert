@@ -1,4 +1,4 @@
-import type { TestimonialType } from "@bilacert/shared/types";
+import type { TestimonialType } from "@bilacert/contracts/testimonial";
 import { createSupabasePublicClient } from "../server";
 import type { Database } from "../supabaseType";
 

@@ -1,6 +1,6 @@
 "use client";
 
-import type { TestimonialType } from "@bilacert/shared/types";
+import type { TestimonialType } from "@bilacert/contracts/testimonial";
 import { ArrowLeft, Edit, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";

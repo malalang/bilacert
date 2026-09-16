@@ -1,4 +1,4 @@
-import type { BlogType } from "@bilacert/shared/types";
+import type { BlogRowType as BlogType } from "@bilacert/contracts/blog";
 import { createSupabaseServerClient } from "@bilacert/supabase/server";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";

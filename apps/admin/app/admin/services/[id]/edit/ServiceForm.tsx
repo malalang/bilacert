@@ -205,7 +205,7 @@ export default function ServiceForm({ service }: ServiceFormProps) {
 
       const result = await upsertService(processedValues);
 
-      if (result.error) {
+      if (!result.ok) {
         throw new Error(result.error);
       }
 

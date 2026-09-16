@@ -1,4 +1,4 @@
-import type { BlogType } from "@bilacert/shared/types";
+import type { BlogRowType as BlogType } from "@bilacert/contracts/blog";
 import { createSupabasePublicClient } from "../server";
 import type { Database } from "../supabaseType";
 

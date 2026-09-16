@@ -1,6 +1,6 @@
 "use client";
 
-import type { SubmissionType } from "@bilacert/shared/types";
+import type { SubmissionType } from "@bilacert/contracts/formSubmission";
 import {
   Briefcase,
   Calendar,
@@ -124,7 +124,7 @@ function SubmissionPreview({
 }
 
 function SubmissionCard({ submission, onDelete }: SubmissionCardProps) {
-  const submissionHref = `/admin/form_submissions/${submission.id}`;
+  const submissionHref = `/admin/formSubmissions/${submission.id}`;
   const emailComposeHref = getSubmissionEmailComposeHref(submission);
   const submittedAt = getSubmissionDate(submission.createdAt);
   const phone = submission.phone?.trim();

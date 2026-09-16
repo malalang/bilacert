@@ -1,6 +1,6 @@
 "use client";
 
-import type { TestimonialType } from "@bilacert/shared/types";
+import type { TestimonialType } from "@bilacert/contracts/testimonial";
 import { format } from "date-fns";
 import { MoreHorizontal } from "lucide-react";
 import Link from "next/link";

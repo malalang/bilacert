@@ -39,7 +39,7 @@ const navItems = [
   { href: "/admin/testimonials", icon: MessageSquare, label: "Testimonials" },
   { href: "/admin/contacts", icon: Users, label: "Contacts" },
   {
-    href: "/admin/form_submissions",
+    href: "/admin/formSubmissions",
     icon: FileSpreadsheet,
     label: "Submissions",
   },

@@ -1,6 +1,6 @@
 "use client";
 
-import type { BlogType } from "@bilacert/shared/types";
+import type { BlogRowType as BlogType } from "@bilacert/contracts/blog";
 import { format } from "date-fns";
 import {
   ArrowLeft,

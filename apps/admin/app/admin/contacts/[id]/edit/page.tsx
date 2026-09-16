@@ -1,4 +1,4 @@
-import type { ContactType } from "@bilacert/shared/types";
+import type { ContactType } from "@bilacert/contracts/contact";
 import { createSupabaseServerClient } from "@bilacert/supabase/server";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";

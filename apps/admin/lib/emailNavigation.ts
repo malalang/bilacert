@@ -1,7 +1,8 @@
-import type { ContactType, SubmissionType } from "@bilacert/shared/types";
+import type { ContactType } from "@bilacert/contracts/contact";
+import type { SubmissionType } from "@bilacert/contracts/formSubmission";
 
 const emailReturnPathPattern =
-  /^\/admin\/(?:contacts|form_submissions)\/[A-Za-z0-9_-]+$/;
+  /^\/admin\/(?:contacts|formSubmissions)\/[A-Za-z0-9_-]+$/;
 
 export function getContactEmailComposeHref(
   contact: ContactType,
@@ -63,7 +64,7 @@ export function getSubmissionEmailComposeHref(
     to: emailAddress,
     subject: `Bilacert submission: ${topic}`,
     content,
-    returnTo: `/admin/form_submissions/${submission.id}`,
+    returnTo: `/admin/formSubmissions/${submission.id}`,
   });
 
   return `/admin/emails/compose?${query.toString()}`;

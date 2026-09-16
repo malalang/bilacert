@@ -1,6 +1,6 @@
 "use client";
 
-import type { ContactType } from "@bilacert/shared/types";
+import type { ContactType } from "@bilacert/contracts/contact";
 import { Loader2 } from "lucide-react";
 import { useState } from "react";
 import {
@@ -39,7 +39,7 @@ export default function DeleteContactDialog({
     try {
       const result = await deleteContact(contact.id);
 
-      if (result?.error) {
+      if (!result.ok) {
         throw new Error(result.error);
       }
 

@@ -1,10 +1,10 @@
 "use client";
 
+import type { BlogRowType as BlogType } from "@bilacert/contracts/blog";
 import {
   type BlogType as BlogFormValues,
   blogSchema,
 } from "@bilacert/contracts/blog";
-import type { BlogType } from "@bilacert/shared/types";
 import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
@@ -154,19 +154,14 @@ export default function BlogForm({ blog, blogId }: BlogFormProps) {
     startTransition(async () => {
       try {
         const result = await upsertBlog(payload);
-        console.log("[bilacert-admin/blogs] form submit result", {
-          hasError: Boolean(result.error),
-          error: result.error,
-          blogId: result.blog?.id,
-          blogSlug: result.blog?.slug,
-        });
 
-        if (result.error || !result.blog) {
+        if (!result.ok || !result.data) {
           toast({
             variant: "destructive",
             title: "Error saving blog post",
-            description:
-              result.error ?? "The blog save did not return a saved post.",
+            description: result.ok
+              ? "The blog save did not return a saved post."
+              : result.error,
           });
           return;
         }
@@ -175,7 +170,7 @@ export default function BlogForm({ blog, blogId }: BlogFormProps) {
           title: "Blog post saved",
           description: "Your changes were saved successfully.",
         });
-        router.push(`/admin/blogs/${result.blog.id}`);
+        router.push(`/admin/blogs/${result.data.id}`);
         router.refresh();
       } catch (error) {
         const message =
