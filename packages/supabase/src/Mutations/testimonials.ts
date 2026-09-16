@@ -1,3 +1,5 @@
+"use server";
+
 import { requireAdminUser } from "../auth";
 import { CACHE_PATHS, CACHE_TAGS, mutationResult } from "../cache";
 import type { Database } from "../supabaseType";
