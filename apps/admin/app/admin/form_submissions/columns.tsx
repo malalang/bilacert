@@ -1,6 +1,6 @@
 "use client";
 
-import type { Submission } from "@bilacert/shared/types";
+import type { SubmissionType } from "@bilacert/shared/types";
 import type { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
@@ -27,12 +27,12 @@ export const statusVariantMap: {
 };
 
 interface ColumnsOptions {
-  onDelete: (submission: Submission) => void;
+  onDelete: (submission: SubmissionType) => void;
 }
 
 export const columns = ({
   onDelete,
-}: ColumnsOptions): ColumnDef<Submission>[] => [
+}: ColumnsOptions): ColumnDef<SubmissionType>[] => [
   {
     accessorKey: "formType",
     header: "Form Type",

@@ -1,6 +1,6 @@
 "use client";
 
-import type { Contact } from "@bilacert/shared/types";
+import type { ContactType } from "@bilacert/shared/types";
 import type { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 import Link from "next/link";
@@ -16,14 +16,14 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 interface ColumnsOptions {
-  onEdit: (contact: Contact) => void;
-  onDelete: (contact: Contact) => void;
+  onEdit: (contact: ContactType) => void;
+  onDelete: (contact: ContactType) => void;
 }
 
 export const columns = ({
   onEdit,
   onDelete,
-}: ColumnsOptions): ColumnDef<Contact>[] => [
+}: ColumnsOptions): ColumnDef<ContactType>[] => [
   {
     id: "select",
     header: ({ table }) => (

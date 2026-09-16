@@ -1,7 +1,7 @@
 "use server";
 
 import { submissionSchema } from "@bilacert/contracts/formSubmission";
-import type { Submission } from "@bilacert/shared/types";
+import type { SubmissionType } from "@bilacert/shared/types";
 import { updateFormSubmission } from "@bilacert/supabase/Mutations/formSubmissions";
 import type { Json } from "@bilacert/supabase/supabaseType";
 import { revalidatePath } from "next/cache";
@@ -29,10 +29,10 @@ export async function upsertSubmission(values: unknown, submissionId: string) {
     updatedAt: new Date().toISOString(),
   };
 
-  let data: Submission;
+  let data: SubmissionType;
   try {
     const result = await updateFormSubmission(submissionId, submissionData);
-    data = result.data as Submission;
+    data = result.data as SubmissionType;
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unknown error";
     return { error: `Database error: ${message}` };
@@ -49,15 +49,15 @@ export async function upsertSubmission(values: unknown, submissionId: string) {
 
 export async function updateSubmissionStatus(
   submissionId: string,
-  status: Submission["status"],
+  status: SubmissionType["status"],
 ) {
-  let data: Submission;
+  let data: SubmissionType;
   try {
     const result = await updateFormSubmission(submissionId, {
       status,
       updatedAt: new Date().toISOString(),
     });
-    data = result.data as Submission;
+    data = result.data as SubmissionType;
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unknown error";
     return { error: `Database error: ${message}` };

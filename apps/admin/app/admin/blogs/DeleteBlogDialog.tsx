@@ -1,6 +1,6 @@
 "use client";
 
-import type { BlogPost } from "@bilacert/shared/types";
+import type { BlogType } from "@bilacert/shared/types";
 import { Loader2 } from "lucide-react";
 import { useState } from "react";
 import {
@@ -19,7 +19,7 @@ import { deleteBlog } from "./actions";
 interface DeleteBlogDialogProps {
   isOpen: boolean;
   onClose: () => void;
-  blog: BlogPost | null;
+  blog: BlogType | null;
   onDeleted?: () => void;
 }
 

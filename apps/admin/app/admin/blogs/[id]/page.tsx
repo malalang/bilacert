@@ -1,10 +1,10 @@
-import type { BlogPost } from "@bilacert/shared/types";
+import type { BlogType } from "@bilacert/shared/types";
 import { createSupabaseServerClient } from "@bilacert/supabase/server";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import BlogDetails from "../BlogDetails";
 
-async function getBlog(identifier: string): Promise<BlogPost | null> {
+async function getBlog(identifier: string): Promise<BlogType | null> {
   const supabase = await createSupabaseServerClient();
   const { data, error } = await supabase
     .from("blog_posts")
@@ -39,7 +39,7 @@ async function getBlog(identifier: string): Promise<BlogPost | null> {
     viewsCount: data.viewsCount,
     createdAt: data.createdAt,
     updatedAt: data.updatedAt,
-  } as BlogPost;
+  } as BlogType;
 }
 
 export async function generateMetadata({

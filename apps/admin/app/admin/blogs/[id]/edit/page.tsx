@@ -1,4 +1,4 @@
-import type { BlogPost } from "@bilacert/shared/types";
+import type { BlogType } from "@bilacert/shared/types";
 import { createSupabaseServerClient } from "@bilacert/supabase/server";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
@@ -18,7 +18,7 @@ export const metadata = {
   description: "Edit an existing blog post.",
 };
 
-async function getBlog(id: string): Promise<BlogPost | null> {
+async function getBlog(id: string): Promise<BlogType | null> {
   const supabase = await createSupabaseServerClient();
   const { data, error } = await supabase
     .from("blog_posts")
@@ -52,7 +52,7 @@ async function getBlog(id: string): Promise<BlogPost | null> {
     viewsCount: data.viewsCount,
     createdAt: data.createdAt,
     updatedAt: data.updatedAt,
-  } as BlogPost;
+  } as BlogType;
 }
 
 export default async function EditBlogPage({

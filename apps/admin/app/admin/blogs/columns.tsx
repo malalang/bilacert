@@ -1,6 +1,6 @@
 "use client";
 
-import type { BlogPost } from "@bilacert/shared/types";
+import type { BlogType } from "@bilacert/shared/types";
 import type { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
 import { MoreHorizontal } from "lucide-react";
@@ -16,16 +16,16 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 interface ColumnsOptions {
-  onEdit: (blog: BlogPost) => void;
-  onDelete: (blog: BlogPost) => void;
-  onViewDetails: (blog: BlogPost) => void;
+  onEdit: (blog: BlogType) => void;
+  onDelete: (blog: BlogType) => void;
+  onViewDetails: (blog: BlogType) => void;
 }
 
 export const columns = ({
   onEdit,
   onDelete,
   onViewDetails,
-}: ColumnsOptions): ColumnDef<BlogPost>[] => [
+}: ColumnsOptions): ColumnDef<BlogType>[] => [
   {
     accessorKey: "title",
     header: "Title",

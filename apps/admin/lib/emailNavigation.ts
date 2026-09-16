@@ -1,9 +1,11 @@
-import type { Contact, Submission } from "@bilacert/shared/types";
+import type { ContactType, SubmissionType } from "@bilacert/shared/types";
 
 const emailReturnPathPattern =
   /^\/admin\/(?:contacts|form_submissions)\/[A-Za-z0-9_-]+$/;
 
-export function getContactEmailComposeHref(contact: Contact): string | null {
+export function getContactEmailComposeHref(
+  contact: ContactType,
+): string | null {
   const emailAddress = contact.email.trim();
   if (!emailAddress) return null;
 
@@ -29,7 +31,7 @@ export function getContactEmailComposeHref(contact: Contact): string | null {
   return `/admin/emails/compose?${query.toString()}`;
 }
 
-function getSubmissionTopic(submission: Submission) {
+function getSubmissionTopic(submission: SubmissionType) {
   const topic =
     submission.serviceName?.trim() ||
     submission.formType.replace(/[-_]+/g, " ").trim() ||
@@ -41,7 +43,7 @@ function getSubmissionTopic(submission: Submission) {
 }
 
 export function getSubmissionEmailComposeHref(
-  submission: Submission,
+  submission: SubmissionType,
 ): string | null {
   const emailAddress = submission.email.trim();
   if (!emailAddress) return null;

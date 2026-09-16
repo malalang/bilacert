@@ -2,13 +2,13 @@
 
 import type { ActionResult } from "@bilacert/contracts/actionResult";
 import {
-  type ContactMessageInput,
+  type ContactMessageType,
   contactSchema,
 } from "@bilacert/contracts/contact";
 import { createContact } from "@bilacert/supabase/Mutations/contacts";
 
 export async function submitContactForm(
-  values: ContactMessageInput,
+  values: ContactMessageType,
 ): Promise<ActionResult<{ id: string }>> {
   const parsed = contactSchema.safeParse(values);
 

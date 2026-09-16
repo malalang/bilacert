@@ -1,6 +1,6 @@
 "use client";
 
-import type { Contact } from "@bilacert/shared/types";
+import type { ContactType } from "@bilacert/shared/types";
 import {
   type ColumnDef,
   type ColumnFiltersState,
@@ -61,7 +61,7 @@ export function DataTable<TData, TValue>({
   });
 
   const handleRowClick = (row: Row<TData>) => {
-    const contact = row.original as Contact;
+    const contact = row.original as ContactType;
     if (contact?.id) {
       router.push(`/admin/contacts/${contact.id}`);
     }

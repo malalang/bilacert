@@ -1,10 +1,10 @@
 "use client";
 
 import {
-  type SubmissionFormValues,
+  type FormSubmissionType,
   submissionSchema,
 } from "@bilacert/contracts/formSubmission";
-import type { Submission } from "@bilacert/shared/types";
+import type { SubmissionType } from "@bilacert/shared/types";
 import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
@@ -33,13 +33,13 @@ import { useToast } from "@/hooks/use-toast";
 import { upsertSubmission } from "./actions";
 
 interface SubmissionFormProps {
-  submission: Submission;
+  submission: SubmissionType;
 }
 
 export default function SubmissionForm({ submission }: SubmissionFormProps) {
   const { toast } = useToast();
   const router = useRouter();
-  const form = useForm<SubmissionFormValues>({
+  const form = useForm<FormSubmissionType>({
     resolver: standardSchemaResolver(submissionSchema),
     defaultValues: {
       fullName: "",
@@ -80,7 +80,7 @@ export default function SubmissionForm({ submission }: SubmissionFormProps) {
     }
   }, [submission, reset]);
 
-  const onSubmit = async (values: SubmissionFormValues) => {
+  const onSubmit = async (values: FormSubmissionType) => {
     try {
       if (!submission.id) {
         throw new Error("Submission ID is missing");

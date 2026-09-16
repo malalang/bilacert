@@ -1,11 +1,11 @@
-import type { BlogPost } from "@bilacert/shared/types";
+import type { BlogType } from "@bilacert/shared/types";
 import { ArrowRight, Calendar } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 
 interface BlogCardProps {
-  post: BlogPost;
+  post: BlogType;
 }
 
 export default function BlogCard({ post }: BlogCardProps) {

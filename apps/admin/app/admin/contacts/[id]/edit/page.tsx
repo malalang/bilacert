@@ -1,4 +1,4 @@
-import type { Contact } from "@bilacert/shared/types";
+import type { ContactType } from "@bilacert/shared/types";
 import { createSupabaseServerClient } from "@bilacert/supabase/server";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
@@ -18,7 +18,7 @@ export const metadata = {
   description: "Edit an existing contact.",
 };
 
-async function getContact(id: string): Promise<Contact | null> {
+async function getContact(id: string): Promise<ContactType | null> {
   const supabase = await createSupabaseServerClient();
   const { data, error } = await supabase
     .from("contacts")
@@ -38,7 +38,7 @@ async function getContact(id: string): Promise<Contact | null> {
     service: data.service,
     message: data.message,
     submittedAt: data.submittedAt,
-  } as Contact;
+  } as ContactType;
 }
 
 export default async function EditContactPage({

@@ -1,4 +1,4 @@
-import type { Testimonial } from "@bilacert/shared/types";
+import type { TestimonialType } from "@bilacert/shared/types";
 import { createSupabaseBrowserClient } from "@bilacert/supabase/client";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
@@ -20,7 +20,7 @@ export const metadata = {
   description: "Edit an existing testimonial.",
 };
 
-async function getTestimonial(id: string): Promise<Testimonial | null> {
+async function getTestimonial(id: string): Promise<TestimonialType | null> {
   const { data, error } = await supabase
     .from("testimonials")
     .select("*")
@@ -35,7 +35,7 @@ async function getTestimonial(id: string): Promise<Testimonial | null> {
     id: data.id,
     postUrl: data.postUrl,
     createdAt: data.createdAt,
-  } as Testimonial;
+  } as TestimonialType;
 }
 
 export default async function EditTestimonialPage({

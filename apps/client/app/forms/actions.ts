@@ -2,14 +2,14 @@
 
 import type { ActionResult } from "@bilacert/contracts/actionResult";
 import {
-  type FormSubmissionPayload,
+  type FormSubmissionInputType,
   formSubmissionPayloadSchema,
 } from "@bilacert/contracts/formSubmission";
 import { createFormSubmission } from "@bilacert/supabase/Mutations/formSubmissions";
 import type { Json } from "@bilacert/supabase/supabaseType";
 
 export async function submitFormAction(
-  values: FormSubmissionPayload,
+  values: FormSubmissionInputType,
 ): Promise<ActionResult<{ id: string }>> {
   const parsed = formSubmissionPayloadSchema.safeParse(values);
 

@@ -1,7 +1,7 @@
 "use server";
 
 import { contactSchema } from "@bilacert/contracts/contact";
-import type { Contact } from "@bilacert/shared/types";
+import type { ContactType } from "@bilacert/shared/types";
 import {
   deleteContact as deleteContactMutation,
   upsertContact as upsertContactMutation,
@@ -20,7 +20,7 @@ export async function getContacts() {
     throw new Error(error.message);
   }
 
-  return data as Contact[];
+  return data as ContactType[];
 }
 
 export async function upsertContact(values: unknown, contactId?: string) {
@@ -30,12 +30,12 @@ export async function upsertContact(values: unknown, contactId?: string) {
     return { error: parsedValues.error.message };
   }
 
-  let data: Contact;
+  let data: ContactType;
   try {
     const result = await upsertContactMutation(
       contactId ? { ...parsedValues.data, id: contactId } : parsedValues.data,
     );
-    data = result.data as Contact;
+    data = result.data as ContactType;
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unknown error";
     return { error: `Database error: ${message}` };

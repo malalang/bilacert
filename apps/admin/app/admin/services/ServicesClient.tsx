@@ -1,7 +1,10 @@
 "use client";
 
-import type { Service } from "@bilacert/contracts/service";
-import type { Submission, SubmissionStatus } from "@bilacert/shared/types";
+import type { ServiceType } from "@bilacert/contracts/service";
+import type {
+  SubmissionStatus,
+  SubmissionType,
+} from "@bilacert/shared/types";
 import {
   Archive,
   BarChart3,
@@ -92,7 +95,10 @@ function normalizeServiceKey(value: string | undefined) {
   return value?.trim().toLowerCase();
 }
 
-function getServiceSubmissions(service: Service, submissions: Submission[]) {
+function getServiceSubmissions(
+  service: ServiceType,
+  submissions: SubmissionType[],
+) {
   const serviceKeys = [service.id, service.slug, service.title]
     .map(normalizeServiceKey)
     .filter(Boolean);
@@ -109,8 +115,8 @@ function getServiceSubmissions(service: Service, submissions: Submission[]) {
 }
 
 function getServiceSubmissionStatusCounts(
-  service: Service,
-  submissions: Submission[],
+  service: ServiceType,
+  submissions: SubmissionType[],
 ): ServiceSubmissionStatusCount[] {
   const serviceSubmissions = getServiceSubmissions(service, submissions);
 
@@ -126,8 +132,8 @@ function ServicesAnalysis({
   services,
   submissions,
 }: {
-  services: Service[];
-  submissions: Submission[];
+  services: ServiceType[];
+  submissions: SubmissionType[];
 }) {
   const publishedServices = services.filter((service) => service.published);
   const featuredServices = services.filter((service) => service.featured);
@@ -210,10 +216,10 @@ const ServiceCard = ({
   onEdit,
   onDelete,
 }: {
-  service: Service;
+  service: ServiceType;
   submissionStatusCounts: ServiceSubmissionStatusCount[];
-  onEdit: (service: Service) => void;
-  onDelete: (service: Service) => void;
+  onEdit: (service: ServiceType) => void;
+  onDelete: (service: ServiceType) => void;
 }) => {
   const router = useRouter();
   const imageUrl =
@@ -349,7 +355,7 @@ export default function ServicesClient() {
   const { data: submissions } = useSubmissions();
 
   return (
-    <AdminPage<Service>
+    <AdminPage<ServiceType>
       useData={useServices}
       title="Services"
       newItemButtonText="Add Service"

@@ -1,4 +1,4 @@
-export interface PricingPlan {
+export interface PricingPlanType {
   name: string;
   title: string;
   description: string;
@@ -7,27 +7,13 @@ export interface PricingPlan {
   popular: boolean;
 }
 
-export interface FormSubmissionPayload {
-  fullName: string;
-  email: string;
-  phone?: string;
-  companyName?: string;
-  serviceType?: string;
-  formType: FormType;
-  serviceId?: string;
-  message: string;
-  industry?: string;
-  details?: Record<string, unknown>;
-  serviceName?: string;
-}
-
-export interface ProcessStep {
+export interface ProcessStepType {
   step: string | number;
   title: string;
   description: string;
 }
 
-export interface SuccessStory {
+export interface SuccessStoryType {
   scenario: string;
   challenge: string;
   solution: string;
@@ -51,7 +37,7 @@ export type FormType =
   | "radio-dealer"
   | "ski-boat-vhf";
 
-export interface Submission {
+export interface SubmissionType {
   id: string;
   formType: FormType;
   status: SubmissionStatus;
@@ -70,7 +56,7 @@ export interface Submission {
   completedAt?: string;
 }
 
-export interface Service {
+export interface ServiceType {
   id: string;
   title: string;
   slug: string;
@@ -94,19 +80,19 @@ export interface Service {
   seoTitle?: string;
   seoDescription?: string;
   seoKeywords?: string;
-  pricingPlans?: PricingPlan[];
-  processSteps?: ProcessStep[];
-  successStory?: SuccessStory;
+  pricingPlans?: PricingPlanType[];
+  processSteps?: ProcessStepType[];
+  successStory?: SuccessStoryType;
   updatedAt?: string;
 }
 
-export interface Testimonial {
+export interface TestimonialType {
   id: string;
   postUrl: string;
   createdAt: string;
 }
 
-export interface BlogPost {
+export interface BlogType {
   id: string;
   title: string;
   slug: string;
@@ -130,7 +116,7 @@ export interface BlogPost {
   updatedAt?: string;
 }
 
-export interface Contact {
+export interface ContactType {
   id: string;
   name?: string;
   email: string;
@@ -140,7 +126,7 @@ export interface Contact {
   submittedAt: string;
 }
 
-export interface User {
+export interface UserType {
   id: string;
   email: string;
   firstName?: string;

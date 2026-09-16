@@ -1,6 +1,6 @@
 "use client";
 
-import type { Submission } from "@bilacert/shared/types";
+import type { SubmissionType } from "@bilacert/shared/types";
 import { createSupabaseBrowserClient } from "@bilacert/supabase/client";
 import { Loader2 } from "lucide-react";
 import { useState } from "react";
@@ -21,7 +21,7 @@ const supabase = createSupabaseBrowserClient();
 interface DeleteSubmissionDialogProps {
   isOpen: boolean;
   onClose: () => void;
-  submission: Submission | null;
+  submission: SubmissionType | null;
   onDeleted?: () => void;
 }
 

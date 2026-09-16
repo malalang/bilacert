@@ -1,6 +1,6 @@
 "use client";
 
-import type { Contact } from "@bilacert/shared/types";
+import type { ContactType } from "@bilacert/shared/types";
 import { ClipboardList, Mail, MessageSquare, Phone } from "lucide-react";
 import AdminPage from "@/components/admin/AdminPage";
 import AnalysesHeader from "@/components/admin/AnalysesHeader";
@@ -8,7 +8,7 @@ import { useContacts } from "@/lib/hooks/useContacts";
 import ContactCard from "./ContactCard";
 import DeleteContactDialog from "./DeleteContactDialog";
 
-function ContactsAnalysis({ contacts }: { contacts: Contact[] }) {
+function ContactsAnalysis({ contacts }: { contacts: ContactType[] }) {
   const totals = contacts.reduce(
     (summary, contact) => {
       if (contact.email?.trim()) summary.withEmail += 1;
@@ -60,7 +60,7 @@ function ContactDeleteDialogAdapter({
   isOpen: boolean;
   onClose: () => void;
   onDeleted: () => void;
-  item: Contact | null;
+  item: ContactType | null;
 }) {
   return (
     <DeleteContactDialog
@@ -74,7 +74,7 @@ function ContactDeleteDialogAdapter({
 
 export default function ContactsClient() {
   return (
-    <AdminPage<Contact>
+    <AdminPage<ContactType>
       useData={useContacts}
       title="Contacts"
       newItemButtonText="Add Contact"

@@ -1,6 +1,6 @@
 "use client";
 
-import type { Contact } from "@bilacert/shared/types";
+import type { ContactType } from "@bilacert/shared/types";
 import { Loader2 } from "lucide-react";
 import { useState } from "react";
 import {
@@ -19,7 +19,7 @@ import { deleteContact } from "./actions";
 interface DeleteContactDialogProps {
   isOpen: boolean;
   onClose: () => void;
-  contact: Contact | null;
+  contact: ContactType | null;
   onDeleted?: () => void;
 }
 

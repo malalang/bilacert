@@ -1,6 +1,6 @@
 "use client";
 
-import type { Submission } from "@bilacert/shared/types";
+import type { SubmissionType } from "@bilacert/shared/types";
 import {
   Briefcase,
   Calendar,
@@ -33,11 +33,11 @@ import { getSubmissionEmailComposeHref } from "@/lib/emailNavigation";
 import StatusUpdate from "./StatusUpdate";
 
 interface SubmissionCardProps {
-  submission: Submission;
-  onDelete: (submission: Submission) => void;
+  submission: SubmissionType;
+  onDelete: (submission: SubmissionType) => void;
 }
 
-const statusStyles: Record<Submission["status"], string> = {
+const statusStyles: Record<SubmissionType["status"], string> = {
   pending:
     "border-yellow-200 bg-yellow-100 text-yellow-800 dark:border-yellow-900 dark:bg-yellow-950/60 dark:text-yellow-200",
   "in-progress":
@@ -50,7 +50,7 @@ const statusStyles: Record<Submission["status"], string> = {
     "border-slate-200 bg-slate-100 text-slate-800 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-200",
 };
 
-const statusLabels: Record<Submission["status"], string> = {
+const statusLabels: Record<SubmissionType["status"], string> = {
   pending: "Pending",
   "in-progress": "Processing",
   completed: "Completed",

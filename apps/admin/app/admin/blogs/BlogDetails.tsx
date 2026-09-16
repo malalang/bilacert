@@ -1,6 +1,6 @@
 "use client";
 
-import type { BlogPost } from "@bilacert/shared/types";
+import type { BlogType } from "@bilacert/shared/types";
 import { format } from "date-fns";
 import {
   ArrowLeft,
@@ -29,7 +29,7 @@ import {
 import DeleteBlogDialog from "./DeleteBlogDialog";
 
 interface BlogDetailsProps {
-  blog: BlogPost;
+  blog: BlogType;
 }
 
 const bilacertArticleDetailsStyles = `

@@ -1,10 +1,10 @@
-import type { BlogPost } from "@bilacert/shared/types";
+import type { BlogType } from "@bilacert/shared/types";
 import { createSupabasePublicClient } from "../server";
 import type { Database } from "../supabaseType";
 
 type BlogPostRow = Database["public"]["Tables"]["blog_posts"]["Row"];
 
-function normalizeBlogPost(row: BlogPostRow): BlogPost {
+function normalizeBlogPost(row: BlogPostRow): BlogType {
   return {
     id: row.id,
     title: row.title,
@@ -44,7 +44,7 @@ export async function getAllPublishedBlogSlugs() {
   return data;
 }
 
-export async function getAllPublishedBlogPosts(): Promise<BlogPost[]> {
+export async function getAllPublishedBlogPosts(): Promise<BlogType[]> {
   const supabase = createSupabasePublicClient();
   const { data, error } = await supabase
     .from("blog_posts")
@@ -61,7 +61,7 @@ export async function getAllPublishedBlogPosts(): Promise<BlogPost[]> {
 
 export async function getBlogPostBySlug(
   slug: string,
-): Promise<BlogPost | null> {
+): Promise<BlogType | null> {
   const supabase = createSupabasePublicClient();
   const { data, error } = await supabase
     .from("blog_posts")
@@ -79,7 +79,7 @@ export async function getBlogPostBySlug(
 export async function getBlogPostsByCategory(
   category: string,
   limit: number = 3,
-): Promise<BlogPost[]> {
+): Promise<BlogType[]> {
   const supabase = createSupabasePublicClient();
   const { data, error } = await supabase
     .from("blog_posts")

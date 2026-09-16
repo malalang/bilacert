@@ -1,4 +1,4 @@
-import type { Contact } from "@bilacert/shared/types";
+import type { ContactType } from "@bilacert/shared/types";
 import { createSupabaseServerClient } from "@bilacert/supabase/server";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
@@ -12,7 +12,7 @@ type ContactDetailsPageProps = {
   searchParams: Promise<{ emailStatus?: string }>;
 };
 
-const getContact = cache(async (id: string): Promise<Contact | null> => {
+const getContact = cache(async (id: string): Promise<ContactType | null> => {
   const supabase = await createSupabaseServerClient();
   const { data, error } = await supabase
     .from("contacts")
@@ -32,7 +32,7 @@ const getContact = cache(async (id: string): Promise<Contact | null> => {
     service: data.service,
     message: data.message,
     submittedAt: data.submittedAt,
-  } as Contact;
+  } as ContactType;
 });
 
 export async function generateMetadata({

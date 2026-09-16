@@ -1,6 +1,6 @@
 "use client";
 
-import type { Submission } from "@bilacert/shared/types";
+import type { SubmissionType } from "@bilacert/shared/types";
 import { format } from "date-fns";
 import { ArrowLeft, Edit, Mail, Phone, Trash2 } from "lucide-react";
 import Link from "next/link";
@@ -19,7 +19,7 @@ import { statusVariantMap } from "./columns";
 import DeleteSubmissionDialog from "./DeleteSubmissionDialog";
 
 interface SubmissionDetailsProps {
-  submission: Submission;
+  submission: SubmissionType;
   emailComposeHref: string | null;
 }
 

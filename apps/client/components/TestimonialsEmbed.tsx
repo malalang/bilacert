@@ -1,9 +1,9 @@
 "use client";
 
-import type { Testimonial } from "@bilacert/shared/types";
+import type { TestimonialType } from "@bilacert/shared/types";
 import { useEffect } from "react";
 
-type TestimonialEmbed = Pick<Testimonial, "id" | "postUrl">;
+type TestimonialEmbed = Pick<TestimonialType, "id" | "postUrl">;
 
 declare global {
   interface Window {

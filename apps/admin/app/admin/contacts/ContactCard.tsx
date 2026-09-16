@@ -1,6 +1,6 @@
 "use client";
 
-import type { Contact } from "@bilacert/shared/types";
+import type { ContactType } from "@bilacert/shared/types";
 import {
   CalendarClock,
   Edit,
@@ -34,8 +34,8 @@ import {
 import { getContactEmailComposeHref } from "@/lib/emailNavigation";
 
 type ContactCardProps = {
-  contact: Contact;
-  onDelete: (contact: Contact) => void;
+  contact: ContactType;
+  onDelete: (contact: ContactType) => void;
 };
 
 const contactDateFormatter = new Intl.DateTimeFormat("en-ZA", {

@@ -1,7 +1,10 @@
 "use client";
 
-import type { Service } from "@bilacert/contracts/service";
-import type { Submission, SubmissionStatus } from "@bilacert/shared/types";
+import type { ServiceType } from "@bilacert/contracts/service";
+import type {
+  SubmissionStatus,
+  SubmissionType,
+} from "@bilacert/shared/types";
 import {
   Archive,
   CheckCircle2,
@@ -57,7 +60,10 @@ const submissionStatuses: StatusConfig[] = [
   },
 ];
 
-function getServiceSubmissions(service: Service, submissions: Submission[]) {
+function getServiceSubmissions(
+  service: ServiceType,
+  submissions: SubmissionType[],
+) {
   const serviceTitle = service.title.trim().toLowerCase();
 
   return submissions.filter((submission) => {
@@ -69,7 +75,7 @@ function getServiceSubmissions(service: Service, submissions: Submission[]) {
   });
 }
 
-function getSubmissionsByDay(submissions: Submission[]) {
+function getSubmissionsByDay(submissions: SubmissionType[]) {
   const dailyCounts = new Map<string, number>();
 
   for (const submission of submissions) {
@@ -87,7 +93,7 @@ function getSubmissionsByDay(submissions: Submission[]) {
 }
 
 interface ServiceSubmissionAnalysisProps {
-  service: Service;
+  service: ServiceType;
 }
 
 export default function ServiceSubmissionAnalysis({
@@ -95,7 +101,7 @@ export default function ServiceSubmissionAnalysis({
 }: ServiceSubmissionAnalysisProps) {
   const { data: submissions, loading } = useSubmissions();
   const [selectedSubmission, setSelectedSubmission] =
-    useState<Submission | null>(null);
+    useState<SubmissionType | null>(null);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
   const serviceSubmissions = useMemo(
@@ -117,7 +123,7 @@ export default function ServiceSubmissionAnalysis({
     [serviceSubmissions],
   );
 
-  const handleDelete = (submission: Submission) => {
+  const handleDelete = (submission: SubmissionType) => {
     setSelectedSubmission(submission);
     setIsDeleteDialogOpen(true);
   };

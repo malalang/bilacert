@@ -1,7 +1,7 @@
 import type {
-  PricingPlan,
-  ProcessStep,
-  SuccessStory as TSuccessStory,
+  PricingPlanType,
+  ProcessStepType,
+  SuccessStoryType as TSuccessStory,
 } from "@bilacert/shared/types";
 import {
   CheckCircle2,
@@ -204,7 +204,7 @@ export default async function ServiceDetailPage({ params }: Props) {
         <ProcessSteps
           title="Our Process"
           subtitle="A streamlined approach to get you certified."
-          steps={(service.processSteps as unknown as ProcessStep[]).map(
+          steps={(service.processSteps as unknown as ProcessStepType[]).map(
             (step) => ({ ...step, step: step.step.toString() }),
           )}
         />
@@ -214,7 +214,7 @@ export default async function ServiceDetailPage({ params }: Props) {
         <PricingPlans
           title="Pricing Plans"
           subtitle="Choose the best plan for your needs."
-          plans={(service.pricingPlans as unknown as PricingPlan[]).map(
+          plans={(service.pricingPlans as unknown as PricingPlanType[]).map(
             (plan) => ({
               ...plan,
               title: plan.title || plan.name || "Pricing Plan",

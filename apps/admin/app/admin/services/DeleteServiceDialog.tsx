@@ -1,6 +1,6 @@
 "use client";
 
-import type { Service } from "@bilacert/contracts/service";
+import type { ServiceType } from "@bilacert/contracts/service";
 import { Loader2 } from "lucide-react";
 import { useState } from "react";
 import {
@@ -19,7 +19,7 @@ import { deleteService } from "./actions";
 interface DeleteServiceDialogProps {
   isOpen: boolean;
   onClose: () => void;
-  service: Service | null;
+  service: ServiceType | null;
   onDeleted?: () => void;
 }
 

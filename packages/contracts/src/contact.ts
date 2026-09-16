@@ -8,4 +8,4 @@ export const contactSchema = z.object({
   message: z.string().optional(),
 });
 
-export type ContactMessageInput = z.infer<typeof contactSchema>;
+export type ContactMessageType = z.infer<typeof contactSchema>;

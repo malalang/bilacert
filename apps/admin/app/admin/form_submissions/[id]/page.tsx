@@ -1,4 +1,4 @@
-import type { Submission } from "@bilacert/shared/types";
+import type { SubmissionType } from "@bilacert/shared/types";
 import { createSupabaseBrowserClient } from "@bilacert/supabase/client";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
@@ -13,7 +13,7 @@ type SubmissionDetailsPageProps = {
   searchParams: Promise<{ emailStatus?: string }>;
 };
 
-async function getSubmission(id: string): Promise<Submission | null> {
+async function getSubmission(id: string): Promise<SubmissionType | null> {
   const { data, error } = await supabase
     .from("form_submissions")
     .select("*")
@@ -41,7 +41,7 @@ async function getSubmission(id: string): Promise<Submission | null> {
     createdAt: data.createdAt,
     updatedAt: data.updatedAt,
     completedAt: data.completedAt,
-  } as Submission;
+  } as SubmissionType;
 }
 
 export async function generateMetadata({

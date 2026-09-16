@@ -54,7 +54,7 @@ export const submissionSchema = z.object({
   contactOwner: z.string().optional(),
 });
 
-export type SubmissionFormValues = z.infer<typeof submissionSchema>;
+export type FormSubmissionType = z.infer<typeof submissionSchema>;
 
 export const formSubmissionPayloadSchema = z.object({
   fullName: z.string().min(1),
@@ -70,4 +70,6 @@ export const formSubmissionPayloadSchema = z.object({
   serviceName: z.string().optional(),
 });
 
-export type FormSubmissionPayload = z.infer<typeof formSubmissionPayloadSchema>;
+export type FormSubmissionInputType = z.infer<
+  typeof formSubmissionPayloadSchema
+>;

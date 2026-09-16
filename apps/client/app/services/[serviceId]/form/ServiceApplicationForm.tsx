@@ -1,6 +1,6 @@
 "use client";
 
-import type { Service } from "@bilacert/contracts/service";
+import type { ServiceType } from "@bilacert/contracts/service";
 import { AlertCircle, CheckCircle, Send } from "lucide-react";
 import { useState, useTransition } from "react";
 import { submitFormAction } from "../../../forms/actions";
@@ -9,7 +9,7 @@ export default function ServiceApplicationForm({
   service,
   serviceSlug,
 }: {
-  service: Service;
+  service: ServiceType;
   serviceSlug: string;
 }) {
   const [formData, setFormData] = useState({

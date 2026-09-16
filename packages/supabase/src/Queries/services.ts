@@ -1,4 +1,4 @@
-import type { Service } from "@bilacert/contracts/service";
+import type { ServiceType } from "@bilacert/contracts/service";
 import { createSupabasePublicClient } from "../server";
 import type { Database } from "../supabaseType";
 
@@ -19,7 +19,7 @@ function toStringArray(value: unknown): string[] {
   return [];
 }
 
-export function normalizeService(row: ServiceRow): Service {
+export function normalizeService(row: ServiceRow): ServiceType {
   return {
     id: row.id,
     title: row.title,
@@ -51,7 +51,7 @@ export function normalizeService(row: ServiceRow): Service {
   };
 }
 
-export async function getPublishedServices(): Promise<Service[]> {
+export async function getPublishedServices(): Promise<ServiceType[]> {
   const supabase = createSupabasePublicClient();
   const { data, error } = await supabase
     .from("services")
@@ -67,7 +67,7 @@ export async function getPublishedServices(): Promise<Service[]> {
   return (data || []).map(normalizeService);
 }
 
-export async function getFeaturedServices(): Promise<Service[]> {
+export async function getFeaturedServices(): Promise<ServiceType[]> {
   const supabase = createSupabasePublicClient();
   const { data, error } = await supabase
     .from("services")
@@ -85,7 +85,9 @@ export async function getFeaturedServices(): Promise<Service[]> {
   return (data || []).map(normalizeService);
 }
 
-export async function getServiceBySlug(slug: string): Promise<Service | null> {
+export async function getServiceBySlug(
+  slug: string,
+): Promise<ServiceType | null> {
   const supabase = createSupabasePublicClient();
   const { data, error } = await supabase
     .from("services")

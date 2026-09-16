@@ -1,5 +1,5 @@
-import type { Service } from "@bilacert/contracts/service";
-import type { BlogPost } from "@bilacert/shared/types";
+import type { ServiceType } from "@bilacert/contracts/service";
+import type { BlogType } from "@bilacert/shared/types";
 import { createSupabaseBrowserClient } from "@bilacert/supabase/client";
 import { normalizeService } from "@bilacert/supabase/Queries/services";
 import { Eye } from "lucide-react";
@@ -19,7 +19,7 @@ import ServiceSubmissionAnalysis from "./ServiceSubmissionAnalysis";
 
 const supabase = createSupabaseBrowserClient();
 
-async function getService(id: string): Promise<Service | null> {
+async function getService(id: string): Promise<ServiceType | null> {
   const { data, error } = await supabase
     .from("services")
     .select("*")
@@ -33,7 +33,7 @@ async function getService(id: string): Promise<Service | null> {
   return normalizeService(data);
 }
 
-async function getBlogs(): Promise<BlogPost[]> {
+async function getBlogs(): Promise<BlogType[]> {
   const { data, error } = await supabase
     .from("blog_posts")
     .select(
@@ -44,14 +44,14 @@ async function getBlogs(): Promise<BlogPost[]> {
     return [];
   }
 
-  return data as BlogPost[];
+  return data as BlogType[];
 }
 
 function normalizeSearchValue(value: string | null | undefined) {
   return value?.trim().toLowerCase() ?? "";
 }
 
-function getRelatedBlogs(service: Service, blogs: BlogPost[]) {
+function getRelatedBlogs(service: ServiceType, blogs: BlogType[]) {
   const serviceTerms = [service.title, service.slug, service.category]
     .map(normalizeSearchValue)
     .filter(Boolean);
@@ -75,8 +75,8 @@ function ServiceBlogPerformance({
   service,
   blogs,
 }: {
-  service: Service;
-  blogs: BlogPost[];
+  service: ServiceType;
+  blogs: BlogType[];
 }) {
   const topBlogs = getRelatedBlogs(service, blogs)
     .sort((a, b) => (b.viewsCount ?? 0) - (a.viewsCount ?? 0))

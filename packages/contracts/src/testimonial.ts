@@ -6,4 +6,4 @@ export const testimonialSchema = z.object({
   createdAt: z.string().optional(),
 });
 
-export type TestimonialContract = z.infer<typeof testimonialSchema>;
+export type TestimonialType = z.infer<typeof testimonialSchema>;

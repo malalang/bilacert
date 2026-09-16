@@ -1,10 +1,10 @@
 "use client";
 
 import type {
-  PricingPlan,
-  ProcessStep,
-  Service,
-  SuccessStory,
+  PricingPlanType,
+  ProcessStepType,
+  ServiceType,
+  SuccessStoryType,
 } from "@bilacert/contracts/service";
 import { Icon } from "@bilacert/shared/Icon";
 import { format } from "date-fns";
@@ -25,7 +25,7 @@ import {
 import DeleteServiceDialog from "../DeleteServiceDialog";
 
 interface ServiceDetailsProps {
-  service: Service;
+  service: ServiceType;
 }
 
 export default function ServiceDetails({ service }: ServiceDetailsProps) {
@@ -60,7 +60,7 @@ export default function ServiceDetails({ service }: ServiceDetailsProps) {
     );
   };
 
-  const renderPricingPlans = (plans: PricingPlan[] | undefined) => {
+  const renderPricingPlans = (plans: PricingPlanType[] | undefined) => {
     if (!plans || plans.length === 0)
       return (
         <p className="text-sm text-muted-foreground">
@@ -95,7 +95,7 @@ export default function ServiceDetails({ service }: ServiceDetailsProps) {
     );
   };
 
-  const renderProcessSteps = (steps: ProcessStep[] | undefined) => {
+  const renderProcessSteps = (steps: ProcessStepType[] | undefined) => {
     if (!steps || steps.length === 0)
       return (
         <p className="text-sm text-muted-foreground">
@@ -126,7 +126,7 @@ export default function ServiceDetails({ service }: ServiceDetailsProps) {
     );
   };
 
-  const renderSuccessStory = (story: SuccessStory | undefined) => {
+  const renderSuccessStory = (story: SuccessStoryType | undefined) => {
     if (!story)
       return (
         <p className="text-sm text-muted-foreground">

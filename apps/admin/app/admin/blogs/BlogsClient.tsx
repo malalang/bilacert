@@ -1,6 +1,6 @@
 "use client";
 
-import type { BlogPost } from "@bilacert/shared/types";
+import type { BlogType } from "@bilacert/shared/types";
 import { format, isValid, parseISO } from "date-fns";
 import {
   Calendar,
@@ -57,7 +57,7 @@ const safeFormatDate = (
   return isValid(d) ? format(d, dateFormat) : fallback;
 };
 
-function BlogsAnalysis({ blogs }: { blogs: BlogPost[] }) {
+function BlogsAnalysis({ blogs }: { blogs: BlogType[] }) {
   const publishedBlogs = blogs.filter((blog) => blog.published);
   const featuredBlogs = blogs.filter((blog) => blog.featured);
   const totalViews = blogs.reduce(
@@ -196,9 +196,9 @@ const BlogCard = ({
   onEdit,
   onDelete,
 }: {
-  blog: BlogPost;
-  onEdit: (blog: BlogPost) => void;
-  onDelete: (blog: BlogPost) => void;
+  blog: BlogType;
+  onEdit: (blog: BlogType) => void;
+  onDelete: (blog: BlogType) => void;
 }) => {
   const router = useRouter();
   return (
@@ -308,7 +308,7 @@ export default function BlogsClient() {
   const [categoryFilter, setCategoryFilter] = useState("all");
   const [statusTab, setStatusTab] = useState("all");
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const [selectedBlog, setSelectedBlog] = useState<BlogPost | null>(null);
+  const [selectedBlog, setSelectedBlog] = useState<BlogType | null>(null);
 
   const categories = useMemo(() => {
     const cats = new Set<string>();
@@ -334,11 +334,11 @@ export default function BlogsClient() {
     });
   }, [blogs, searchQuery, categoryFilter, statusTab]);
 
-  const handleEdit = (blog: BlogPost) => {
+  const handleEdit = (blog: BlogType) => {
     router.push(`/admin/blogs/${blog.id}/edit`);
   };
 
-  const handleDelete = (blog: BlogPost) => {
+  const handleDelete = (blog: BlogType) => {
     setSelectedBlog(blog);
     setIsDeleteDialogOpen(true);
   };

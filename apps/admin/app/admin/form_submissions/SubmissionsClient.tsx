@@ -1,7 +1,10 @@
 "use client";
 
-import type { Service } from "@bilacert/contracts/service";
-import type { Submission, SubmissionStatus } from "@bilacert/shared/types";
+import type { ServiceType } from "@bilacert/contracts/service";
+import type {
+  SubmissionStatus,
+  SubmissionType,
+} from "@bilacert/shared/types";
 import {
   Archive,
   BarChart3,
@@ -74,14 +77,17 @@ function normalizeServiceKey(value: string | undefined) {
 }
 
 function getSubmissionStatusTotal(
-  submissions: Submission[],
+  submissions: SubmissionType[],
   status: SubmissionStatus,
 ) {
   return submissions.filter((submission) => submission.status === status)
     .length;
 }
 
-function getServiceSubmissions(service: Service, submissions: Submission[]) {
+function getServiceSubmissions(
+  service: ServiceType,
+  submissions: SubmissionType[],
+) {
   const serviceKeys = [service.id, service.slug, service.title]
     .map(normalizeServiceKey)
     .filter(Boolean);
@@ -101,8 +107,8 @@ function TopServicesBySubmissions({
   services,
   submissions,
 }: {
-  services: Service[];
-  submissions: Submission[];
+  services: ServiceType[];
+  submissions: SubmissionType[];
 }) {
   const serviceSubmissionRows = services
     .map((service) => {
@@ -214,11 +220,11 @@ export default function SubmissionsClient() {
   } = useServices();
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [selectedSubmission, setSelectedSubmission] =
-    useState<Submission | null>(null);
+    useState<SubmissionType | null>(null);
   const [search, setSearch] = useState("");
   const [activeTab, setActiveTab] = useState("all");
 
-  const handleDelete = (submission: Submission) => {
+  const handleDelete = (submission: SubmissionType) => {
     setSelectedSubmission(submission);
     setIsDeleteDialogOpen(true);
   };

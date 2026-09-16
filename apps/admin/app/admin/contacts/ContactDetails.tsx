@@ -1,6 +1,6 @@
 "use client";
 
-import type { Contact } from "@bilacert/shared/types";
+import type { ContactType } from "@bilacert/shared/types";
 import {
   ArrowLeft,
   CalendarClock,
@@ -24,7 +24,7 @@ import {
 import DeleteContactDialog from "./DeleteContactDialog";
 
 interface ContactDetailsProps {
-  contact: Contact;
+  contact: ContactType;
   emailComposeHref: string | null;
 }
 

@@ -1,8 +1,8 @@
 "use client";
 
-import type { BlogPost } from "@bilacert/shared/types";
+import type { BlogType } from "@bilacert/shared/types";
 import { useDataFetching } from "./useDataFetching";
 
 export function useBlogs() {
-  return useDataFetching<BlogPost>("blog_posts");
+  return useDataFetching<BlogType>("blog_posts");
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import type { Service } from "@bilacert/contracts/service";
+import type { ServiceType } from "@bilacert/contracts/service";
 import { useMemo } from "react";
 import { useBlogs } from "./useBlogs";
 import { useContacts } from "./useContacts";
@@ -21,7 +21,7 @@ function normalizeServiceKey(value: string | undefined) {
 
 function matchesService(
   submissionServiceName: string | undefined,
-  service: Service,
+  service: ServiceType,
 ) {
   const normalizedSubmissionServiceName = normalizeServiceKey(
     submissionServiceName,

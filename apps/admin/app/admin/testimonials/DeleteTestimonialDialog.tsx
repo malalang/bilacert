@@ -1,6 +1,6 @@
 "use client";
 
-import type { Testimonial } from "@bilacert/shared/types";
+import type { TestimonialType } from "@bilacert/shared/types";
 import { Loader2 } from "lucide-react";
 import { useState } from "react";
 import {
@@ -19,7 +19,7 @@ import { deleteTestimonial } from "./actions";
 interface DeleteTestimonialDialogProps {
   isOpen: boolean;
   onClose: () => void;
-  testimonial: Testimonial | null;
+  testimonial: TestimonialType | null;
 }
 
 export default function DeleteTestimonialDialog({

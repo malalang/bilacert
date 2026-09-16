@@ -1,11 +1,11 @@
 "use client";
 
 import type {
-  BlogPost,
-  Contact,
-  Service,
-  Submission,
-  Testimonial,
+  BlogType,
+  ContactType,
+  ServiceType,
+  SubmissionType,
+  TestimonialType,
 } from "@bilacert/shared/types";
 import { createSupabaseBrowserClient } from "@bilacert/supabase/client";
 import { subYears } from "date-fns";
@@ -221,7 +221,7 @@ function FilterableLineCard({
   );
 }
 
-function statusTotal(submissions: Submission[], status: string) {
+function statusTotal(submissions: SubmissionType[], status: string) {
   return submissions.filter((submission) => submission.status === status)
     .length;
 }
@@ -252,11 +252,11 @@ async function getAnalyticsData(
         .select("createdAt,updatedAt,serviceName,status"),
     ]);
 
-  const blogs = (blogRes?.data as BlogPost[]) || [];
-  const contacts = (contactRes?.data as Contact[]) || [];
-  const services = (serviceRes?.data as Service[]) || [];
-  const testimonials = (testimonialRes?.data as Testimonial[]) || [];
-  const submissions = (submissionRes?.data as Submission[]) || [];
+  const blogs = (blogRes?.data as BlogType[]) || [];
+  const contacts = (contactRes?.data as ContactType[]) || [];
+  const services = (serviceRes?.data as ServiceType[]) || [];
+  const testimonials = (testimonialRes?.data as TestimonialType[]) || [];
+  const submissions = (submissionRes?.data as SubmissionType[]) || [];
   const activity = new Map<string, Record<string, number>>();
   const activityKeys = new Set<string>();
 

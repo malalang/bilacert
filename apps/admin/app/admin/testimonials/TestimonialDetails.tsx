@@ -1,6 +1,6 @@
 "use client";
 
-import type { Testimonial } from "@bilacert/shared/types";
+import type { TestimonialType } from "@bilacert/shared/types";
 import { ArrowLeft, Edit, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -11,7 +11,7 @@ import DeleteTestimonialDialog from "./DeleteTestimonialDialog";
 import TestimonialEmbed from "./TestimonialEmbed";
 
 interface TestimonialDetailsProps {
-  testimonial: Testimonial;
+  testimonial: TestimonialType;
 }
 
 export default function TestimonialDetails({

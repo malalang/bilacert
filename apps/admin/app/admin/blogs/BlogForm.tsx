@@ -1,7 +1,10 @@
 "use client";
 
-import { type BlogFormValues, blogSchema } from "@bilacert/contracts/blog";
-import type { BlogPost } from "@bilacert/shared/types";
+import {
+  type BlogType as BlogFormValues,
+  blogSchema,
+} from "@bilacert/contracts/blog";
+import type { BlogType } from "@bilacert/shared/types";
 import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
@@ -36,7 +39,7 @@ import { upsertBlog } from "./actions";
 import BlogEditor from "./BlogEditor";
 
 interface BlogFormProps {
-  blog?: BlogPost | null;
+  blog?: BlogType | null;
   blogId?: string;
 }
 
@@ -59,7 +62,7 @@ function getTabForError(fieldName: string): BlogEditorTab {
   return "core";
 }
 
-function getBlogFormValues(blog?: BlogPost | null): BlogFormValues {
+function getBlogInput(blog?: BlogType | null): BlogFormValues {
   return {
     id: blog?.id,
     title: blog?.title ?? "",
@@ -111,7 +114,7 @@ export default function BlogForm({ blog, blogId }: BlogFormProps) {
 
   const form = useForm<BlogFormValues>({
     resolver: standardSchemaResolver(blogSchema),
-    defaultValues: getBlogFormValues(blog),
+    defaultValues: getBlogInput(blog),
   });
 
   const { handleSubmit, reset, watch, setValue } = form;
@@ -127,7 +130,7 @@ export default function BlogForm({ blog, blogId }: BlogFormProps) {
 
   useEffect(() => {
     if (blog) {
-      const normalizedValues = getBlogFormValues(blog);
+      const normalizedValues = getBlogInput(blog);
       console.log("[bilacert-admin/blogs] form reset", {
         ...getBlogLogPayload(normalizedValues),
         isEditing: true,

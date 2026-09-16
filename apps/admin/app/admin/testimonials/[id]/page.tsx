@@ -1,4 +1,4 @@
-import type { Testimonial } from "@bilacert/shared/types";
+import type { TestimonialType } from "@bilacert/shared/types";
 import { createSupabaseBrowserClient } from "@bilacert/supabase/client";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
@@ -6,7 +6,7 @@ import TestimonialDetails from "../TestimonialDetails";
 
 const supabase = createSupabaseBrowserClient();
 
-async function getTestimonial(id: string): Promise<Testimonial | null> {
+async function getTestimonial(id: string): Promise<TestimonialType | null> {
   const { data, error } = await supabase
     .from("testimonials")
     .select("*")
@@ -21,7 +21,7 @@ async function getTestimonial(id: string): Promise<Testimonial | null> {
     id: data.id,
     postUrl: data.postUrl,
     createdAt: data.createdAt,
-  } as Testimonial;
+  } as TestimonialType;
 }
 
 export async function generateMetadata({

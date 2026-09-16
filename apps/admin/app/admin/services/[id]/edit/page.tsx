@@ -1,4 +1,4 @@
-import type { Service } from "@bilacert/contracts/service";
+import type { ServiceType } from "@bilacert/contracts/service";
 import { normalizeService } from "@bilacert/supabase/Queries/services";
 import { createSupabaseServerClient } from "@bilacert/supabase/server";
 import { ArrowLeft } from "lucide-react";
@@ -19,7 +19,7 @@ export const metadata = {
   description: "Edit an existing regulatory service.",
 };
 
-async function getService(id: string): Promise<Service | null> {
+async function getService(id: string): Promise<ServiceType | null> {
   const supabase = await createSupabaseServerClient();
   const { data, error } = await supabase
     .from("services")

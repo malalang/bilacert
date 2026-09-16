@@ -1,6 +1,6 @@
 "use client";
 
-import type { Submission } from "@bilacert/shared/types";
+import type { SubmissionType } from "@bilacert/shared/types";
 import { Loader2 } from "lucide-react";
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
@@ -16,10 +16,10 @@ import { updateSubmissionStatus } from "./actions";
 import { statusVariantMap } from "./columns";
 
 interface StatusUpdateProps {
-  submission: Submission;
+  submission: SubmissionType;
 }
 
-const statuses: Submission["status"][] = [
+const statuses: SubmissionType["status"][] = [
   "pending",
   "in-progress",
   "completed",
@@ -32,7 +32,7 @@ export default function StatusUpdate({ submission }: StatusUpdateProps) {
   const [currentStatus, setCurrentStatus] = useState(submission.status);
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleStatusChange = async (newStatus: Submission["status"]) => {
+  const handleStatusChange = async (newStatus: SubmissionType["status"]) => {
     if (newStatus === currentStatus) return;
 
     setIsLoading(true);
@@ -44,7 +44,7 @@ export default function StatusUpdate({ submission }: StatusUpdateProps) {
 
       if (result.error) throw new Error(result.error);
 
-      setCurrentStatus(newStatus as Submission["status"]);
+      setCurrentStatus(newStatus as SubmissionType["status"]);
       toast({
         title: "Status updated",
         description: `Submission status changed to "${newStatus}".`,

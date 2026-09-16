@@ -1,10 +1,10 @@
 "use client";
 
 import {
-  type ContactMessageInput as ContactFormValues,
+  type ContactMessageType as ContactFormValues,
   contactSchema,
 } from "@bilacert/contracts/contact";
-import type { Contact } from "@bilacert/shared/types";
+import type { ContactType } from "@bilacert/shared/types";
 import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
@@ -26,7 +26,7 @@ import { useToast } from "@/hooks/use-toast";
 import { upsertContact } from "./actions";
 
 interface ContactFormProps {
-  contact?: Contact | null;
+  contact?: ContactType | null;
 }
 
 export default function ContactForm({ contact }: ContactFormProps) {

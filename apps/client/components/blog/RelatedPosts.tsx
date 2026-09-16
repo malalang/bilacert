@@ -1,8 +1,8 @@
-import type { BlogPost } from "@bilacert/shared/types";
+import type { BlogType } from "@bilacert/shared/types";
 import BlogCard from "@/components/cards/BlogCard";
 
 interface RelatedPostsProps {
-  posts: BlogPost[];
+  posts: BlogType[];
 }
 
 export function RelatedPosts({ posts }: RelatedPostsProps) {

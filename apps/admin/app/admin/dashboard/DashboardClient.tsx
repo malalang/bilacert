@@ -1,7 +1,11 @@
 "use client";
 
 import { Icon } from "@bilacert/shared/Icon";
-import type { BlogPost, Contact, Submission } from "@bilacert/shared/types";
+import type {
+  BlogType,
+  ContactType,
+  SubmissionType,
+} from "@bilacert/shared/types";
 import { format, isValid, parseISO } from "date-fns";
 import {
   Archive,
@@ -67,7 +71,7 @@ const compactFormatDate = (date: string | Date | undefined) => {
   return isValid(d) ? format(d, "dd MMM yyyy") : "Invalid date";
 };
 
-function PendingSubmissionItem({ submission }: { submission: Submission }) {
+function PendingSubmissionItem({ submission }: { submission: SubmissionType }) {
   return (
     <Link
       href={`/admin/form_submissions/${submission.id}`}
@@ -104,7 +108,7 @@ function PendingSubmissionItem({ submission }: { submission: Submission }) {
   );
 }
 
-function ContactItem({ contact }: { contact: Contact }) {
+function ContactItem({ contact }: { contact: ContactType }) {
   return (
     <Link
       href={`/admin/contacts/${contact.id}`}
@@ -133,7 +137,7 @@ function ContactItem({ contact }: { contact: Contact }) {
   );
 }
 
-function BlogInsightCard({ blog }: { blog: BlogPost }) {
+function BlogInsightCard({ blog }: { blog: BlogType }) {
   return (
     <Link
       href={`/admin/blogs/${blog.id}`}

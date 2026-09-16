@@ -1,4 +1,4 @@
-import type { Submission } from "@bilacert/shared/types";
+import type { SubmissionType } from "@bilacert/shared/types";
 import { createSupabaseBrowserClient } from "@bilacert/supabase/client";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
@@ -20,7 +20,7 @@ export const metadata = {
   description: "Edit a form submission.",
 };
 
-async function getSubmission(id: string): Promise<Submission | null> {
+async function getSubmission(id: string): Promise<SubmissionType | null> {
   const { data, error } = await supabase
     .from("form_submissions")
     .select("*")
@@ -48,7 +48,7 @@ async function getSubmission(id: string): Promise<Submission | null> {
     createdAt: data.createdAt,
     updatedAt: data.updatedAt,
     completedAt: data.completedAt,
-  } as Submission;
+  } as SubmissionType;
 }
 
 export default async function EditSubmissionPage({

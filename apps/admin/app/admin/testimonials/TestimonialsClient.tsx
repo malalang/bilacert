@@ -1,6 +1,6 @@
 "use client";
 
-import type { Testimonial } from "@bilacert/shared/types";
+import type { TestimonialType } from "@bilacert/shared/types";
 import { format } from "date-fns";
 import { MoreHorizontal } from "lucide-react";
 import Link from "next/link";
@@ -27,9 +27,9 @@ import DeleteTestimonialDialog from "./DeleteTestimonialDialog";
 import TestimonialEmbed from "./TestimonialEmbed";
 
 const renderTestimonial = (
-  testimonial: Testimonial,
-  onEdit: (testimonial: Testimonial) => void,
-  onDelete: (testimonial: Testimonial) => void,
+  testimonial: TestimonialType,
+  onEdit: (testimonial: TestimonialType) => void,
+  onDelete: (testimonial: TestimonialType) => void,
 ) => {
   const router = useRouter();
   const date = new Date(testimonial.createdAt);
@@ -107,7 +107,7 @@ const renderTestimonial = (
 
 export default function TestimonialsClient() {
   return (
-    <AdminPage<Testimonial>
+    <AdminPage<TestimonialType>
       useData={useTestimonials}
       title="Testimonials"
       newItemButtonText="Add Testimonial"

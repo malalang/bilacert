@@ -27,5 +27,4 @@ export const blogSchema = z.object({
   seoKeywords: z.string().optional(),
 });
 
-export type BlogFormValues = z.infer<typeof blogSchema>;
-export type BlogContract = BlogFormValues;
+export type BlogType = z.infer<typeof blogSchema>;

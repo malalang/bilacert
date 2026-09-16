@@ -1,8 +1,8 @@
 "use client";
 
 import {
-  type Service,
-  type ServiceFormValues,
+  type ServiceInput,
+  type ServiceType,
   serviceSchema,
 } from "@bilacert/contracts/service";
 import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
@@ -27,7 +27,7 @@ import SeoForm from "../../components/SeoForm";
 import SuccessStoryForm from "../../components/SuccessStoryForm";
 
 interface ServiceFormProps {
-  service?: Service | null;
+  service?: ServiceType | null;
 }
 
 const slugify = (str: string) =>
@@ -43,7 +43,7 @@ export default function ServiceForm({ service }: ServiceFormProps) {
   const router = useRouter();
   const isEditing = !!service;
 
-  const form = useForm<ServiceFormValues>({
+  const form = useForm<ServiceInput>({
     resolver: standardSchemaResolver(serviceSchema),
     defaultValues: {
       id: undefined,
@@ -189,7 +189,7 @@ export default function ServiceForm({ service }: ServiceFormProps) {
     }
   }, [service, reset]);
 
-  const onSubmit = async (values: ServiceFormValues) => {
+  const onSubmit = async (values: ServiceInput) => {
     try {
       const processedValues = {
         ...values,

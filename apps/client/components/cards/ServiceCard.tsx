@@ -1,4 +1,4 @@
-import type { Service } from "@bilacert/contracts/service";
+import type { ServiceType } from "@bilacert/contracts/service";
 import { Icon } from "@bilacert/shared/Icon";
 import { ArrowRight, CheckCircle2 } from "lucide-react";
 import Image from "next/image";
@@ -6,7 +6,7 @@ import Link from "next/link";
 
 const serviceImageFallback = "/images/services/services-hero.svg";
 
-function getServiceImage(service: Service) {
+function getServiceImage(service: ServiceType) {
   return (
     service.thumbnail?.trim() || service.image?.trim() || serviceImageFallback
   );
@@ -17,7 +17,7 @@ function isSvgImage(src: string) {
 }
 
 interface ServiceCardProps {
-  service: Service;
+  service: ServiceType;
 }
 
 export default function ServiceCard({ service }: ServiceCardProps) {
