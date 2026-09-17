@@ -45,3 +45,18 @@ export async function updateFormSubmission(id: string, data: SubmissionUpdate) {
     mode: "immediate",
   });
 }
+
+export async function deleteFormSubmission(id: string) {
+  const supabase = await requireAdminUser();
+  const { error } = await supabase
+    .from("form_submissions")
+    .delete()
+    .eq("id", id);
+
+  if (error) throw new Error(error.message);
+
+  return mutationResult(null, {
+    tags: [CACHE_TAGS.formSubmissions],
+    mode: "immediate",
+  });
+}

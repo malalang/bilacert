@@ -1,6 +1,6 @@
 import type { BlogRowType as BlogType } from "@bilacert/contracts/blog";
 import type { ServiceType } from "@bilacert/contracts/service";
-import { createSupabaseBrowserClient } from "@bilacert/supabase/client";
+import { createSupabaseServerClient } from "@bilacert/supabase/server";
 import { normalizeService } from "@bilacert/supabase/Queries/services";
 import { Eye } from "lucide-react";
 import type { Metadata } from "next";
@@ -17,9 +17,8 @@ import {
 import ServiceDetails from "./ServiceDetails";
 import ServiceSubmissionAnalysis from "./ServiceSubmissionAnalysis";
 
-const supabase = createSupabaseBrowserClient();
-
 async function getService(id: string): Promise<ServiceType | null> {
+  const supabase = await createSupabaseServerClient();
   const { data, error } = await supabase
     .from("services")
     .select("*")
@@ -34,6 +33,7 @@ async function getService(id: string): Promise<ServiceType | null> {
 }
 
 async function getBlogs(): Promise<BlogType[]> {
+  const supabase = await createSupabaseServerClient();
   const { data, error } = await supabase
     .from("blog_posts")
     .select(

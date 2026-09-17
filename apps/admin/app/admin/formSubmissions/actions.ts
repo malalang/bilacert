@@ -3,7 +3,7 @@
 import type { ActionResult } from "@bilacert/contracts/actionResult";
 import type { SubmissionType } from "@bilacert/contracts/formSubmission";
 import { submissionSchema } from "@bilacert/contracts/formSubmission";
-import { updateFormSubmission } from "@bilacert/supabase/Mutations/formSubmissions";
+import { deleteFormSubmission, updateFormSubmission } from "@bilacert/supabase/Mutations/formSubmissions";
 import type { Json } from "@bilacert/supabase/supabaseType";
 import { revalidatePath } from "next/cache";
 
@@ -75,5 +75,24 @@ export async function updateSubmissionStatus(
     ok: true,
     data,
     message: "Status updated successfully",
+  };
+}
+
+export async function deleteSubmission(
+  submissionId: string,
+): Promise<ActionResult<null>> {
+  try {
+    await deleteFormSubmission(submissionId);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Unknown error";
+    return { ok: false, error: `Database error: ${message}` };
+  }
+
+  revalidatePath("/admin/formSubmissions");
+
+  return {
+    ok: true,
+    data: null,
+    message: "Submission deleted successfully",
   };
 }

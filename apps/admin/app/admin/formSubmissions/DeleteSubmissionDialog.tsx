@@ -1,7 +1,6 @@
 "use client";
 
 import type { SubmissionType } from "@bilacert/contracts/formSubmission";
-import { createSupabaseBrowserClient } from "@bilacert/supabase/client";
 import { Loader2 } from "lucide-react";
 import { useState } from "react";
 import {
@@ -15,8 +14,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-
-const supabase = createSupabaseBrowserClient();
+import { deleteSubmission } from "./actions";
 
 interface DeleteSubmissionDialogProps {
   isOpen: boolean;
@@ -39,12 +37,11 @@ export default function DeleteSubmissionDialog({
 
     setIsDeleting(true);
     try {
-      const { error } = await supabase
-        .from("form_submissions")
-        .delete()
-        .eq("id", submission.id);
+      const result = await deleteSubmission(submission.id);
 
-      if (error) throw error;
+      if (!result.ok) {
+        throw new Error(result.error);
+      }
 
       toast({
         title: "Submission deleted",
