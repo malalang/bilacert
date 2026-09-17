@@ -47,6 +47,9 @@ function blogMutationResult(blog: BlogRow) {
   });
 }
 
+// Public-facing view counter triggered from blog pages
+// (apps/client/app/blog/[slug]). Auth is intentionally omitted
+// because this runs as an unauthenticated public read-trigger.
 export async function incrementBlogPostViews(slug: string): Promise<void> {
   const supabase = await createSupabaseServerClient();
   const { error } = await supabase.rpc("increment_views", { post_slug: slug });

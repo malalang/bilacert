@@ -8,7 +8,7 @@ export const contactSchema = z.object({
   message: z.string().optional(),
 });
 
-export type ContactMessageType = z.infer<typeof contactSchema>;
+export type ContactInput = z.infer<typeof contactSchema>;
 
 export interface ContactType {
   id: string;

@@ -2,7 +2,7 @@
 
 import type { ContactType } from "@bilacert/contracts/contact";
 import {
-  type ContactMessageType as ContactFormValues,
+  type ContactInput as ContactFormValues,
   contactSchema,
 } from "@bilacert/contracts/contact";
 import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";

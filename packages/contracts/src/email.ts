@@ -53,8 +53,8 @@ export const emailMessageReadStateSchema = z.object({
   readState: z.enum(["read", "unread"]),
 });
 
-export type EmailComposeInput = z.infer<typeof emailComposeSchema>;
-export type EmailMessageReadStateInput = z.infer<
+export type EmailComposeType = z.infer<typeof emailComposeSchema>;
+export type EmailMessageReadStateType = z.infer<
   typeof emailMessageReadStateSchema
 >;
 

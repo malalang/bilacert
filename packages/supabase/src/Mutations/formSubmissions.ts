@@ -10,6 +10,9 @@ type SubmissionInsert =
 type SubmissionUpdate =
   Database["public"]["Tables"]["form_submissions"]["Update"];
 
+// Public-facing insert used by the client service-application forms.
+// Auth is intentionally omitted because this runs as an
+// unauthenticated public submission.
 export async function createFormSubmission(data: SubmissionInsert) {
   const supabase = await createSupabaseServerClient();
   const { data: submission, error } = await supabase

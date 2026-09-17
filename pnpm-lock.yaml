@@ -12,6 +12,9 @@ catalogs:
     '@hookform/resolvers':
       specifier: ^5.2.2
       version: 5.4.0
+    '@next/mdx':
+      specifier: 16.2.7
+      version: 16.2.7
     '@radix-ui/react-accordion':
       specifier: ^1.2.3
       version: 1.2.13
@@ -361,8 +364,8 @@ importers:
         specifier: ^3.1.1
         version: 3.1.1(@types/react@19.2.4)(react@19.2.4)
       '@next/mdx':
-        specifier: ^15.5.2
-        version: 15.5.19(@mdx-js/loader@3.1.1)(@mdx-js/react@3.1.1(@types/react@19.2.4)(react@19.2.4))
+        specifier: 'catalog:'
+        version: 16.2.7(@mdx-js/loader@3.1.1)(@mdx-js/react@3.1.1(@types/react@19.2.4)(react@19.2.4))
       '@next/third-parties':
         specifier: ^16.0.1
         version: 16.2.7(next@16.2.7(@opentelemetry/api@1.9.1)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4)
@@ -1178,8 +1181,8 @@ packages:
   '@next/env@16.2.7':
     resolution: {integrity: sha512-tMJizPlj6ZYpBMMdK8S0LJufrP4QTdR6pcv9KQ/bVETPAmg0j1mlHE9G2c38UyGHxoBapgwuj7XjbGJ2RcDFOg==}
 
-  '@next/mdx@15.5.19':
-    resolution: {integrity: sha512-W9eYr4l+qkWlOv7ZOLJTNp1SLtX4iYkUVSBWox6svcfRkLDMHhquvCUjN7kCJ2EaxKtJf4t/+pZDoNGUsd1HTw==}
+  '@next/mdx@16.2.7':
+    resolution: {integrity: sha512-4RmM0KISxvfHr37/cn9TAGD2oy1nvTQ+ycgknz2xpd8IrY980N7XDU3CXhfKOXPhIVgbshxFF9HQEQC32ZVa9A==}
     peerDependencies:
       '@mdx-js/loader': '>=0.15.0'
       '@mdx-js/react': '>=0.15.0'
@@ -5647,7 +5650,7 @@ snapshots:
 
   '@next/env@16.2.7': {}
 
-  '@next/mdx@15.5.19(@mdx-js/loader@3.1.1)(@mdx-js/react@3.1.1(@types/react@19.2.4)(react@19.2.4))':
+  '@next/mdx@16.2.7(@mdx-js/loader@3.1.1)(@mdx-js/react@3.1.1(@types/react@19.2.4)(react@19.2.4))':
     dependencies:
       source-map: 0.7.6
     optionalDependencies:

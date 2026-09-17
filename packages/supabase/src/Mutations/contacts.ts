@@ -7,6 +7,9 @@ import type { Database } from "../supabaseType";
 
 type ContactInsert = Database["public"]["Tables"]["contacts"]["Insert"];
 
+// Public-facing insert used by the client contact form
+// (apps/client/app/contact). Auth is intentionally omitted
+// because this runs as an unauthenticated public submission.
 export async function createContact(data: ContactInsert) {
   const supabase = await createSupabaseServerClient();
   const { data: contact, error } = await supabase
