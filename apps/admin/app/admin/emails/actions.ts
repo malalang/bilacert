@@ -23,7 +23,7 @@ export async function submitEmailAction(
   const access = await getAdminAccess();
 
   if (!access.allowed) {
-    return { error: access.message };
+    return { ok: false, error: access.message };
   }
 
   const parsed = emailComposeSchema.safeParse({
@@ -37,6 +37,7 @@ export async function submitEmailAction(
 
   if (!parsed.success) {
     return {
+      ok: false,
       error: "Check the highlighted fields and try again.",
       fieldErrors: parsed.error.flatten().fieldErrors as Record<
         string,
@@ -55,6 +56,7 @@ export async function submitEmailAction(
       message: error instanceof Error ? error.message : "Unknown error",
     });
     return {
+      ok: false,
       error:
         error instanceof Error
           ? error.message

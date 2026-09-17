@@ -59,6 +59,7 @@ export type EmailMessageReadStateInput = z.infer<
 >;
 
 export type EmailComposeActionState = {
+  ok?: boolean;
   error?: string;
   fieldErrors?: Record<string, string[]>;
 };
