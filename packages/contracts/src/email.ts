@@ -10,7 +10,7 @@ function isEmailList(value: string) {
 
   return (
     addresses.length > 0 &&
-    addresses.every((address) => z.string().email().safeParse(address).success)
+    addresses.every((address) => z.email().safeParse(address).success)
   );
 }
 

@@ -29,7 +29,7 @@ export type FormType = z.infer<typeof formTypeSchema>;
 
 export const submissionSchema = z.object({
   fullName: z.string().min(1, "Full name is required"),
-  email: z.string().email(),
+  email: z.email(),
   phone: z.string().optional(),
   company: z.string().optional(),
   industry: z.string().optional(),
@@ -58,7 +58,7 @@ export type FormSubmissionType = z.infer<typeof submissionSchema>;
 
 export const formSubmissionPayloadSchema = z.object({
   fullName: z.string().min(1),
-  email: z.string().email(),
+  email: z.email(),
   phone: z.string().optional(),
   companyName: z.string().optional(),
   serviceType: z.string().optional(),
