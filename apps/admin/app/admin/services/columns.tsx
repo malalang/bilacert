@@ -1,6 +1,6 @@
 "use client";
 
-import type { ServiceType } from "@bilacert/contracts/service";
+import type { ServiceRowType } from "@bilacert/contracts/service";
 import type { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 import Link from "next/link";
@@ -16,12 +16,12 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 interface ColumnsOptions {
-  onDelete: (service: ServiceType) => void;
+  onDelete: (service: ServiceRowType) => void;
 }
 
 export const columns = ({
   onDelete,
-}: ColumnsOptions): ColumnDef<ServiceType>[] => [
+}: ColumnsOptions): ColumnDef<ServiceRowType>[] => [
   {
     accessorKey: "title",
     header: ({ column }) => {

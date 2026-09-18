@@ -65,8 +65,8 @@ export const serviceSchema = z.object({
   updatedAt: z.string().optional(),
 });
 
-export type ServiceInput = z.infer<typeof serviceSchema>;
-export type ServiceType = ServiceInput & { id: string };
+export type ServiceType = z.infer<typeof serviceSchema>;
+export type ServiceRowType = ServiceType & { id: string };
 export type PricingPlanType = z.infer<typeof pricingPlanSchema>;
 export type ProcessStepType = z.infer<typeof processStepSchema>;
 export type SuccessStoryType = z.infer<typeof successStorySchema>;

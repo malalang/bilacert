@@ -4,7 +4,7 @@ import type {
   SubmissionStatus,
   SubmissionType,
 } from "@bilacert/contracts/formSubmission";
-import type { ServiceType } from "@bilacert/contracts/service";
+import type { ServiceRowType } from "@bilacert/contracts/service";
 import {
   Archive,
   BarChart3,
@@ -85,7 +85,7 @@ function getSubmissionStatusTotal(
 }
 
 function getServiceSubmissions(
-  service: ServiceType,
+  service: ServiceRowType,
   submissions: SubmissionType[],
 ) {
   const serviceKeys = [service.id, service.slug, service.title]
@@ -107,7 +107,7 @@ function TopServicesBySubmissions({
   services,
   submissions,
 }: {
-  services: ServiceType[];
+  services: ServiceRowType[];
   submissions: SubmissionType[];
 }) {
   const serviceSubmissionRows = services

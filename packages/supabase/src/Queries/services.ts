@@ -1,4 +1,4 @@
-import type { ServiceType } from "@bilacert/contracts/service";
+import type { ServiceRowType } from "@bilacert/contracts/service";
 import { createSupabasePublicClient } from "../server";
 import type { Database } from "../supabaseType";
 
@@ -19,7 +19,7 @@ function toStringArray(value: unknown): string[] {
   return [];
 }
 
-export function normalizeService(row: ServiceRow): ServiceType {
+export function normalizeService(row: ServiceRow): ServiceRowType {
   return {
     id: row.id,
     title: row.title,
@@ -51,7 +51,7 @@ export function normalizeService(row: ServiceRow): ServiceType {
   };
 }
 
-export async function getPublishedServices(): Promise<ServiceType[]> {
+export async function getPublishedServices(): Promise<ServiceRowType[]> {
   const supabase = createSupabasePublicClient();
   const { data, error } = await supabase
     .from("services")
@@ -67,7 +67,7 @@ export async function getPublishedServices(): Promise<ServiceType[]> {
   return (data || []).map(normalizeService);
 }
 
-export async function getFeaturedServices(): Promise<ServiceType[]> {
+export async function getFeaturedServices(): Promise<ServiceRowType[]> {
   const supabase = createSupabasePublicClient();
   const { data, error } = await supabase
     .from("services")
@@ -87,7 +87,7 @@ export async function getFeaturedServices(): Promise<ServiceType[]> {
 
 export async function getServiceBySlug(
   slug: string,
-): Promise<ServiceType | null> {
+): Promise<ServiceRowType | null> {
   const supabase = createSupabasePublicClient();
   const { data, error } = await supabase
     .from("services")

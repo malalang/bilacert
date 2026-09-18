@@ -3,7 +3,10 @@
 import type { ActionResult } from "@bilacert/contracts/actionResult";
 import type { SubmissionType } from "@bilacert/contracts/formSubmission";
 import { submissionSchema } from "@bilacert/contracts/formSubmission";
-import { deleteFormSubmission, updateFormSubmission } from "@bilacert/supabase/Mutations/formSubmissions";
+import {
+  deleteFormSubmission,
+  updateFormSubmission,
+} from "@bilacert/supabase/Mutations/formSubmissions";
 import type { Json } from "@bilacert/supabase/supabaseType";
 import { revalidatePath } from "next/cache";
 

@@ -1,10 +1,10 @@
-import type { TestimonialType } from "@bilacert/contracts/testimonial";
+import type { TestimonialRowType } from "@bilacert/contracts/testimonial";
 import { createSupabaseServerClient } from "@bilacert/supabase/server";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import TestimonialDetails from "../TestimonialDetails";
 
-async function getTestimonial(id: string): Promise<TestimonialType | null> {
+async function getTestimonial(id: string): Promise<TestimonialRowType | null> {
   const supabase = await createSupabaseServerClient();
   const { data, error } = await supabase
     .from("testimonials")
@@ -20,7 +20,7 @@ async function getTestimonial(id: string): Promise<TestimonialType | null> {
     id: data.id,
     postUrl: data.postUrl,
     createdAt: data.createdAt,
-  } as TestimonialType;
+  } as TestimonialRowType;
 }
 
 export async function generateMetadata({

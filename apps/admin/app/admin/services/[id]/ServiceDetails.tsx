@@ -3,7 +3,7 @@
 import type {
   PricingPlanType,
   ProcessStepType,
-  ServiceType,
+  ServiceRowType,
   SuccessStoryType,
 } from "@bilacert/contracts/service";
 import { Icon } from "@bilacert/shared/Icon";
@@ -25,7 +25,7 @@ import {
 import DeleteServiceDialog from "../DeleteServiceDialog";
 
 interface ServiceDetailsProps {
-  service: ServiceType;
+  service: ServiceRowType;
 }
 
 export default function ServiceDetails({ service }: ServiceDetailsProps) {

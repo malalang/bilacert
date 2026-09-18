@@ -4,7 +4,7 @@ import type {
   SubmissionStatus,
   SubmissionType,
 } from "@bilacert/contracts/formSubmission";
-import type { ServiceType } from "@bilacert/contracts/service";
+import type { ServiceRowType } from "@bilacert/contracts/service";
 import {
   Archive,
   CheckCircle2,
@@ -61,7 +61,7 @@ const submissionStatuses: StatusConfig[] = [
 ];
 
 function getServiceSubmissions(
-  service: ServiceType,
+  service: ServiceRowType,
   submissions: SubmissionType[],
 ) {
   const serviceTitle = service.title.trim().toLowerCase();
@@ -93,7 +93,7 @@ function getSubmissionsByDay(submissions: SubmissionType[]) {
 }
 
 interface ServiceSubmissionAnalysisProps {
-  service: ServiceType;
+  service: ServiceRowType;
 }
 
 export default function ServiceSubmissionAnalysis({

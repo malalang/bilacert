@@ -1,7 +1,7 @@
 "use client";
 
 import {
-  type TestimonialInput,
+  type TestimonialRowType,
   type TestimonialType,
   testimonialSchema,
 } from "@bilacert/contracts/testimonial";
@@ -25,7 +25,7 @@ import { useToast } from "@/hooks/use-toast";
 import { upsertTestimonial } from "./actions";
 
 interface TestimonialFormProps {
-  testimonial?: TestimonialType | null;
+  testimonial?: TestimonialRowType | null;
 }
 
 export default function TestimonialForm({ testimonial }: TestimonialFormProps) {
@@ -33,7 +33,7 @@ export default function TestimonialForm({ testimonial }: TestimonialFormProps) {
   const router = useRouter();
   const isEditing = !!testimonial;
 
-  const form = useForm<TestimonialInput>({
+  const form = useForm<TestimonialType>({
     resolver: standardSchemaResolver(testimonialSchema),
     defaultValues: {
       postUrl: "",
@@ -58,7 +58,7 @@ export default function TestimonialForm({ testimonial }: TestimonialFormProps) {
     }
   }, [testimonial, reset]);
 
-  const onSubmit = async (values: TestimonialInput) => {
+  const onSubmit = async (values: TestimonialType) => {
     try {
       const result = await upsertTestimonial(values);
 

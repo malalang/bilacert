@@ -1,7 +1,7 @@
 "use client";
 
-import type { ServiceType } from "@bilacert/contracts/service";
-import { type ServiceInput, serviceSchema } from "@bilacert/contracts/service";
+import type { ServiceRowType } from "@bilacert/contracts/service";
+import { type ServiceType, serviceSchema } from "@bilacert/contracts/service";
 import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import { Loader2, PlusCircle, Trash2 } from "lucide-react";
 import Link from "next/link";
@@ -28,7 +28,7 @@ import { useToast } from "@/hooks/use-toast";
 import { upsertService } from "./actions";
 
 interface ServiceFormProps {
-  service?: ServiceType | null;
+  service?: ServiceRowType | null;
 }
 
 const slugify = (str: string) =>
@@ -44,7 +44,7 @@ export default function ServiceForm({ service }: ServiceFormProps) {
   const router = useRouter();
   const isEditing = !!service;
 
-  const form = useForm<ServiceInput>({
+  const form = useForm<ServiceType>({
     resolver: standardSchemaResolver(serviceSchema),
     defaultValues: {
       title: "",
@@ -203,7 +203,7 @@ export default function ServiceForm({ service }: ServiceFormProps) {
     }
   }, [service, reset]);
 
-  const onSubmit = async (values: ServiceInput) => {
+  const onSubmit = async (values: ServiceType) => {
     try {
       const processedValues = {
         ...values,

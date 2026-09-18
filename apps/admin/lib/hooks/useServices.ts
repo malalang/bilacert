@@ -1,8 +1,8 @@
 "use client";
 
-import type { ServiceType } from "@bilacert/contracts/service";
+import type { ServiceRowType } from "@bilacert/contracts/service";
 import { useDataFetching } from "./useDataFetching";
 
 export function useServices() {
-  return useDataFetching<ServiceType>("services");
+  return useDataFetching<ServiceRowType>("services");
 }

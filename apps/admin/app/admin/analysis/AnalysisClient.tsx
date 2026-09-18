@@ -3,8 +3,8 @@
 import type { BlogRowType as BlogType } from "@bilacert/contracts/blog";
 import type { ContactType } from "@bilacert/contracts/contact";
 import type { SubmissionType } from "@bilacert/contracts/formSubmission";
-import type { ServiceType } from "@bilacert/contracts/service";
-import type { TestimonialType } from "@bilacert/contracts/testimonial";
+import type { ServiceRowType } from "@bilacert/contracts/service";
+import type { TestimonialRowType } from "@bilacert/contracts/testimonial";
 import { createSupabaseBrowserClient } from "@bilacert/supabase/client";
 import { subYears } from "date-fns";
 import {
@@ -252,8 +252,8 @@ async function getAnalyticsData(
 
   const blogs = (blogRes?.data as BlogType[]) || [];
   const contacts = (contactRes?.data as ContactType[]) || [];
-  const services = (serviceRes?.data as ServiceType[]) || [];
-  const testimonials = (testimonialRes?.data as TestimonialType[]) || [];
+  const services = (serviceRes?.data as ServiceRowType[]) || [];
+  const testimonials = (testimonialRes?.data as TestimonialRowType[]) || [];
   const submissions = (submissionRes?.data as SubmissionType[]) || [];
   const activity = new Map<string, Record<string, number>>();
   const activityKeys = new Set<string>();

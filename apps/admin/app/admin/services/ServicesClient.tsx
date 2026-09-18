@@ -4,7 +4,7 @@ import type {
   SubmissionStatus,
   SubmissionType,
 } from "@bilacert/contracts/formSubmission";
-import type { ServiceType } from "@bilacert/contracts/service";
+import type { ServiceRowType } from "@bilacert/contracts/service";
 import {
   Archive,
   BarChart3,
@@ -96,7 +96,7 @@ function normalizeServiceKey(value: string | undefined) {
 }
 
 function getServiceSubmissions(
-  service: ServiceType,
+  service: ServiceRowType,
   submissions: SubmissionType[],
 ) {
   const serviceKeys = [service.id, service.slug, service.title]
@@ -115,7 +115,7 @@ function getServiceSubmissions(
 }
 
 function getServiceSubmissionStatusCounts(
-  service: ServiceType,
+  service: ServiceRowType,
   submissions: SubmissionType[],
 ): ServiceSubmissionStatusCount[] {
   const serviceSubmissions = getServiceSubmissions(service, submissions);
@@ -132,7 +132,7 @@ function ServicesAnalysis({
   services,
   submissions,
 }: {
-  services: ServiceType[];
+  services: ServiceRowType[];
   submissions: SubmissionType[];
 }) {
   const publishedServices = services.filter((service) => service.published);
@@ -216,10 +216,10 @@ const ServiceCard = ({
   onEdit,
   onDelete,
 }: {
-  service: ServiceType;
+  service: ServiceRowType;
   submissionStatusCounts: ServiceSubmissionStatusCount[];
-  onEdit: (service: ServiceType) => void;
-  onDelete: (service: ServiceType) => void;
+  onEdit: (service: ServiceRowType) => void;
+  onDelete: (service: ServiceRowType) => void;
 }) => {
   const router = useRouter();
   const imageUrl =
@@ -355,7 +355,7 @@ export default function ServicesClient() {
   const { data: submissions } = useSubmissions();
 
   return (
-    <AdminPage<ServiceType>
+    <AdminPage<ServiceRowType>
       useData={useServices}
       title="Services"
       newItemButtonText="Add Service"

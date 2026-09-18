@@ -1,8 +1,8 @@
 "use client";
 
-import type { TestimonialType } from "@bilacert/contracts/testimonial";
+import type { TestimonialRowType } from "@bilacert/contracts/testimonial";
 import { useDataFetching } from "./useDataFetching";
 
 export function useTestimonials() {
-  return useDataFetching<TestimonialType>("testimonials");
+  return useDataFetching<TestimonialRowType>("testimonials");
 }

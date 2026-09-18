@@ -1,10 +1,10 @@
-import type { TestimonialType } from "@bilacert/contracts/testimonial";
+import type { TestimonialRowType } from "@bilacert/contracts/testimonial";
 import { createSupabasePublicClient } from "../server";
 import type { Database } from "../supabaseType";
 
 type TestimonialRow = Database["public"]["Tables"]["testimonials"]["Row"];
 
-function normalizeTestimonial(row: TestimonialRow): TestimonialType {
+function normalizeTestimonial(row: TestimonialRow): TestimonialRowType {
   return {
     id: row.id,
     postUrl: row.postUrl,
@@ -12,7 +12,9 @@ function normalizeTestimonial(row: TestimonialRow): TestimonialType {
   };
 }
 
-export async function getPublishedTestimonials(): Promise<TestimonialType[]> {
+export async function getPublishedTestimonials(): Promise<
+  TestimonialRowType[]
+> {
   const supabase = createSupabasePublicClient();
   const { data, error } = await supabase
     .from("testimonials")

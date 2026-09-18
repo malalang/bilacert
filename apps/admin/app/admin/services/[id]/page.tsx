@@ -1,7 +1,7 @@
 import type { BlogRowType as BlogType } from "@bilacert/contracts/blog";
-import type { ServiceType } from "@bilacert/contracts/service";
-import { createSupabaseServerClient } from "@bilacert/supabase/server";
+import type { ServiceRowType } from "@bilacert/contracts/service";
 import { normalizeService } from "@bilacert/supabase/Queries/services";
+import { createSupabaseServerClient } from "@bilacert/supabase/server";
 import { Eye } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
@@ -17,7 +17,7 @@ import {
 import ServiceDetails from "./ServiceDetails";
 import ServiceSubmissionAnalysis from "./ServiceSubmissionAnalysis";
 
-async function getService(id: string): Promise<ServiceType | null> {
+async function getService(id: string): Promise<ServiceRowType | null> {
   const supabase = await createSupabaseServerClient();
   const { data, error } = await supabase
     .from("services")
@@ -51,7 +51,7 @@ function normalizeSearchValue(value: string | null | undefined) {
   return value?.trim().toLowerCase() ?? "";
 }
 
-function getRelatedBlogs(service: ServiceType, blogs: BlogType[]) {
+function getRelatedBlogs(service: ServiceRowType, blogs: BlogType[]) {
   const serviceTerms = [service.title, service.slug, service.category]
     .map(normalizeSearchValue)
     .filter(Boolean);
@@ -75,7 +75,7 @@ function ServiceBlogPerformance({
   service,
   blogs,
 }: {
-  service: ServiceType;
+  service: ServiceRowType;
   blogs: BlogType[];
 }) {
   const topBlogs = getRelatedBlogs(service, blogs)

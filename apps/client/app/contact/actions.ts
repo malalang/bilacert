@@ -1,10 +1,7 @@
 "use server";
 
 import type { ActionResult } from "@bilacert/contracts/actionResult";
-import {
-  type ContactInput,
-  contactSchema,
-} from "@bilacert/contracts/contact";
+import { type ContactInput, contactSchema } from "@bilacert/contracts/contact";
 import { createContact } from "@bilacert/supabase/Mutations/contacts";
 
 export async function submitContactForm(
