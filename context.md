@@ -378,7 +378,6 @@ packages/supabase/sql/zohoEmailManagement.sql
 packages/supabase/src/auth.ts
 packages/supabase/src/cache.ts
 packages/supabase/src/client.ts
-packages/supabase/src/middleware.ts
 packages/supabase/src/Mutations/blogs.ts
 packages/supabase/src/Mutations/contacts.ts
 packages/supabase/src/Mutations/formSubmissions.ts
@@ -390,6 +389,7 @@ packages/supabase/src/Queries/services.ts
 packages/supabase/src/Queries/testimonials.ts
 packages/supabase/src/Queries/users.ts
 packages/supabase/src/server.ts
+packages/supabase/src/session.ts
 packages/supabase/src/supabaseType.ts
 packages/supabase/supabase/.gitignore
 packages/supabase/supabase/config.toml
@@ -14110,7 +14110,7 @@ export const createSupabaseBrowserClient = () => {
 };
 ````
 
-## File: packages/supabase/src/middleware.ts
+## File: packages/supabase/src/session.ts
 ````typescript
 import { createServerClient } from "@supabase/ssr";
 import { type NextRequest, NextResponse } from "next/server";
@@ -24714,104 +24714,6 @@ export interface BlogRowType {
 }
 ````
 
-## File: packages/contracts/src/formSubmission.ts
-````typescript
-import { z } from "zod";
-
-export const submissionStatuses = [
-  "pending",
-  "in-progress",
-  "completed",
-  "rejected",
-  "archived",
-] as const;
-
-export const submissionStatusSchema = z.enum(submissionStatuses);
-
-export type SubmissionStatus = z.infer<typeof submissionStatusSchema>;
-
-export const formTypes = [
-  "service-inquiry",
-  "contact",
-  "class-ecs-ecns",
-  "icasa-type-approvals",
-  "license-exemptions",
-  "nrcs-loa",
-  "radio-dealer",
-  "ski-boat-vhf",
-] as const;
-
-export const formTypeSchema = z.enum(formTypes);
-
-export type FormType = z.infer<typeof formTypeSchema>;
-
-export const submissionSchema = z.object({
-  fullName: z.string().min(1, "Full name is required"),
-  email: z.string().email(),
-  phone: z.string().optional(),
-  company: z.string().optional(),
-  industry: z.string().optional(),
-  serviceName: z.string().optional(),
-  status: submissionStatusSchema,
-  details: z
-    .string()
-    .optional()
-    .refine(
-      (val) => {
-        if (!val || val.trim() === "") return true;
-        try {
-          JSON.parse(val);
-          return true;
-        } catch (_e) {
-          return false;
-        }
-      },
-      { message: "Details must be a valid JSON object." },
-    ),
-  notes: z.string().optional(),
-  contactOwner: z.string().optional(),
-});
-
-export type FormSubmissionType = z.infer<typeof submissionSchema>;
-
-export const formSubmissionPayloadSchema = z.object({
-  fullName: z.string().min(1),
-  email: z.string().email(),
-  phone: z.string().optional(),
-  companyName: z.string().optional(),
-  serviceType: z.string().optional(),
-  formType: formTypeSchema,
-  serviceId: z.string().optional(),
-  message: z.string().min(1),
-  industry: z.string().optional(),
-  details: z.record(z.string(), z.unknown()).optional(),
-  serviceName: z.string().optional(),
-});
-
-export type FormSubmissionInputType = z.infer<
-  typeof formSubmissionPayloadSchema
->;
-
-export interface SubmissionType {
-  id: string;
-  formType: FormType;
-  status: SubmissionStatus;
-  serviceId?: string;
-  serviceName?: string;
-  fullName: string;
-  email: string;
-  phone?: string;
-  company?: string;
-  industry?: string;
-  details?: unknown;
-  internalNotes?: string;
-  assignedTo?: string;
-  createdAt: string;
-  updatedAt: string;
-  completedAt?: string;
-}
-````
-
 ## File: turbo.json
 ````json
 {
@@ -24843,53 +24745,6 @@ export interface SubmissionType {
     }
   }
 }
-````
-
-## File: .gitignore
-````
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
-# dependencies
-node_modules/
-/.pnp
-.pnp.*
-.yarn/*
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/versions
-/.turbo
-/.pnpm
-
-# testing
-/coverage
-
-# next.js
-/.next/
-/out/
-
-# production
-/build
-
-# misc
-.DS_Store
-*.pem
-
-# debug
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-.pnpm-debug.log*
-
-# env files (can opt-in for committing if needed)
-.env*
-
-# vercel
-.vercel
-
-# typescript
-*.tsbuildinfo
-next-env.d.ts
 ````
 
 ## File: apps/admin/app/admin/analysis/charts.tsx
@@ -28950,73 +28805,102 @@ export interface ContactType {
 }
 ````
 
-## File: packages/contracts/src/email.ts
+## File: packages/contracts/src/formSubmission.ts
 ````typescript
 import { z } from "zod";
 
-const EMAIL_LIST_MAX_LENGTH = 4_000;
+export const submissionStatuses = [
+  "pending",
+  "in-progress",
+  "completed",
+  "rejected",
+  "archived",
+] as const;
 
-function isEmailList(value: string) {
-  const addresses = value
-    .split(/[;,]/)
-    .map((address) => address.trim())
-    .filter(Boolean);
+export const submissionStatusSchema = z.enum(submissionStatuses);
 
-  return (
-    addresses.length > 0 &&
-    addresses.every((address) => z.string().email().safeParse(address).success)
-  );
-}
+export type SubmissionStatus = z.infer<typeof submissionStatusSchema>;
 
-const requiredEmailListSchema = z
-  .string()
-  .trim()
-  .min(1, "At least one recipient is required.")
-  .max(EMAIL_LIST_MAX_LENGTH, "The recipient list is too long.")
-  .refine(isEmailList, "Enter valid email addresses separated by commas.");
+export const formTypes = [
+  "service-inquiry",
+  "contact",
+  "class-ecs-ecns",
+  "icasa-type-approvals",
+  "license-exemptions",
+  "nrcs-loa",
+  "radio-dealer",
+  "ski-boat-vhf",
+] as const;
 
-const optionalEmailListSchema = z
-  .string()
-  .trim()
-  .max(EMAIL_LIST_MAX_LENGTH, "The recipient list is too long.")
-  .refine(
-    (value) => value.length === 0 || isEmailList(value),
-    "Enter valid email addresses separated by commas.",
-  );
+export const formTypeSchema = z.enum(formTypes);
 
-export const emailComposeSchema = z.object({
-  toAddress: requiredEmailListSchema,
-  ccAddress: optionalEmailListSchema,
-  bccAddress: optionalEmailListSchema,
-  subject: z
+export type FormType = z.infer<typeof formTypeSchema>;
+
+export const submissionSchema = z.object({
+  fullName: z.string().min(1, "Full name is required"),
+  email: z.email(),
+  phone: z.string().optional(),
+  company: z.string().optional(),
+  industry: z.string().optional(),
+  serviceName: z.string().optional(),
+  status: submissionStatusSchema,
+  details: z
     .string()
-    .trim()
-    .min(1, "Subject is required.")
-    .max(998, "Subject must be 998 characters or fewer."),
-  content: z
-    .string()
-    .trim()
-    .min(1, "Message content is required.")
-    .max(200_000, "Message content is too long."),
-  intent: z.enum(["send", "draft"]).default("send"),
+    .optional()
+    .refine(
+      (val) => {
+        if (!val || val.trim() === "") return true;
+        try {
+          JSON.parse(val);
+          return true;
+        } catch (_e) {
+          return false;
+        }
+      },
+      { message: "Details must be a valid JSON object." },
+    ),
+  notes: z.string().optional(),
+  contactOwner: z.string().optional(),
 });
 
-export const emailMessageReadStateSchema = z.object({
-  messageId: z.string().regex(/^\d+$/, "The message ID is invalid."),
-  folderId: z.string().regex(/^\d+$/, "The folder ID is invalid."),
-  readState: z.enum(["read", "unread"]),
+export type FormSubmissionType = z.infer<typeof submissionSchema>;
+
+export const formSubmissionPayloadSchema = z.object({
+  fullName: z.string().min(1),
+  email: z.email(),
+  phone: z.string().optional(),
+  companyName: z.string().optional(),
+  serviceType: z.string().optional(),
+  formType: formTypeSchema,
+  serviceId: z.string().optional(),
+  message: z.string().min(1),
+  industry: z.string().optional(),
+  details: z.record(z.string(), z.unknown()).optional(),
+  serviceName: z.string().optional(),
 });
 
-export type EmailComposeType = z.infer<typeof emailComposeSchema>;
-export type EmailMessageReadStateType = z.infer<
-  typeof emailMessageReadStateSchema
+export type FormSubmissionInputType = z.infer<
+  typeof formSubmissionPayloadSchema
 >;
 
-export type EmailComposeActionState = {
-  ok?: boolean;
-  error?: string;
-  fieldErrors?: Record<string, string[]>;
-};
+export interface SubmissionType {
+  id: string;
+  formType: FormType;
+  status: SubmissionStatus;
+  serviceId?: string;
+  serviceName?: string;
+  fullName: string;
+  email: string;
+  phone?: string;
+  company?: string;
+  industry?: string;
+  details?: unknown;
+  internalNotes?: string;
+  assignedTo?: string;
+  createdAt: string;
+  updatedAt: string;
+  completedAt?: string;
+}
 ````
 
 ## File: packages/contracts/src/service.ts
@@ -29258,6 +29142,53 @@ export async function deleteTestimonial(id: string) {
     mode: "immediate",
   });
 }
+````
+
+## File: .gitignore
+````
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+node_modules/
+/.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+.turbo/
+/.pnpm
+
+# testing
+/coverage
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# env files (can opt-in for committing if needed)
+.env*
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
 ````
 
 ## File: apps/admin/app/admin/blogs/actions.ts
@@ -29885,6 +29816,87 @@ export default function DashboardClient() {
 }
 ````
 
+## File: apps/admin/app/admin/services/[id]/edit/page.tsx
+````typescript
+import type { ServiceRowType } from "@bilacert/contracts/service";
+import { normalizeService } from "@bilacert/supabase/Queries/services";
+import { createSupabaseServerClient } from "@bilacert/supabase/server";
+import { ArrowLeft } from "lucide-react";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import ServiceForm from "./ServiceForm";
+
+export const metadata = {
+  title: "Edit Service | Bilacert Admin Pro",
+  description: "Edit an existing regulatory service.",
+};
+
+async function getService(id: string): Promise<ServiceRowType | null> {
+  const supabase = await createSupabaseServerClient();
+  const { data, error } = await supabase
+    .from("services")
+    .select("*")
+    .eq("id", id)
+    .single();
+
+  if (error) {
+    console.error("Error fetching service:", error);
+    return null;
+  }
+
+  return data ? normalizeService(data) : null;
+}
+
+export default async function EditServicePage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const slug = (await params).id;
+  const service = await getService(slug);
+
+  if (!service) {
+    notFound();
+  }
+
+  return (
+    <div className="mx-auto max-w-5xl space-y-6">
+      <div className="flex items-center gap-4">
+        <Button variant="outline" size="sm" asChild>
+          <Link href={`/admin/services/${service.id}`}>
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Cancel Edit
+          </Link>
+        </Button>
+      </div>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Edit Service</CardTitle>
+          <CardDescription>
+            You are currently editing the details for:{" "}
+            <span className="font-semibold text-foreground">
+              {service.title}
+            </span>
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <ServiceForm service={service} />
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+````
+
 ## File: apps/admin/app/admin/services/[id]/ServiceSubmissionAnalysis.tsx
 ````typescript
 "use client";
@@ -30288,37 +30300,73 @@ export default function TestimonialsClient() {
 }
 ````
 
-## File: packages/supabase/package.json
-````json
-{
-  "name": "@bilacert/supabase",
-  "version": "0.0.0",
-  "private": true,
-  "exports": {
-    "./client": "./src/client.ts",
-    "./server": "./src/server.ts",
-    "./cache": "./src/cache.ts",
-    "./middleware": "./src/middleware.ts",
-    "./supabaseType": "./src/supabaseType.ts",
-    "./auth": "./src/auth.ts",
-    "./Queries/*": "./src/Queries/*.ts",
-    "./Mutations/*": "./src/Mutations/*.ts"
-  },
-  "dependencies": {
-    "@bilacert/contracts": "workspace:*",
-    "@bilacert/shared": "workspace:*",
-    "@supabase/ssr": "catalog:",
-    "@supabase/supabase-js": "catalog:",
-    "typescript": "catalog:"
-  },
-  "devDependencies": {
-    "@bilacert/typescript-config": "workspace:*"
-  },
-  "scripts": {
-    "typecheck": "tsc --noEmit",
-    "supabase:types": "supabase gen types typescript --local > src/supabaseType.ts"
-  }
+## File: packages/contracts/src/email.ts
+````typescript
+import { z } from "zod";
+
+const EMAIL_LIST_MAX_LENGTH = 4_000;
+
+function isEmailList(value: string) {
+  const addresses = value
+    .split(/[;,]/)
+    .map((address) => address.trim())
+    .filter(Boolean);
+
+  return (
+    addresses.length > 0 &&
+    addresses.every((address) => z.email().safeParse(address).success)
+  );
 }
+
+const requiredEmailListSchema = z
+  .string()
+  .trim()
+  .min(1, "At least one recipient is required.")
+  .max(EMAIL_LIST_MAX_LENGTH, "The recipient list is too long.")
+  .refine(isEmailList, "Enter valid email addresses separated by commas.");
+
+const optionalEmailListSchema = z
+  .string()
+  .trim()
+  .max(EMAIL_LIST_MAX_LENGTH, "The recipient list is too long.")
+  .refine(
+    (value) => value.length === 0 || isEmailList(value),
+    "Enter valid email addresses separated by commas.",
+  );
+
+export const emailComposeSchema = z.object({
+  toAddress: requiredEmailListSchema,
+  ccAddress: optionalEmailListSchema,
+  bccAddress: optionalEmailListSchema,
+  subject: z
+    .string()
+    .trim()
+    .min(1, "Subject is required.")
+    .max(998, "Subject must be 998 characters or fewer."),
+  content: z
+    .string()
+    .trim()
+    .min(1, "Message content is required.")
+    .max(200_000, "Message content is too long."),
+  intent: z.enum(["send", "draft"]).default("send"),
+});
+
+export const emailMessageReadStateSchema = z.object({
+  messageId: z.string().regex(/^\d+$/, "The message ID is invalid."),
+  folderId: z.string().regex(/^\d+$/, "The folder ID is invalid."),
+  readState: z.enum(["read", "unread"]),
+});
+
+export type EmailComposeType = z.infer<typeof emailComposeSchema>;
+export type EmailMessageReadStateType = z.infer<
+  typeof emailMessageReadStateSchema
+>;
+
+export type EmailComposeActionState = {
+  ok?: boolean;
+  error?: string;
+  fieldErrors?: Record<string, string[]>;
+};
 ````
 
 ## File: packages/supabase/src/Mutations/contacts.ts
@@ -31189,6 +31237,483 @@ export default function BlogDetails({ blog }: BlogDetailsProps) {
 }
 ````
 
+## File: apps/admin/app/admin/blogs/BlogsClient.tsx
+````typescript
+"use client";
+
+import type { BlogRowType as BlogType } from "@bilacert/contracts/blog";
+import { format, isValid, parseISO } from "date-fns";
+import {
+  Calendar,
+  Eye,
+  FileText,
+  Filter,
+  MoreHorizontal,
+  Newspaper,
+  PlusCircle,
+  Search,
+  Sparkles,
+} from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useMemo, useState } from "react";
+import AnalysesHeader from "@/components/admin/AnalysesHeader";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useBlogs } from "@/lib/hooks/useBlogs";
+import DeleteBlogDialog from "./DeleteBlogDialog";
+
+const safeFormatDate = (
+  date: string | Date | undefined,
+  dateFormat = "PP",
+  fallback = "Invalid date",
+) => {
+  if (!date) return fallback;
+  const d = typeof date === "string" ? parseISO(date) : date;
+  return isValid(d) ? format(d, dateFormat) : fallback;
+};
+
+function BlogsAnalysis({ blogs }: { blogs: BlogType[] }) {
+  const publishedBlogs = blogs.filter((blog) => blog.published);
+  const featuredBlogs = blogs.filter((blog) => blog.featured);
+  const totalViews = blogs.reduce(
+    (sum, blog) => sum + (blog.viewsCount ?? 0),
+    0,
+  );
+  const topBlogs = [...blogs]
+    .sort((a, b) => (b.viewsCount ?? 0) - (a.viewsCount ?? 0))
+    .slice(0, 5);
+  const categoryCounts = blogs.reduce<Map<string, number>>((counts, blog) => {
+    const category = blog.category || "Uncategorized";
+    counts.set(category, (counts.get(category) ?? 0) + 1);
+    return counts;
+  }, new Map());
+  const topCategories = [...categoryCounts.entries()]
+    .sort(([, a], [, b]) => b - a)
+    .slice(0, 5);
+
+  return (
+    <div className="space-y-4">
+      <AnalysesHeader
+        items={[
+          {
+            title: "Total Blogs",
+            value: blogs.length,
+            description: `${publishedBlogs.length.toLocaleString()} published`,
+            icon: <Newspaper className="h-4 w-4 text-muted-foreground" />,
+          },
+          {
+            title: "Published Blogs",
+            value: publishedBlogs.length,
+            description: "Visible publicly",
+            icon: <FileText className="h-4 w-4 text-muted-foreground" />,
+          },
+          {
+            title: "Blog Views",
+            value: totalViews,
+            description: "Across all posts",
+            icon: <Eye className="h-4 w-4 text-muted-foreground" />,
+          },
+          {
+            title: "Featured Blogs",
+            value: featuredBlogs.length,
+            description: "Promoted content",
+            icon: <Sparkles className="h-4 w-4 text-muted-foreground" />,
+          },
+        ]}
+      />
+
+      <div className="grid gap-4 lg:grid-cols-[2fr_1fr]">
+        <Card className="border-0 shadow-xl shadow-black/5">
+          <CardHeader>
+            <CardTitle className="text-lg font-semibold">
+              Blog Performance
+            </CardTitle>
+            <CardDescription>
+              Top posts ranked by recorded public views.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            {topBlogs.length > 0 ? (
+              <div className="space-y-3">
+                {topBlogs.map((blog) => (
+                  <div
+                    key={blog.id}
+                    className="flex flex-col gap-3 rounded-xl border bg-background p-4 shadow-sm shadow-black/5 md:flex-row md:items-center md:justify-between"
+                  >
+                    <div className="min-w-0">
+                      <Link
+                        href={`/admin/blogs/${blog.id}`}
+                        className="font-semibold text-primary hover:text-primary/80"
+                      >
+                        {blog.title}
+                      </Link>
+                      <div className="mt-2 flex flex-wrap gap-2">
+                        {blog.category && (
+                          <Badge variant="secondary">{blog.category}</Badge>
+                        )}
+                        <Badge variant={blog.published ? "default" : "outline"}>
+                          {blog.published ? "Published" : "Draft"}
+                        </Badge>
+                        {blog.featured && (
+                          <Badge variant="outline">Featured</Badge>
+                        )}
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2 text-sm font-semibold text-muted-foreground">
+                      <Eye className="h-4 w-4" />
+                      {(blog.viewsCount ?? 0).toLocaleString()} views
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-sm text-muted-foreground">
+                No blog performance data yet.
+              </p>
+            )}
+          </CardContent>
+        </Card>
+
+        <Card className="border-0 shadow-xl shadow-black/5">
+          <CardHeader>
+            <CardTitle className="text-lg font-semibold">
+              Category Coverage
+            </CardTitle>
+            <CardDescription>Most-used blog categories.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            {topCategories.length > 0 ? (
+              <div className="space-y-3">
+                {topCategories.map(([category, count]) => (
+                  <div
+                    key={category}
+                    className="flex items-center justify-between rounded-xl bg-muted/40 px-4 py-3 text-sm"
+                  >
+                    <span className="font-medium">{category}</span>
+                    <Badge variant="secondary">{count}</Badge>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-sm text-muted-foreground">
+                No categories assigned yet.
+              </p>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  );
+}
+
+const BlogCard = ({
+  blog,
+  onEdit,
+  onDelete,
+}: {
+  blog: BlogType;
+  onEdit: (blog: BlogType) => void;
+  onDelete: (blog: BlogType) => void;
+}) => {
+  const router = useRouter();
+  return (
+    <div
+      key={blog.id}
+      className="group relative flex flex-col overflow-hidden rounded-xl bg-white shadow-sm shadow-black/5 transition-all duration-300 hover:-translate-y-2 hover:shadow-xl hover:shadow-black/10"
+    >
+      <Link
+        href={`/admin/blogs/${blog.id}`}
+        className="absolute inset-0 z-10"
+        aria-label={`View ${blog.title}`}
+      >
+        <span className="sr-only">View Details</span>
+      </Link>
+      <div className="absolute top-4 right-4 z-20">
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8 rounded-full bg-background/60 backdrop-blur-sm hover:bg-background"
+              onClick={(e) => e.preventDefault()}
+            >
+              <span className="sr-only">Open menu</span>
+              <MoreHorizontal className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+            <DropdownMenuItem
+              onClick={(e) => {
+                e.preventDefault();
+                router.push(`/admin/blogs/${blog.id}`);
+              }}
+            >
+              View
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={(e) => {
+                e.preventDefault();
+                onEdit(blog);
+              }}
+            >
+              Edit
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              className="text-destructive focus:bg-destructive/10 focus:text-destructive"
+              onClick={(e) => {
+                e.preventDefault();
+                onDelete(blog);
+              }}
+            >
+              Delete
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+
+      <div className="relative h-48 w-full">
+        <Image
+          src={
+            blog.featuredImage ||
+            `https://picsum.photos/seed/${blog.id}/600/400`
+          }
+          alt={blog.title}
+          fill
+          className="object-cover transition-transform duration-300 group-hover:scale-105"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+        <div className="absolute bottom-4 left-4">
+          {blog.category && <Badge variant="secondary">{blog.category}</Badge>}
+        </div>
+      </div>
+
+      <div className="flex flex-col flex-grow p-6">
+        <h3 className="mb-2 text-xl font-semibold text-primary line-clamp-2">
+          {blog.title}
+        </h3>
+        <p className="mb-4 text-sm text-muted-foreground line-clamp-3 flex-grow">
+          {blog.excerpt}
+        </p>
+        <div className="mt-auto flex items-center justify-between gap-3 text-xs text-muted-foreground">
+          <Badge variant={blog.published ? "default" : "outline"}>
+            {blog.published ? "Published" : "Draft"}
+          </Badge>
+          <div className="flex flex-wrap items-center justify-end gap-x-3 gap-y-1">
+            <div className="flex items-center gap-1.5">
+              <Eye className="h-4 w-4" />
+              <span>{(blog.viewsCount ?? 0).toLocaleString()} views</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <Calendar className="h-4 w-4" />
+              <span>{safeFormatDate(blog.createdAt, "PP")}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default function BlogsClient() {
+  const { data: blogs, loading, error, refresh } = useBlogs();
+  const router = useRouter();
+  const [searchQuery, setSearchQuery] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState("all");
+  const [statusTab, setStatusTab] = useState("all");
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [selectedBlog, setSelectedBlog] = useState<BlogType | null>(null);
+
+  const categories = useMemo(() => {
+    const cats = new Set<string>();
+    blogs.forEach((blog) => {
+      if (blog.category) cats.add(blog.category);
+    });
+    return Array.from(cats).sort();
+  }, [blogs]);
+
+  const filteredBlogs = useMemo(() => {
+    return blogs.filter((blog) => {
+      const matchesSearch =
+        blog.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (blog.excerpt?.toLowerCase().includes(searchQuery.toLowerCase()) ??
+          false);
+      const matchesCategory =
+        categoryFilter === "all" || blog.category === categoryFilter;
+      const matchesStatus =
+        statusTab === "all" ||
+        (statusTab === "published" && blog.published) ||
+        (statusTab === "draft" && !blog.published);
+      return matchesSearch && matchesCategory && matchesStatus;
+    });
+  }, [blogs, searchQuery, categoryFilter, statusTab]);
+
+  const handleEdit = (blog: BlogType) => {
+    router.push(`/admin/blogs/${blog.id}/edit`);
+  };
+
+  const handleDelete = (blog: BlogType) => {
+    setSelectedBlog(blog);
+    setIsDeleteDialogOpen(true);
+  };
+
+  const onDeleted = () => {
+    setIsDeleteDialogOpen(false);
+    setSelectedBlog(null);
+    refresh();
+  };
+
+  if (error) {
+    return (
+      <div className="text-destructive p-4 border border-destructive/20 rounded-lg bg-destructive/10">
+        Error loading blogs: {error.message}
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-6">
+      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">Blogs</h1>
+          <p className="text-muted-foreground">
+            Manage your blog posts and content.
+          </p>
+        </div>
+        <Button asChild>
+          <Link href="/admin/blogs/new">
+            <PlusCircle className="mr-2 h-4 w-4" />
+            Add Post
+          </Link>
+        </Button>
+      </div>
+
+      <BlogsAnalysis blogs={blogs} />
+
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-b pb-4">
+        <Tabs
+          defaultValue="all"
+          className="w-full sm:w-auto"
+          onValueChange={setStatusTab}
+        >
+          <TabsList>
+            <TabsTrigger value="all">All</TabsTrigger>
+            <TabsTrigger value="published">Published</TabsTrigger>
+            <TabsTrigger value="draft">Drafts</TabsTrigger>
+          </TabsList>
+        </Tabs>
+        <div className="flex items-center gap-2">
+          <div className="relative w-full sm:w-64">
+            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Search blogs..."
+              className="pl-8"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
+          <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+            <SelectTrigger className="w-[180px]">
+              <Filter className="mr-2 h-4 w-4 text-muted-foreground" />
+              <SelectValue placeholder="Category" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Categories</SelectItem>
+              {categories.map((cat) => (
+                <SelectItem key={cat} value={cat}>
+                  {cat}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
+
+      {loading ? (
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <div
+              key={i}
+              className="h-[400px] w-full animate-pulse rounded-xl bg-muted"
+            ></div>
+          ))}
+        </div>
+      ) : filteredBlogs.length === 0 ? (
+        <div className="flex flex-col items-center justify-center rounded-xl border-2 border-dashed py-24 text-center">
+          <div className="rounded-full bg-muted p-6 mb-4">
+            <Search className="h-10 w-10 text-muted-foreground" />
+          </div>
+          <h3 className="text-xl font-semibold">No blogs found</h3>
+          <p className="text-muted-foreground max-w-xs mx-auto mt-2">
+            No blogs match the current filters.
+          </p>
+          {(searchQuery || categoryFilter !== "all" || statusTab !== "all") && (
+            <Button
+              variant="outline"
+              className="mt-6"
+              onClick={() => {
+                setSearchQuery("");
+                setCategoryFilter("all");
+                setStatusTab("all");
+              }}
+            >
+              Clear all filters
+            </Button>
+          )}
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+          {filteredBlogs.map((blog) => (
+            <BlogCard
+              key={blog.id}
+              blog={blog}
+              onEdit={handleEdit}
+              onDelete={handleDelete}
+            />
+          ))}
+        </div>
+      )}
+
+      {isDeleteDialogOpen && (
+        <DeleteBlogDialog
+          isOpen={isDeleteDialogOpen}
+          onClose={() => setIsDeleteDialogOpen(false)}
+          onDeleted={onDeleted}
+          blog={selectedBlog}
+        />
+      )}
+    </div>
+  );
+}
+````
+
 ## File: apps/admin/app/admin/contacts/ContactsClient.tsx
 ````typescript
 "use client";
@@ -31280,87 +31805,6 @@ export default function ContactsClient() {
       )}
       DeleteDialog={ContactDeleteDialogAdapter}
     />
-  );
-}
-````
-
-## File: apps/admin/app/admin/services/[id]/edit/page.tsx
-````typescript
-import type { ServiceRowType } from "@bilacert/contracts/service";
-import { normalizeService } from "@bilacert/supabase/Queries/services";
-import { createSupabaseServerClient } from "@bilacert/supabase/server";
-import { ArrowLeft } from "lucide-react";
-import Link from "next/link";
-import { notFound } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import ServiceForm from "./ServiceForm";
-
-export const metadata = {
-  title: "Edit Service | Bilacert Admin Pro",
-  description: "Edit an existing regulatory service.",
-};
-
-async function getService(id: string): Promise<ServiceRowType | null> {
-  const supabase = await createSupabaseServerClient();
-  const { data, error } = await supabase
-    .from("services")
-    .select("*")
-    .eq("id", id)
-    .single();
-
-  if (error) {
-    console.error("Error fetching service:", error);
-    return null;
-  }
-
-  return data ? normalizeService(data) : null;
-}
-
-export default async function EditServicePage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
-  const slug = (await params).id;
-  const service = await getService(slug);
-
-  if (!service) {
-    notFound();
-  }
-
-  return (
-    <div className="mx-auto max-w-5xl space-y-6">
-      <div className="flex items-center gap-4">
-        <Button variant="outline" size="sm" asChild>
-          <Link href={`/admin/services/${service.id}`}>
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            Cancel Edit
-          </Link>
-        </Button>
-      </div>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Edit Service</CardTitle>
-          <CardDescription>
-            You are currently editing the details for:{" "}
-            <span className="font-semibold text-foreground">
-              {service.title}
-            </span>
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <ServiceForm service={service} />
-        </CardContent>
-      </Card>
-    </div>
   );
 }
 ````
@@ -32009,6 +32453,39 @@ export function getSafeEmailReturnPath(value: unknown): string | null {
 }
 ````
 
+## File: packages/supabase/package.json
+````json
+{
+  "name": "@bilacert/supabase",
+  "version": "0.0.0",
+  "private": true,
+  "exports": {
+    "./client": "./src/client.ts",
+    "./server": "./src/server.ts",
+    "./cache": "./src/cache.ts",
+    "./session": "./src/session.ts",
+    "./supabaseType": "./src/supabaseType.ts",
+    "./auth": "./src/auth.ts",
+    "./Queries/*": "./src/Queries/*.ts",
+    "./Mutations/*": "./src/Mutations/*.ts"
+  },
+  "dependencies": {
+    "@bilacert/contracts": "workspace:*",
+    "@bilacert/shared": "workspace:*",
+    "@supabase/ssr": "catalog:",
+    "@supabase/supabase-js": "catalog:",
+    "typescript": "catalog:"
+  },
+  "devDependencies": {
+    "@bilacert/typescript-config": "workspace:*"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "supabase:types": "supabase gen types typescript --local > src/supabaseType.ts"
+  }
+}
+````
+
 ## File: packages/supabase/src/Mutations/formSubmissions.ts
 ````typescript
 "use server";
@@ -32259,483 +32736,6 @@ catalog:
   "@biomejs/biome": "2.2.0"
   "babel-plugin-react-compiler": "1.0.0"
   "turbo": "^2.9.14"
-````
-
-## File: apps/admin/app/admin/blogs/BlogsClient.tsx
-````typescript
-"use client";
-
-import type { BlogRowType as BlogType } from "@bilacert/contracts/blog";
-import { format, isValid, parseISO } from "date-fns";
-import {
-  Calendar,
-  Eye,
-  FileText,
-  Filter,
-  MoreHorizontal,
-  Newspaper,
-  PlusCircle,
-  Search,
-  Sparkles,
-} from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useMemo, useState } from "react";
-import AnalysesHeader from "@/components/admin/AnalysesHeader";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useBlogs } from "@/lib/hooks/useBlogs";
-import DeleteBlogDialog from "./DeleteBlogDialog";
-
-const safeFormatDate = (
-  date: string | Date | undefined,
-  dateFormat = "PP",
-  fallback = "Invalid date",
-) => {
-  if (!date) return fallback;
-  const d = typeof date === "string" ? parseISO(date) : date;
-  return isValid(d) ? format(d, dateFormat) : fallback;
-};
-
-function BlogsAnalysis({ blogs }: { blogs: BlogType[] }) {
-  const publishedBlogs = blogs.filter((blog) => blog.published);
-  const featuredBlogs = blogs.filter((blog) => blog.featured);
-  const totalViews = blogs.reduce(
-    (sum, blog) => sum + (blog.viewsCount ?? 0),
-    0,
-  );
-  const topBlogs = [...blogs]
-    .sort((a, b) => (b.viewsCount ?? 0) - (a.viewsCount ?? 0))
-    .slice(0, 5);
-  const categoryCounts = blogs.reduce<Map<string, number>>((counts, blog) => {
-    const category = blog.category || "Uncategorized";
-    counts.set(category, (counts.get(category) ?? 0) + 1);
-    return counts;
-  }, new Map());
-  const topCategories = [...categoryCounts.entries()]
-    .sort(([, a], [, b]) => b - a)
-    .slice(0, 5);
-
-  return (
-    <div className="space-y-4">
-      <AnalysesHeader
-        items={[
-          {
-            title: "Total Blogs",
-            value: blogs.length,
-            description: `${publishedBlogs.length.toLocaleString()} published`,
-            icon: <Newspaper className="h-4 w-4 text-muted-foreground" />,
-          },
-          {
-            title: "Published Blogs",
-            value: publishedBlogs.length,
-            description: "Visible publicly",
-            icon: <FileText className="h-4 w-4 text-muted-foreground" />,
-          },
-          {
-            title: "Blog Views",
-            value: totalViews,
-            description: "Across all posts",
-            icon: <Eye className="h-4 w-4 text-muted-foreground" />,
-          },
-          {
-            title: "Featured Blogs",
-            value: featuredBlogs.length,
-            description: "Promoted content",
-            icon: <Sparkles className="h-4 w-4 text-muted-foreground" />,
-          },
-        ]}
-      />
-
-      <div className="grid gap-4 lg:grid-cols-[2fr_1fr]">
-        <Card className="border-0 shadow-xl shadow-black/5">
-          <CardHeader>
-            <CardTitle className="text-lg font-semibold">
-              Blog Performance
-            </CardTitle>
-            <CardDescription>
-              Top posts ranked by recorded public views.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            {topBlogs.length > 0 ? (
-              <div className="space-y-3">
-                {topBlogs.map((blog) => (
-                  <div
-                    key={blog.id}
-                    className="flex flex-col gap-3 rounded-xl border bg-background p-4 shadow-sm shadow-black/5 md:flex-row md:items-center md:justify-between"
-                  >
-                    <div className="min-w-0">
-                      <Link
-                        href={`/admin/blogs/${blog.id}`}
-                        className="font-semibold text-primary hover:text-primary/80"
-                      >
-                        {blog.title}
-                      </Link>
-                      <div className="mt-2 flex flex-wrap gap-2">
-                        {blog.category && (
-                          <Badge variant="secondary">{blog.category}</Badge>
-                        )}
-                        <Badge variant={blog.published ? "default" : "outline"}>
-                          {blog.published ? "Published" : "Draft"}
-                        </Badge>
-                        {blog.featured && (
-                          <Badge variant="outline">Featured</Badge>
-                        )}
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-2 text-sm font-semibold text-muted-foreground">
-                      <Eye className="h-4 w-4" />
-                      {(blog.viewsCount ?? 0).toLocaleString()} views
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <p className="text-sm text-muted-foreground">
-                No blog performance data yet.
-              </p>
-            )}
-          </CardContent>
-        </Card>
-
-        <Card className="border-0 shadow-xl shadow-black/5">
-          <CardHeader>
-            <CardTitle className="text-lg font-semibold">
-              Category Coverage
-            </CardTitle>
-            <CardDescription>Most-used blog categories.</CardDescription>
-          </CardHeader>
-          <CardContent>
-            {topCategories.length > 0 ? (
-              <div className="space-y-3">
-                {topCategories.map(([category, count]) => (
-                  <div
-                    key={category}
-                    className="flex items-center justify-between rounded-xl bg-muted/40 px-4 py-3 text-sm"
-                  >
-                    <span className="font-medium">{category}</span>
-                    <Badge variant="secondary">{count}</Badge>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <p className="text-sm text-muted-foreground">
-                No categories assigned yet.
-              </p>
-            )}
-          </CardContent>
-        </Card>
-      </div>
-    </div>
-  );
-}
-
-const BlogCard = ({
-  blog,
-  onEdit,
-  onDelete,
-}: {
-  blog: BlogType;
-  onEdit: (blog: BlogType) => void;
-  onDelete: (blog: BlogType) => void;
-}) => {
-  const router = useRouter();
-  return (
-    <div
-      key={blog.id}
-      className="group relative flex flex-col overflow-hidden rounded-xl bg-white shadow-sm shadow-black/5 transition-all duration-300 hover:-translate-y-2 hover:shadow-xl hover:shadow-black/10"
-    >
-      <Link
-        href={`/admin/blogs/${blog.id}`}
-        className="absolute inset-0 z-10"
-        aria-label={`View ${blog.title}`}
-      >
-        <span className="sr-only">View Details</span>
-      </Link>
-      <div className="absolute top-4 right-4 z-20">
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-8 w-8 rounded-full bg-background/60 backdrop-blur-sm hover:bg-background"
-              onClick={(e) => e.preventDefault()}
-            >
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={(e) => {
-                e.preventDefault();
-                router.push(`/admin/blogs/${blog.id}`);
-              }}
-            >
-              View
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              onClick={(e) => {
-                e.preventDefault();
-                onEdit(blog);
-              }}
-            >
-              Edit
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem
-              className="text-destructive focus:bg-destructive/10 focus:text-destructive"
-              onClick={(e) => {
-                e.preventDefault();
-                onDelete(blog);
-              }}
-            >
-              Delete
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
-
-      <div className="relative h-48 w-full">
-        <Image
-          src={
-            blog.featuredImage ||
-            `https://picsum.photos/seed/${blog.id}/600/400`
-          }
-          alt={blog.title}
-          fill
-          className="object-cover transition-transform duration-300 group-hover:scale-105"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
-        <div className="absolute bottom-4 left-4">
-          {blog.category && <Badge variant="secondary">{blog.category}</Badge>}
-        </div>
-      </div>
-
-      <div className="flex flex-col flex-grow p-6">
-        <h3 className="mb-2 text-xl font-semibold text-primary line-clamp-2">
-          {blog.title}
-        </h3>
-        <p className="mb-4 text-sm text-muted-foreground line-clamp-3 flex-grow">
-          {blog.excerpt}
-        </p>
-        <div className="mt-auto flex items-center justify-between gap-3 text-xs text-muted-foreground">
-          <Badge variant={blog.published ? "default" : "outline"}>
-            {blog.published ? "Published" : "Draft"}
-          </Badge>
-          <div className="flex flex-wrap items-center justify-end gap-x-3 gap-y-1">
-            <div className="flex items-center gap-1.5">
-              <Eye className="h-4 w-4" />
-              <span>{(blog.viewsCount ?? 0).toLocaleString()} views</span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <Calendar className="h-4 w-4" />
-              <span>{safeFormatDate(blog.createdAt, "PP")}</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-export default function BlogsClient() {
-  const { data: blogs, loading, error, refresh } = useBlogs();
-  const router = useRouter();
-  const [searchQuery, setSearchQuery] = useState("");
-  const [categoryFilter, setCategoryFilter] = useState("all");
-  const [statusTab, setStatusTab] = useState("all");
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const [selectedBlog, setSelectedBlog] = useState<BlogType | null>(null);
-
-  const categories = useMemo(() => {
-    const cats = new Set<string>();
-    blogs.forEach((blog) => {
-      if (blog.category) cats.add(blog.category);
-    });
-    return Array.from(cats).sort();
-  }, [blogs]);
-
-  const filteredBlogs = useMemo(() => {
-    return blogs.filter((blog) => {
-      const matchesSearch =
-        blog.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        (blog.excerpt?.toLowerCase().includes(searchQuery.toLowerCase()) ??
-          false);
-      const matchesCategory =
-        categoryFilter === "all" || blog.category === categoryFilter;
-      const matchesStatus =
-        statusTab === "all" ||
-        (statusTab === "published" && blog.published) ||
-        (statusTab === "draft" && !blog.published);
-      return matchesSearch && matchesCategory && matchesStatus;
-    });
-  }, [blogs, searchQuery, categoryFilter, statusTab]);
-
-  const handleEdit = (blog: BlogType) => {
-    router.push(`/admin/blogs/${blog.id}/edit`);
-  };
-
-  const handleDelete = (blog: BlogType) => {
-    setSelectedBlog(blog);
-    setIsDeleteDialogOpen(true);
-  };
-
-  const onDeleted = () => {
-    setIsDeleteDialogOpen(false);
-    setSelectedBlog(null);
-    refresh();
-  };
-
-  if (error) {
-    return (
-      <div className="text-destructive p-4 border border-destructive/20 rounded-lg bg-destructive/10">
-        Error loading blogs: {error.message}
-      </div>
-    );
-  }
-
-  return (
-    <div className="space-y-6">
-      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Blogs</h1>
-          <p className="text-muted-foreground">
-            Manage your blog posts and content.
-          </p>
-        </div>
-        <Button asChild>
-          <Link href="/admin/blogs/new">
-            <PlusCircle className="mr-2 h-4 w-4" />
-            Add Post
-          </Link>
-        </Button>
-      </div>
-
-      <BlogsAnalysis blogs={blogs} />
-
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-b pb-4">
-        <Tabs
-          defaultValue="all"
-          className="w-full sm:w-auto"
-          onValueChange={setStatusTab}
-        >
-          <TabsList>
-            <TabsTrigger value="all">All</TabsTrigger>
-            <TabsTrigger value="published">Published</TabsTrigger>
-            <TabsTrigger value="draft">Drafts</TabsTrigger>
-          </TabsList>
-        </Tabs>
-        <div className="flex items-center gap-2">
-          <div className="relative w-full sm:w-64">
-            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder="Search blogs..."
-              className="pl-8"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-          </div>
-          <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-            <SelectTrigger className="w-[180px]">
-              <Filter className="mr-2 h-4 w-4 text-muted-foreground" />
-              <SelectValue placeholder="Category" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Categories</SelectItem>
-              {categories.map((cat) => (
-                <SelectItem key={cat} value={cat}>
-                  {cat}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-      </div>
-
-      {loading ? (
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-          {Array.from({ length: 6 }).map((_, i) => (
-            <div
-              key={i}
-              className="h-[400px] w-full animate-pulse rounded-xl bg-muted"
-            ></div>
-          ))}
-        </div>
-      ) : filteredBlogs.length === 0 ? (
-        <div className="flex flex-col items-center justify-center rounded-xl border-2 border-dashed py-24 text-center">
-          <div className="rounded-full bg-muted p-6 mb-4">
-            <Search className="h-10 w-10 text-muted-foreground" />
-          </div>
-          <h3 className="text-xl font-semibold">No blogs found</h3>
-          <p className="text-muted-foreground max-w-xs mx-auto mt-2">
-            No blogs match the current filters.
-          </p>
-          {(searchQuery || categoryFilter !== "all" || statusTab !== "all") && (
-            <Button
-              variant="outline"
-              className="mt-6"
-              onClick={() => {
-                setSearchQuery("");
-                setCategoryFilter("all");
-                setStatusTab("all");
-              }}
-            >
-              Clear all filters
-            </Button>
-          )}
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-          {filteredBlogs.map((blog) => (
-            <BlogCard
-              key={blog.id}
-              blog={blog}
-              onEdit={handleEdit}
-              onDelete={handleDelete}
-            />
-          ))}
-        </div>
-      )}
-
-      {isDeleteDialogOpen && (
-        <DeleteBlogDialog
-          isOpen={isDeleteDialogOpen}
-          onClose={() => setIsDeleteDialogOpen(false)}
-          onDeleted={onDeleted}
-          blog={selectedBlog}
-        />
-      )}
-    </div>
-  );
-}
 ````
 
 ## File: apps/admin/app/admin/blogs/BlogForm.tsx
