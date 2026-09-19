@@ -4214,6 +4214,52 @@ export default function AdminPage<
 }
 ````
 
+## File: apps/admin/components/admin/AnalysesHeader.tsx
+````typescript
+import type { ReactNode } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+
+export interface AnalysesHeaderItem {
+  title: string;
+  value: string | number;
+  description: string;
+  icon?: ReactNode;
+}
+
+interface AnalysesHeaderProps {
+  items: AnalysesHeaderItem[];
+  className?: string;
+  gridClassName?: string;
+}
+
+export default function AnalysesHeader({
+  items,
+  className = "",
+  gridClassName = "grid gap-4 md:grid-cols-2 xl:grid-cols-4",
+}: AnalysesHeaderProps) {
+  return (
+    <div className={`${gridClassName} ${className}`.trim()}>
+      {items.map((item) => (
+        <Card key={item.title} className="border-0 shadow-md shadow-black/5">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">{item.title}</CardTitle>
+            {item.icon}
+          </CardHeader>
+          <CardContent>
+            <p className="text-2xl font-bold">
+              {typeof item.value === "number"
+                ? item.value.toLocaleString()
+                : item.value}
+            </p>
+            <p className="text-xs text-muted-foreground">{item.description}</p>
+          </CardContent>
+        </Card>
+      ))}
+    </div>
+  );
+}
+````
+
 ## File: apps/admin/components/admin/ArrayInput.tsx
 ````typescript
 "use client";
@@ -16770,52 +16816,6 @@ export default function AdminLayout({
 }
 ````
 
-## File: apps/admin/components/admin/AnalysesHeader.tsx
-````typescript
-import type { ReactNode } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-
-export interface AnalysesHeaderItem {
-  title: string;
-  value: string | number;
-  description: string;
-  icon?: ReactNode;
-}
-
-interface AnalysesHeaderProps {
-  items: AnalysesHeaderItem[];
-  className?: string;
-  gridClassName?: string;
-}
-
-export default function AnalysesHeader({
-  items,
-  className = "",
-  gridClassName = "grid gap-4 md:grid-cols-2 xl:grid-cols-4",
-}: AnalysesHeaderProps) {
-  return (
-    <div className={`${gridClassName} ${className}`.trim()}>
-      {items.map((item) => (
-        <Card key={item.title} className="border-0 shadow-md shadow-black/5">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{item.title}</CardTitle>
-            {item.icon}
-          </CardHeader>
-          <CardContent>
-            <p className="text-2xl font-bold">
-              {typeof item.value === "number"
-                ? item.value.toLocaleString()
-                : item.value}
-            </p>
-            <p className="text-xs text-muted-foreground">{item.description}</p>
-          </CardContent>
-        </Card>
-      ))}
-    </div>
-  );
-}
-````
-
 ## File: apps/admin/components/admin/Header.tsx
 ````typescript
 "use client";
@@ -24034,88 +24034,6 @@ export function useSubmissions() {
 }
 ````
 
-## File: apps/admin/package.json
-````json
-{
-  "name": "@bilacert/admin",
-  "version": "0.1.0",
-  "private": true,
-  "scripts": {
-    "dev": "next dev --turbopack -p 3001",
-    "build": "next build",
-    "start": "next start -p 3001",
-    "lint": "biome check .",
-    "lint:fix": "biome check --write .",
-    "format": "biome format --write .",
-    "typecheck": "tsc --noEmit",
-    "clean": "rm -rf .next"
-  },
-  "dependencies": {
-    "@bilacert/shared": "workspace:*",
-    "@bilacert/contracts": "workspace:*",
-    "@bilacert/supabase": "workspace:*",
-    "next": "catalog:",
-    "react": "catalog:",
-    "zod": "catalog:",
-    "react-dom": "catalog:",
-    "react-icons": "catalog:",
-    "@supabase/ssr": "catalog:",
-    "lucide-react": "catalog:",
-    "react-hook-form": "catalog:",
-    "tailwind-merge": "catalog:",
-    "tailwindcss-animate": "catalog:",
-    "@supabase/supabase-js": "catalog:",
-    "@hookform/resolvers": "catalog:",
-    "@radix-ui/react-accordion": "catalog:",
-    "@radix-ui/react-alert-dialog": "catalog:",
-    "@radix-ui/react-avatar": "catalog:",
-    "@radix-ui/react-checkbox": "catalog:",
-    "@radix-ui/react-collapsible": "catalog:",
-    "@radix-ui/react-dialog": "catalog:",
-    "@radix-ui/react-dropdown-menu": "catalog:",
-    "@radix-ui/react-label": "catalog:",
-    "@radix-ui/react-menubar": "catalog:",
-    "@radix-ui/react-popover": "catalog:",
-    "@radix-ui/react-progress": "catalog:",
-    "@radix-ui/react-radio-group": "catalog:",
-    "@radix-ui/react-scroll-area": "catalog:",
-    "@radix-ui/react-select": "catalog:",
-    "@radix-ui/react-separator": "catalog:",
-    "@radix-ui/react-slider": "catalog:",
-    "@radix-ui/react-slot": "catalog:",
-    "@radix-ui/react-switch": "catalog:",
-    "@radix-ui/react-tabs": "catalog:",
-    "@radix-ui/react-toast": "catalog:",
-    "@radix-ui/react-tooltip": "catalog:",
-    "@tanstack/react-table": "catalog:",
-    "@types/uuid": "catalog:",
-    "class-variance-authority": "catalog:",
-    "clsx": "catalog:",
-    "date-fns": "catalog:",
-    "dotenv": "catalog:",
-    "embla-carousel-react": "catalog:",
-    "genkit": "catalog:",
-    "isomorphic-dompurify": "catalog:",
-    "patch-package": "catalog:",
-    "react-day-picker": "catalog:",
-    "react-quill-new": "catalog:",
-    "recharts": "catalog:",
-    "uuid": "catalog:"
-  },
-  "devDependencies": {
-    "@bilacert/typescript-config": "workspace:*",
-    "typescript": "catalog:",
-    "@types/node": "catalog:",
-    "@types/react": "catalog:",
-    "tailwindcss": "catalog:",
-    "@biomejs/biome": "catalog:",
-    "@types/react-dom": "catalog:",
-    "@tailwindcss/postcss": "catalog:",
-    "babel-plugin-react-compiler": "catalog:"
-  }
-}
-````
-
 ## File: apps/client/app/services/[serviceId]/form/ServiceApplicationForm.tsx
 ````typescript
 "use client";
@@ -25182,6 +25100,494 @@ export default async function BlogDetailsPage({
   }
 
   return <BlogDetails blog={blog} />;
+}
+````
+
+## File: apps/admin/app/admin/blogs/BlogDetails.tsx
+````typescript
+"use client";
+
+import type { BlogRowType as BlogType } from "@bilacert/contracts/blog";
+import { format } from "date-fns";
+import {
+  ArrowLeft,
+  Clock,
+  Edit,
+  Eye,
+  FileText,
+  ImageIcon,
+  Tags,
+  Trash2,
+  User,
+} from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import DeleteBlogDialog from "./DeleteBlogDialog";
+
+interface BlogDetailsProps {
+  blog: BlogType;
+}
+
+const bilacertArticleDetailsStyles = `
+  .bilacert-article {
+    color: #1f2937;
+    font-size: 1.0625rem;
+    line-height: 1.9;
+    max-width: 100%;
+    overflow-wrap: normal;
+    word-break: normal;
+  }
+
+  .bilacert-article p {
+    margin-bottom: 1.5rem;
+    overflow-wrap: normal;
+    text-wrap: pretty;
+    white-space: normal;
+    word-break: normal;
+  }
+
+  .bilacert-article h1,
+  .bilacert-article h2,
+  .bilacert-article h3,
+  .bilacert-article h4 {
+    color: #0a2b4c;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.2;
+    text-wrap: balance;
+  }
+
+  .bilacert-article h1 {
+    font-size: 2.5rem;
+    margin: 0 0 1.5rem;
+  }
+
+  .bilacert-article h2 {
+    font-size: 2rem;
+    margin: 3rem 0 1rem;
+  }
+
+  .bilacert-article h3 {
+    font-size: 1.5rem;
+    margin: 2rem 0 0.75rem;
+  }
+
+  .bilacert-article strong {
+    color: #334155;
+    font-weight: 800;
+  }
+
+  .bilacert-article a {
+    color: #1a4a6b;
+    font-weight: 700;
+    text-decoration: underline;
+    text-decoration-color: #f2994a;
+    text-underline-offset: 0.2em;
+  }
+
+  .bilacert-article ul,
+  .bilacert-article ol {
+    margin: 1.5rem 0 1.5rem 1.5rem;
+    padding-left: 1rem;
+  }
+
+  .bilacert-article ul {
+    list-style: disc;
+  }
+
+  .bilacert-article ol {
+    list-style: decimal;
+  }
+
+  .bilacert-article li {
+    margin-bottom: 0.75rem;
+    padding-left: 0.25rem;
+  }
+
+  .bilacert-article blockquote {
+    border-left: 4px solid #f2994a;
+    color: #475569;
+    font-size: 1.125rem;
+    font-style: italic;
+    margin: 2rem 0;
+    padding: 1rem 0 1rem 1.5rem;
+  }
+
+  .bilacert-article img,
+  .bilacert-article iframe,
+  .bilacert-article video {
+    border-radius: 1rem;
+    height: auto;
+    margin: 2rem auto;
+    max-width: 100%;
+  }
+
+  .bilacert-article pre {
+    background: #0a2b4c;
+    border-radius: 1rem;
+    color: white;
+    margin: 2rem 0;
+    overflow-x: auto;
+    padding: 1.25rem;
+    white-space: pre-wrap;
+  }
+
+  .bilacert-article code {
+    overflow-wrap: break-word;
+    white-space: pre-wrap;
+  }
+
+  .bilacert-article table {
+    display: block;
+    margin: 2rem 0;
+    max-width: 100%;
+    overflow-x: auto;
+    width: 100%;
+  }
+
+  .bilacert-article .ql-align-center {
+    text-align: center;
+  }
+
+  .bilacert-article .ql-align-right {
+    text-align: right;
+  }
+
+  .bilacert-article .ql-align-justify {
+    text-align: justify;
+  }
+
+  .bilacert-article .ql-size-small {
+    font-size: 0.875em;
+  }
+
+  .bilacert-article .ql-size-large {
+    font-size: 1.25em;
+  }
+
+  .bilacert-article .ql-size-huge {
+    font-size: 1.5em;
+  }
+
+  @media (min-width: 768px) {
+    .bilacert-article {
+      font-size: 1.125rem;
+    }
+  }
+`;
+
+function normalizeArticleHtml(html: string | null | undefined) {
+  if (!html)
+    return '<p class="text-slate-400 italic">No content to display yet...</p>';
+
+  return html
+    .replace(/<br\s*\/?>(\s*)/gi, " ")
+    .replace(/&nbsp;/gi, " ")
+    .replace(/([A-Za-z])[-‐‑‒–—]\s+([A-Za-z])/g, "$1$2")
+    .replace(/\s{2,}/g, " ")
+    .trim();
+}
+
+function InfoItem({
+  label,
+  value,
+}: {
+  label: string;
+  value: string | number | null | undefined;
+}) {
+  if (value === null || value === undefined || value === "") return null;
+
+  return (
+    <div>
+      <h4 className="text-sm font-medium text-muted-foreground">{label}</h4>
+      <p className="mt-1 text-sm text-card-foreground">{value}</p>
+    </div>
+  );
+}
+
+function MetricCard({
+  title,
+  value,
+  description,
+  Icon,
+}: {
+  title: string;
+  value: string | number;
+  description: string;
+  Icon: typeof Eye;
+}) {
+  return (
+    <Card className="border-0 shadow-md shadow-black/5">
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+        <CardTitle className="text-sm font-medium">{title}</CardTitle>
+        <Icon className="h-4 w-4 text-muted-foreground" />
+      </CardHeader>
+      <CardContent>
+        <p className="text-2xl font-bold">{value}</p>
+        <p className="text-xs text-muted-foreground">{description}</p>
+      </CardContent>
+    </Card>
+  );
+}
+
+export default function BlogDetails({ blog }: BlogDetailsProps) {
+  const router = useRouter();
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+
+  if (!blog) return null;
+
+  const handleDelete = () => {
+    setIsDeleteDialogOpen(true);
+  };
+
+  const onDeleted = () => {
+    setIsDeleteDialogOpen(false);
+    router.push("/admin/blogs");
+    router.refresh();
+  };
+
+  const handleCloseDialog = () => {
+    setIsDeleteDialogOpen(false);
+  };
+
+  const publishedDate = blog.publishedAt
+    ? format(new Date(blog.publishedAt), "PPpp")
+    : "Not published yet";
+  const createdDate = format(new Date(blog.createdAt), "PPpp");
+  const updatedDate = blog.updatedAt
+    ? format(new Date(blog.updatedAt), "PPpp")
+    : "Not updated yet";
+  const tags = blog.tags
+    ? blog.tags
+        .split(",")
+        .map((tag) => tag.trim())
+        .filter(Boolean)
+    : [];
+
+  return (
+    <>
+      <style>{bilacertArticleDetailsStyles}</style>
+      <div className="space-y-8">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <Button variant="outline" asChild>
+            <Link href="/admin/blogs">
+              <ArrowLeft className="mr-2 h-4 w-4" />
+              Back to Blogs
+            </Link>
+          </Button>
+          <div className="flex gap-2">
+            <Button asChild>
+              <Link href={`/admin/blogs/${blog.id}/edit`}>
+                <Edit className="mr-2 h-4 w-4" /> Edit
+              </Link>
+            </Button>
+            <Button variant="destructive" onClick={handleDelete}>
+              <Trash2 className="mr-2 h-4 w-4" /> Delete
+            </Button>
+          </div>
+        </div>
+
+        <Card className="overflow-hidden shadow-xl shadow-black/5">
+          <CardHeader className="bg-muted/30">
+            <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+              <div className="space-y-3">
+                <div className="flex flex-wrap gap-2">
+                  <Badge variant={blog.published ? "default" : "secondary"}>
+                    {blog.published ? "Published" : "Draft"}
+                  </Badge>
+                  <Badge variant={blog.featured ? "default" : "secondary"}>
+                    {blog.featured ? "Featured" : "Not Featured"}
+                  </Badge>
+                  {blog.category && (
+                    <Badge variant="outline">{blog.category}</Badge>
+                  )}
+                </div>
+                <CardTitle className="max-w-4xl text-3xl leading-tight">
+                  {blog.title}
+                </CardTitle>
+                {blog.excerpt && (
+                  <CardDescription className="max-w-3xl text-base leading-relaxed">
+                    {blog.excerpt}
+                  </CardDescription>
+                )}
+              </div>
+              <div className="rounded-2xl bg-background px-5 py-4 text-right shadow-sm shadow-black/5">
+                <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                  Views
+                </p>
+                <p className="text-2xl font-bold text-primary">
+                  {(blog.viewsCount ?? 0).toLocaleString()}
+                </p>
+              </div>
+            </div>
+          </CardHeader>
+        </Card>
+
+        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+          <MetricCard
+            title="Views"
+            value={(blog.viewsCount ?? 0).toLocaleString()}
+            description="Recorded public reads"
+            Icon={Eye}
+          />
+          <MetricCard
+            title="Read Time"
+            value={blog.readTime || "Not set"}
+            description="Estimated article length"
+            Icon={Clock}
+          />
+          <MetricCard
+            title="Author"
+            value={blog.authorName || "Not set"}
+            description="Public byline"
+            Icon={User}
+          />
+          <MetricCard
+            title="Tags"
+            value={tags.length}
+            description="Search and topic labels"
+            Icon={Tags}
+          />
+        </div>
+
+        {(blog.featuredImage || blog.thumbnail) && (
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+            {blog.featuredImage && (
+              <Card className="overflow-hidden border-0 shadow-xl shadow-black/5">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2 text-lg">
+                    <ImageIcon className="h-5 w-5" />
+                    Featured Image
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="relative aspect-video w-full overflow-hidden rounded-xl bg-muted shadow-md shadow-black/10">
+                    <Image
+                      src={blog.featuredImage}
+                      alt="Featured Image"
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+            {blog.thumbnail && (
+              <Card className="overflow-hidden border-0 shadow-xl shadow-black/5">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2 text-lg">
+                    <ImageIcon className="h-5 w-5" />
+                    Thumbnail
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="relative aspect-video w-full overflow-hidden rounded-xl bg-muted shadow-md shadow-black/10">
+                    <Image
+                      src={blog.thumbnail}
+                      alt="Thumbnail"
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+          </div>
+        )}
+
+        <Card className="overflow-hidden shadow-xl shadow-black/5">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-lg">
+              <FileText className="h-5 w-5" />
+              Blog Details
+            </CardTitle>
+            <CardDescription>
+              Publishing, search, and editorial metadata for this blog post.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid gap-6 md:grid-cols-2">
+              <div className="space-y-5 rounded-2xl bg-muted/20 p-5 shadow-sm shadow-black/5">
+                <InfoItem label="Slug" value={blog.slug} />
+                <InfoItem label="Category" value={blog.category} />
+                <InfoItem label="Author" value={blog.authorName} />
+                <InfoItem label="Read Time" value={blog.readTime} />
+                <InfoItem label="Published At" value={publishedDate} />
+                <InfoItem label="Created At" value={createdDate} />
+                <InfoItem label="Updated At" value={updatedDate} />
+              </div>
+              <div className="space-y-5 rounded-2xl bg-muted/20 p-5 shadow-sm shadow-black/5">
+                <InfoItem label="SEO Title" value={blog.seoTitle} />
+                <InfoItem label="SEO Description" value={blog.seoDescription} />
+                <InfoItem label="SEO Keywords" value={blog.seoKeywords} />
+                {tags.length > 0 && (
+                  <div>
+                    <h4 className="text-sm font-medium text-muted-foreground">
+                      Tags
+                    </h4>
+                    <div className="mt-2 flex flex-wrap gap-2">
+                      {tags.map((tag) => (
+                        <Badge key={tag} variant="secondary">
+                          {tag}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="overflow-hidden shadow-xl shadow-black/5">
+          <CardHeader>
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <CardTitle className="text-lg">Content Preview</CardTitle>
+                <CardDescription>
+                  Public article content rendered with the Bilacert article
+                  style.
+                </CardDescription>
+              </div>
+              <Button asChild>
+                <Link href={`/admin/blogs/${blog.id}/edit`}>
+                  <Edit className="mr-2 h-4 w-4" /> Edit Content
+                </Link>
+              </Button>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <article
+              className="bilacert-article"
+              dangerouslySetInnerHTML={{
+                __html: normalizeArticleHtml(blog.content),
+              }}
+            />
+          </CardContent>
+        </Card>
+      </div>
+
+      {isDeleteDialogOpen && (
+        <DeleteBlogDialog
+          isOpen={isDeleteDialogOpen}
+          onClose={handleCloseDialog}
+          blog={blog}
+          onDeleted={onDeleted}
+        />
+      )}
+    </>
+  );
 }
 ````
 
@@ -28194,6 +28600,88 @@ export function useTestimonials() {
 }
 ````
 
+## File: apps/admin/package.json
+````json
+{
+  "name": "@bilacert/admin",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --turbopack -p 3001",
+    "build": "next build",
+    "start": "next start -p 3001",
+    "lint": "biome check .",
+    "lint:fix": "biome check --write .",
+    "format": "biome format --write .",
+    "typecheck": "tsc --noEmit",
+    "clean": "node -e \"require('node:fs').rmSync('.next',{recursive:true,force:true})\""
+  },
+  "dependencies": {
+    "@bilacert/shared": "workspace:*",
+    "@bilacert/contracts": "workspace:*",
+    "@bilacert/supabase": "workspace:*",
+    "next": "catalog:",
+    "react": "catalog:",
+    "zod": "catalog:",
+    "react-dom": "catalog:",
+    "react-icons": "catalog:",
+    "@supabase/ssr": "catalog:",
+    "lucide-react": "catalog:",
+    "react-hook-form": "catalog:",
+    "tailwind-merge": "catalog:",
+    "tailwindcss-animate": "catalog:",
+    "@supabase/supabase-js": "catalog:",
+    "@hookform/resolvers": "catalog:",
+    "@radix-ui/react-accordion": "catalog:",
+    "@radix-ui/react-alert-dialog": "catalog:",
+    "@radix-ui/react-avatar": "catalog:",
+    "@radix-ui/react-checkbox": "catalog:",
+    "@radix-ui/react-collapsible": "catalog:",
+    "@radix-ui/react-dialog": "catalog:",
+    "@radix-ui/react-dropdown-menu": "catalog:",
+    "@radix-ui/react-label": "catalog:",
+    "@radix-ui/react-menubar": "catalog:",
+    "@radix-ui/react-popover": "catalog:",
+    "@radix-ui/react-progress": "catalog:",
+    "@radix-ui/react-radio-group": "catalog:",
+    "@radix-ui/react-scroll-area": "catalog:",
+    "@radix-ui/react-select": "catalog:",
+    "@radix-ui/react-separator": "catalog:",
+    "@radix-ui/react-slider": "catalog:",
+    "@radix-ui/react-slot": "catalog:",
+    "@radix-ui/react-switch": "catalog:",
+    "@radix-ui/react-tabs": "catalog:",
+    "@radix-ui/react-toast": "catalog:",
+    "@radix-ui/react-tooltip": "catalog:",
+    "@tanstack/react-table": "catalog:",
+    "@types/uuid": "catalog:",
+    "class-variance-authority": "catalog:",
+    "clsx": "catalog:",
+    "date-fns": "catalog:",
+    "dotenv": "catalog:",
+    "embla-carousel-react": "catalog:",
+    "genkit": "catalog:",
+    "isomorphic-dompurify": "catalog:",
+    "patch-package": "catalog:",
+    "react-day-picker": "catalog:",
+    "react-quill-new": "catalog:",
+    "recharts": "catalog:",
+    "uuid": "catalog:"
+  },
+  "devDependencies": {
+    "@bilacert/typescript-config": "workspace:*",
+    "typescript": "catalog:",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "tailwindcss": "catalog:",
+    "@biomejs/biome": "catalog:",
+    "@types/react-dom": "catalog:",
+    "@tailwindcss/postcss": "catalog:",
+    "babel-plugin-react-compiler": "catalog:"
+  }
+}
+````
+
 ## File: apps/client/app/contact/actions.ts
 ````typescript
 "use server";
@@ -28692,59 +29180,6 @@ export default function TestimonialsEmbed({
       </div>
     </section>
   );
-}
-````
-
-## File: apps/client/package.json
-````json
-{
-  "name": "@bilacert/client",
-  "version": "0.1.0",
-  "private": true,
-  "scripts": {
-    "dev": "next dev --turbopack -p 3000",
-    "build": "next build",
-    "start": "next start -p 3000",
-    "lint": "biome check .",
-    "lint:fix": "biome check --write .",
-    "format": "biome format --write .",
-    "typecheck": "tsc --noEmit",
-    "clean": "rm -rf .next"
-  },
-  "dependencies": {
-    "@bilacert/shared": "workspace:*",
-    "@bilacert/contracts": "workspace:*",
-    "@bilacert/supabase": "workspace:*",
-    "next": "catalog:",
-    "react": "catalog:",
-    "react-dom": "catalog:",
-    "react-icons": "catalog:",
-    "lucide-react": "catalog:",
-    "tailwind-merge": "catalog:",
-    "@supabase/supabase-js": "catalog:",
-    "@mdx-js/loader": "catalog:",
-    "@mdx-js/react": "catalog:",
-    "@next/mdx": "catalog:",
-    "@next/third-parties": "catalog:",
-    "@radix-ui/react-slot": "catalog:",
-    "@supabase/ssr": "catalog:",
-    "@vercel/analytics": "catalog:",
-    "class-variance-authority": "catalog:",
-    "clsx": "catalog:",
-    "date-fns": "catalog:",
-    "uuid": "catalog:"
-  },
-  "devDependencies": {
-    "@bilacert/typescript-config": "workspace:*",
-    "@biomejs/biome": "catalog:",
-    "@tailwindcss/postcss": "catalog:",
-    "@types/node": "catalog:",
-    "@types/react": "catalog:",
-    "@types/react-dom": "catalog:",
-    "babel-plugin-react-compiler": "catalog:",
-    "tailwindcss": "catalog:",
-    "typescript": "catalog:"
-  }
 }
 ````
 
@@ -29897,6 +30332,184 @@ export default async function EditServicePage({
 }
 ````
 
+## File: apps/admin/app/admin/services/[id]/page.tsx
+````typescript
+import type { BlogRowType as BlogType } from "@bilacert/contracts/blog";
+import type { ServiceRowType } from "@bilacert/contracts/service";
+import { normalizeService } from "@bilacert/supabase/Queries/services";
+import { createSupabaseServerClient } from "@bilacert/supabase/server";
+import { Eye } from "lucide-react";
+import type { Metadata } from "next";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import { Badge } from "@/components/ui/badge";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import ServiceDetails from "./ServiceDetails";
+import ServiceSubmissionAnalysis from "./ServiceSubmissionAnalysis";
+
+async function getService(id: string): Promise<ServiceRowType | null> {
+  const supabase = await createSupabaseServerClient();
+  const { data, error } = await supabase
+    .from("services")
+    .select("*")
+    .eq("id", id)
+    .single();
+
+  if (error || !data) {
+    return null;
+  }
+
+  return normalizeService(data);
+}
+
+async function getBlogs(): Promise<BlogType[]> {
+  const supabase = await createSupabaseServerClient();
+  const { data, error } = await supabase
+    .from("blog_posts")
+    .select(
+      "id,title,slug,excerpt,content,category,tags,readTime,seoTitle,seoDescription,seoKeywords,featuredImage,thumbnail,published,publishedAt,featured,authorId,authorName,viewsCount,createdAt,updatedAt",
+    );
+
+  if (error || !data) {
+    return [];
+  }
+
+  return data as BlogType[];
+}
+
+function normalizeSearchValue(value: string | null | undefined) {
+  return value?.trim().toLowerCase() ?? "";
+}
+
+function getRelatedBlogs(service: ServiceRowType, blogs: BlogType[]) {
+  const serviceTerms = [service.title, service.slug, service.category]
+    .map(normalizeSearchValue)
+    .filter(Boolean);
+
+  return blogs.filter((blog) => {
+    const searchableBlogText = [
+      blog.title,
+      blog.category,
+      blog.tags,
+      blog.excerpt,
+      blog.content,
+    ]
+      .map(normalizeSearchValue)
+      .join(" ");
+
+    return serviceTerms.some((term) => searchableBlogText.includes(term));
+  });
+}
+
+function ServiceBlogPerformance({
+  service,
+  blogs,
+}: {
+  service: ServiceRowType;
+  blogs: BlogType[];
+}) {
+  const topBlogs = getRelatedBlogs(service, blogs)
+    .sort((a, b) => (b.viewsCount ?? 0) - (a.viewsCount ?? 0))
+    .slice(0, 5);
+
+  return (
+    <Card className="border-0 shadow-xl shadow-black/5">
+      <CardHeader>
+        <CardTitle className="text-lg font-semibold">
+          Service Blog Performance
+        </CardTitle>
+        <CardDescription>
+          Blog content connected to {service.title} by title, slug, or category
+          match.
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        {topBlogs.length > 0 ? (
+          <div className="space-y-3">
+            {topBlogs.map((blog) => (
+              <div
+                key={blog.id}
+                className="flex flex-col gap-3 rounded-xl border bg-background p-4 shadow-sm shadow-black/5 md:flex-row md:items-center md:justify-between"
+              >
+                <div className="min-w-0">
+                  <Link
+                    href={`/admin/blogs/${blog.id}`}
+                    className="font-semibold text-primary hover:text-primary/80"
+                  >
+                    {blog.title}
+                  </Link>
+                  <div className="mt-2 flex flex-wrap gap-2">
+                    {blog.category && (
+                      <Badge variant="secondary">{blog.category}</Badge>
+                    )}
+                    <Badge variant={blog.published ? "default" : "outline"}>
+                      {blog.published ? "Published" : "Draft"}
+                    </Badge>
+                    {blog.featured && <Badge variant="outline">Featured</Badge>}
+                  </div>
+                </div>
+                <div className="flex items-center gap-2 text-sm font-semibold text-muted-foreground">
+                  <Eye className="h-4 w-4" />
+                  {(blog.viewsCount ?? 0).toLocaleString()} views
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p className="text-sm text-muted-foreground">
+            No related blog posts were found for this service yet.
+          </p>
+        )}
+      </CardContent>
+    </Card>
+  );
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}): Promise<Metadata> {
+  const { id } = await params;
+  const service = await getService(id);
+  if (!service) {
+    return {
+      title: "Service Not Found",
+    };
+  }
+  return {
+    title: `${service.title} | Bilacert Admin Pro`,
+  };
+}
+
+export default async function ServiceDetailsPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
+  const [service, blogs] = await Promise.all([getService(id), getBlogs()]);
+
+  if (!service) {
+    notFound();
+  }
+
+  return (
+    <div className="space-y-8">
+      <ServiceDetails service={service} />
+      <ServiceSubmissionAnalysis service={service} />
+      <ServiceBlogPerformance service={service} blogs={blogs} />
+    </div>
+  );
+}
+````
+
 ## File: apps/admin/app/admin/services/[id]/ServiceSubmissionAnalysis.tsx
 ````typescript
 "use client";
@@ -30297,6 +30910,59 @@ export default function TestimonialsClient() {
       DeleteDialog={DeleteTestimonialDialog as any}
     />
   );
+}
+````
+
+## File: apps/client/package.json
+````json
+{
+  "name": "@bilacert/client",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --turbopack -p 3000",
+    "build": "next build",
+    "start": "next start -p 3000",
+    "lint": "biome check .",
+    "lint:fix": "biome check --write .",
+    "format": "biome format --write .",
+    "typecheck": "tsc --noEmit",
+    "clean": "node -e \"require('node:fs').rmSync('.next',{recursive:true,force:true})\""
+  },
+  "dependencies": {
+    "@bilacert/shared": "workspace:*",
+    "@bilacert/contracts": "workspace:*",
+    "@bilacert/supabase": "workspace:*",
+    "next": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "react-icons": "catalog:",
+    "lucide-react": "catalog:",
+    "tailwind-merge": "catalog:",
+    "@supabase/supabase-js": "catalog:",
+    "@mdx-js/loader": "catalog:",
+    "@mdx-js/react": "catalog:",
+    "@next/mdx": "catalog:",
+    "@next/third-parties": "catalog:",
+    "@radix-ui/react-slot": "catalog:",
+    "@supabase/ssr": "catalog:",
+    "@vercel/analytics": "catalog:",
+    "class-variance-authority": "catalog:",
+    "clsx": "catalog:",
+    "date-fns": "catalog:",
+    "uuid": "catalog:"
+  },
+  "devDependencies": {
+    "@bilacert/typescript-config": "workspace:*",
+    "@biomejs/biome": "catalog:",
+    "@tailwindcss/postcss": "catalog:",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "babel-plugin-react-compiler": "catalog:",
+    "tailwindcss": "catalog:",
+    "typescript": "catalog:"
+  }
 }
 ````
 
@@ -30745,494 +31411,6 @@ export default async function EditBlogPage({
         </CardContent>
       </Card>
     </div>
-  );
-}
-````
-
-## File: apps/admin/app/admin/blogs/BlogDetails.tsx
-````typescript
-"use client";
-
-import type { BlogRowType as BlogType } from "@bilacert/contracts/blog";
-import { format } from "date-fns";
-import {
-  ArrowLeft,
-  Clock,
-  Edit,
-  Eye,
-  FileText,
-  ImageIcon,
-  Tags,
-  Trash2,
-  User,
-} from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import DeleteBlogDialog from "./DeleteBlogDialog";
-
-interface BlogDetailsProps {
-  blog: BlogType;
-}
-
-const bilacertArticleDetailsStyles = `
-  .bilacert-article {
-    color: #1f2937;
-    font-size: 1.0625rem;
-    line-height: 1.9;
-    max-width: 100%;
-    overflow-wrap: normal;
-    word-break: normal;
-  }
-
-  .bilacert-article p {
-    margin-bottom: 1.5rem;
-    overflow-wrap: normal;
-    text-wrap: pretty;
-    white-space: normal;
-    word-break: normal;
-  }
-
-  .bilacert-article h1,
-  .bilacert-article h2,
-  .bilacert-article h3,
-  .bilacert-article h4 {
-    color: #0a2b4c;
-    font-weight: 800;
-    letter-spacing: -0.03em;
-    line-height: 1.2;
-    text-wrap: balance;
-  }
-
-  .bilacert-article h1 {
-    font-size: 2.5rem;
-    margin: 0 0 1.5rem;
-  }
-
-  .bilacert-article h2 {
-    font-size: 2rem;
-    margin: 3rem 0 1rem;
-  }
-
-  .bilacert-article h3 {
-    font-size: 1.5rem;
-    margin: 2rem 0 0.75rem;
-  }
-
-  .bilacert-article strong {
-    color: #334155;
-    font-weight: 800;
-  }
-
-  .bilacert-article a {
-    color: #1a4a6b;
-    font-weight: 700;
-    text-decoration: underline;
-    text-decoration-color: #f2994a;
-    text-underline-offset: 0.2em;
-  }
-
-  .bilacert-article ul,
-  .bilacert-article ol {
-    margin: 1.5rem 0 1.5rem 1.5rem;
-    padding-left: 1rem;
-  }
-
-  .bilacert-article ul {
-    list-style: disc;
-  }
-
-  .bilacert-article ol {
-    list-style: decimal;
-  }
-
-  .bilacert-article li {
-    margin-bottom: 0.75rem;
-    padding-left: 0.25rem;
-  }
-
-  .bilacert-article blockquote {
-    border-left: 4px solid #f2994a;
-    color: #475569;
-    font-size: 1.125rem;
-    font-style: italic;
-    margin: 2rem 0;
-    padding: 1rem 0 1rem 1.5rem;
-  }
-
-  .bilacert-article img,
-  .bilacert-article iframe,
-  .bilacert-article video {
-    border-radius: 1rem;
-    height: auto;
-    margin: 2rem auto;
-    max-width: 100%;
-  }
-
-  .bilacert-article pre {
-    background: #0a2b4c;
-    border-radius: 1rem;
-    color: white;
-    margin: 2rem 0;
-    overflow-x: auto;
-    padding: 1.25rem;
-    white-space: pre-wrap;
-  }
-
-  .bilacert-article code {
-    overflow-wrap: break-word;
-    white-space: pre-wrap;
-  }
-
-  .bilacert-article table {
-    display: block;
-    margin: 2rem 0;
-    max-width: 100%;
-    overflow-x: auto;
-    width: 100%;
-  }
-
-  .bilacert-article .ql-align-center {
-    text-align: center;
-  }
-
-  .bilacert-article .ql-align-right {
-    text-align: right;
-  }
-
-  .bilacert-article .ql-align-justify {
-    text-align: justify;
-  }
-
-  .bilacert-article .ql-size-small {
-    font-size: 0.875em;
-  }
-
-  .bilacert-article .ql-size-large {
-    font-size: 1.25em;
-  }
-
-  .bilacert-article .ql-size-huge {
-    font-size: 1.5em;
-  }
-
-  @media (min-width: 768px) {
-    .bilacert-article {
-      font-size: 1.125rem;
-    }
-  }
-`;
-
-function normalizeArticleHtml(html: string | null | undefined) {
-  if (!html)
-    return '<p class="text-slate-400 italic">No content to display yet...</p>';
-
-  return html
-    .replace(/<br\s*\/?>(\s*)/gi, " ")
-    .replace(/&nbsp;/gi, " ")
-    .replace(/([A-Za-z])[-‐‑‒–—]\s+([A-Za-z])/g, "$1$2")
-    .replace(/\s{2,}/g, " ")
-    .trim();
-}
-
-function InfoItem({
-  label,
-  value,
-}: {
-  label: string;
-  value: string | number | null | undefined;
-}) {
-  if (value === null || value === undefined || value === "") return null;
-
-  return (
-    <div>
-      <h4 className="text-sm font-medium text-muted-foreground">{label}</h4>
-      <p className="mt-1 text-sm text-card-foreground">{value}</p>
-    </div>
-  );
-}
-
-function MetricCard({
-  title,
-  value,
-  description,
-  Icon,
-}: {
-  title: string;
-  value: string | number;
-  description: string;
-  Icon: typeof Eye;
-}) {
-  return (
-    <Card className="border-0 shadow-md shadow-black/5">
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <CardTitle className="text-sm font-medium">{title}</CardTitle>
-        <Icon className="h-4 w-4 text-muted-foreground" />
-      </CardHeader>
-      <CardContent>
-        <p className="text-2xl font-bold">{value}</p>
-        <p className="text-xs text-muted-foreground">{description}</p>
-      </CardContent>
-    </Card>
-  );
-}
-
-export default function BlogDetails({ blog }: BlogDetailsProps) {
-  const router = useRouter();
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-
-  if (!blog) return null;
-
-  const handleDelete = () => {
-    setIsDeleteDialogOpen(true);
-  };
-
-  const onDeleted = () => {
-    setIsDeleteDialogOpen(false);
-    router.push("/admin/blogs");
-    router.refresh();
-  };
-
-  const handleCloseDialog = () => {
-    setIsDeleteDialogOpen(false);
-  };
-
-  const publishedDate = blog.publishedAt
-    ? format(new Date(blog.publishedAt), "PPpp")
-    : "Not published yet";
-  const createdDate = format(new Date(blog.createdAt), "PPpp");
-  const updatedDate = blog.updatedAt
-    ? format(new Date(blog.updatedAt), "PPpp")
-    : "Not updated yet";
-  const tags = blog.tags
-    ? blog.tags
-        .split(",")
-        .map((tag) => tag.trim())
-        .filter(Boolean)
-    : [];
-
-  return (
-    <>
-      <style>{bilacertArticleDetailsStyles}</style>
-      <div className="space-y-8">
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <Button variant="outline" asChild>
-            <Link href="/admin/blogs">
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              Back to Blogs
-            </Link>
-          </Button>
-          <div className="flex gap-2">
-            <Button asChild>
-              <Link href={`/admin/blogs/${blog.id}/edit`}>
-                <Edit className="mr-2 h-4 w-4" /> Edit
-              </Link>
-            </Button>
-            <Button variant="destructive" onClick={handleDelete}>
-              <Trash2 className="mr-2 h-4 w-4" /> Delete
-            </Button>
-          </div>
-        </div>
-
-        <Card className="overflow-hidden shadow-xl shadow-black/5">
-          <CardHeader className="bg-muted/30">
-            <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-              <div className="space-y-3">
-                <div className="flex flex-wrap gap-2">
-                  <Badge variant={blog.published ? "default" : "secondary"}>
-                    {blog.published ? "Published" : "Draft"}
-                  </Badge>
-                  <Badge variant={blog.featured ? "default" : "secondary"}>
-                    {blog.featured ? "Featured" : "Not Featured"}
-                  </Badge>
-                  {blog.category && (
-                    <Badge variant="outline">{blog.category}</Badge>
-                  )}
-                </div>
-                <CardTitle className="max-w-4xl text-3xl leading-tight">
-                  {blog.title}
-                </CardTitle>
-                {blog.excerpt && (
-                  <CardDescription className="max-w-3xl text-base leading-relaxed">
-                    {blog.excerpt}
-                  </CardDescription>
-                )}
-              </div>
-              <div className="rounded-2xl bg-background px-5 py-4 text-right shadow-sm shadow-black/5">
-                <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                  Views
-                </p>
-                <p className="text-2xl font-bold text-primary">
-                  {(blog.viewsCount ?? 0).toLocaleString()}
-                </p>
-              </div>
-            </div>
-          </CardHeader>
-        </Card>
-
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-          <MetricCard
-            title="Views"
-            value={(blog.viewsCount ?? 0).toLocaleString()}
-            description="Recorded public reads"
-            Icon={Eye}
-          />
-          <MetricCard
-            title="Read Time"
-            value={blog.readTime || "Not set"}
-            description="Estimated article length"
-            Icon={Clock}
-          />
-          <MetricCard
-            title="Author"
-            value={blog.authorName || "Not set"}
-            description="Public byline"
-            Icon={User}
-          />
-          <MetricCard
-            title="Tags"
-            value={tags.length}
-            description="Search and topic labels"
-            Icon={Tags}
-          />
-        </div>
-
-        {(blog.featuredImage || blog.thumbnail) && (
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-            {blog.featuredImage && (
-              <Card className="overflow-hidden border-0 shadow-xl shadow-black/5">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-lg">
-                    <ImageIcon className="h-5 w-5" />
-                    Featured Image
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="relative aspect-video w-full overflow-hidden rounded-xl bg-muted shadow-md shadow-black/10">
-                    <Image
-                      src={blog.featuredImage}
-                      alt="Featured Image"
-                      fill
-                      className="object-cover"
-                    />
-                  </div>
-                </CardContent>
-              </Card>
-            )}
-            {blog.thumbnail && (
-              <Card className="overflow-hidden border-0 shadow-xl shadow-black/5">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-lg">
-                    <ImageIcon className="h-5 w-5" />
-                    Thumbnail
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="relative aspect-video w-full overflow-hidden rounded-xl bg-muted shadow-md shadow-black/10">
-                    <Image
-                      src={blog.thumbnail}
-                      alt="Thumbnail"
-                      fill
-                      className="object-cover"
-                    />
-                  </div>
-                </CardContent>
-              </Card>
-            )}
-          </div>
-        )}
-
-        <Card className="overflow-hidden shadow-xl shadow-black/5">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-lg">
-              <FileText className="h-5 w-5" />
-              Blog Details
-            </CardTitle>
-            <CardDescription>
-              Publishing, search, and editorial metadata for this blog post.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="grid gap-6 md:grid-cols-2">
-              <div className="space-y-5 rounded-2xl bg-muted/20 p-5 shadow-sm shadow-black/5">
-                <InfoItem label="Slug" value={blog.slug} />
-                <InfoItem label="Category" value={blog.category} />
-                <InfoItem label="Author" value={blog.authorName} />
-                <InfoItem label="Read Time" value={blog.readTime} />
-                <InfoItem label="Published At" value={publishedDate} />
-                <InfoItem label="Created At" value={createdDate} />
-                <InfoItem label="Updated At" value={updatedDate} />
-              </div>
-              <div className="space-y-5 rounded-2xl bg-muted/20 p-5 shadow-sm shadow-black/5">
-                <InfoItem label="SEO Title" value={blog.seoTitle} />
-                <InfoItem label="SEO Description" value={blog.seoDescription} />
-                <InfoItem label="SEO Keywords" value={blog.seoKeywords} />
-                {tags.length > 0 && (
-                  <div>
-                    <h4 className="text-sm font-medium text-muted-foreground">
-                      Tags
-                    </h4>
-                    <div className="mt-2 flex flex-wrap gap-2">
-                      {tags.map((tag) => (
-                        <Badge key={tag} variant="secondary">
-                          {tag}
-                        </Badge>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="overflow-hidden shadow-xl shadow-black/5">
-          <CardHeader>
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-              <div>
-                <CardTitle className="text-lg">Content Preview</CardTitle>
-                <CardDescription>
-                  Public article content rendered with the Bilacert article
-                  style.
-                </CardDescription>
-              </div>
-              <Button asChild>
-                <Link href={`/admin/blogs/${blog.id}/edit`}>
-                  <Edit className="mr-2 h-4 w-4" /> Edit Content
-                </Link>
-              </Button>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <article
-              className="bilacert-article"
-              dangerouslySetInnerHTML={{
-                __html: normalizeArticleHtml(blog.content),
-              }}
-            />
-          </CardContent>
-        </Card>
-      </div>
-
-      {isDeleteDialogOpen && (
-        <DeleteBlogDialog
-          isOpen={isDeleteDialogOpen}
-          onClose={handleCloseDialog}
-          blog={blog}
-          onDeleted={onDeleted}
-        />
-      )}
-    </>
   );
 }
 ````
@@ -31805,184 +31983,6 @@ export default function ContactsClient() {
       )}
       DeleteDialog={ContactDeleteDialogAdapter}
     />
-  );
-}
-````
-
-## File: apps/admin/app/admin/services/[id]/page.tsx
-````typescript
-import type { BlogRowType as BlogType } from "@bilacert/contracts/blog";
-import type { ServiceRowType } from "@bilacert/contracts/service";
-import { normalizeService } from "@bilacert/supabase/Queries/services";
-import { createSupabaseServerClient } from "@bilacert/supabase/server";
-import { Eye } from "lucide-react";
-import type { Metadata } from "next";
-import Link from "next/link";
-import { notFound } from "next/navigation";
-import { Badge } from "@/components/ui/badge";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import ServiceDetails from "./ServiceDetails";
-import ServiceSubmissionAnalysis from "./ServiceSubmissionAnalysis";
-
-async function getService(id: string): Promise<ServiceRowType | null> {
-  const supabase = await createSupabaseServerClient();
-  const { data, error } = await supabase
-    .from("services")
-    .select("*")
-    .eq("id", id)
-    .single();
-
-  if (error || !data) {
-    return null;
-  }
-
-  return normalizeService(data);
-}
-
-async function getBlogs(): Promise<BlogType[]> {
-  const supabase = await createSupabaseServerClient();
-  const { data, error } = await supabase
-    .from("blog_posts")
-    .select(
-      "id,title,slug,excerpt,content,category,tags,readTime,seoTitle,seoDescription,seoKeywords,featuredImage,thumbnail,published,publishedAt,featured,authorId,authorName,viewsCount,createdAt,updatedAt",
-    );
-
-  if (error || !data) {
-    return [];
-  }
-
-  return data as BlogType[];
-}
-
-function normalizeSearchValue(value: string | null | undefined) {
-  return value?.trim().toLowerCase() ?? "";
-}
-
-function getRelatedBlogs(service: ServiceRowType, blogs: BlogType[]) {
-  const serviceTerms = [service.title, service.slug, service.category]
-    .map(normalizeSearchValue)
-    .filter(Boolean);
-
-  return blogs.filter((blog) => {
-    const searchableBlogText = [
-      blog.title,
-      blog.category,
-      blog.tags,
-      blog.excerpt,
-      blog.content,
-    ]
-      .map(normalizeSearchValue)
-      .join(" ");
-
-    return serviceTerms.some((term) => searchableBlogText.includes(term));
-  });
-}
-
-function ServiceBlogPerformance({
-  service,
-  blogs,
-}: {
-  service: ServiceRowType;
-  blogs: BlogType[];
-}) {
-  const topBlogs = getRelatedBlogs(service, blogs)
-    .sort((a, b) => (b.viewsCount ?? 0) - (a.viewsCount ?? 0))
-    .slice(0, 5);
-
-  return (
-    <Card className="border-0 shadow-xl shadow-black/5">
-      <CardHeader>
-        <CardTitle className="text-lg font-semibold">
-          Service Blog Performance
-        </CardTitle>
-        <CardDescription>
-          Blog content connected to {service.title} by title, slug, or category
-          match.
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        {topBlogs.length > 0 ? (
-          <div className="space-y-3">
-            {topBlogs.map((blog) => (
-              <div
-                key={blog.id}
-                className="flex flex-col gap-3 rounded-xl border bg-background p-4 shadow-sm shadow-black/5 md:flex-row md:items-center md:justify-between"
-              >
-                <div className="min-w-0">
-                  <Link
-                    href={`/admin/blogs/${blog.id}`}
-                    className="font-semibold text-primary hover:text-primary/80"
-                  >
-                    {blog.title}
-                  </Link>
-                  <div className="mt-2 flex flex-wrap gap-2">
-                    {blog.category && (
-                      <Badge variant="secondary">{blog.category}</Badge>
-                    )}
-                    <Badge variant={blog.published ? "default" : "outline"}>
-                      {blog.published ? "Published" : "Draft"}
-                    </Badge>
-                    {blog.featured && <Badge variant="outline">Featured</Badge>}
-                  </div>
-                </div>
-                <div className="flex items-center gap-2 text-sm font-semibold text-muted-foreground">
-                  <Eye className="h-4 w-4" />
-                  {(blog.viewsCount ?? 0).toLocaleString()} views
-                </div>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <p className="text-sm text-muted-foreground">
-            No related blog posts were found for this service yet.
-          </p>
-        )}
-      </CardContent>
-    </Card>
-  );
-}
-
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}): Promise<Metadata> {
-  const { id } = await params;
-  const service = await getService(id);
-  if (!service) {
-    return {
-      title: "Service Not Found",
-    };
-  }
-  return {
-    title: `${service.title} | Bilacert Admin Pro`,
-  };
-}
-
-export default async function ServiceDetailsPage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
-  const { id } = await params;
-  const [service, blogs] = await Promise.all([getService(id), getBlogs()]);
-
-  if (!service) {
-    notFound();
-  }
-
-  return (
-    <div className="space-y-8">
-      <ServiceDetails service={service} />
-      <ServiceSubmissionAnalysis service={service} />
-      <ServiceBlogPerformance service={service} blogs={blogs} />
-    </div>
   );
 }
 ````
