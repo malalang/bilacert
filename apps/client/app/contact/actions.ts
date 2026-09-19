@@ -1,13 +1,16 @@
 "use server";
 
 import type { ActionResult } from "@bilacert/contracts/actionResult";
-import { type ContactInput, contactSchema } from "@bilacert/contracts/contact";
+import {
+  type ContactInput,
+  contactInputSchema,
+} from "@bilacert/contracts/contact";
 import { createContact } from "@bilacert/supabase/Mutations/contacts";
 
 export async function submitContactForm(
   values: ContactInput,
 ): Promise<ActionResult<{ id: string }>> {
-  const parsed = contactSchema.safeParse(values);
+  const parsed = contactInputSchema.safeParse(values);
 
   if (!parsed.success) {
     return {

@@ -3,7 +3,7 @@
 import type { ContactType } from "@bilacert/contracts/contact";
 import {
   type ContactInput as ContactFormValues,
-  contactSchema,
+  contactInputSchema,
 } from "@bilacert/contracts/contact";
 import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import { Loader2 } from "lucide-react";
@@ -33,7 +33,7 @@ export default function ContactForm({ contact }: ContactFormProps) {
   const { toast } = useToast();
   const router = useRouter();
   const form = useForm<ContactFormValues>({
-    resolver: standardSchemaResolver(contactSchema),
+    resolver: standardSchemaResolver(contactInputSchema),
     defaultValues: {
       name: "",
       email: "",

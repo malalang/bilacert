@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const serverEnvSchema = z.object({
+export const envSchema = z.object({
   NEXT_PUBLIC_SUPABASE_URL: z.string().url("Supabase URL is required"),
   NEXT_PUBLIC_SUPABASE_ANON_KEY: z
     .string()
@@ -15,8 +15,8 @@ export const serverEnvSchema = z.object({
   PEXELS_API_KEY: z.string().optional(),
 });
 
-export type ServerEnv = z.infer<typeof serverEnvSchema>;
+export type Env = z.infer<typeof envSchema>;
 
-export function validateServerEnv(raw: Record<string, string | undefined>) {
-  return serverEnvSchema.safeParse(raw);
+export function validateEnv(raw: Record<string, string | undefined>) {
+  return envSchema.safeParse(raw);
 }

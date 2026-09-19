@@ -2,7 +2,7 @@
 
 import type { ActionResult } from "@bilacert/contracts/actionResult";
 import type { ContactType } from "@bilacert/contracts/contact";
-import { contactSchema } from "@bilacert/contracts/contact";
+import { contactInputSchema } from "@bilacert/contracts/contact";
 import {
   deleteContact as deleteContactMutation,
   upsertContact as upsertContactMutation,
@@ -28,7 +28,7 @@ export async function upsertContact(
   values: unknown,
   contactId?: string,
 ): Promise<ActionResult<ContactType>> {
-  const parsedValues = contactSchema.safeParse(values);
+  const parsedValues = contactInputSchema.safeParse(values);
 
   if (!parsedValues.success) {
     return { ok: false, error: parsedValues.error.message };
