@@ -37,6 +37,7 @@ The content is organized as follows:
 .gitignore
 .npmrc
 .repomixignore
+AGENTS.md
 apps/admin/.gitignore
 apps/admin/app/admin/analysis/AnalysisClient.tsx
 apps/admin/app/admin/analysis/charts.tsx
@@ -49,7 +50,6 @@ apps/admin/app/admin/blogs/BlogDetails.tsx
 apps/admin/app/admin/blogs/BlogEditor.tsx
 apps/admin/app/admin/blogs/BlogForm.tsx
 apps/admin/app/admin/blogs/BlogsClient.tsx
-apps/admin/app/admin/blogs/columns.tsx
 apps/admin/app/admin/blogs/DeleteBlogDialog.tsx
 apps/admin/app/admin/blogs/loading.tsx
 apps/admin/app/admin/blogs/new/page.tsx
@@ -57,12 +57,10 @@ apps/admin/app/admin/blogs/page.tsx
 apps/admin/app/admin/contacts/[id]/edit/page.tsx
 apps/admin/app/admin/contacts/[id]/page.tsx
 apps/admin/app/admin/contacts/actions.ts
-apps/admin/app/admin/contacts/columns.tsx
 apps/admin/app/admin/contacts/ContactCard.tsx
 apps/admin/app/admin/contacts/ContactDetails.tsx
 apps/admin/app/admin/contacts/ContactForm.tsx
 apps/admin/app/admin/contacts/ContactsClient.tsx
-apps/admin/app/admin/contacts/data-table.tsx
 apps/admin/app/admin/contacts/DeleteContactDialog.tsx
 apps/admin/app/admin/contacts/loading.tsx
 apps/admin/app/admin/contacts/new/page.tsx
@@ -83,7 +81,6 @@ apps/admin/app/admin/formSubmissions/[id]/edit/page.tsx
 apps/admin/app/admin/formSubmissions/[id]/page.tsx
 apps/admin/app/admin/formSubmissions/actions.ts
 apps/admin/app/admin/formSubmissions/columns.tsx
-apps/admin/app/admin/formSubmissions/data-table.tsx
 apps/admin/app/admin/formSubmissions/DeleteSubmissionDialog.tsx
 apps/admin/app/admin/formSubmissions/page.tsx
 apps/admin/app/admin/formSubmissions/StatusUpdate.tsx
@@ -99,7 +96,6 @@ apps/admin/app/admin/services/[id]/page.tsx
 apps/admin/app/admin/services/[id]/ServiceDetails.tsx
 apps/admin/app/admin/services/[id]/ServiceSubmissionAnalysis.tsx
 apps/admin/app/admin/services/actions.ts
-apps/admin/app/admin/services/columns.tsx
 apps/admin/app/admin/services/components/CoreDetailsForm.tsx
 apps/admin/app/admin/services/components/DetailsForm.tsx
 apps/admin/app/admin/services/components/FeaturesForm.tsx
@@ -109,7 +105,6 @@ apps/admin/app/admin/services/components/ProcessStepsForm.tsx
 apps/admin/app/admin/services/components/PublishingForm.tsx
 apps/admin/app/admin/services/components/SeoForm.tsx
 apps/admin/app/admin/services/components/SuccessStoryForm.tsx
-apps/admin/app/admin/services/data-table.tsx
 apps/admin/app/admin/services/DeleteServiceDialog.tsx
 apps/admin/app/admin/services/loading.tsx
 apps/admin/app/admin/services/new/page.tsx
@@ -203,6 +198,7 @@ apps/admin/lib/zohoMail.ts
 apps/admin/next.config.ts
 apps/admin/package.json
 apps/admin/postcss.config.mjs
+apps/admin/proxy.ts
 apps/admin/public/class-ens-ecns.jpg
 apps/admin/public/compliance-cost-savings.jpg
 apps/admin/public/ecs-ecns-licensing-explained.jpeg
@@ -305,6 +301,7 @@ apps/client/lib/styles/index.css
 apps/client/next.config.ts
 apps/client/package.json
 apps/client/postcss.config.mjs
+apps/client/proxy.ts
 apps/client/public/class-ens-ecns.jpg
 apps/client/public/compliance-cost-savings.jpg
 apps/client/public/ecs-ecns-licensing-explained.jpeg
@@ -519,6 +516,12 @@ Thumbs.db
 
 # Project-specific ignores
 GEMINI.md
+````
+
+## File: AGENTS.md
+````markdown
+# bilacert
+<!-- owned by GitHub account: malalang -->
 ````
 
 ## File: apps/admin/.gitignore
@@ -1216,161 +1219,6 @@ export const columns = ({
     },
   },
 ];
-````
-
-## File: apps/admin/app/admin/formSubmissions/data-table.tsx
-````typescript
-"use client";
-
-import type { SubmissionType } from "@bilacert/contracts/formSubmission";
-import {
-  type ColumnDef,
-  flexRender,
-  getCoreRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  type Row,
-  type SortingState,
-  useReactTable,
-} from "@tanstack/react-table";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-
-interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[];
-  data: TData[];
-  isLoading?: boolean;
-}
-
-export function DataTable<TData, TValue>({
-  columns,
-  data,
-  isLoading = false,
-}: DataTableProps<TData, TValue>) {
-  const [sorting, setSorting] = useState<SortingState>([]);
-  const router = useRouter();
-
-  const table = useReactTable({
-    data,
-    columns,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    onSortingChange: setSorting,
-    getSortedRowModel: getSortedRowModel(),
-    state: {
-      sorting,
-    },
-  });
-
-  const handleRowClick = (row: Row<TData>) => {
-    const submission = row.original as SubmissionType;
-    if (submission?.id) {
-      router.push(`/admin/formSubmissions/${submission.id}`);
-    }
-  };
-
-  return (
-    <div>
-      <div className="rounded-md border">
-        <Table>
-          <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <TableHead key={header.id}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext(),
-                          )}
-                    </TableHead>
-                  );
-                })}
-              </TableRow>
-            ))}
-          </TableHeader>
-          <TableBody>
-            {isLoading ? (
-              Array.from({ length: 5 }).map((_, i) => (
-                <TableRow key={i}>
-                  {columns.map((_col, j) => (
-                    <TableCell key={j}>
-                      <Skeleton className="h-6 w-full" />
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))
-            ) : table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                  className="cursor-pointer"
-                  onClick={() => handleRowClick(row)}
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell
-                      key={cell.id}
-                      onClick={(e) => {
-                        if (cell.column.id === "actions") {
-                          e.stopPropagation();
-                        }
-                      }}
-                    >
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext(),
-                      )}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
-                  No results.
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </div>
-      <div className="flex items-center justify-end space-x-2 py-4">
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => table.previousPage()}
-          disabled={!table.getCanPreviousPage()}
-        >
-          Previous
-        </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => table.nextPage()}
-          disabled={!table.getCanNextPage()}
-        >
-          Next
-        </Button>
-      </div>
-    </div>
-  );
-}
 ````
 
 ## File: apps/admin/app/admin/formSubmissions/page.tsx
@@ -3269,158 +3117,6 @@ export default function SuccessStoryForm({ form }: { form: any }) {
 }
 ````
 
-## File: apps/admin/app/admin/services/data-table.tsx
-````typescript
-"use client";
-
-import {
-  type ColumnDef,
-  type ColumnFiltersState,
-  flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  type SortingState,
-  useReactTable,
-} from "@tanstack/react-table";
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Skeleton } from "@/components/ui/skeleton";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-
-interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[];
-  data: TData[];
-  isLoading?: boolean;
-}
-
-export function DataTable<TData, TValue>({
-  columns,
-  data,
-  isLoading = false,
-}: DataTableProps<TData, TValue>) {
-  const [sorting, setSorting] = useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-
-  const table = useReactTable({
-    data,
-    columns,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    onSortingChange: setSorting,
-    getSortedRowModel: getSortedRowModel(),
-    onColumnFiltersChange: setColumnFilters,
-    getFilteredRowModel: getFilteredRowModel(),
-    state: {
-      sorting,
-      columnFilters,
-    },
-  });
-
-  return (
-    <div>
-      <div className="flex items-center py-4">
-        <Input
-          placeholder="Filter by title..."
-          value={(table.getColumn("title")?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn("title")?.setFilterValue(event.target.value)
-          }
-          className="max-w-sm"
-        />
-      </div>
-      <div className="rounded-md border">
-        <Table>
-          <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <TableHead key={header.id}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext(),
-                          )}
-                    </TableHead>
-                  );
-                })}
-              </TableRow>
-            ))}
-          </TableHeader>
-          <TableBody>
-            {isLoading ? (
-              Array.from({ length: 5 }).map((_, i) => (
-                <TableRow key={i}>
-                  {columns.map((_col, j) => (
-                    <TableCell key={j}>
-                      <Skeleton className="h-6 w-full" />
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))
-            ) : table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext(),
-                      )}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
-                  No results.
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </div>
-      <div className="flex items-center justify-end space-x-2 py-4">
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => table.previousPage()}
-          disabled={!table.getCanPreviousPage()}
-        >
-          Previous
-        </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => table.nextPage()}
-          disabled={!table.getCanNextPage()}
-        >
-          Next
-        </Button>
-      </div>
-    </div>
-  );
-}
-````
-
 ## File: apps/admin/app/admin/services/loading.tsx
 ````typescript
 import {
@@ -3675,55 +3371,6 @@ export default function TestimonialEmbed({ postUrl }: TestimonialEmbedProps) {
       />
     </div>
   );
-}
-````
-
-## File: apps/admin/app/api/pexels/route.ts
-````typescript
-import { NextResponse } from "next/server";
-
-export async function GET(request: Request) {
-  const { searchParams } = new URL(request.url);
-  const query = searchParams.get("query");
-
-  const accessKey = process.env.PEXELS_API_KEY;
-
-  if (!accessKey) {
-    console.error("PEXELS_API_KEY is not set in environment variables");
-    return NextResponse.json(
-      { error: "Pexels API key is not configured" },
-      { status: 500 },
-    );
-  }
-
-  // If query is provided, search. Otherwise, get curated photos.
-  const url = query
-    ? `https://api.pexels.com/v1/search?query=${encodeURIComponent(query)}&per_page=21`
-    : `https://api.pexels.com/v1/curated?per_page=21`;
-
-  try {
-    const response = await fetch(url, {
-      headers: {
-        Authorization: accessKey,
-      },
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      return NextResponse.json(
-        { error: errorData.error || "Failed to fetch from Pexels" },
-        { status: response.status },
-      );
-    }
-
-    const data = await response.json();
-    return NextResponse.json(data);
-  } catch (error: any) {
-    return NextResponse.json(
-      { error: error.message || "Internal server error" },
-      { status: 500 },
-    );
-  }
 }
 ````
 
@@ -4036,31 +3683,6 @@ export default function HomePage() {
       }
     }
   }
-}
-````
-
-## File: apps/admin/components.json
-````json
-{
-  "$schema": "https://ui.shadcn.com/schema.json",
-  "style": "default",
-  "rsc": true,
-  "tsx": true,
-  "tailwind": {
-    "config": "tailwind.config.ts",
-    "css": "src/app/globals.css",
-    "baseColor": "neutral",
-    "cssVariables": true,
-    "prefix": ""
-  },
-  "aliases": {
-    "components": "@/components",
-    "utils": "@/lib/utils",
-    "ui": "@/components/ui",
-    "lib": "@/lib",
-    "hooks": "@/lib/hooks"
-  },
-  "iconLibrary": "lucide"
 }
 ````
 
@@ -12962,32 +12584,6 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 }
 ````
 
-## File: packages/contracts/src/env.ts
-````typescript
-import { z } from "zod";
-
-export const serverEnvSchema = z.object({
-  NEXT_PUBLIC_SUPABASE_URL: z.string().url("Supabase URL is required"),
-  NEXT_PUBLIC_SUPABASE_ANON_KEY: z
-    .string()
-    .min(1, "Supabase anon key is required"),
-  SUPABASE_URL: z.string().url().optional(),
-  SUPABASE_SECRET_KEY: z.string().min(1).optional(),
-  SUPABASE_SERVICE_ROLE_KEY: z.string().min(1).optional(),
-  REVALIDATION_SECRET: z.string().min(1).optional(),
-  CLIENT_REVALIDATION_URL: z.string().optional(),
-  NEXT_PUBLIC_CLIENT_URL: z.string().optional(),
-  BILACERT_CLIENT_URL: z.string().optional(),
-  PEXELS_API_KEY: z.string().optional(),
-});
-
-export type ServerEnv = z.infer<typeof serverEnvSchema>;
-
-export function validateServerEnv(raw: Record<string, string | undefined>) {
-  return serverEnvSchema.safeParse(raw);
-}
-````
-
 ## File: packages/contracts/src/revalidation.ts
 ````typescript
 import { z } from "zod";
@@ -16619,82 +16215,6 @@ export default function SubmissionsClient() {
 }
 ````
 
-## File: apps/admin/app/admin/services/actions.ts
-````typescript
-"use server";
-
-import type { ActionResult } from "@bilacert/contracts/actionResult";
-import { serviceSchema } from "@bilacert/contracts/service";
-import {
-  deleteService as deleteServiceMutation,
-  upsertService as upsertServiceMutation,
-} from "@bilacert/supabase/Mutations/services";
-import { revalidatePath } from "next/cache";
-import { triggerRevalidation } from "@/lib/revalidation";
-
-export async function upsertService(values: unknown): Promise<ActionResult> {
-  const parsedValues = serviceSchema.safeParse(values);
-
-  if (!parsedValues.success) {
-    return { ok: false, error: parsedValues.error.message };
-  }
-
-  const {
-    id,
-    shortDescription,
-    orderIndex,
-    processingTime,
-    seoTitle,
-    seoDescription,
-    seoKeywords,
-    pricingPlans,
-    processSteps,
-    successStory,
-    ...rest
-  } = parsedValues.data;
-
-  const dataToUpsert = {
-    ...rest,
-    id,
-    shortDescription,
-    orderIndex,
-    processingTime,
-    seoTitle,
-    seoDescription,
-    seoKeywords,
-    pricingPlans,
-    processSteps,
-    successStory,
-  };
-
-  try {
-    const result = await upsertServiceMutation(dataToUpsert as any);
-    await triggerRevalidation(result.revalidate);
-  } catch (error) {
-    const message = error instanceof Error ? error.message : "Unknown error";
-    return { ok: false, error: `Database error: ${message}` };
-  }
-
-  revalidatePath("/admin/services");
-
-  return { ok: true };
-}
-
-export async function deleteService(serviceId: string): Promise<ActionResult> {
-  try {
-    const result = await deleteServiceMutation(serviceId);
-    await triggerRevalidation(result.revalidate);
-  } catch (error) {
-    const message = error instanceof Error ? error.message : "Unknown error";
-    return { ok: false, error: `Database error: ${message}` };
-  }
-
-  revalidatePath("/admin/services");
-
-  return { ok: true };
-}
-````
-
 ## File: apps/admin/app/admin/testimonials/actions.ts
 ````typescript
 "use server";
@@ -16748,6 +16268,80 @@ export async function deleteTestimonial(
   revalidatePath("/admin/testimonials");
 
   return { ok: true };
+}
+````
+
+## File: apps/admin/app/api/pexels/route.ts
+````typescript
+import { getEnv } from "@bilacert/contracts/env";
+import { NextResponse } from "next/server";
+
+export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const query = searchParams.get("query");
+
+  const accessKey = getEnv().PEXELS_API_KEY;
+
+  if (!accessKey) {
+    console.error("PEXELS_API_KEY is not set in environment variables");
+    return NextResponse.json(
+      { error: "Pexels API key is not configured" },
+      { status: 500 },
+    );
+  }
+
+  // If query is provided, search. Otherwise, get curated photos.
+  const url = query
+    ? `https://api.pexels.com/v1/search?query=${encodeURIComponent(query)}&per_page=21`
+    : `https://api.pexels.com/v1/curated?per_page=21`;
+
+  try {
+    const response = await fetch(url, {
+      headers: {
+        Authorization: accessKey,
+      },
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      return NextResponse.json(
+        { error: errorData.error || "Failed to fetch from Pexels" },
+        { status: response.status },
+      );
+    }
+
+    const data = await response.json();
+    return NextResponse.json(data);
+  } catch (error: any) {
+    return NextResponse.json(
+      { error: error.message || "Internal server error" },
+      { status: 500 },
+    );
+  }
+}
+````
+
+## File: apps/admin/components.json
+````json
+{
+  "$schema": "https://ui.shadcn.com/schema.json",
+  "style": "default",
+  "rsc": true,
+  "tsx": true,
+  "tailwind": {
+    "css": "app/globals.css",
+    "baseColor": "neutral",
+    "cssVariables": true,
+    "prefix": ""
+  },
+  "aliases": {
+    "components": "@/components",
+    "utils": "@/lib/utils",
+    "ui": "@/components/ui",
+    "lib": "@/lib",
+    "hooks": "@/lib/hooks"
+  },
+  "iconLibrary": "lucide"
 }
 ````
 
@@ -17569,110 +17163,6 @@ export async function getAdminAccess(): Promise<AdminAccessResult> {
 }
 ````
 
-## File: apps/admin/lib/revalidation.ts
-````typescript
-import type { RevalidationRequest } from "@bilacert/contracts/revalidation";
-
-const fallbackClientUrls = [
-  "https://bilacert-client.malalang.co.za",
-  "https://bilacert-malalang.vercel.app",
-];
-
-type RevalidationAttemptFailure = {
-  url: string;
-  reason: string;
-};
-
-function splitClientUrls(value: string | undefined) {
-  return (
-    value
-      ?.split(",")
-      .map((url) => url.trim())
-      .filter((url) => url.length > 0) ?? []
-  );
-}
-
-function getClientRevalidationUrl(clientUrl: string) {
-  const trimmedClientUrl = clientUrl.trim();
-  const normalizedClientUrl = trimmedClientUrl.match(/^https?:\/\//)
-    ? trimmedClientUrl
-    : `https://${trimmedClientUrl}`;
-  const url = new URL(normalizedClientUrl);
-
-  if (url.pathname.endsWith("/api/revalidate")) {
-    return url;
-  }
-
-  return new URL("/api/revalidate", url);
-}
-
-function getClientRevalidationUrls() {
-  const configuredUrls = [
-    ...splitClientUrls(process.env.CLIENT_REVALIDATION_URL),
-    ...splitClientUrls(process.env.NEXT_PUBLIC_CLIENT_URL),
-    ...splitClientUrls(process.env.BILACERT_CLIENT_URL),
-  ];
-
-  const urls = [...configuredUrls, ...fallbackClientUrls]
-    .map((clientUrl) => getClientRevalidationUrl(clientUrl).toString())
-    .filter((url, index, allUrls) => allUrls.indexOf(url) === index);
-
-  return urls.map((url) => new URL(url));
-}
-
-export async function triggerRevalidation(request: RevalidationRequest) {
-  const secret = process.env.REVALIDATION_SECRET;
-  const revalidationUrls = getClientRevalidationUrls();
-  const failedAttempts: RevalidationAttemptFailure[] = [];
-
-  if (!secret) {
-    console.warn(
-      "REVALIDATION_SECRET is not configured. Skipping client revalidation.",
-    );
-    return { ok: false, skipped: true };
-  }
-
-  for (const revalidationUrl of revalidationUrls) {
-    try {
-      const response = await fetch(revalidationUrl, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${secret}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(request),
-        cache: "no-store",
-      });
-
-      if (response.ok) {
-        return {
-          ok: true,
-          skipped: false,
-          url: revalidationUrl.origin,
-        };
-      }
-
-      failedAttempts.push({
-        url: revalidationUrl.origin,
-        reason: `${response.status}: ${await response.text()}`,
-      });
-    } catch (error) {
-      failedAttempts.push({
-        url: revalidationUrl.origin,
-        reason:
-          error instanceof Error ? error.message : "Unknown request error",
-      });
-    }
-  }
-
-  console.error("Client revalidation failed for all configured URLs:", {
-    attempts: failedAttempts,
-  });
-
-  return { ok: false, skipped: false };
-}
-````
-
 ## File: apps/admin/lib/zohoMail.ts
 ````typescript
 import "server-only";
@@ -18260,79 +17750,69 @@ export async function updateZohoMailReadState(
 }
 ````
 
-## File: apps/client/app/api/revalidate/route.ts
+## File: apps/admin/proxy.ts
 ````typescript
-import {
-  type RevalidationMode,
-  revalidationPayloadSchema,
-} from "@bilacert/contracts/revalidation";
-import { revalidatePath, revalidateTag } from "next/cache";
+import { getEnv } from "@bilacert/contracts/env";
+import { createClient } from "@bilacert/supabase/session";
+import { createServerClient } from "@supabase/ssr";
 import { type NextRequest, NextResponse } from "next/server";
 
-export async function POST(request: NextRequest) {
-  const secret = process.env.REVALIDATION_SECRET;
+export async function proxy(request: NextRequest) {
+  const response = createClient(request);
 
-  if (!secret) {
-    return NextResponse.json(
-      { message: "Revalidation secret not configured" },
-      { status: 500 },
-    );
+  const env = getEnv();
+  const supabaseUrl = env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseAnonKey = env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+  if (!supabaseUrl || !supabaseAnonKey) {
+    throw new Error("Missing Supabase environment variables");
   }
 
-  if (request.headers.get("authorization") !== `Bearer ${secret}`) {
-    return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
-  }
-
-  const json = await request.json().catch(() => null);
-  const parsed = revalidationPayloadSchema.safeParse(json);
-
-  if (!parsed.success) {
-    return NextResponse.json(
-      { message: "Invalid revalidation payload" },
-      { status: 400 },
-    );
-  }
-
-  const body = parsed.data;
-  const tags = [...(body.tags ?? []), ...(body.tag ? [body.tag] : [])].filter(
-    (tag) => tag.length > 0,
-  );
-  const paths = [
-    ...(body.paths ?? []),
-    ...(body.path ? [body.path] : []),
-  ].filter((path) => path.length > 0 && path.startsWith("/"));
-  const uniqueTags = [...new Set(tags)];
-  const uniquePaths = [...new Set(paths)];
-  const mode: RevalidationMode =
-    body.mode === "immediate" ? "immediate" : "max";
-
-  if (uniqueTags.length === 0 && uniquePaths.length === 0) {
-    return NextResponse.json(
-      { message: "At least one tag or path is required" },
-      { status: 400 },
-    );
-  }
-
-  for (const tag of uniqueTags) {
-    if (mode === "immediate") {
-      revalidateTag(tag, { expire: 0 });
-    } else {
-      revalidateTag(tag, "max");
-    }
-  }
-
-  for (const path of uniquePaths) {
-    revalidatePath(path);
-  }
-
-  return NextResponse.json({
-    revalidated: true,
-    tags: uniqueTags,
-    paths: uniquePaths,
-    mode,
-    now: Date.now(),
+  const supabase = createServerClient(supabaseUrl, supabaseAnonKey, {
+    cookies: {
+      getAll() {
+        return request.cookies.getAll();
+      },
+      setAll(cookiesToSet) {
+        cookiesToSet.forEach(({ name, value, options }) => {
+          response.cookies.set(name, value, options);
+        });
+      },
+    },
   });
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  // If there is no user and the route is not /admin/login, redirect to /admin/login
+  if (!user && request.nextUrl.pathname !== "/admin/login") {
+    const redirectRes = NextResponse.redirect(
+      new URL("/admin/login", request.url),
+    );
+    response.cookies.getAll().forEach((cookie) => {
+      redirectRes.cookies.set(cookie.name, cookie.value);
+    });
+    return redirectRes;
+  }
+
+  // If there is a user and the route is /admin/login, redirect to /admin/dashboard
+  if (user && request.nextUrl.pathname === "/admin/login") {
+    const redirectRes = NextResponse.redirect(
+      new URL("/admin/dashboard", request.url),
+    );
+    response.cookies.getAll().forEach((cookie) => {
+      redirectRes.cookies.set(cookie.name, cookie.value);
+    });
+    return redirectRes;
+  }
+
+  return response;
 }
+
+export const config = {
+  matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
+};
 ````
 
 ## File: apps/client/app/blog/[slug]/page.tsx
@@ -20529,6 +20009,47 @@ export function WhatIsSection({
 }
 ````
 
+## File: apps/client/proxy.ts
+````typescript
+import { getEnv } from "@bilacert/contracts/env";
+import { createClient } from "@bilacert/supabase/session";
+import { createServerClient } from "@supabase/ssr";
+import type { NextRequest } from "next/server";
+
+export async function proxy(request: NextRequest) {
+  const response = createClient(request);
+
+  const env = getEnv();
+  const supabaseUrl = env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseAnonKey = env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+  if (!supabaseUrl || !supabaseAnonKey) {
+    return response;
+  }
+
+  const supabase = createServerClient(supabaseUrl, supabaseAnonKey, {
+    cookies: {
+      getAll() {
+        return request.cookies.getAll();
+      },
+      setAll(cookiesToSet) {
+        cookiesToSet.forEach(({ name, value, options }) => {
+          response.cookies.set(name, value, options);
+        });
+      },
+    },
+  });
+
+  await supabase.auth.getUser();
+
+  return response;
+}
+
+export const config = {
+  matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
+};
+````
+
 ## File: biome.json
 ````json
 {
@@ -21816,111 +21337,6 @@ export default function BlogEditor({
 }
 ````
 
-## File: apps/admin/app/admin/blogs/columns.tsx
-````typescript
-"use client";
-
-import type { BlogRowType as BlogType } from "@bilacert/contracts/blog";
-import type { ColumnDef } from "@tanstack/react-table";
-import { format } from "date-fns";
-import { MoreHorizontal } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-
-interface ColumnsOptions {
-  onEdit: (blog: BlogType) => void;
-  onDelete: (blog: BlogType) => void;
-  onViewDetails: (blog: BlogType) => void;
-}
-
-export const columns = ({
-  onEdit,
-  onDelete,
-  onViewDetails,
-}: ColumnsOptions): ColumnDef<BlogType>[] => [
-  {
-    accessorKey: "title",
-    header: "Title",
-    cell: ({ row }) => (
-      <div className="max-w-[300px] truncate font-medium">
-        {row.getValue("title")}
-      </div>
-    ),
-  },
-  {
-    accessorKey: "authorName",
-    header: "Author",
-  },
-  {
-    accessorKey: "category",
-    header: "Category",
-  },
-  {
-    accessorKey: "published",
-    header: "Status",
-    cell: ({ row }) => {
-      const published = row.getValue("published") as boolean;
-      return (
-        <Badge variant={published ? "default" : "secondary"}>
-          {published ? "Published" : "Draft"}
-        </Badge>
-      );
-    },
-  },
-  {
-    accessorKey: "createdAt",
-    header: "Created At",
-    cell: ({ row }) => {
-      const date = row.getValue("createdAt") as string;
-      if (!date) return "N/A";
-      const formattedDate = format(new Date(date), "PP");
-      return <div className="font-medium">{formattedDate}</div>;
-    },
-  },
-  {
-    id: "actions",
-    cell: ({ row }) => {
-      const blog = row.original;
-
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem onClick={() => onViewDetails(blog)}>
-              View details
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => onEdit(blog)}>
-              Edit
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem
-              className="text-destructive focus:bg-destructive/10 focus:text-destructive"
-              onClick={() => onDelete(blog)}
-            >
-              Delete
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
-    },
-  },
-];
-````
-
 ## File: apps/admin/app/admin/blogs/DeleteBlogDialog.tsx
 ````typescript
 "use client";
@@ -22013,300 +21429,6 @@ export default function DeleteBlogDialog({
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
-  );
-}
-````
-
-## File: apps/admin/app/admin/contacts/columns.tsx
-````typescript
-"use client";
-
-import type { ContactType } from "@bilacert/contracts/contact";
-import type { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown, MoreHorizontal } from "lucide-react";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-
-interface ColumnsOptions {
-  onEdit: (contact: ContactType) => void;
-  onDelete: (contact: ContactType) => void;
-}
-
-export const columns = ({
-  onEdit,
-  onDelete,
-}: ColumnsOptions): ColumnDef<ContactType>[] => [
-  {
-    id: "select",
-    header: ({ table }) => (
-      <Checkbox
-        checked={table.getIsAllPageRowsSelected()}
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
-  },
-  {
-    accessorKey: "name",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Name
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
-  },
-  {
-    accessorKey: "email",
-    header: "Email",
-  },
-  {
-    accessorKey: "phone",
-    header: "Phone",
-    cell: ({ row }) => row.getValue("phone") || "N/A",
-  },
-  {
-    accessorKey: "service",
-    header: "Service",
-    cell: ({ row }) => row.getValue("service") || "N/A",
-  },
-  {
-    id: "actions",
-    cell: ({ row }) => {
-      const contact = row.original;
-
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem asChild>
-              <Link href={`/admin/contacts/${contact.id}`}>View Details</Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => onEdit(contact)}>
-              Edit
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem
-              className="text-destructive focus:bg-destructive/10 focus:text-destructive"
-              onClick={() => onDelete(contact)}
-            >
-              Delete
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
-    },
-  },
-];
-````
-
-## File: apps/admin/app/admin/contacts/data-table.tsx
-````typescript
-"use client";
-
-import type { ContactType } from "@bilacert/contracts/contact";
-import {
-  type ColumnDef,
-  type ColumnFiltersState,
-  flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  type Row,
-  type SortingState,
-  useReactTable,
-} from "@tanstack/react-table";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Skeleton } from "@/components/ui/skeleton";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-
-interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[];
-  data: TData[];
-  isLoading?: boolean;
-}
-
-export function DataTable<TData, TValue>({
-  columns,
-  data,
-  isLoading = false,
-}: DataTableProps<TData, TValue>) {
-  const [sorting, setSorting] = useState<SortingState>([]);
-  const [rowSelection, setRowSelection] = useState({});
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const router = useRouter();
-
-  const table = useReactTable({
-    data,
-    columns,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    onSortingChange: setSorting,
-    getSortedRowModel: getSortedRowModel(),
-    onRowSelectionChange: setRowSelection,
-    onColumnFiltersChange: setColumnFilters,
-    getFilteredRowModel: getFilteredRowModel(),
-    state: {
-      sorting,
-      rowSelection,
-      columnFilters,
-    },
-  });
-
-  const handleRowClick = (row: Row<TData>) => {
-    const contact = row.original as ContactType;
-    if (contact?.id) {
-      router.push(`/admin/contacts/${contact.id}`);
-    }
-  };
-
-  return (
-    <div>
-      <div className="flex items-center py-4">
-        <Input
-          placeholder="Filter by name or email..."
-          value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
-          onChange={(event) => {
-            table.getColumn("name")?.setFilterValue(event.target.value);
-            table.getColumn("email")?.setFilterValue(event.target.value);
-          }}
-          className="max-w-sm"
-        />
-      </div>
-      <div className="rounded-md border">
-        <Table>
-          <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <TableHead key={header.id}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext(),
-                          )}
-                    </TableHead>
-                  );
-                })}
-              </TableRow>
-            ))}
-          </TableHeader>
-          <TableBody>
-            {isLoading ? (
-              Array.from({ length: 10 }).map((_, i) => (
-                <TableRow key={i}>
-                  {columns.map((_col, j) => (
-                    <TableCell key={j}>
-                      <Skeleton className="h-6 w-full" />
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))
-            ) : table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                  className="cursor-pointer"
-                  onClick={() => handleRowClick(row)}
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell
-                      key={cell.id}
-                      onClick={(e) => {
-                        if (
-                          cell.column.id === "actions" ||
-                          cell.column.id === "select"
-                        ) {
-                          e.stopPropagation();
-                        }
-                      }}
-                    >
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext(),
-                      )}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
-                  No results.
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </div>
-      <div className="flex items-center justify-end space-x-2 py-4">
-        <div className="flex-1 text-sm text-muted-foreground">
-          {table.getFilteredSelectedRowModel().rows.length} of{" "}
-          {table.getFilteredRowModel().rows.length} row(s) selected.
-        </div>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => table.previousPage()}
-          disabled={!table.getCanPreviousPage()}
-        >
-          Previous
-        </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => table.nextPage()}
-          disabled={!table.getCanNextPage()}
-        >
-          Next
-        </Button>
-      </div>
-    </div>
   );
 }
 ````
@@ -22754,128 +21876,83 @@ export default function AdminLayout({
 }
 ````
 
-## File: apps/admin/app/admin/services/columns.tsx
+## File: apps/admin/app/admin/services/actions.ts
 ````typescript
-"use client";
+"use server";
 
-import type { ServiceRowType } from "@bilacert/contracts/service";
-import type { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown, MoreHorizontal } from "lucide-react";
-import Link from "next/link";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import type { ActionResult } from "@bilacert/contracts/actionResult";
+import { serviceSchema } from "@bilacert/contracts/service";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+  deleteService as deleteServiceMutation,
+  upsertService as upsertServiceMutation,
+} from "@bilacert/supabase/Mutations/services";
+import { getServiceSlugById } from "@bilacert/supabase/Queries/services";
+import { revalidatePath } from "next/cache";
+import { triggerRevalidation } from "@/lib/revalidation";
 
-interface ColumnsOptions {
-  onDelete: (service: ServiceRowType) => void;
+export async function upsertService(values: unknown): Promise<ActionResult> {
+  const parsedValues = serviceSchema.safeParse(values);
+
+  if (!parsedValues.success) {
+    return { ok: false, error: parsedValues.error.message };
+  }
+
+  const {
+    id,
+    shortDescription,
+    orderIndex,
+    processingTime,
+    seoTitle,
+    seoDescription,
+    seoKeywords,
+    pricingPlans,
+    processSteps,
+    successStory,
+    ...rest
+  } = parsedValues.data;
+
+  const dataToUpsert = {
+    ...rest,
+    id,
+    shortDescription,
+    orderIndex,
+    processingTime,
+    seoTitle,
+    seoDescription,
+    seoKeywords,
+    pricingPlans,
+    processSteps,
+    successStory,
+  };
+
+  try {
+    const existingSlug = id ? await getServiceSlugById(id) : null;
+    const result = await upsertServiceMutation(dataToUpsert, existingSlug);
+    await triggerRevalidation(result.revalidate);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Unknown error";
+    return { ok: false, error: `Database error: ${message}` };
+  }
+
+  revalidatePath("/admin/services");
+
+  return { ok: true };
 }
 
-export const columns = ({
-  onDelete,
-}: ColumnsOptions): ColumnDef<ServiceRowType>[] => [
-  {
-    accessorKey: "title",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Title
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
-    cell: ({ row }) => {
-      return (
-        <Link
-          href={`/admin/services/${row.original.id}`}
-          className="font-medium text-primary hover:underline"
-        >
-          {row.original.title}
-        </Link>
-      );
-    },
-  },
-  {
-    accessorKey: "category",
-    header: "Category",
-  },
-  {
-    accessorKey: "published",
-    header: "Status",
-    cell: ({ row }) => {
-      const published = row.getValue("published") as boolean;
-      return (
-        <Badge variant={published ? "default" : "secondary"}>
-          {published ? "Published" : "Draft"}
-        </Badge>
-      );
-    },
-  },
-  {
-    accessorKey: "featured",
-    header: "Featured",
-    cell: ({ row }) => {
-      const featured = row.getValue("featured") as boolean;
-      return featured ? <Badge variant="outline">Yes</Badge> : "No";
-    },
-  },
-  {
-    accessorKey: "pricing",
-    header: "Pricing (ZAR)",
-    cell: ({ row }) => {
-      const amount = parseFloat(row.getValue("pricing"));
-      if (Number.isNaN(amount)) return "N/A";
-      const formatted = new Intl.NumberFormat("en-ZA", {
-        style: "currency",
-        currency: "ZAR",
-      }).format(amount);
+export async function deleteService(serviceId: string): Promise<ActionResult> {
+  try {
+    const existingSlug = await getServiceSlugById(serviceId);
+    const result = await deleteServiceMutation(serviceId, existingSlug);
+    await triggerRevalidation(result.revalidate);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Unknown error";
+    return { ok: false, error: `Database error: ${message}` };
+  }
 
-      return <div className="font-medium">{formatted}</div>;
-    },
-  },
-  {
-    id: "actions",
-    cell: ({ row }) => {
-      const service = row.original;
+  revalidatePath("/admin/services");
 
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem asChild>
-              <Link href={`/admin/services/${service.id}`}>View Details</Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem asChild>
-              <Link href={`/admin/services/${service.id}/edit`}>Edit</Link>
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem
-              className="text-destructive focus:bg-destructive/10 focus:text-destructive"
-              onClick={() => onDelete(service)}
-            >
-              Delete
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
-    },
-  },
-];
+  return { ok: true };
+}
 ````
 
 ## File: apps/admin/components/admin/Sidebar.tsx
@@ -24034,6 +23111,188 @@ export function useSubmissions() {
 }
 ````
 
+## File: apps/admin/lib/revalidation.ts
+````typescript
+import { getEnv } from "@bilacert/contracts/env";
+import type { RevalidationRequest } from "@bilacert/contracts/revalidation";
+
+const fallbackClientUrls = [
+  "https://bilacert-client.malalang.co.za",
+  "https://bilacert-malalang.vercel.app",
+];
+
+type RevalidationAttemptFailure = {
+  url: string;
+  reason: string;
+};
+
+function splitClientUrls(value: string | undefined) {
+  return (
+    value
+      ?.split(",")
+      .map((url) => url.trim())
+      .filter((url) => url.length > 0) ?? []
+  );
+}
+
+function getClientRevalidationUrl(clientUrl: string) {
+  const trimmedClientUrl = clientUrl.trim();
+  const normalizedClientUrl = trimmedClientUrl.match(/^https?:\/\//)
+    ? trimmedClientUrl
+    : `https://${trimmedClientUrl}`;
+  const url = new URL(normalizedClientUrl);
+
+  if (url.pathname.endsWith("/api/revalidate")) {
+    return url;
+  }
+
+  return new URL("/api/revalidate", url);
+}
+
+function getClientRevalidationUrls() {
+  const env = getEnv();
+  const configuredUrls = [
+    ...splitClientUrls(env.CLIENT_REVALIDATION_URL),
+    ...splitClientUrls(env.NEXT_PUBLIC_CLIENT_URL),
+    ...splitClientUrls(env.BILACERT_CLIENT_URL),
+  ];
+
+  const urls = [...configuredUrls, ...fallbackClientUrls]
+    .map((clientUrl) => getClientRevalidationUrl(clientUrl).toString())
+    .filter((url, index, allUrls) => allUrls.indexOf(url) === index);
+
+  return urls.map((url) => new URL(url));
+}
+
+export async function triggerRevalidation(request: RevalidationRequest) {
+  const secret = getEnv().REVALIDATION_SECRET;
+  const revalidationUrls = getClientRevalidationUrls();
+  const failedAttempts: RevalidationAttemptFailure[] = [];
+
+  if (!secret) {
+    console.warn(
+      "REVALIDATION_SECRET is not configured. Skipping client revalidation.",
+    );
+    return { ok: false, skipped: true };
+  }
+
+  for (const revalidationUrl of revalidationUrls) {
+    try {
+      const response = await fetch(revalidationUrl, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${secret}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(request),
+        cache: "no-store",
+      });
+
+      if (response.ok) {
+        return {
+          ok: true,
+          skipped: false,
+          url: revalidationUrl.origin,
+        };
+      }
+
+      failedAttempts.push({
+        url: revalidationUrl.origin,
+        reason: `${response.status}: ${await response.text()}`,
+      });
+    } catch (error) {
+      failedAttempts.push({
+        url: revalidationUrl.origin,
+        reason:
+          error instanceof Error ? error.message : "Unknown request error",
+      });
+    }
+  }
+
+  console.error("Client revalidation failed for all configured URLs:", {
+    attempts: failedAttempts,
+  });
+
+  return { ok: false, skipped: false };
+}
+````
+
+## File: apps/client/app/api/revalidate/route.ts
+````typescript
+import { getEnv } from "@bilacert/contracts/env";
+import {
+  type RevalidationMode,
+  revalidationPayloadSchema,
+} from "@bilacert/contracts/revalidation";
+import { revalidatePath, revalidateTag } from "next/cache";
+import { type NextRequest, NextResponse } from "next/server";
+
+export async function POST(request: NextRequest) {
+  const secret = getEnv().REVALIDATION_SECRET;
+
+  if (!secret) {
+    return NextResponse.json(
+      { message: "Revalidation secret not configured" },
+      { status: 500 },
+    );
+  }
+
+  if (request.headers.get("authorization") !== `Bearer ${secret}`) {
+    return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+  }
+
+  const json = await request.json().catch(() => null);
+  const parsed = revalidationPayloadSchema.safeParse(json);
+
+  if (!parsed.success) {
+    return NextResponse.json(
+      { message: "Invalid revalidation payload" },
+      { status: 400 },
+    );
+  }
+
+  const body = parsed.data;
+  const tags = [...(body.tags ?? []), ...(body.tag ? [body.tag] : [])].filter(
+    (tag) => tag.length > 0,
+  );
+  const paths = [
+    ...(body.paths ?? []),
+    ...(body.path ? [body.path] : []),
+  ].filter((path) => path.length > 0 && path.startsWith("/"));
+  const uniqueTags = [...new Set(tags)];
+  const uniquePaths = [...new Set(paths)];
+  const mode: RevalidationMode =
+    body.mode === "immediate" ? "immediate" : "max";
+
+  if (uniqueTags.length === 0 && uniquePaths.length === 0) {
+    return NextResponse.json(
+      { message: "At least one tag or path is required" },
+      { status: 400 },
+    );
+  }
+
+  for (const tag of uniqueTags) {
+    if (mode === "immediate") {
+      revalidateTag(tag, { expire: 0 });
+    } else {
+      revalidateTag(tag, "max");
+    }
+  }
+
+  for (const path of uniquePaths) {
+    revalidatePath(path);
+  }
+
+  return NextResponse.json({
+    revalidated: true,
+    tags: uniqueTags,
+    paths: uniquePaths,
+    mode,
+    now: Date.now(),
+  });
+}
+````
+
 ## File: apps/client/app/services/[serviceId]/form/ServiceApplicationForm.tsx
 ````typescript
 "use client";
@@ -24550,30 +23809,6 @@ export const businessInfo = {
 } as const;
 ````
 
-## File: package.json
-````json
-{
-  "name": "bilacert-monorepo",
-  "version": "0.0.0",
-  "private": true,
-  "packageManager": "pnpm@10.0.0",
-  "scripts": {
-    "dev": "turbo run dev",
-    "build": "turbo run build --concurrency=1",
-    "clean": "turbo run clean",
-    "lint": "biome check .",
-    "lint:fix": "biome check --write .",
-    "format": "biome format --write .",
-    "typecheck": "turbo run typecheck",
-    "gen:types": "pnpm --filter @bilacert/supabase supabase:types"
-  },
-  "devDependencies": {
-    "@biomejs/biome": "catalog:",
-    "turbo": "catalog:"
-  }
-}
-````
-
 ## File: packages/contracts/src/blog.ts
 ````typescript
 import { z } from "zod";
@@ -24629,6 +23864,37 @@ export interface BlogRowType {
   viewsCount?: number;
   createdAt: string;
   updatedAt?: string;
+}
+````
+
+## File: packages/contracts/src/env.ts
+````typescript
+import { z } from "zod";
+
+export const envSchema = z.object({
+  NEXT_PUBLIC_SUPABASE_URL: z.string().url("Supabase URL is required"),
+  NEXT_PUBLIC_SUPABASE_ANON_KEY: z
+    .string()
+    .min(1, "Supabase anon key is required"),
+  SUPABASE_URL: z.string().url().optional(),
+  SUPABASE_SECRET_KEY: z.string().min(1).optional(),
+  SUPABASE_SERVICE_ROLE_KEY: z.string().min(1).optional(),
+  REVALIDATION_SECRET: z.string().min(1).optional(),
+  CLIENT_REVALIDATION_URL: z.string().optional(),
+  NEXT_PUBLIC_CLIENT_URL: z.string().optional(),
+  BILACERT_CLIENT_URL: z.string().optional(),
+  PEXELS_API_KEY: z.string().optional(),
+});
+
+export type Env = z.infer<typeof envSchema>;
+
+export function validateEnv(raw: Record<string, string | undefined>) {
+  return envSchema.safeParse(raw);
+}
+
+export function getEnv(): Env {
+  const result = envSchema.safeParse(process.env);
+  return result.success ? result.data : (process.env as unknown as Env);
 }
 ````
 
@@ -26181,176 +25447,467 @@ export default function ContactDetails({
 }
 ````
 
-## File: apps/admin/app/admin/contacts/ContactForm.tsx
+## File: apps/admin/app/admin/dashboard/DashboardClient.tsx
 ````typescript
 "use client";
 
+import type { BlogRowType as BlogType } from "@bilacert/contracts/blog";
 import type { ContactType } from "@bilacert/contracts/contact";
+import type { SubmissionType } from "@bilacert/contracts/formSubmission";
+import { Icon } from "@bilacert/shared/Icon";
+import { format, isValid, parseISO } from "date-fns";
 import {
-  type ContactInput as ContactFormValues,
-  contactSchema,
-} from "@bilacert/contracts/contact";
-import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
-import { Loader2 } from "lucide-react";
+  Archive,
+  BarChart as BarChartIcon,
+  Calendar,
+  CheckCircle2,
+  Clock,
+  Eye,
+  Inbox,
+  type LucideIcon,
+  MessageSquare,
+  Newspaper,
+  Package,
+  Users,
+  XCircle,
+} from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
-import { useForm } from "react-hook-form";
-import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { useToast } from "@/hooks/use-toast";
-import { upsertContact } from "./actions";
+import AnalysesHeader from "@/components/admin/AnalysesHeader";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
+import { useDashboardData } from "@/lib/hooks/useDashboardData";
 
-interface ContactFormProps {
-  contact?: ContactType | null;
+const statusStyles: Record<
+  string,
+  {
+    label: string;
+    Icon: LucideIcon;
+    className: string;
+  }
+> = {
+  pending: {
+    label: "Pending",
+    Icon: Clock,
+    className: "bg-yellow-100 text-yellow-800 shadow-yellow-500/10",
+  },
+  "in-progress": {
+    label: "Processing",
+    Icon: Inbox,
+    className: "bg-blue-100 text-blue-800 shadow-blue-500/10",
+  },
+  completed: {
+    label: "Completed",
+    Icon: CheckCircle2,
+    className: "bg-emerald-100 text-emerald-800 shadow-emerald-500/10",
+  },
+  rejected: {
+    label: "Rejected",
+    Icon: XCircle,
+    className: "bg-red-100 text-red-800 shadow-red-500/10",
+  },
+  archived: {
+    label: "Archived",
+    Icon: Archive,
+    className: "bg-slate-100 text-slate-800 shadow-slate-500/10",
+  },
+};
+
+const compactFormatDate = (date: string | Date | undefined) => {
+  if (!date) return "No date";
+  const d = typeof date === "string" ? parseISO(date) : date;
+  return isValid(d) ? format(d, "dd MMM yyyy") : "Invalid date";
+};
+
+function PendingSubmissionItem({ submission }: { submission: SubmissionType }) {
+  return (
+    <Link
+      href={`/admin/formSubmissions/${submission.id}`}
+      className="block rounded-xl bg-background p-3 shadow-sm shadow-black/5 transition-all hover:-translate-y-0.5 hover:shadow-md hover:shadow-black/10"
+    >
+      <div className="flex items-start gap-3">
+        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-yellow-100 text-yellow-700">
+          <Clock className="h-5 w-5" />
+        </div>
+        <div className="min-w-0 flex-1">
+          <div className="flex flex-wrap items-center gap-2">
+            <p className="truncate text-sm font-semibold">
+              {submission.fullName || "Anonymous"}
+            </p>
+            <Badge
+              variant="outline"
+              className="bg-yellow-100 text-[10px] font-bold text-yellow-800"
+            >
+              Pending
+            </Badge>
+          </div>
+          <p className="truncate text-xs text-muted-foreground">
+            {submission.email}
+          </p>
+          <p className="mt-1 truncate text-xs text-muted-foreground">
+            {submission.serviceName || "General Inquiry"}
+          </p>
+        </div>
+        <span className="whitespace-nowrap text-xs text-muted-foreground">
+          {compactFormatDate(submission.createdAt)}
+        </span>
+      </div>
+    </Link>
+  );
 }
 
-export default function ContactForm({ contact }: ContactFormProps) {
-  const { toast } = useToast();
-  const router = useRouter();
-  const form = useForm<ContactFormValues>({
-    resolver: standardSchemaResolver(contactSchema),
-    defaultValues: {
-      name: "",
-      email: "",
-      phone: "",
-      service: "",
-      message: "",
-    },
-  });
+function ContactItem({ contact }: { contact: ContactType }) {
+  return (
+    <Link
+      href={`/admin/contacts/${contact.id}`}
+      className="block rounded-xl bg-background p-3 shadow-sm shadow-black/5 transition-all hover:-translate-y-0.5 hover:shadow-md hover:shadow-black/10"
+    >
+      <div className="flex items-start gap-3">
+        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+          <MessageSquare className="h-5 w-5" />
+        </div>
+        <div className="min-w-0 flex-1">
+          <p className="truncate text-sm font-semibold">
+            {contact.name || "Unnamed contact"}
+          </p>
+          <p className="truncate text-xs text-muted-foreground">
+            {contact.email}
+          </p>
+          <p className="mt-1 truncate text-xs text-muted-foreground">
+            {contact.service || "Contact Form"}
+          </p>
+        </div>
+        <span className="whitespace-nowrap text-xs text-muted-foreground">
+          {compactFormatDate(contact.submittedAt)}
+        </span>
+      </div>
+    </Link>
+  );
+}
 
-  const {
-    handleSubmit,
-    reset,
-    formState: { isSubmitting },
-  } = form;
-  const isEditing = !!contact;
+function BlogInsightCard({ blog }: { blog: BlogType }) {
+  return (
+    <Link
+      href={`/admin/blogs/${blog.id}`}
+      className="group flex overflow-hidden rounded-xl bg-white shadow-sm shadow-black/5 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-black/10"
+    >
+      <div className="relative h-28 w-32 shrink-0 overflow-hidden bg-muted">
+        <Image
+          src={
+            blog.featuredImage ||
+            `https://picsum.photos/seed/${blog.id}/600/400`
+          }
+          alt={blog.title}
+          fill
+          className="object-cover transition-transform duration-300 group-hover:scale-105"
+        />
+      </div>
+      <div className="flex min-w-0 flex-1 flex-col justify-between p-4">
+        <div>
+          <div className="mb-2 flex flex-wrap items-center gap-2">
+            {blog.category && (
+              <Badge variant="secondary">{blog.category}</Badge>
+            )}
+            <Badge variant={blog.published ? "default" : "outline"}>
+              {blog.published ? "Published" : "Draft"}
+            </Badge>
+          </div>
+          <h3 className="line-clamp-2 text-sm font-semibold text-primary">
+            {blog.title}
+          </h3>
+        </div>
+        <div className="mt-3 flex items-center justify-between gap-2 text-xs text-muted-foreground">
+          <span className="flex items-center gap-1.5">
+            <Eye className="h-3.5 w-3.5" />
+            {(blog.viewsCount || 0).toLocaleString()} views
+          </span>
+          <span className="flex items-center gap-1.5">
+            <Calendar className="h-3.5 w-3.5" />
+            {compactFormatDate(blog.createdAt)}
+          </span>
+        </div>
+      </div>
+    </Link>
+  );
+}
 
-  useEffect(() => {
-    if (contact) {
-      reset({
-        name: contact.name,
-        email: contact.email,
-        phone: contact.phone || "",
-        service: contact.service || "",
-        message: contact.message || "",
-      });
-    }
-  }, [contact, reset]);
+function ServiceStatusBreakdown({
+  statusCounts,
+}: {
+  statusCounts: { status: string; count: number }[];
+}) {
+  const visibleStatusCounts = statusCounts.filter(({ count }) => count > 0);
 
-  const onSubmit = async (values: ContactFormValues) => {
-    try {
-      const result = await upsertContact(values, contact?.id);
-
-      if (!result.ok) {
-        throw new Error(result.error);
-      }
-
-      toast({
-        title: result.message,
-      });
-      router.push("/admin/contacts");
-      router.refresh();
-    } catch (error: any) {
-      toast({
-        variant: "destructive",
-        title: "Error saving contact",
-        description: error.message,
-      });
-    }
-  };
+  if (visibleStatusCounts.length === 0) {
+    return (
+      <p className="mt-3 text-xs text-muted-foreground">
+        No status activity for this service yet.
+      </p>
+    );
+  }
 
   return (
-    <Form {...form}>
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-        <FormField
-          control={form.control}
-          name="name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Name</FormLabel>
-              <FormControl>
-                <Input placeholder="John Doe" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Email</FormLabel>
-              <FormControl>
-                <Input placeholder="john.doe@example.com" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="phone"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Phone</FormLabel>
-              <FormControl>
-                <Input placeholder="(123) 456-7890" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="service"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Service</FormLabel>
-              <FormControl>
-                <Input placeholder="e.g. Web Development" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="message"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Message / Notes</FormLabel>
-              <FormControl>
-                <Textarea
-                  placeholder="Initial contact from the website..."
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <div className="flex justify-end gap-4 pt-4">
-          <Button type="button" variant="outline" asChild>
-            <Link href="/admin/contacts">Cancel</Link>
-          </Button>
-          <Button type="submit" disabled={isSubmitting}>
-            {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            {isEditing ? "Save Changes" : "Add Contact"}
-          </Button>
-        </div>
-      </form>
-    </Form>
+    <div className="mt-3 grid gap-2 sm:grid-cols-2 xl:grid-cols-3">
+      {visibleStatusCounts.map(({ status, count }) => {
+        const statusStyle = statusStyles[status];
+        if (!statusStyle) return null;
+        const { Icon: StatusIcon } = statusStyle;
+
+        return (
+          <div
+            key={status}
+            className={`flex items-center justify-between gap-2 rounded-lg px-3 py-2 text-xs font-semibold shadow-sm ${statusStyle.className}`}
+          >
+            <span className="flex items-center gap-1.5">
+              <StatusIcon className="h-3.5 w-3.5" />
+              {statusStyle.label}
+            </span>
+            <span className="tabular-nums">{count}</span>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+export default function DashboardClient() {
+  const {
+    loading,
+    error,
+    stats,
+    statusCounts,
+    submissionsByService,
+    pendingSubmissions,
+    recentContacts,
+    topViewedBlogs,
+  } = useDashboardData();
+
+  if (error) {
+    return (
+      <div className="text-destructive">
+        Error loading dashboard data: {error.message}
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-8">
+      <AnalysesHeader
+        items={[
+          {
+            title: "Total Submissions",
+            value: loading ? "..." : stats.totalSubmissions,
+            description: "All form submissions",
+            icon: <Package className="h-4 w-4 text-muted-foreground" />,
+          },
+          {
+            title: "Total Contacts",
+            value: loading ? "..." : stats.totalContacts,
+            description: "Captured contact messages",
+            icon: <Users className="h-4 w-4 text-muted-foreground" />,
+          },
+          {
+            title: "Total Blogs",
+            value: loading ? "..." : stats.totalBlogs,
+            description: "Content library posts",
+            icon: <Newspaper className="h-4 w-4 text-muted-foreground" />,
+          },
+          {
+            title: "Pending Applications",
+            value: loading ? "..." : stats.newApplications,
+            description: "Applications awaiting action",
+            icon: <BarChartIcon className="h-4 w-4 text-muted-foreground" />,
+          },
+        ]}
+      />
+
+      <Card className="border-0 shadow-xl shadow-black/5">
+        <CardHeader>
+          <CardTitle className="text-lg font-semibold">
+            Submission Status Totals
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid gap-3 md:grid-cols-5">
+            {statusCounts.map(({ status, count }) => {
+              const statusStyle = statusStyles[status];
+              if (!statusStyle) return null;
+              const { Icon: StatusIcon } = statusStyle;
+
+              return (
+                <div
+                  key={status}
+                  className={`rounded-xl p-4 shadow-sm ${statusStyle.className}`}
+                >
+                  <div className="flex items-center justify-between gap-3">
+                    <div className="flex items-center gap-2">
+                      <StatusIcon className="h-4 w-4" />
+                      <span className="text-sm font-semibold">
+                        {statusStyle.label}
+                      </span>
+                    </div>
+                    <span className="text-2xl font-bold tabular-nums">
+                      {count}
+                    </span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </CardContent>
+      </Card>
+
+      <div className="grid gap-8 xl:grid-cols-[1.15fr_0.85fr]">
+        <Card className="border-0 shadow-xl shadow-black/5">
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-lg font-medium">
+              Submissions by Service
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {submissionsByService.length > 0 ? (
+                (() => {
+                  const progressColorClasses = [
+                    "[&>div]:bg-chart-1",
+                    "[&>div]:bg-chart-2",
+                    "[&>div]:bg-chart-3",
+                    "[&>div]:bg-chart-4",
+                    "[&>div]:bg-chart-5",
+                  ];
+                  return submissionsByService
+                    .sort((a, b) => b.submissions - a.submissions)
+                    .map((item, index) => (
+                      <div
+                        key={item.id}
+                        className="rounded-xl bg-muted/20 p-4 shadow-sm shadow-black/5"
+                      >
+                        <div className="grid grid-cols-[auto_1fr_auto] items-center gap-4">
+                          <div className="flex min-w-0 items-center gap-3">
+                            <Icon
+                              name={item.icon || "Package"}
+                              className="h-5 w-5 shrink-0 text-muted-foreground"
+                            />
+                            <span className="truncate text-sm font-medium">
+                              {item.title}
+                            </span>
+                          </div>
+                          <Progress
+                            value={
+                              stats.totalSubmissions > 0
+                                ? (item.submissions / stats.totalSubmissions) *
+                                  100
+                                : 0
+                            }
+                            className={`h-2 ${progressColorClasses[index % progressColorClasses.length]}`}
+                          />
+                          <span className="font-mono text-sm font-medium">
+                            {item.submissions}
+                          </span>
+                        </div>
+                        <ServiceStatusBreakdown
+                          statusCounts={item.statusCounts}
+                        />
+                      </div>
+                    ));
+                })()
+              ) : (
+                <div className="pt-4 text-center text-muted-foreground">
+                  No submissions yet.
+                </div>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="border-0 shadow-xl shadow-black/5">
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <div>
+              <CardTitle className="text-lg font-medium">
+                Recent Activity
+              </CardTitle>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Latest pending submissions, limited to 5.
+              </p>
+            </div>
+            <Clock className="h-5 w-5 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              {pendingSubmissions.length > 0 ? (
+                pendingSubmissions.map((submission) => (
+                  <PendingSubmissionItem
+                    key={submission.id}
+                    submission={submission}
+                  />
+                ))
+              ) : (
+                <div className="pt-4 text-center text-muted-foreground">
+                  No pending submissions.
+                </div>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      <div className="grid gap-8 xl:grid-cols-[1.15fr_0.85fr]">
+        <Card className="border-0 shadow-xl shadow-black/5">
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <div>
+              <CardTitle className="text-lg font-medium">
+                Top Blog Views
+              </CardTitle>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Three highest-performing blog posts by views.
+              </p>
+            </div>
+            <Eye className="h-5 w-5 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="grid gap-4 lg:grid-cols-3 xl:grid-cols-1">
+              {topViewedBlogs.length > 0 ? (
+                topViewedBlogs.map((blog) => (
+                  <BlogInsightCard key={blog.id} blog={blog} />
+                ))
+              ) : (
+                <div className="pt-4 text-center text-muted-foreground">
+                  No blog views yet.
+                </div>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="border-0 shadow-xl shadow-black/5">
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <div>
+              <CardTitle className="text-lg font-medium">
+                Recent Contacts
+              </CardTitle>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Latest contact messages, limited to 5.
+              </p>
+            </div>
+            <MessageSquare className="h-5 w-5 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              {recentContacts.length > 0 ? (
+                recentContacts.map((contact) => (
+                  <ContactItem key={contact.id} contact={contact} />
+                ))
+              ) : (
+                <div className="pt-4 text-center text-muted-foreground">
+                  No contacts yet.
+                </div>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
   );
 }
 ````
@@ -28682,55 +28239,6 @@ export function useTestimonials() {
 }
 ````
 
-## File: apps/client/app/contact/actions.ts
-````typescript
-"use server";
-
-import type { ActionResult } from "@bilacert/contracts/actionResult";
-import { type ContactInput, contactSchema } from "@bilacert/contracts/contact";
-import { createContact } from "@bilacert/supabase/Mutations/contacts";
-
-export async function submitContactForm(
-  values: ContactInput,
-): Promise<ActionResult<{ id: string }>> {
-  const parsed = contactSchema.safeParse(values);
-
-  if (!parsed.success) {
-    return {
-      ok: false,
-      error: "Invalid form data",
-      fieldErrors: parsed.error.flatten().fieldErrors as Record<
-        string,
-        string[]
-      >,
-    };
-  }
-
-  try {
-    const { data } = await createContact({
-      name: parsed.data.name,
-      email: parsed.data.email,
-      phone: parsed.data.phone || null,
-      service: parsed.data.service || null,
-      message: parsed.data.message || null,
-    });
-
-    return {
-      ok: true,
-      data: { id: data?.id || "" },
-      message:
-        "Form submitted successfully. We will review and contact you soon.",
-    };
-  } catch (error) {
-    console.error("Form submission error:", error);
-    return {
-      ok: false,
-      error: "An unexpected error occurred. Please try again.",
-    };
-  }
-}
-````
-
 ## File: apps/client/app/services/[serviceId]/page.tsx
 ````typescript
 import type {
@@ -29183,60 +28691,28 @@ export default function TestimonialsEmbed({
 }
 ````
 
-## File: packages/contracts/package.json
+## File: package.json
 ````json
 {
-  "name": "@bilacert/contracts",
+  "name": "bilacert-monorepo",
   "version": "0.0.0",
   "private": true,
-  "exports": {
-    "./blog": "./src/blog.ts",
-    "./contact": "./src/contact.ts",
-    "./email": "./src/email.ts",
-    "./formSubmission": "./src/formSubmission.ts",
-    "./service": "./src/service.ts",
-    "./testimonial": "./src/testimonial.ts",
-    "./user": "./src/user.ts",
-    "./actionResult": "./src/actionResult.ts",
-    "./revalidation": "./src/revalidation.ts",
-    "./env": "./src/env.ts"
-  },
+  "packageManager": "pnpm@10.0.0",
   "scripts": {
-    "build": "tsc",
-    "typecheck": "tsc --noEmit"
-  },
-  "dependencies": {
-    "zod": "catalog:"
+    "dev": "turbo run dev",
+    "build": "turbo run build --concurrency=1",
+    "clean": "turbo run clean",
+    "lint": "biome check .",
+    "lint:fix": "biome check --write .",
+    "format": "biome format --write .",
+    "typecheck": "turbo run typecheck",
+    "gen:types": "pnpm --filter @bilacert/supabase supabase:types"
   },
   "devDependencies": {
-    "@bilacert/typescript-config": "workspace:*",
+    "@biomejs/biome": "catalog:",
+    "turbo": "catalog:",
     "typescript": "catalog:"
   }
-}
-````
-
-## File: packages/contracts/src/contact.ts
-````typescript
-import { z } from "zod";
-
-export const contactSchema = z.object({
-  name: z.string().min(1, "Name is required"),
-  email: z.string().email("Please enter a valid email"),
-  phone: z.string().optional(),
-  service: z.string().optional(),
-  message: z.string().optional(),
-});
-
-export type ContactInput = z.infer<typeof contactSchema>;
-
-export interface ContactType {
-  id: string;
-  name?: string;
-  email: string;
-  phone?: string;
-  service?: string;
-  message?: string;
-  submittedAt: string;
 }
 ````
 
@@ -29458,87 +28934,6 @@ export type TestimonialRowType = TestimonialType & {
 }
 ````
 
-## File: packages/supabase/src/Mutations/services.ts
-````typescript
-"use server";
-
-import { requireAdminUser } from "../auth";
-import { CACHE_PATHS, CACHE_TAGS, mutationResult } from "../cache";
-import type { Database } from "../supabaseType";
-
-type ServiceInsert = Database["public"]["Tables"]["services"]["Insert"];
-
-function uniqueValues(values: string[]) {
-  return [...new Set(values.filter((value) => value.length > 0))];
-}
-
-export async function upsertService(data: ServiceInsert) {
-  const supabase = await requireAdminUser();
-  const { data: existing, error: readError } = data.id
-    ? await supabase
-        .from("services")
-        .select("slug")
-        .eq("id", data.id)
-        .maybeSingle()
-    : { data: null, error: null };
-
-  if (readError) throw new Error(readError.message);
-
-  const { data: service, error } = await supabase
-    .from("services")
-    .upsert(data)
-    .select("*")
-    .single();
-
-  if (error) throw new Error(error.message);
-
-  const serviceSlugs = uniqueValues([
-    service.slug,
-    ...(existing?.slug ? [existing.slug] : []),
-  ]);
-
-  return mutationResult(service, {
-    tags: uniqueValues([
-      CACHE_TAGS.services,
-      ...serviceSlugs.map((slug) => CACHE_TAGS.service(slug)),
-    ]),
-    paths: uniqueValues([
-      CACHE_PATHS.home,
-      CACHE_PATHS.services,
-      ...serviceSlugs.map((slug) => CACHE_PATHS.service(slug)),
-    ]),
-    mode: "immediate",
-  });
-}
-
-export async function deleteService(id: string) {
-  const supabase = await requireAdminUser();
-  const { data: existing, error: readError } = await supabase
-    .from("services")
-    .select("slug")
-    .eq("id", id)
-    .maybeSingle();
-
-  if (readError) throw new Error(readError.message);
-
-  const { error } = await supabase.from("services").delete().eq("id", id);
-  if (error) throw new Error(error.message);
-
-  return mutationResult(undefined, {
-    tags: [
-      CACHE_TAGS.services,
-      ...(existing?.slug ? [CACHE_TAGS.service(existing.slug)] : []),
-    ],
-    paths: [
-      CACHE_PATHS.home,
-      CACHE_PATHS.services,
-      ...(existing?.slug ? [CACHE_PATHS.service(existing.slug)] : []),
-    ],
-    mode: "immediate",
-  });
-}
-````
-
 ## File: packages/supabase/src/Mutations/testimonials.ts
 ````typescript
 "use server";
@@ -29626,312 +29021,269 @@ yarn-error.log*
 next-env.d.ts
 ````
 
-## File: apps/admin/app/admin/blogs/actions.ts
-````typescript
-"use server";
-
-import type { ActionResult } from "@bilacert/contracts/actionResult";
-import { blogSchema } from "@bilacert/contracts/blog";
-import {
-  createBlog as createBlogMutation,
-  deleteBlog as deleteBlogMutation,
-  updateBlog as updateBlogMutation,
-} from "@bilacert/supabase/Mutations/blogs";
-import { revalidatePath } from "next/cache";
-import { v4 as uuidv4 } from "uuid";
-import { triggerRevalidation } from "@/lib/revalidation";
-
-export async function upsertBlog(
-  values: unknown,
-): Promise<ActionResult<{ id: string }>> {
-  const parsedValues = blogSchema.safeParse(values);
-
-  if (!parsedValues.success) {
-    return { ok: false, error: parsedValues.error.message };
-  }
-
-  const { id, ...rest } = parsedValues.data;
-  const isUpdate = Boolean(id);
-  const now = new Date().toISOString();
-
-  const blogData = {
-    id: id || uuidv4(),
-    title: rest.title,
-    slug: rest.slug,
-    authorName: rest.authorName,
-    readTime: rest.readTime,
-    category: rest.category,
-    tags: rest.tags,
-    excerpt: rest.excerpt,
-    content: rest.content,
-    published: rest.published,
-    publishedAt: rest.published ? now : null,
-    featuredImage: rest.featuredImage,
-    thumbnail: rest.thumbnail,
-    featured: rest.featured,
-    seoTitle: rest.seoTitle,
-    seoDescription: rest.seoDescription,
-    seoKeywords: rest.seoKeywords,
-    updatedAt: now,
-  };
-
-  try {
-    const result = isUpdate
-      ? await updateBlogMutation(blogData.id, blogData)
-      : await createBlogMutation(blogData);
-
-    await triggerRevalidation(result.revalidate);
-
-    revalidatePath("/admin/blogs");
-    revalidatePath(`/admin/blogs/${result.data.id}`);
-    revalidatePath(`/admin/blogs/${result.data.slug}`);
-    revalidatePath(`/admin/blogs/${result.data.id}/edit`);
-    revalidatePath(`/admin/blogs/${result.data.slug}/edit`);
-
-    return { ok: true, data: { id: result.data.id } };
-  } catch (error) {
-    const message = error instanceof Error ? error.message : "Unknown error";
-    return { ok: false, error: `Database error: ${message}` };
-  }
-}
-
-export async function deleteBlog(blogId: string): Promise<ActionResult> {
-  try {
-    const result = await deleteBlogMutation(blogId);
-    await triggerRevalidation(result.revalidate);
-  } catch (error) {
-    const message = error instanceof Error ? error.message : "Unknown error";
-    return { ok: false, error: `Database error: ${message}` };
-  }
-
-  revalidatePath("/admin/blogs");
-
-  return { ok: true };
-}
-````
-
-## File: apps/admin/app/admin/contacts/actions.ts
-````typescript
-"use server";
-
-import type { ActionResult } from "@bilacert/contracts/actionResult";
-import type { ContactType } from "@bilacert/contracts/contact";
-import { contactSchema } from "@bilacert/contracts/contact";
-import {
-  deleteContact as deleteContactMutation,
-  upsertContact as upsertContactMutation,
-} from "@bilacert/supabase/Mutations/contacts";
-import { createSupabaseServerClient } from "@bilacert/supabase/server";
-import { revalidatePath } from "next/cache";
-
-export async function getContacts() {
-  const supabase = await createSupabaseServerClient();
-  const { data, error } = await supabase
-    .from("contacts")
-    .select("*")
-    .order("name", { ascending: true });
-
-  if (error) {
-    throw new Error(error.message);
-  }
-
-  return data as ContactType[];
-}
-
-export async function upsertContact(
-  values: unknown,
-  contactId?: string,
-): Promise<ActionResult<ContactType>> {
-  const parsedValues = contactSchema.safeParse(values);
-
-  if (!parsedValues.success) {
-    return { ok: false, error: parsedValues.error.message };
-  }
-
-  let data: ContactType;
-  try {
-    const result = await upsertContactMutation(
-      contactId ? { ...parsedValues.data, id: contactId } : parsedValues.data,
-    );
-    data = result.data as ContactType;
-  } catch (error) {
-    const message = error instanceof Error ? error.message : "Unknown error";
-    return { ok: false, error: `Database error: ${message}` };
-  }
-
-  revalidatePath("/admin/contacts");
-  revalidatePath(`/admin/contacts/${data.id}`);
-
-  return {
-    ok: true,
-    data,
-    message: `Contact ${contactId ? "updated" : "created"} successfully!`,
-  };
-}
-
-export async function deleteContact(contactId: string): Promise<ActionResult> {
-  try {
-    await deleteContactMutation(contactId);
-  } catch (error) {
-    const message = error instanceof Error ? error.message : "Unknown error";
-    return { ok: false, error: `Database error: ${message}` };
-  }
-
-  revalidatePath("/admin/contacts");
-
-  return {
-    ok: true,
-    message: "Contact deleted successfully!",
-  };
-}
-````
-
-## File: apps/admin/app/admin/dashboard/DashboardClient.tsx
+## File: apps/admin/app/admin/blogs/BlogsClient.tsx
 ````typescript
 "use client";
 
 import type { BlogRowType as BlogType } from "@bilacert/contracts/blog";
-import type { ContactType } from "@bilacert/contracts/contact";
-import type { SubmissionType } from "@bilacert/contracts/formSubmission";
-import { Icon } from "@bilacert/shared/Icon";
 import { format, isValid, parseISO } from "date-fns";
 import {
-  Archive,
-  BarChart as BarChartIcon,
   Calendar,
-  CheckCircle2,
-  Clock,
   Eye,
-  Inbox,
-  type LucideIcon,
-  MessageSquare,
+  FileText,
+  Filter,
+  MoreHorizontal,
   Newspaper,
-  Package,
-  Users,
-  XCircle,
+  PlusCircle,
+  Search,
+  Sparkles,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useMemo, useState } from "react";
 import AnalysesHeader from "@/components/admin/AnalysesHeader";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
-import { useDashboardData } from "@/lib/hooks/useDashboardData";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useBlogs } from "@/lib/hooks/useBlogs";
+import DeleteBlogDialog from "./DeleteBlogDialog";
 
-const statusStyles: Record<
-  string,
-  {
-    label: string;
-    Icon: LucideIcon;
-    className: string;
-  }
-> = {
-  pending: {
-    label: "Pending",
-    Icon: Clock,
-    className: "bg-yellow-100 text-yellow-800 shadow-yellow-500/10",
-  },
-  "in-progress": {
-    label: "Processing",
-    Icon: Inbox,
-    className: "bg-blue-100 text-blue-800 shadow-blue-500/10",
-  },
-  completed: {
-    label: "Completed",
-    Icon: CheckCircle2,
-    className: "bg-emerald-100 text-emerald-800 shadow-emerald-500/10",
-  },
-  rejected: {
-    label: "Rejected",
-    Icon: XCircle,
-    className: "bg-red-100 text-red-800 shadow-red-500/10",
-  },
-  archived: {
-    label: "Archived",
-    Icon: Archive,
-    className: "bg-slate-100 text-slate-800 shadow-slate-500/10",
-  },
-};
-
-const compactFormatDate = (date: string | Date | undefined) => {
-  if (!date) return "No date";
+const safeFormatDate = (
+  date: string | Date | undefined,
+  dateFormat = "PP",
+  fallback = "Invalid date",
+) => {
+  if (!date) return fallback;
   const d = typeof date === "string" ? parseISO(date) : date;
-  return isValid(d) ? format(d, "dd MMM yyyy") : "Invalid date";
+  return isValid(d) ? format(d, dateFormat) : fallback;
 };
 
-function PendingSubmissionItem({ submission }: { submission: SubmissionType }) {
+function BlogsAnalysis({ blogs }: { blogs: BlogType[] }) {
+  const publishedBlogs = blogs.filter((blog) => blog.published);
+  const featuredBlogs = blogs.filter((blog) => blog.featured);
+  const totalViews = blogs.reduce(
+    (sum, blog) => sum + (blog.viewsCount ?? 0),
+    0,
+  );
+  const topBlogs = [...blogs]
+    .sort((a, b) => (b.viewsCount ?? 0) - (a.viewsCount ?? 0))
+    .slice(0, 5);
+  const categoryCounts = blogs.reduce<Map<string, number>>((counts, blog) => {
+    const category = blog.category || "Uncategorized";
+    counts.set(category, (counts.get(category) ?? 0) + 1);
+    return counts;
+  }, new Map());
+  const topCategories = [...categoryCounts.entries()]
+    .sort(([, a], [, b]) => b - a)
+    .slice(0, 5);
+
   return (
-    <Link
-      href={`/admin/formSubmissions/${submission.id}`}
-      className="block rounded-xl bg-background p-3 shadow-sm shadow-black/5 transition-all hover:-translate-y-0.5 hover:shadow-md hover:shadow-black/10"
+    <div className="space-y-4">
+      <AnalysesHeader
+        items={[
+          {
+            title: "Total Blogs",
+            value: blogs.length,
+            description: `${publishedBlogs.length.toLocaleString()} published`,
+            icon: <Newspaper className="h-4 w-4 text-muted-foreground" />,
+          },
+          {
+            title: "Published Blogs",
+            value: publishedBlogs.length,
+            description: "Visible publicly",
+            icon: <FileText className="h-4 w-4 text-muted-foreground" />,
+          },
+          {
+            title: "Blog Views",
+            value: totalViews,
+            description: "Across all posts",
+            icon: <Eye className="h-4 w-4 text-muted-foreground" />,
+          },
+          {
+            title: "Featured Blogs",
+            value: featuredBlogs.length,
+            description: "Promoted content",
+            icon: <Sparkles className="h-4 w-4 text-muted-foreground" />,
+          },
+        ]}
+      />
+
+      <div className="grid gap-4 lg:grid-cols-[2fr_1fr]">
+        <Card className="border-0 shadow-xl shadow-black/5">
+          <CardHeader>
+            <CardTitle className="text-lg font-semibold">
+              Blog Performance
+            </CardTitle>
+            <CardDescription>
+              Top posts ranked by recorded public views.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            {topBlogs.length > 0 ? (
+              <div className="space-y-3">
+                {topBlogs.map((blog) => (
+                  <div
+                    key={blog.id}
+                    className="flex flex-col gap-3 rounded-xl border bg-background p-4 shadow-sm shadow-black/5 md:flex-row md:items-center md:justify-between"
+                  >
+                    <div className="min-w-0">
+                      <Link
+                        href={`/admin/blogs/${blog.id}`}
+                        className="font-semibold text-primary hover:text-primary/80"
+                      >
+                        {blog.title}
+                      </Link>
+                      <div className="mt-2 flex flex-wrap gap-2">
+                        {blog.category && (
+                          <Badge variant="secondary">{blog.category}</Badge>
+                        )}
+                        <Badge variant={blog.published ? "default" : "outline"}>
+                          {blog.published ? "Published" : "Draft"}
+                        </Badge>
+                        {blog.featured && (
+                          <Badge variant="outline">Featured</Badge>
+                        )}
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2 text-sm font-semibold text-muted-foreground">
+                      <Eye className="h-4 w-4" />
+                      {(blog.viewsCount ?? 0).toLocaleString()} views
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-sm text-muted-foreground">
+                No blog performance data yet.
+              </p>
+            )}
+          </CardContent>
+        </Card>
+
+        <Card className="border-0 shadow-xl shadow-black/5">
+          <CardHeader>
+            <CardTitle className="text-lg font-semibold">
+              Category Coverage
+            </CardTitle>
+            <CardDescription>Most-used blog categories.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            {topCategories.length > 0 ? (
+              <div className="space-y-3">
+                {topCategories.map(([category, count]) => (
+                  <div
+                    key={category}
+                    className="flex items-center justify-between rounded-xl bg-muted/40 px-4 py-3 text-sm"
+                  >
+                    <span className="font-medium">{category}</span>
+                    <Badge variant="secondary">{count}</Badge>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-sm text-muted-foreground">
+                No categories assigned yet.
+              </p>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  );
+}
+
+const BlogCard = ({
+  blog,
+  onEdit,
+  onDelete,
+}: {
+  blog: BlogType;
+  onEdit: (blog: BlogType) => void;
+  onDelete: (blog: BlogType) => void;
+}) => {
+  const router = useRouter();
+  return (
+    <div
+      key={blog.id}
+      className="group relative flex flex-col overflow-hidden rounded-xl bg-white shadow-sm shadow-black/5 transition-all duration-300 hover:-translate-y-2 hover:shadow-xl hover:shadow-black/10"
     >
-      <div className="flex items-start gap-3">
-        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-yellow-100 text-yellow-700">
-          <Clock className="h-5 w-5" />
-        </div>
-        <div className="min-w-0 flex-1">
-          <div className="flex flex-wrap items-center gap-2">
-            <p className="truncate text-sm font-semibold">
-              {submission.fullName || "Anonymous"}
-            </p>
-            <Badge
-              variant="outline"
-              className="bg-yellow-100 text-[10px] font-bold text-yellow-800"
+      <Link
+        href={`/admin/blogs/${blog.id}`}
+        className="absolute inset-0 z-10"
+        aria-label={`View ${blog.title}`}
+      >
+        <span className="sr-only">View Details</span>
+      </Link>
+      <div className="absolute top-4 right-4 z-20">
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8 rounded-full bg-background/60 backdrop-blur-sm hover:bg-background"
+              onClick={(e) => e.preventDefault()}
             >
-              Pending
-            </Badge>
-          </div>
-          <p className="truncate text-xs text-muted-foreground">
-            {submission.email}
-          </p>
-          <p className="mt-1 truncate text-xs text-muted-foreground">
-            {submission.serviceName || "General Inquiry"}
-          </p>
-        </div>
-        <span className="whitespace-nowrap text-xs text-muted-foreground">
-          {compactFormatDate(submission.createdAt)}
-        </span>
+              <span className="sr-only">Open menu</span>
+              <MoreHorizontal className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+            <DropdownMenuItem
+              onClick={(e) => {
+                e.preventDefault();
+                router.push(`/admin/blogs/${blog.id}`);
+              }}
+            >
+              View
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={(e) => {
+                e.preventDefault();
+                onEdit(blog);
+              }}
+            >
+              Edit
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              className="text-destructive focus:bg-destructive/10 focus:text-destructive"
+              onClick={(e) => {
+                e.preventDefault();
+                onDelete(blog);
+              }}
+            >
+              Delete
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
-    </Link>
-  );
-}
 
-function ContactItem({ contact }: { contact: ContactType }) {
-  return (
-    <Link
-      href={`/admin/contacts/${contact.id}`}
-      className="block rounded-xl bg-background p-3 shadow-sm shadow-black/5 transition-all hover:-translate-y-0.5 hover:shadow-md hover:shadow-black/10"
-    >
-      <div className="flex items-start gap-3">
-        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
-          <MessageSquare className="h-5 w-5" />
-        </div>
-        <div className="min-w-0 flex-1">
-          <p className="truncate text-sm font-semibold">
-            {contact.name || "Unnamed contact"}
-          </p>
-          <p className="truncate text-xs text-muted-foreground">
-            {contact.email}
-          </p>
-          <p className="mt-1 truncate text-xs text-muted-foreground">
-            {contact.service || "Contact Form"}
-          </p>
-        </div>
-        <span className="whitespace-nowrap text-xs text-muted-foreground">
-          {compactFormatDate(contact.submittedAt)}
-        </span>
-      </div>
-    </Link>
-  );
-}
-
-function BlogInsightCard({ blog }: { blog: BlogType }) {
-  return (
-    <Link
-      href={`/admin/blogs/${blog.id}`}
-      className="group flex overflow-hidden rounded-xl bg-white shadow-sm shadow-black/5 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-black/10"
-    >
-      <div className="relative h-28 w-32 shrink-0 overflow-hidden bg-muted">
+      <div className="relative h-48 w-full">
         <Image
           src={
             blog.featuredImage ||
@@ -29941,312 +29293,476 @@ function BlogInsightCard({ blog }: { blog: BlogType }) {
           fill
           className="object-cover transition-transform duration-300 group-hover:scale-105"
         />
-      </div>
-      <div className="flex min-w-0 flex-1 flex-col justify-between p-4">
-        <div>
-          <div className="mb-2 flex flex-wrap items-center gap-2">
-            {blog.category && (
-              <Badge variant="secondary">{blog.category}</Badge>
-            )}
-            <Badge variant={blog.published ? "default" : "outline"}>
-              {blog.published ? "Published" : "Draft"}
-            </Badge>
-          </div>
-          <h3 className="line-clamp-2 text-sm font-semibold text-primary">
-            {blog.title}
-          </h3>
-        </div>
-        <div className="mt-3 flex items-center justify-between gap-2 text-xs text-muted-foreground">
-          <span className="flex items-center gap-1.5">
-            <Eye className="h-3.5 w-3.5" />
-            {(blog.viewsCount || 0).toLocaleString()} views
-          </span>
-          <span className="flex items-center gap-1.5">
-            <Calendar className="h-3.5 w-3.5" />
-            {compactFormatDate(blog.createdAt)}
-          </span>
+        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+        <div className="absolute bottom-4 left-4">
+          {blog.category && <Badge variant="secondary">{blog.category}</Badge>}
         </div>
       </div>
-    </Link>
-  );
-}
 
-function ServiceStatusBreakdown({
-  statusCounts,
-}: {
-  statusCounts: { status: string; count: number }[];
-}) {
-  const visibleStatusCounts = statusCounts.filter(({ count }) => count > 0);
-
-  if (visibleStatusCounts.length === 0) {
-    return (
-      <p className="mt-3 text-xs text-muted-foreground">
-        No status activity for this service yet.
-      </p>
-    );
-  }
-
-  return (
-    <div className="mt-3 grid gap-2 sm:grid-cols-2 xl:grid-cols-3">
-      {visibleStatusCounts.map(({ status, count }) => {
-        const statusStyle = statusStyles[status];
-        if (!statusStyle) return null;
-        const { Icon: StatusIcon } = statusStyle;
-
-        return (
-          <div
-            key={status}
-            className={`flex items-center justify-between gap-2 rounded-lg px-3 py-2 text-xs font-semibold shadow-sm ${statusStyle.className}`}
-          >
-            <span className="flex items-center gap-1.5">
-              <StatusIcon className="h-3.5 w-3.5" />
-              {statusStyle.label}
-            </span>
-            <span className="tabular-nums">{count}</span>
+      <div className="flex flex-col flex-grow p-6">
+        <h3 className="mb-2 text-xl font-semibold text-primary line-clamp-2">
+          {blog.title}
+        </h3>
+        <p className="mb-4 text-sm text-muted-foreground line-clamp-3 flex-grow">
+          {blog.excerpt}
+        </p>
+        <div className="mt-auto flex items-center justify-between gap-3 text-xs text-muted-foreground">
+          <Badge variant={blog.published ? "default" : "outline"}>
+            {blog.published ? "Published" : "Draft"}
+          </Badge>
+          <div className="flex flex-wrap items-center justify-end gap-x-3 gap-y-1">
+            <div className="flex items-center gap-1.5">
+              <Eye className="h-4 w-4" />
+              <span>{(blog.viewsCount ?? 0).toLocaleString()} views</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <Calendar className="h-4 w-4" />
+              <span>{safeFormatDate(blog.createdAt, "PP")}</span>
+            </div>
           </div>
-        );
-      })}
+        </div>
+      </div>
     </div>
   );
-}
+};
 
-export default function DashboardClient() {
-  const {
-    loading,
-    error,
-    stats,
-    statusCounts,
-    submissionsByService,
-    pendingSubmissions,
-    recentContacts,
-    topViewedBlogs,
-  } = useDashboardData();
+export default function BlogsClient() {
+  const { data: blogs, loading, error, refresh } = useBlogs();
+  const router = useRouter();
+  const [searchQuery, setSearchQuery] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState("all");
+  const [statusTab, setStatusTab] = useState("all");
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [selectedBlog, setSelectedBlog] = useState<BlogType | null>(null);
+
+  const categories = useMemo(() => {
+    const cats = new Set<string>();
+    blogs.forEach((blog) => {
+      if (blog.category) cats.add(blog.category);
+    });
+    return Array.from(cats).sort();
+  }, [blogs]);
+
+  const filteredBlogs = useMemo(() => {
+    return blogs.filter((blog) => {
+      const matchesSearch =
+        blog.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (blog.excerpt?.toLowerCase().includes(searchQuery.toLowerCase()) ??
+          false);
+      const matchesCategory =
+        categoryFilter === "all" || blog.category === categoryFilter;
+      const matchesStatus =
+        statusTab === "all" ||
+        (statusTab === "published" && blog.published) ||
+        (statusTab === "draft" && !blog.published);
+      return matchesSearch && matchesCategory && matchesStatus;
+    });
+  }, [blogs, searchQuery, categoryFilter, statusTab]);
+
+  const handleEdit = (blog: BlogType) => {
+    router.push(`/admin/blogs/${blog.id}/edit`);
+  };
+
+  const handleDelete = (blog: BlogType) => {
+    setSelectedBlog(blog);
+    setIsDeleteDialogOpen(true);
+  };
+
+  const onDeleted = () => {
+    setIsDeleteDialogOpen(false);
+    setSelectedBlog(null);
+    refresh();
+  };
 
   if (error) {
     return (
-      <div className="text-destructive">
-        Error loading dashboard data: {error.message}
+      <div className="text-destructive p-4 border border-destructive/20 rounded-lg bg-destructive/10">
+        Error loading blogs: {error.message}
       </div>
     );
   }
 
   return (
-    <div className="space-y-8">
-      <AnalysesHeader
-        items={[
-          {
-            title: "Total Submissions",
-            value: loading ? "..." : stats.totalSubmissions,
-            description: "All form submissions",
-            icon: <Package className="h-4 w-4 text-muted-foreground" />,
-          },
-          {
-            title: "Total Contacts",
-            value: loading ? "..." : stats.totalContacts,
-            description: "Captured contact messages",
-            icon: <Users className="h-4 w-4 text-muted-foreground" />,
-          },
-          {
-            title: "Total Blogs",
-            value: loading ? "..." : stats.totalBlogs,
-            description: "Content library posts",
-            icon: <Newspaper className="h-4 w-4 text-muted-foreground" />,
-          },
-          {
-            title: "Pending Applications",
-            value: loading ? "..." : stats.newApplications,
-            description: "Applications awaiting action",
-            icon: <BarChartIcon className="h-4 w-4 text-muted-foreground" />,
-          },
-        ]}
-      />
+    <div className="space-y-6">
+      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">Blogs</h1>
+          <p className="text-muted-foreground">
+            Manage your blog posts and content.
+          </p>
+        </div>
+        <Button asChild>
+          <Link href="/admin/blogs/new">
+            <PlusCircle className="mr-2 h-4 w-4" />
+            Add Post
+          </Link>
+        </Button>
+      </div>
 
-      <Card className="border-0 shadow-xl shadow-black/5">
-        <CardHeader>
-          <CardTitle className="text-lg font-semibold">
-            Submission Status Totals
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid gap-3 md:grid-cols-5">
-            {statusCounts.map(({ status, count }) => {
-              const statusStyle = statusStyles[status];
-              if (!statusStyle) return null;
-              const { Icon: StatusIcon } = statusStyle;
+      <BlogsAnalysis blogs={blogs} />
 
-              return (
-                <div
-                  key={status}
-                  className={`rounded-xl p-4 shadow-sm ${statusStyle.className}`}
-                >
-                  <div className="flex items-center justify-between gap-3">
-                    <div className="flex items-center gap-2">
-                      <StatusIcon className="h-4 w-4" />
-                      <span className="text-sm font-semibold">
-                        {statusStyle.label}
-                      </span>
-                    </div>
-                    <span className="text-2xl font-bold tabular-nums">
-                      {count}
-                    </span>
-                  </div>
-                </div>
-              );
-            })}
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-b pb-4">
+        <Tabs
+          defaultValue="all"
+          className="w-full sm:w-auto"
+          onValueChange={setStatusTab}
+        >
+          <TabsList>
+            <TabsTrigger value="all">All</TabsTrigger>
+            <TabsTrigger value="published">Published</TabsTrigger>
+            <TabsTrigger value="draft">Drafts</TabsTrigger>
+          </TabsList>
+        </Tabs>
+        <div className="flex items-center gap-2">
+          <div className="relative w-full sm:w-64">
+            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Search blogs..."
+              className="pl-8"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
           </div>
-        </CardContent>
-      </Card>
-
-      <div className="grid gap-8 xl:grid-cols-[1.15fr_0.85fr]">
-        <Card className="border-0 shadow-xl shadow-black/5">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-lg font-medium">
-              Submissions by Service
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {submissionsByService.length > 0 ? (
-                (() => {
-                  const progressColorClasses = [
-                    "[&>div]:bg-chart-1",
-                    "[&>div]:bg-chart-2",
-                    "[&>div]:bg-chart-3",
-                    "[&>div]:bg-chart-4",
-                    "[&>div]:bg-chart-5",
-                  ];
-                  return submissionsByService
-                    .sort((a, b) => b.submissions - a.submissions)
-                    .map((item, index) => (
-                      <div
-                        key={item.id}
-                        className="rounded-xl bg-muted/20 p-4 shadow-sm shadow-black/5"
-                      >
-                        <div className="grid grid-cols-[auto_1fr_auto] items-center gap-4">
-                          <div className="flex min-w-0 items-center gap-3">
-                            <Icon
-                              name={item.icon || "Package"}
-                              className="h-5 w-5 shrink-0 text-muted-foreground"
-                            />
-                            <span className="truncate text-sm font-medium">
-                              {item.title}
-                            </span>
-                          </div>
-                          <Progress
-                            value={
-                              stats.totalSubmissions > 0
-                                ? (item.submissions / stats.totalSubmissions) *
-                                  100
-                                : 0
-                            }
-                            className={`h-2 ${progressColorClasses[index % progressColorClasses.length]}`}
-                          />
-                          <span className="font-mono text-sm font-medium">
-                            {item.submissions}
-                          </span>
-                        </div>
-                        <ServiceStatusBreakdown
-                          statusCounts={item.statusCounts}
-                        />
-                      </div>
-                    ));
-                })()
-              ) : (
-                <div className="pt-4 text-center text-muted-foreground">
-                  No submissions yet.
-                </div>
-              )}
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="border-0 shadow-xl shadow-black/5">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <div>
-              <CardTitle className="text-lg font-medium">
-                Recent Activity
-              </CardTitle>
-              <p className="mt-1 text-sm text-muted-foreground">
-                Latest pending submissions, limited to 5.
-              </p>
-            </div>
-            <Clock className="h-5 w-5 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-3">
-              {pendingSubmissions.length > 0 ? (
-                pendingSubmissions.map((submission) => (
-                  <PendingSubmissionItem
-                    key={submission.id}
-                    submission={submission}
-                  />
-                ))
-              ) : (
-                <div className="pt-4 text-center text-muted-foreground">
-                  No pending submissions.
-                </div>
-              )}
-            </div>
-          </CardContent>
-        </Card>
+          <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+            <SelectTrigger className="w-[180px]">
+              <Filter className="mr-2 h-4 w-4 text-muted-foreground" />
+              <SelectValue placeholder="Category" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Categories</SelectItem>
+              {categories.map((cat) => (
+                <SelectItem key={cat} value={cat}>
+                  {cat}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
       </div>
 
-      <div className="grid gap-8 xl:grid-cols-[1.15fr_0.85fr]">
-        <Card className="border-0 shadow-xl shadow-black/5">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <div>
-              <CardTitle className="text-lg font-medium">
-                Top Blog Views
-              </CardTitle>
-              <p className="mt-1 text-sm text-muted-foreground">
-                Three highest-performing blog posts by views.
-              </p>
-            </div>
-            <Eye className="h-5 w-5 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="grid gap-4 lg:grid-cols-3 xl:grid-cols-1">
-              {topViewedBlogs.length > 0 ? (
-                topViewedBlogs.map((blog) => (
-                  <BlogInsightCard key={blog.id} blog={blog} />
-                ))
-              ) : (
-                <div className="pt-4 text-center text-muted-foreground">
-                  No blog views yet.
-                </div>
-              )}
-            </div>
-          </CardContent>
-        </Card>
+      {loading ? (
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <div
+              key={i}
+              className="h-[400px] w-full animate-pulse rounded-xl bg-muted"
+            ></div>
+          ))}
+        </div>
+      ) : filteredBlogs.length === 0 ? (
+        <div className="flex flex-col items-center justify-center rounded-xl border-2 border-dashed py-24 text-center">
+          <div className="rounded-full bg-muted p-6 mb-4">
+            <Search className="h-10 w-10 text-muted-foreground" />
+          </div>
+          <h3 className="text-xl font-semibold">No blogs found</h3>
+          <p className="text-muted-foreground max-w-xs mx-auto mt-2">
+            No blogs match the current filters.
+          </p>
+          {(searchQuery || categoryFilter !== "all" || statusTab !== "all") && (
+            <Button
+              variant="outline"
+              className="mt-6"
+              onClick={() => {
+                setSearchQuery("");
+                setCategoryFilter("all");
+                setStatusTab("all");
+              }}
+            >
+              Clear all filters
+            </Button>
+          )}
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+          {filteredBlogs.map((blog) => (
+            <BlogCard
+              key={blog.id}
+              blog={blog}
+              onEdit={handleEdit}
+              onDelete={handleDelete}
+            />
+          ))}
+        </div>
+      )}
 
-        <Card className="border-0 shadow-xl shadow-black/5">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <div>
-              <CardTitle className="text-lg font-medium">
-                Recent Contacts
-              </CardTitle>
-              <p className="mt-1 text-sm text-muted-foreground">
-                Latest contact messages, limited to 5.
-              </p>
-            </div>
-            <MessageSquare className="h-5 w-5 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-3">
-              {recentContacts.length > 0 ? (
-                recentContacts.map((contact) => (
-                  <ContactItem key={contact.id} contact={contact} />
-                ))
-              ) : (
-                <div className="pt-4 text-center text-muted-foreground">
-                  No contacts yet.
-                </div>
-              )}
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+      {isDeleteDialogOpen && (
+        <DeleteBlogDialog
+          isOpen={isDeleteDialogOpen}
+          onClose={() => setIsDeleteDialogOpen(false)}
+          onDeleted={onDeleted}
+          blog={selectedBlog}
+        />
+      )}
     </div>
+  );
+}
+````
+
+## File: apps/admin/app/admin/contacts/ContactForm.tsx
+````typescript
+"use client";
+
+import type { ContactType } from "@bilacert/contracts/contact";
+import {
+  type ContactInput as ContactFormValues,
+  contactInputSchema,
+} from "@bilacert/contracts/contact";
+import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
+import { Loader2 } from "lucide-react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { useToast } from "@/hooks/use-toast";
+import { upsertContact } from "./actions";
+
+interface ContactFormProps {
+  contact?: ContactType | null;
+}
+
+export default function ContactForm({ contact }: ContactFormProps) {
+  const { toast } = useToast();
+  const router = useRouter();
+  const form = useForm<ContactFormValues>({
+    resolver: standardSchemaResolver(contactInputSchema),
+    defaultValues: {
+      name: "",
+      email: "",
+      phone: "",
+      service: "",
+      message: "",
+    },
+  });
+
+  const {
+    handleSubmit,
+    reset,
+    formState: { isSubmitting },
+  } = form;
+  const isEditing = !!contact;
+
+  useEffect(() => {
+    if (contact) {
+      reset({
+        name: contact.name,
+        email: contact.email,
+        phone: contact.phone || "",
+        service: contact.service || "",
+        message: contact.message || "",
+      });
+    }
+  }, [contact, reset]);
+
+  const onSubmit = async (values: ContactFormValues) => {
+    try {
+      const result = await upsertContact(values, contact?.id);
+
+      if (!result.ok) {
+        throw new Error(result.error);
+      }
+
+      toast({
+        title: result.message,
+      });
+      router.push("/admin/contacts");
+      router.refresh();
+    } catch (error: any) {
+      toast({
+        variant: "destructive",
+        title: "Error saving contact",
+        description: error.message,
+      });
+    }
+  };
+
+  return (
+    <Form {...form}>
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        <FormField
+          control={form.control}
+          name="name"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Name</FormLabel>
+              <FormControl>
+                <Input placeholder="John Doe" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="email"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Email</FormLabel>
+              <FormControl>
+                <Input placeholder="john.doe@example.com" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="phone"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Phone</FormLabel>
+              <FormControl>
+                <Input placeholder="(123) 456-7890" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="service"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Service</FormLabel>
+              <FormControl>
+                <Input placeholder="e.g. Web Development" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="message"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Message / Notes</FormLabel>
+              <FormControl>
+                <Textarea
+                  placeholder="Initial contact from the website..."
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <div className="flex justify-end gap-4 pt-4">
+          <Button type="button" variant="outline" asChild>
+            <Link href="/admin/contacts">Cancel</Link>
+          </Button>
+          <Button type="submit" disabled={isSubmitting}>
+            {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            {isEditing ? "Save Changes" : "Add Contact"}
+          </Button>
+        </div>
+      </form>
+    </Form>
+  );
+}
+````
+
+## File: apps/admin/app/admin/contacts/ContactsClient.tsx
+````typescript
+"use client";
+
+import type { ContactType } from "@bilacert/contracts/contact";
+import { ClipboardList, Mail, MessageSquare, Phone } from "lucide-react";
+import AdminPage from "@/components/admin/AdminPage";
+import AnalysesHeader from "@/components/admin/AnalysesHeader";
+import { useContacts } from "@/lib/hooks/useContacts";
+import ContactCard from "./ContactCard";
+import DeleteContactDialog from "./DeleteContactDialog";
+
+function ContactsAnalysis({ contacts }: { contacts: ContactType[] }) {
+  const totals = contacts.reduce(
+    (summary, contact) => {
+      if (contact.email?.trim()) summary.withEmail += 1;
+      if (contact.phone?.trim()) summary.withPhone += 1;
+      if (contact.service?.trim()) summary.serviceInquiries += 1;
+      return summary;
+    },
+    { withEmail: 0, withPhone: 0, serviceInquiries: 0 },
+  );
+
+  return (
+    <AnalysesHeader
+      items={[
+        {
+          title: "Total Contacts",
+          value: contacts.length,
+          description: "All captured contact messages",
+          icon: <MessageSquare className="h-4 w-4 text-muted-foreground" />,
+        },
+        {
+          title: "Email Contacts",
+          value: totals.withEmail,
+          description: "Contacts with email addresses",
+          icon: <Mail className="h-4 w-4 text-muted-foreground" />,
+        },
+        {
+          title: "Phone Contacts",
+          value: totals.withPhone,
+          description: "Contacts with phone numbers",
+          icon: <Phone className="h-4 w-4 text-muted-foreground" />,
+        },
+        {
+          title: "Service Inquiries",
+          value: totals.serviceInquiries,
+          description: "Messages linked to services",
+          icon: <ClipboardList className="h-4 w-4 text-muted-foreground" />,
+        },
+      ]}
+    />
+  );
+}
+
+function ContactDeleteDialogAdapter({
+  isOpen,
+  onClose,
+  onDeleted,
+  item,
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+  onDeleted: () => void;
+  item: ContactType | null;
+}) {
+  return (
+    <DeleteContactDialog
+      isOpen={isOpen}
+      onClose={onClose}
+      onDeleted={onDeleted}
+      contact={item}
+    />
+  );
+}
+
+export default function ContactsClient() {
+  return (
+    <AdminPage<ContactType>
+      useData={useContacts}
+      title="Contacts"
+      newItemButtonText="Add Contact"
+      newItemLink="/admin/contacts/new"
+      renderBeforeContent={(contacts) => (
+        <ContactsAnalysis contacts={contacts} />
+      )}
+      renderItem={(contact, _onEdit, onDelete) => (
+        <ContactCard contact={contact} onDelete={onDelete} />
+      )}
+      DeleteDialog={ContactDeleteDialogAdapter}
+    />
   );
 }
 ````
@@ -30731,1262 +30247,6 @@ export default function ServiceSubmissionAnalysis({
 }
 ````
 
-## File: apps/admin/app/admin/testimonials/[id]/page.tsx
-````typescript
-import type { TestimonialRowType } from "@bilacert/contracts/testimonial";
-import { createSupabaseServerClient } from "@bilacert/supabase/server";
-import type { Metadata } from "next";
-import { notFound } from "next/navigation";
-import TestimonialDetails from "../TestimonialDetails";
-
-async function getTestimonial(id: string): Promise<TestimonialRowType | null> {
-  const supabase = await createSupabaseServerClient();
-  const { data, error } = await supabase
-    .from("testimonials")
-    .select("*")
-    .eq("id", id)
-    .single();
-
-  if (error || !data) {
-    return null;
-  }
-
-  return {
-    id: data.id,
-    postUrl: data.postUrl,
-    createdAt: data.createdAt,
-  } as TestimonialRowType;
-}
-
-export async function generateMetadata({
-  params,
-}: {
-  params: { id: string };
-}): Promise<Metadata> {
-  const testimonial = await getTestimonial(params.id);
-  if (!testimonial) {
-    return {
-      title: "Testimonial Not Found",
-    };
-  }
-  return {
-    title: `Testimonial from ${new Date(testimonial.createdAt).toLocaleDateString()} | Bilacert Admin Pro`,
-  };
-}
-
-export default async function TestimonialDetailsPage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
-  const { id } = await params;
-  const testimonial = await getTestimonial(id);
-
-  if (!testimonial) {
-    notFound();
-  }
-
-  return <TestimonialDetails testimonial={testimonial} />;
-}
-````
-
-## File: apps/admin/app/admin/testimonials/TestimonialsClient.tsx
-````typescript
-"use client";
-
-import type { TestimonialRowType } from "@bilacert/contracts/testimonial";
-import { format } from "date-fns";
-import { MoreHorizontal } from "lucide-react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import AdminPage from "@/components/admin/AdminPage";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { useTestimonials } from "@/lib/hooks/useTestimonials";
-import DeleteTestimonialDialog from "./DeleteTestimonialDialog";
-import TestimonialEmbed from "./TestimonialEmbed";
-
-const renderTestimonial = (
-  testimonial: TestimonialRowType,
-  onEdit: (testimonial: TestimonialRowType) => void,
-  onDelete: (testimonial: TestimonialRowType) => void,
-) => {
-  const router = useRouter();
-  const date = new Date(testimonial.createdAt);
-  const formattedDate = !Number.isNaN(date.getTime())
-    ? format(date, "PP")
-    : "Date not available";
-  return (
-    <div key={testimonial.id} className="group relative">
-      <Link
-        href={`/admin/testimonials/${testimonial.id}`}
-        className="absolute inset-0 z-10"
-        aria-label={`View testimonial`}
-      >
-        <span className="sr-only">View Details</span>
-      </Link>
-      <Card className="flex flex-col h-full hover:shadow-lg hover:border-primary/50 transition-all">
-        <CardHeader className="flex-row items-center justify-between">
-          <div>
-            <CardTitle className="text-base">Testimonial</CardTitle>
-            <CardDescription className="text-xs">
-              Added on {formattedDate}
-            </CardDescription>
-          </div>
-          <div className="relative z-20">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="ghost"
-                  className="h-8 w-8 p-0"
-                  onClick={(e) => e.preventDefault()}
-                >
-                  <span className="sr-only">Open menu</span>
-                  <MoreHorizontal className="h-4 w-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                <DropdownMenuItem
-                  onClick={(e) => {
-                    e.preventDefault();
-                    router.push(`/admin/testimonials/${testimonial.id}`);
-                  }}
-                >
-                  View
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={(e) => {
-                    e.preventDefault();
-                    onEdit(testimonial);
-                  }}
-                >
-                  Edit
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem
-                  className="text-destructive focus:bg-destructive/10 focus:text-destructive"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    onDelete(testimonial);
-                  }}
-                >
-                  Delete
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
-        </CardHeader>
-        <CardContent className="flex-grow p-0 overflow-hidden">
-          <TestimonialEmbed postUrl={testimonial.postUrl} />
-        </CardContent>
-      </Card>
-    </div>
-  );
-};
-
-export default function TestimonialsClient() {
-  return (
-    <AdminPage<TestimonialRowType>
-      useData={useTestimonials}
-      title="Testimonials"
-      newItemButtonText="Add Testimonial"
-      newItemLink="/admin/testimonials/new"
-      renderItem={renderTestimonial}
-      DeleteDialog={DeleteTestimonialDialog as any}
-    />
-  );
-}
-````
-
-## File: apps/client/package.json
-````json
-{
-  "name": "@bilacert/client",
-  "version": "0.1.0",
-  "private": true,
-  "scripts": {
-    "dev": "next dev --turbopack -p 3000",
-    "build": "next build",
-    "start": "next start -p 3000",
-    "lint": "biome check .",
-    "lint:fix": "biome check --write .",
-    "format": "biome format --write .",
-    "typecheck": "tsc --noEmit",
-    "clean": "node -e \"require('node:fs').rmSync('.next',{recursive:true,force:true})\""
-  },
-  "dependencies": {
-    "@bilacert/shared": "workspace:*",
-    "@bilacert/contracts": "workspace:*",
-    "@bilacert/supabase": "workspace:*",
-    "next": "catalog:",
-    "react": "catalog:",
-    "react-dom": "catalog:",
-    "react-icons": "catalog:",
-    "lucide-react": "catalog:",
-    "tailwind-merge": "catalog:",
-    "@supabase/supabase-js": "catalog:",
-    "@mdx-js/loader": "catalog:",
-    "@mdx-js/react": "catalog:",
-    "@next/mdx": "catalog:",
-    "@next/third-parties": "catalog:",
-    "@radix-ui/react-slot": "catalog:",
-    "@supabase/ssr": "catalog:",
-    "@vercel/analytics": "catalog:",
-    "class-variance-authority": "catalog:",
-    "clsx": "catalog:",
-    "date-fns": "catalog:",
-    "uuid": "catalog:"
-  },
-  "devDependencies": {
-    "@bilacert/typescript-config": "workspace:*",
-    "@biomejs/biome": "catalog:",
-    "@tailwindcss/postcss": "catalog:",
-    "@types/node": "catalog:",
-    "@types/react": "catalog:",
-    "@types/react-dom": "catalog:",
-    "babel-plugin-react-compiler": "catalog:",
-    "tailwindcss": "catalog:",
-    "typescript": "catalog:"
-  }
-}
-````
-
-## File: packages/contracts/src/email.ts
-````typescript
-import { z } from "zod";
-
-const EMAIL_LIST_MAX_LENGTH = 4_000;
-
-function isEmailList(value: string) {
-  const addresses = value
-    .split(/[;,]/)
-    .map((address) => address.trim())
-    .filter(Boolean);
-
-  return (
-    addresses.length > 0 &&
-    addresses.every((address) => z.email().safeParse(address).success)
-  );
-}
-
-const requiredEmailListSchema = z
-  .string()
-  .trim()
-  .min(1, "At least one recipient is required.")
-  .max(EMAIL_LIST_MAX_LENGTH, "The recipient list is too long.")
-  .refine(isEmailList, "Enter valid email addresses separated by commas.");
-
-const optionalEmailListSchema = z
-  .string()
-  .trim()
-  .max(EMAIL_LIST_MAX_LENGTH, "The recipient list is too long.")
-  .refine(
-    (value) => value.length === 0 || isEmailList(value),
-    "Enter valid email addresses separated by commas.",
-  );
-
-export const emailComposeSchema = z.object({
-  toAddress: requiredEmailListSchema,
-  ccAddress: optionalEmailListSchema,
-  bccAddress: optionalEmailListSchema,
-  subject: z
-    .string()
-    .trim()
-    .min(1, "Subject is required.")
-    .max(998, "Subject must be 998 characters or fewer."),
-  content: z
-    .string()
-    .trim()
-    .min(1, "Message content is required.")
-    .max(200_000, "Message content is too long."),
-  intent: z.enum(["send", "draft"]).default("send"),
-});
-
-export const emailMessageReadStateSchema = z.object({
-  messageId: z.string().regex(/^\d+$/, "The message ID is invalid."),
-  folderId: z.string().regex(/^\d+$/, "The folder ID is invalid."),
-  readState: z.enum(["read", "unread"]),
-});
-
-export type EmailComposeType = z.infer<typeof emailComposeSchema>;
-export type EmailMessageReadStateType = z.infer<
-  typeof emailMessageReadStateSchema
->;
-
-export type EmailComposeActionState = {
-  ok?: boolean;
-  error?: string;
-  fieldErrors?: Record<string, string[]>;
-};
-````
-
-## File: packages/supabase/src/Mutations/contacts.ts
-````typescript
-"use server";
-
-import { requireAdminUser } from "../auth";
-import { CACHE_TAGS, mutationResult } from "../cache";
-import { createSupabaseServerClient } from "../server";
-import type { Database } from "../supabaseType";
-
-type ContactInsert = Database["public"]["Tables"]["contacts"]["Insert"];
-
-// Public-facing insert used by the client contact form
-// (apps/client/app/contact). Auth is intentionally omitted
-// because this runs as an unauthenticated public submission.
-export async function createContact(data: ContactInsert) {
-  const supabase = await createSupabaseServerClient();
-  const { data: contact, error } = await supabase
-    .from("contacts")
-    .insert([data])
-    .select("*")
-    .single();
-
-  if (error) throw new Error(error.message);
-
-  return mutationResult(contact, {
-    tags: [CACHE_TAGS.contacts],
-    mode: "immediate",
-  });
-}
-
-export async function upsertContact(data: ContactInsert) {
-  const supabase = await requireAdminUser();
-  const { data: contact, error } = await supabase
-    .from("contacts")
-    .upsert(data)
-    .select("*")
-    .single();
-
-  if (error) throw new Error(error.message);
-
-  return mutationResult(contact, {
-    tags: [CACHE_TAGS.contacts],
-    mode: "immediate",
-  });
-}
-
-export async function deleteContact(id: string) {
-  const supabase = await requireAdminUser();
-  const { error } = await supabase.from("contacts").delete().eq("id", id);
-  if (error) throw new Error(error.message);
-
-  return mutationResult(undefined, {
-    tags: [CACHE_TAGS.contacts],
-    mode: "immediate",
-  });
-}
-````
-
-## File: packages/supabase/src/Queries/blogs.ts
-````typescript
-import type { BlogRowType as BlogType } from "@bilacert/contracts/blog";
-import { createSupabasePublicClient } from "../server";
-import type { Database } from "../supabaseType";
-
-type BlogPostRow = Database["public"]["Tables"]["blog_posts"]["Row"];
-
-function normalizeBlogPost(row: BlogPostRow): BlogType {
-  return {
-    id: row.id,
-    title: row.title,
-    slug: row.slug,
-    excerpt: row.excerpt ?? undefined,
-    content: row.content,
-    category: row.category ?? undefined,
-    tags: row.tags ?? undefined,
-    readTime: row.readTime ?? undefined,
-    seoTitle: row.seoTitle ?? undefined,
-    seoDescription: row.seoDescription ?? undefined,
-    seoKeywords: row.seoKeywords ?? undefined,
-    featuredImage: row.featuredImage ?? undefined,
-    thumbnail: row.thumbnail ?? undefined,
-    published: row.published ?? false,
-    publishedAt: row.publishedAt ?? undefined,
-    featured: row.featured ?? false,
-    authorId: row.authorId ?? undefined,
-    authorName: row.authorName ?? undefined,
-    viewsCount: row.viewsCount ?? 0,
-    createdAt: row.createdAt ?? row.publishedAt ?? new Date(0).toISOString(),
-    updatedAt: row.updatedAt ?? undefined,
-  };
-}
-
-export async function getAllPublishedBlogSlugs() {
-  const supabase = createSupabasePublicClient();
-  const { data, error } = await supabase
-    .from("blog_posts")
-    .select("slug")
-    .eq("published", true);
-
-  if (error) {
-    throw new Error(error.message);
-  }
-
-  return data;
-}
-
-export async function getAllPublishedBlogPosts(): Promise<BlogType[]> {
-  const supabase = createSupabasePublicClient();
-  const { data, error } = await supabase
-    .from("blog_posts")
-    .select("*")
-    .eq("published", true)
-    .order("createdAt", { ascending: false });
-
-  if (error) {
-    throw new Error(error.message);
-  }
-
-  return data.map(normalizeBlogPost);
-}
-
-export async function getBlogPostBySlug(
-  slug: string,
-): Promise<BlogType | null> {
-  const supabase = createSupabasePublicClient();
-  const { data, error } = await supabase
-    .from("blog_posts")
-    .select("*")
-    .eq("slug", slug)
-    .single();
-
-  if (error) {
-    return null;
-  }
-
-  return normalizeBlogPost(data);
-}
-
-export async function getBlogPostsByCategory(
-  category: string,
-  limit: number = 3,
-): Promise<BlogType[]> {
-  const supabase = createSupabasePublicClient();
-  const { data, error } = await supabase
-    .from("blog_posts")
-    .select("*")
-    .eq("category", category)
-    .limit(limit);
-
-  if (error) {
-    return [];
-  }
-
-  return data.map(normalizeBlogPost);
-}
-````
-
-## File: packages/supabase/src/Queries/services.ts
-````typescript
-import type { ServiceRowType } from "@bilacert/contracts/service";
-import { createSupabasePublicClient } from "../server";
-import type { Database } from "../supabaseType";
-
-type ServiceRow = Database["public"]["Tables"]["services"]["Row"];
-
-function toStringArray(value: unknown): string[] {
-  if (Array.isArray(value)) {
-    return value.filter((item): item is string => typeof item === "string");
-  }
-
-  if (typeof value === "string") {
-    return value
-      .split("\n")
-      .map((item) => item.trim())
-      .filter(Boolean);
-  }
-
-  return [];
-}
-
-export function normalizeService(row: ServiceRow): ServiceRowType {
-  return {
-    id: row.id,
-    title: row.title,
-    slug: row.slug,
-    href: row.href,
-    category: row.category ?? "",
-    description: row.description ?? "",
-    shortDescription: row.shortDescription ?? undefined,
-    icon: row.icon ?? undefined,
-    orderIndex: row.orderIndex ?? undefined,
-    content: row.content ?? undefined,
-    features: toStringArray(row.features),
-    requirements: toStringArray(row.requirements),
-    includes: toStringArray(row.includes),
-    published: row.published ?? false,
-    featured: row.featured ?? false,
-    processingTime: row.processingTime ?? undefined,
-    pricing: row.pricing ?? undefined,
-    image: row.image ?? undefined,
-    thumbnail: row.thumbnail ?? undefined,
-    seoTitle: row.seoTitle ?? undefined,
-    seoDescription: row.seoDescription ?? undefined,
-    seoKeywords: row.seoKeywords ?? undefined,
-    pricingPlans: (row.pricingPlans as any) ?? [],
-    processSteps: (row.processSteps as any) ?? [],
-    successStory: (row.successStory as any) ?? undefined,
-    createdAt: row.createdAt ?? new Date().toISOString(),
-    updatedAt: row.updatedAt ?? row.createdAt ?? new Date().toISOString(),
-  };
-}
-
-export async function getPublishedServices(): Promise<ServiceRowType[]> {
-  const supabase = createSupabasePublicClient();
-  const { data, error } = await supabase
-    .from("services")
-    .select("*")
-    .eq("published", true)
-    .order("orderIndex", { ascending: true });
-
-  if (error) {
-    console.error("Error fetching services:", error);
-    return [];
-  }
-
-  return (data || []).map(normalizeService);
-}
-
-export async function getFeaturedServices(): Promise<ServiceRowType[]> {
-  const supabase = createSupabasePublicClient();
-  const { data, error } = await supabase
-    .from("services")
-    .select("*")
-    .eq("published", true)
-    .eq("featured", true)
-    .order("orderIndex", { ascending: true })
-    .limit(4);
-
-  if (error) {
-    console.error("Error fetching featured services:", error);
-    return [];
-  }
-
-  return (data || []).map(normalizeService);
-}
-
-export async function getServiceBySlug(
-  slug: string,
-): Promise<ServiceRowType | null> {
-  const supabase = createSupabasePublicClient();
-  const { data, error } = await supabase
-    .from("services")
-    .select("*")
-    .eq("slug", slug)
-    .single();
-
-  if (error || !data) {
-    return null;
-  }
-
-  return normalizeService(data);
-}
-
-export async function getAllPublishedServiceSlugs(): Promise<
-  { slug: string }[]
-> {
-  const supabase = createSupabasePublicClient();
-  const { data, error } = await supabase
-    .from("services")
-    .select("slug")
-    .eq("published", true);
-
-  if (error) {
-    console.error("Error fetching service slugs:", error);
-    return [];
-  }
-
-  return data || [];
-}
-````
-
-## File: apps/admin/app/admin/blogs/[id]/edit/page.tsx
-````typescript
-import type { BlogRowType as BlogType } from "@bilacert/contracts/blog";
-import { createSupabaseServerClient } from "@bilacert/supabase/server";
-import { ArrowLeft } from "lucide-react";
-import Link from "next/link";
-import { notFound } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import BlogForm from "../../BlogForm";
-
-export const metadata = {
-  title: "Edit Blog Post | Bilacert Admin Pro",
-  description: "Edit an existing blog post.",
-};
-
-async function getBlog(id: string): Promise<BlogType | null> {
-  const supabase = await createSupabaseServerClient();
-  const { data, error } = await supabase
-    .from("blog_posts")
-    .select("*")
-    .eq("id", id)
-    .maybeSingle();
-
-  if (error || !data) {
-    return null;
-  }
-
-  return {
-    id: data.id,
-    title: data.title,
-    slug: data.slug,
-    excerpt: data.excerpt,
-    content: data.content,
-    category: data.category,
-    tags: data.tags,
-    readTime: data.readTime,
-    seoTitle: data.seoTitle,
-    seoDescription: data.seoDescription,
-    seoKeywords: data.seoKeywords,
-    featuredImage: data.featuredImage,
-    thumbnail: data.thumbnail,
-    published: data.published,
-    publishedAt: data.publishedAt,
-    featured: data.featured,
-    authorId: data.authorId,
-    authorName: data.authorName,
-    viewsCount: data.viewsCount,
-    createdAt: data.createdAt,
-    updatedAt: data.updatedAt,
-  } as BlogType;
-}
-
-export default async function EditBlogPage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
-  const { id } = await params;
-  const blog = await getBlog(id);
-
-  if (!blog) {
-    notFound();
-  }
-
-  return (
-    <div className="mx-auto max-w-5xl">
-      <div className="mb-4 flex items-center gap-4">
-        <Button variant="outline" size="sm" asChild>
-          <Link href={`/admin/blogs/${blog.id}`}>
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            Cancel Edit
-          </Link>
-        </Button>
-      </div>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Edit Blog Post</CardTitle>
-          <CardDescription>
-            You are currently editing the details for:{" "}
-            <span className="font-semibold text-foreground">{blog.title}</span>
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <BlogForm blog={blog} blogId={id} />
-        </CardContent>
-      </Card>
-    </div>
-  );
-}
-````
-
-## File: apps/admin/app/admin/blogs/BlogsClient.tsx
-````typescript
-"use client";
-
-import type { BlogRowType as BlogType } from "@bilacert/contracts/blog";
-import { format, isValid, parseISO } from "date-fns";
-import {
-  Calendar,
-  Eye,
-  FileText,
-  Filter,
-  MoreHorizontal,
-  Newspaper,
-  PlusCircle,
-  Search,
-  Sparkles,
-} from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useMemo, useState } from "react";
-import AnalysesHeader from "@/components/admin/AnalysesHeader";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useBlogs } from "@/lib/hooks/useBlogs";
-import DeleteBlogDialog from "./DeleteBlogDialog";
-
-const safeFormatDate = (
-  date: string | Date | undefined,
-  dateFormat = "PP",
-  fallback = "Invalid date",
-) => {
-  if (!date) return fallback;
-  const d = typeof date === "string" ? parseISO(date) : date;
-  return isValid(d) ? format(d, dateFormat) : fallback;
-};
-
-function BlogsAnalysis({ blogs }: { blogs: BlogType[] }) {
-  const publishedBlogs = blogs.filter((blog) => blog.published);
-  const featuredBlogs = blogs.filter((blog) => blog.featured);
-  const totalViews = blogs.reduce(
-    (sum, blog) => sum + (blog.viewsCount ?? 0),
-    0,
-  );
-  const topBlogs = [...blogs]
-    .sort((a, b) => (b.viewsCount ?? 0) - (a.viewsCount ?? 0))
-    .slice(0, 5);
-  const categoryCounts = blogs.reduce<Map<string, number>>((counts, blog) => {
-    const category = blog.category || "Uncategorized";
-    counts.set(category, (counts.get(category) ?? 0) + 1);
-    return counts;
-  }, new Map());
-  const topCategories = [...categoryCounts.entries()]
-    .sort(([, a], [, b]) => b - a)
-    .slice(0, 5);
-
-  return (
-    <div className="space-y-4">
-      <AnalysesHeader
-        items={[
-          {
-            title: "Total Blogs",
-            value: blogs.length,
-            description: `${publishedBlogs.length.toLocaleString()} published`,
-            icon: <Newspaper className="h-4 w-4 text-muted-foreground" />,
-          },
-          {
-            title: "Published Blogs",
-            value: publishedBlogs.length,
-            description: "Visible publicly",
-            icon: <FileText className="h-4 w-4 text-muted-foreground" />,
-          },
-          {
-            title: "Blog Views",
-            value: totalViews,
-            description: "Across all posts",
-            icon: <Eye className="h-4 w-4 text-muted-foreground" />,
-          },
-          {
-            title: "Featured Blogs",
-            value: featuredBlogs.length,
-            description: "Promoted content",
-            icon: <Sparkles className="h-4 w-4 text-muted-foreground" />,
-          },
-        ]}
-      />
-
-      <div className="grid gap-4 lg:grid-cols-[2fr_1fr]">
-        <Card className="border-0 shadow-xl shadow-black/5">
-          <CardHeader>
-            <CardTitle className="text-lg font-semibold">
-              Blog Performance
-            </CardTitle>
-            <CardDescription>
-              Top posts ranked by recorded public views.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            {topBlogs.length > 0 ? (
-              <div className="space-y-3">
-                {topBlogs.map((blog) => (
-                  <div
-                    key={blog.id}
-                    className="flex flex-col gap-3 rounded-xl border bg-background p-4 shadow-sm shadow-black/5 md:flex-row md:items-center md:justify-between"
-                  >
-                    <div className="min-w-0">
-                      <Link
-                        href={`/admin/blogs/${blog.id}`}
-                        className="font-semibold text-primary hover:text-primary/80"
-                      >
-                        {blog.title}
-                      </Link>
-                      <div className="mt-2 flex flex-wrap gap-2">
-                        {blog.category && (
-                          <Badge variant="secondary">{blog.category}</Badge>
-                        )}
-                        <Badge variant={blog.published ? "default" : "outline"}>
-                          {blog.published ? "Published" : "Draft"}
-                        </Badge>
-                        {blog.featured && (
-                          <Badge variant="outline">Featured</Badge>
-                        )}
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-2 text-sm font-semibold text-muted-foreground">
-                      <Eye className="h-4 w-4" />
-                      {(blog.viewsCount ?? 0).toLocaleString()} views
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <p className="text-sm text-muted-foreground">
-                No blog performance data yet.
-              </p>
-            )}
-          </CardContent>
-        </Card>
-
-        <Card className="border-0 shadow-xl shadow-black/5">
-          <CardHeader>
-            <CardTitle className="text-lg font-semibold">
-              Category Coverage
-            </CardTitle>
-            <CardDescription>Most-used blog categories.</CardDescription>
-          </CardHeader>
-          <CardContent>
-            {topCategories.length > 0 ? (
-              <div className="space-y-3">
-                {topCategories.map(([category, count]) => (
-                  <div
-                    key={category}
-                    className="flex items-center justify-between rounded-xl bg-muted/40 px-4 py-3 text-sm"
-                  >
-                    <span className="font-medium">{category}</span>
-                    <Badge variant="secondary">{count}</Badge>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <p className="text-sm text-muted-foreground">
-                No categories assigned yet.
-              </p>
-            )}
-          </CardContent>
-        </Card>
-      </div>
-    </div>
-  );
-}
-
-const BlogCard = ({
-  blog,
-  onEdit,
-  onDelete,
-}: {
-  blog: BlogType;
-  onEdit: (blog: BlogType) => void;
-  onDelete: (blog: BlogType) => void;
-}) => {
-  const router = useRouter();
-  return (
-    <div
-      key={blog.id}
-      className="group relative flex flex-col overflow-hidden rounded-xl bg-white shadow-sm shadow-black/5 transition-all duration-300 hover:-translate-y-2 hover:shadow-xl hover:shadow-black/10"
-    >
-      <Link
-        href={`/admin/blogs/${blog.id}`}
-        className="absolute inset-0 z-10"
-        aria-label={`View ${blog.title}`}
-      >
-        <span className="sr-only">View Details</span>
-      </Link>
-      <div className="absolute top-4 right-4 z-20">
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-8 w-8 rounded-full bg-background/60 backdrop-blur-sm hover:bg-background"
-              onClick={(e) => e.preventDefault()}
-            >
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={(e) => {
-                e.preventDefault();
-                router.push(`/admin/blogs/${blog.id}`);
-              }}
-            >
-              View
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              onClick={(e) => {
-                e.preventDefault();
-                onEdit(blog);
-              }}
-            >
-              Edit
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem
-              className="text-destructive focus:bg-destructive/10 focus:text-destructive"
-              onClick={(e) => {
-                e.preventDefault();
-                onDelete(blog);
-              }}
-            >
-              Delete
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
-
-      <div className="relative h-48 w-full">
-        <Image
-          src={
-            blog.featuredImage ||
-            `https://picsum.photos/seed/${blog.id}/600/400`
-          }
-          alt={blog.title}
-          fill
-          className="object-cover transition-transform duration-300 group-hover:scale-105"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
-        <div className="absolute bottom-4 left-4">
-          {blog.category && <Badge variant="secondary">{blog.category}</Badge>}
-        </div>
-      </div>
-
-      <div className="flex flex-col flex-grow p-6">
-        <h3 className="mb-2 text-xl font-semibold text-primary line-clamp-2">
-          {blog.title}
-        </h3>
-        <p className="mb-4 text-sm text-muted-foreground line-clamp-3 flex-grow">
-          {blog.excerpt}
-        </p>
-        <div className="mt-auto flex items-center justify-between gap-3 text-xs text-muted-foreground">
-          <Badge variant={blog.published ? "default" : "outline"}>
-            {blog.published ? "Published" : "Draft"}
-          </Badge>
-          <div className="flex flex-wrap items-center justify-end gap-x-3 gap-y-1">
-            <div className="flex items-center gap-1.5">
-              <Eye className="h-4 w-4" />
-              <span>{(blog.viewsCount ?? 0).toLocaleString()} views</span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <Calendar className="h-4 w-4" />
-              <span>{safeFormatDate(blog.createdAt, "PP")}</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-export default function BlogsClient() {
-  const { data: blogs, loading, error, refresh } = useBlogs();
-  const router = useRouter();
-  const [searchQuery, setSearchQuery] = useState("");
-  const [categoryFilter, setCategoryFilter] = useState("all");
-  const [statusTab, setStatusTab] = useState("all");
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const [selectedBlog, setSelectedBlog] = useState<BlogType | null>(null);
-
-  const categories = useMemo(() => {
-    const cats = new Set<string>();
-    blogs.forEach((blog) => {
-      if (blog.category) cats.add(blog.category);
-    });
-    return Array.from(cats).sort();
-  }, [blogs]);
-
-  const filteredBlogs = useMemo(() => {
-    return blogs.filter((blog) => {
-      const matchesSearch =
-        blog.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        (blog.excerpt?.toLowerCase().includes(searchQuery.toLowerCase()) ??
-          false);
-      const matchesCategory =
-        categoryFilter === "all" || blog.category === categoryFilter;
-      const matchesStatus =
-        statusTab === "all" ||
-        (statusTab === "published" && blog.published) ||
-        (statusTab === "draft" && !blog.published);
-      return matchesSearch && matchesCategory && matchesStatus;
-    });
-  }, [blogs, searchQuery, categoryFilter, statusTab]);
-
-  const handleEdit = (blog: BlogType) => {
-    router.push(`/admin/blogs/${blog.id}/edit`);
-  };
-
-  const handleDelete = (blog: BlogType) => {
-    setSelectedBlog(blog);
-    setIsDeleteDialogOpen(true);
-  };
-
-  const onDeleted = () => {
-    setIsDeleteDialogOpen(false);
-    setSelectedBlog(null);
-    refresh();
-  };
-
-  if (error) {
-    return (
-      <div className="text-destructive p-4 border border-destructive/20 rounded-lg bg-destructive/10">
-        Error loading blogs: {error.message}
-      </div>
-    );
-  }
-
-  return (
-    <div className="space-y-6">
-      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Blogs</h1>
-          <p className="text-muted-foreground">
-            Manage your blog posts and content.
-          </p>
-        </div>
-        <Button asChild>
-          <Link href="/admin/blogs/new">
-            <PlusCircle className="mr-2 h-4 w-4" />
-            Add Post
-          </Link>
-        </Button>
-      </div>
-
-      <BlogsAnalysis blogs={blogs} />
-
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-b pb-4">
-        <Tabs
-          defaultValue="all"
-          className="w-full sm:w-auto"
-          onValueChange={setStatusTab}
-        >
-          <TabsList>
-            <TabsTrigger value="all">All</TabsTrigger>
-            <TabsTrigger value="published">Published</TabsTrigger>
-            <TabsTrigger value="draft">Drafts</TabsTrigger>
-          </TabsList>
-        </Tabs>
-        <div className="flex items-center gap-2">
-          <div className="relative w-full sm:w-64">
-            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder="Search blogs..."
-              className="pl-8"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-          </div>
-          <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-            <SelectTrigger className="w-[180px]">
-              <Filter className="mr-2 h-4 w-4 text-muted-foreground" />
-              <SelectValue placeholder="Category" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Categories</SelectItem>
-              {categories.map((cat) => (
-                <SelectItem key={cat} value={cat}>
-                  {cat}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-      </div>
-
-      {loading ? (
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-          {Array.from({ length: 6 }).map((_, i) => (
-            <div
-              key={i}
-              className="h-[400px] w-full animate-pulse rounded-xl bg-muted"
-            ></div>
-          ))}
-        </div>
-      ) : filteredBlogs.length === 0 ? (
-        <div className="flex flex-col items-center justify-center rounded-xl border-2 border-dashed py-24 text-center">
-          <div className="rounded-full bg-muted p-6 mb-4">
-            <Search className="h-10 w-10 text-muted-foreground" />
-          </div>
-          <h3 className="text-xl font-semibold">No blogs found</h3>
-          <p className="text-muted-foreground max-w-xs mx-auto mt-2">
-            No blogs match the current filters.
-          </p>
-          {(searchQuery || categoryFilter !== "all" || statusTab !== "all") && (
-            <Button
-              variant="outline"
-              className="mt-6"
-              onClick={() => {
-                setSearchQuery("");
-                setCategoryFilter("all");
-                setStatusTab("all");
-              }}
-            >
-              Clear all filters
-            </Button>
-          )}
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-          {filteredBlogs.map((blog) => (
-            <BlogCard
-              key={blog.id}
-              blog={blog}
-              onEdit={handleEdit}
-              onDelete={handleDelete}
-            />
-          ))}
-        </div>
-      )}
-
-      {isDeleteDialogOpen && (
-        <DeleteBlogDialog
-          isOpen={isDeleteDialogOpen}
-          onClose={() => setIsDeleteDialogOpen(false)}
-          onDeleted={onDeleted}
-          blog={selectedBlog}
-        />
-      )}
-    </div>
-  );
-}
-````
-
-## File: apps/admin/app/admin/contacts/ContactsClient.tsx
-````typescript
-"use client";
-
-import type { ContactType } from "@bilacert/contracts/contact";
-import { ClipboardList, Mail, MessageSquare, Phone } from "lucide-react";
-import AdminPage from "@/components/admin/AdminPage";
-import AnalysesHeader from "@/components/admin/AnalysesHeader";
-import { useContacts } from "@/lib/hooks/useContacts";
-import ContactCard from "./ContactCard";
-import DeleteContactDialog from "./DeleteContactDialog";
-
-function ContactsAnalysis({ contacts }: { contacts: ContactType[] }) {
-  const totals = contacts.reduce(
-    (summary, contact) => {
-      if (contact.email?.trim()) summary.withEmail += 1;
-      if (contact.phone?.trim()) summary.withPhone += 1;
-      if (contact.service?.trim()) summary.serviceInquiries += 1;
-      return summary;
-    },
-    { withEmail: 0, withPhone: 0, serviceInquiries: 0 },
-  );
-
-  return (
-    <AnalysesHeader
-      items={[
-        {
-          title: "Total Contacts",
-          value: contacts.length,
-          description: "All captured contact messages",
-          icon: <MessageSquare className="h-4 w-4 text-muted-foreground" />,
-        },
-        {
-          title: "Email Contacts",
-          value: totals.withEmail,
-          description: "Contacts with email addresses",
-          icon: <Mail className="h-4 w-4 text-muted-foreground" />,
-        },
-        {
-          title: "Phone Contacts",
-          value: totals.withPhone,
-          description: "Contacts with phone numbers",
-          icon: <Phone className="h-4 w-4 text-muted-foreground" />,
-        },
-        {
-          title: "Service Inquiries",
-          value: totals.serviceInquiries,
-          description: "Messages linked to services",
-          icon: <ClipboardList className="h-4 w-4 text-muted-foreground" />,
-        },
-      ]}
-    />
-  );
-}
-
-function ContactDeleteDialogAdapter({
-  isOpen,
-  onClose,
-  onDeleted,
-  item,
-}: {
-  isOpen: boolean;
-  onClose: () => void;
-  onDeleted: () => void;
-  item: ContactType | null;
-}) {
-  return (
-    <DeleteContactDialog
-      isOpen={isOpen}
-      onClose={onClose}
-      onDeleted={onDeleted}
-      contact={item}
-    />
-  );
-}
-
-export default function ContactsClient() {
-  return (
-    <AdminPage<ContactType>
-      useData={useContacts}
-      title="Contacts"
-      newItemButtonText="Add Contact"
-      newItemLink="/admin/contacts/new"
-      renderBeforeContent={(contacts) => (
-        <ContactsAnalysis contacts={contacts} />
-      )}
-      renderItem={(contact, _onEdit, onDelete) => (
-        <ContactCard contact={contact} onDelete={onDelete} />
-      )}
-      DeleteDialog={ContactDeleteDialogAdapter}
-    />
-  );
-}
-````
-
 ## File: apps/admin/app/admin/services/ServicesClient.tsx
 ````typescript
 "use client";
@@ -32371,6 +30631,781 @@ export default function ServicesClient() {
 }
 ````
 
+## File: apps/admin/app/admin/testimonials/[id]/page.tsx
+````typescript
+import type { TestimonialRowType } from "@bilacert/contracts/testimonial";
+import { createSupabaseServerClient } from "@bilacert/supabase/server";
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+import TestimonialDetails from "../TestimonialDetails";
+
+async function getTestimonial(id: string): Promise<TestimonialRowType | null> {
+  const supabase = await createSupabaseServerClient();
+  const { data, error } = await supabase
+    .from("testimonials")
+    .select("*")
+    .eq("id", id)
+    .single();
+
+  if (error || !data) {
+    return null;
+  }
+
+  return {
+    id: data.id,
+    postUrl: data.postUrl,
+    createdAt: data.createdAt,
+  } as TestimonialRowType;
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: { id: string };
+}): Promise<Metadata> {
+  const testimonial = await getTestimonial(params.id);
+  if (!testimonial) {
+    return {
+      title: "Testimonial Not Found",
+    };
+  }
+  return {
+    title: `Testimonial from ${new Date(testimonial.createdAt).toLocaleDateString()} | Bilacert Admin Pro`,
+  };
+}
+
+export default async function TestimonialDetailsPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
+  const testimonial = await getTestimonial(id);
+
+  if (!testimonial) {
+    notFound();
+  }
+
+  return <TestimonialDetails testimonial={testimonial} />;
+}
+````
+
+## File: apps/admin/app/admin/testimonials/TestimonialsClient.tsx
+````typescript
+"use client";
+
+import type { TestimonialRowType } from "@bilacert/contracts/testimonial";
+import { format } from "date-fns";
+import { MoreHorizontal } from "lucide-react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import AdminPage from "@/components/admin/AdminPage";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { useTestimonials } from "@/lib/hooks/useTestimonials";
+import DeleteTestimonialDialog from "./DeleteTestimonialDialog";
+import TestimonialEmbed from "./TestimonialEmbed";
+
+const renderTestimonial = (
+  testimonial: TestimonialRowType,
+  onEdit: (testimonial: TestimonialRowType) => void,
+  onDelete: (testimonial: TestimonialRowType) => void,
+) => {
+  const router = useRouter();
+  const date = new Date(testimonial.createdAt);
+  const formattedDate = !Number.isNaN(date.getTime())
+    ? format(date, "PP")
+    : "Date not available";
+  return (
+    <div key={testimonial.id} className="group relative">
+      <Link
+        href={`/admin/testimonials/${testimonial.id}`}
+        className="absolute inset-0 z-10"
+        aria-label={`View testimonial`}
+      >
+        <span className="sr-only">View Details</span>
+      </Link>
+      <Card className="flex flex-col h-full hover:shadow-lg hover:border-primary/50 transition-all">
+        <CardHeader className="flex-row items-center justify-between">
+          <div>
+            <CardTitle className="text-base">Testimonial</CardTitle>
+            <CardDescription className="text-xs">
+              Added on {formattedDate}
+            </CardDescription>
+          </div>
+          <div className="relative z-20">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  className="h-8 w-8 p-0"
+                  onClick={(e) => e.preventDefault()}
+                >
+                  <span className="sr-only">Open menu</span>
+                  <MoreHorizontal className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                <DropdownMenuItem
+                  onClick={(e) => {
+                    e.preventDefault();
+                    router.push(`/admin/testimonials/${testimonial.id}`);
+                  }}
+                >
+                  View
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={(e) => {
+                    e.preventDefault();
+                    onEdit(testimonial);
+                  }}
+                >
+                  Edit
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  className="text-destructive focus:bg-destructive/10 focus:text-destructive"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    onDelete(testimonial);
+                  }}
+                >
+                  Delete
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        </CardHeader>
+        <CardContent className="flex-grow p-0 overflow-hidden">
+          <TestimonialEmbed postUrl={testimonial.postUrl} />
+        </CardContent>
+      </Card>
+    </div>
+  );
+};
+
+export default function TestimonialsClient() {
+  return (
+    <AdminPage<TestimonialRowType>
+      useData={useTestimonials}
+      title="Testimonials"
+      newItemButtonText="Add Testimonial"
+      newItemLink="/admin/testimonials/new"
+      renderItem={renderTestimonial}
+      DeleteDialog={DeleteTestimonialDialog as any}
+    />
+  );
+}
+````
+
+## File: apps/client/app/contact/actions.ts
+````typescript
+"use server";
+
+import type { ActionResult } from "@bilacert/contracts/actionResult";
+import {
+  type ContactInput,
+  contactInputSchema,
+} from "@bilacert/contracts/contact";
+import { createContact } from "@bilacert/supabase/Mutations/contacts";
+
+export async function submitContactForm(
+  values: ContactInput,
+): Promise<ActionResult<{ id: string }>> {
+  const parsed = contactInputSchema.safeParse(values);
+
+  if (!parsed.success) {
+    return {
+      ok: false,
+      error: "Invalid form data",
+      fieldErrors: parsed.error.flatten().fieldErrors as Record<
+        string,
+        string[]
+      >,
+    };
+  }
+
+  try {
+    const { data } = await createContact({
+      name: parsed.data.name,
+      email: parsed.data.email,
+      phone: parsed.data.phone || null,
+      service: parsed.data.service || null,
+      message: parsed.data.message || null,
+    });
+
+    return {
+      ok: true,
+      data: { id: data?.id || "" },
+      message:
+        "Form submitted successfully. We will review and contact you soon.",
+    };
+  } catch (error) {
+    console.error("Form submission error:", error);
+    return {
+      ok: false,
+      error: "An unexpected error occurred. Please try again.",
+    };
+  }
+}
+````
+
+## File: apps/client/package.json
+````json
+{
+  "name": "@bilacert/client",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --turbopack -p 3000",
+    "build": "next build",
+    "start": "next start -p 3000",
+    "lint": "biome check .",
+    "lint:fix": "biome check --write .",
+    "format": "biome format --write .",
+    "typecheck": "tsc --noEmit",
+    "clean": "node -e \"require('node:fs').rmSync('.next',{recursive:true,force:true})\""
+  },
+  "dependencies": {
+    "@bilacert/shared": "workspace:*",
+    "@bilacert/contracts": "workspace:*",
+    "@bilacert/supabase": "workspace:*",
+    "next": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "react-icons": "catalog:",
+    "lucide-react": "catalog:",
+    "tailwind-merge": "catalog:",
+    "@supabase/supabase-js": "catalog:",
+    "@mdx-js/loader": "catalog:",
+    "@mdx-js/react": "catalog:",
+    "@next/mdx": "catalog:",
+    "@next/third-parties": "catalog:",
+    "@radix-ui/react-slot": "catalog:",
+    "@supabase/ssr": "catalog:",
+    "@vercel/analytics": "catalog:",
+    "class-variance-authority": "catalog:",
+    "clsx": "catalog:",
+    "date-fns": "catalog:",
+    "uuid": "catalog:"
+  },
+  "devDependencies": {
+    "@bilacert/typescript-config": "workspace:*",
+    "@biomejs/biome": "catalog:",
+    "@tailwindcss/postcss": "catalog:",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "babel-plugin-react-compiler": "catalog:",
+    "tailwindcss": "catalog:",
+    "typescript": "catalog:"
+  }
+}
+````
+
+## File: packages/contracts/package.json
+````json
+{
+  "name": "@bilacert/contracts",
+  "version": "0.0.0",
+  "private": true,
+  "exports": {
+    "./blog": "./src/blog.ts",
+    "./contact": "./src/contact.ts",
+    "./email": "./src/email.ts",
+    "./formSubmission": "./src/formSubmission.ts",
+    "./service": "./src/service.ts",
+    "./testimonial": "./src/testimonial.ts",
+    "./user": "./src/user.ts",
+    "./actionResult": "./src/actionResult.ts",
+    "./revalidation": "./src/revalidation.ts",
+    "./env": "./src/env.ts"
+  },
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@bilacert/typescript-config": "workspace:*",
+    "@types/node": "catalog:",
+    "typescript": "catalog:"
+  }
+}
+````
+
+## File: packages/contracts/src/email.ts
+````typescript
+import { z } from "zod";
+
+const EMAIL_LIST_MAX_LENGTH = 4_000;
+
+function isEmailList(value: string) {
+  const addresses = value
+    .split(/[;,]/)
+    .map((address) => address.trim())
+    .filter(Boolean);
+
+  return (
+    addresses.length > 0 &&
+    addresses.every((address) => z.email().safeParse(address).success)
+  );
+}
+
+const requiredEmailListSchema = z
+  .string()
+  .trim()
+  .min(1, "At least one recipient is required.")
+  .max(EMAIL_LIST_MAX_LENGTH, "The recipient list is too long.")
+  .refine(isEmailList, "Enter valid email addresses separated by commas.");
+
+const optionalEmailListSchema = z
+  .string()
+  .trim()
+  .max(EMAIL_LIST_MAX_LENGTH, "The recipient list is too long.")
+  .refine(
+    (value) => value.length === 0 || isEmailList(value),
+    "Enter valid email addresses separated by commas.",
+  );
+
+export const emailComposeSchema = z.object({
+  toAddress: requiredEmailListSchema,
+  ccAddress: optionalEmailListSchema,
+  bccAddress: optionalEmailListSchema,
+  subject: z
+    .string()
+    .trim()
+    .min(1, "Subject is required.")
+    .max(998, "Subject must be 998 characters or fewer."),
+  content: z
+    .string()
+    .trim()
+    .min(1, "Message content is required.")
+    .max(200_000, "Message content is too long."),
+  intent: z.enum(["send", "draft"]).default("send"),
+});
+
+export const emailMessageReadStateSchema = z.object({
+  messageId: z.string().regex(/^\d+$/, "The message ID is invalid."),
+  folderId: z.string().regex(/^\d+$/, "The folder ID is invalid."),
+  readState: z.enum(["read", "unread"]),
+});
+
+export type EmailComposeType = z.infer<typeof emailComposeSchema>;
+export type EmailMessageReadStateType = z.infer<
+  typeof emailMessageReadStateSchema
+>;
+
+export type EmailComposeActionState = {
+  ok?: boolean;
+  error?: string;
+  fieldErrors?: Record<string, string[]>;
+};
+````
+
+## File: packages/supabase/src/Mutations/contacts.ts
+````typescript
+"use server";
+
+import { requireAdminUser } from "../auth";
+import { CACHE_TAGS, mutationResult } from "../cache";
+import { createSupabaseServerClient } from "../server";
+import type { Database } from "../supabaseType";
+
+type ContactInsert = Database["public"]["Tables"]["contacts"]["Insert"];
+
+// Public-facing insert used by the client contact form
+// (apps/client/app/contact). Auth is intentionally omitted
+// because this runs as an unauthenticated public submission.
+export async function createContact(data: ContactInsert) {
+  const supabase = await createSupabaseServerClient();
+  const { data: contact, error } = await supabase
+    .from("contacts")
+    .insert([data])
+    .select("*")
+    .single();
+
+  if (error) throw new Error(error.message);
+
+  return mutationResult(contact, {
+    tags: [CACHE_TAGS.contacts],
+    mode: "immediate",
+  });
+}
+
+export async function upsertContact(data: ContactInsert) {
+  const supabase = await requireAdminUser();
+  const { data: contact, error } = await supabase
+    .from("contacts")
+    .upsert(data)
+    .select("*")
+    .single();
+
+  if (error) throw new Error(error.message);
+
+  return mutationResult(contact, {
+    tags: [CACHE_TAGS.contacts],
+    mode: "immediate",
+  });
+}
+
+export async function deleteContact(id: string) {
+  const supabase = await requireAdminUser();
+  const { error } = await supabase.from("contacts").delete().eq("id", id);
+  if (error) throw new Error(error.message);
+
+  return mutationResult(undefined, {
+    tags: [CACHE_TAGS.contacts],
+    mode: "immediate",
+  });
+}
+````
+
+## File: packages/supabase/src/Mutations/services.ts
+````typescript
+"use server";
+
+import { requireAdminUser } from "../auth";
+import { CACHE_PATHS, CACHE_TAGS, mutationResult } from "../cache";
+import type { Database } from "../supabaseType";
+
+type ServiceInsert = Database["public"]["Tables"]["services"]["Insert"];
+
+function uniqueValues(values: string[]) {
+  return [...new Set(values.filter((value) => value.length > 0))];
+}
+
+export async function upsertService(
+  data: ServiceInsert,
+  existingSlug?: string | null,
+) {
+  const supabase = await requireAdminUser();
+
+  const { data: service, error } = await supabase
+    .from("services")
+    .upsert(data)
+    .select("*")
+    .single();
+
+  if (error) throw new Error(error.message);
+
+  const serviceSlugs = uniqueValues([
+    service.slug,
+    ...(existingSlug ? [existingSlug] : []),
+  ]);
+
+  return mutationResult(service, {
+    tags: uniqueValues([
+      CACHE_TAGS.services,
+      ...serviceSlugs.map((slug) => CACHE_TAGS.service(slug)),
+    ]),
+    paths: uniqueValues([
+      CACHE_PATHS.home,
+      CACHE_PATHS.services,
+      ...serviceSlugs.map((slug) => CACHE_PATHS.service(slug)),
+    ]),
+    mode: "immediate",
+  });
+}
+
+export async function deleteService(id: string, existingSlug?: string | null) {
+  const supabase = await requireAdminUser();
+  const { error } = await supabase.from("services").delete().eq("id", id);
+  if (error) throw new Error(error.message);
+
+  return mutationResult(undefined, {
+    tags: [
+      CACHE_TAGS.services,
+      ...(existingSlug ? [CACHE_TAGS.service(existingSlug)] : []),
+    ],
+    paths: [
+      CACHE_PATHS.home,
+      CACHE_PATHS.services,
+      ...(existingSlug ? [CACHE_PATHS.service(existingSlug)] : []),
+    ],
+    mode: "immediate",
+  });
+}
+````
+
+## File: apps/admin/app/admin/blogs/[id]/edit/page.tsx
+````typescript
+import type { BlogRowType as BlogType } from "@bilacert/contracts/blog";
+import { createSupabaseServerClient } from "@bilacert/supabase/server";
+import { ArrowLeft } from "lucide-react";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import BlogForm from "../../BlogForm";
+
+export const metadata = {
+  title: "Edit Blog Post | Bilacert Admin Pro",
+  description: "Edit an existing blog post.",
+};
+
+async function getBlog(id: string): Promise<BlogType | null> {
+  const supabase = await createSupabaseServerClient();
+  const { data, error } = await supabase
+    .from("blog_posts")
+    .select("*")
+    .eq("id", id)
+    .maybeSingle();
+
+  if (error || !data) {
+    return null;
+  }
+
+  return {
+    id: data.id,
+    title: data.title,
+    slug: data.slug,
+    excerpt: data.excerpt,
+    content: data.content,
+    category: data.category,
+    tags: data.tags,
+    readTime: data.readTime,
+    seoTitle: data.seoTitle,
+    seoDescription: data.seoDescription,
+    seoKeywords: data.seoKeywords,
+    featuredImage: data.featuredImage,
+    thumbnail: data.thumbnail,
+    published: data.published,
+    publishedAt: data.publishedAt,
+    featured: data.featured,
+    authorId: data.authorId,
+    authorName: data.authorName,
+    viewsCount: data.viewsCount,
+    createdAt: data.createdAt,
+    updatedAt: data.updatedAt,
+  } as BlogType;
+}
+
+export default async function EditBlogPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
+  const blog = await getBlog(id);
+
+  if (!blog) {
+    notFound();
+  }
+
+  return (
+    <div className="mx-auto max-w-5xl">
+      <div className="mb-4 flex items-center gap-4">
+        <Button variant="outline" size="sm" asChild>
+          <Link href={`/admin/blogs/${blog.id}`}>
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Cancel Edit
+          </Link>
+        </Button>
+      </div>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Edit Blog Post</CardTitle>
+          <CardDescription>
+            You are currently editing the details for:{" "}
+            <span className="font-semibold text-foreground">{blog.title}</span>
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <BlogForm blog={blog} blogId={id} />
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+````
+
+## File: apps/admin/app/admin/blogs/actions.ts
+````typescript
+"use server";
+
+import type { ActionResult } from "@bilacert/contracts/actionResult";
+import { blogSchema } from "@bilacert/contracts/blog";
+import {
+  createBlog as createBlogMutation,
+  deleteBlog as deleteBlogMutation,
+  updateBlog as updateBlogMutation,
+} from "@bilacert/supabase/Mutations/blogs";
+import { getBlogSlugById } from "@bilacert/supabase/Queries/blogs";
+import { revalidatePath } from "next/cache";
+import { v4 as uuidv4 } from "uuid";
+import { triggerRevalidation } from "@/lib/revalidation";
+
+export async function upsertBlog(
+  values: unknown,
+): Promise<ActionResult<{ id: string }>> {
+  const parsedValues = blogSchema.safeParse(values);
+
+  if (!parsedValues.success) {
+    return { ok: false, error: parsedValues.error.message };
+  }
+
+  const { id, ...rest } = parsedValues.data;
+  const isUpdate = Boolean(id);
+  const now = new Date().toISOString();
+
+  const blogData = {
+    id: id || uuidv4(),
+    title: rest.title,
+    slug: rest.slug,
+    authorName: rest.authorName,
+    readTime: rest.readTime,
+    category: rest.category,
+    tags: rest.tags,
+    excerpt: rest.excerpt,
+    content: rest.content,
+    published: rest.published,
+    publishedAt: rest.published ? now : null,
+    featuredImage: rest.featuredImage,
+    thumbnail: rest.thumbnail,
+    featured: rest.featured,
+    seoTitle: rest.seoTitle,
+    seoDescription: rest.seoDescription,
+    seoKeywords: rest.seoKeywords,
+    updatedAt: now,
+  };
+
+  try {
+    const result = isUpdate
+      ? await updateBlogMutation(blogData.id, blogData)
+      : await createBlogMutation(blogData);
+
+    await triggerRevalidation(result.revalidate);
+
+    revalidatePath("/admin/blogs");
+    revalidatePath(`/admin/blogs/${result.data.id}`);
+    revalidatePath(`/admin/blogs/${result.data.slug}`);
+    revalidatePath(`/admin/blogs/${result.data.id}/edit`);
+    revalidatePath(`/admin/blogs/${result.data.slug}/edit`);
+
+    return { ok: true, data: { id: result.data.id } };
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Unknown error";
+    return { ok: false, error: `Database error: ${message}` };
+  }
+}
+
+export async function deleteBlog(blogId: string): Promise<ActionResult> {
+  try {
+    const existingSlug = await getBlogSlugById(blogId);
+    const result = await deleteBlogMutation(blogId, existingSlug);
+    await triggerRevalidation(result.revalidate);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Unknown error";
+    return { ok: false, error: `Database error: ${message}` };
+  }
+
+  revalidatePath("/admin/blogs");
+
+  return { ok: true };
+}
+````
+
+## File: apps/admin/app/admin/contacts/actions.ts
+````typescript
+"use server";
+
+import type { ActionResult } from "@bilacert/contracts/actionResult";
+import type { ContactType } from "@bilacert/contracts/contact";
+import { contactInputSchema } from "@bilacert/contracts/contact";
+import {
+  deleteContact as deleteContactMutation,
+  upsertContact as upsertContactMutation,
+} from "@bilacert/supabase/Mutations/contacts";
+import { createSupabaseServerClient } from "@bilacert/supabase/server";
+import { revalidatePath } from "next/cache";
+
+export async function getContacts() {
+  const supabase = await createSupabaseServerClient();
+  const { data, error } = await supabase
+    .from("contacts")
+    .select("*")
+    .order("name", { ascending: true });
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return data as ContactType[];
+}
+
+export async function upsertContact(
+  values: unknown,
+  contactId?: string,
+): Promise<ActionResult<ContactType>> {
+  const parsedValues = contactInputSchema.safeParse(values);
+
+  if (!parsedValues.success) {
+    return { ok: false, error: parsedValues.error.message };
+  }
+
+  let data: ContactType;
+  try {
+    const result = await upsertContactMutation(
+      contactId ? { ...parsedValues.data, id: contactId } : parsedValues.data,
+    );
+    data = result.data as ContactType;
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Unknown error";
+    return { ok: false, error: `Database error: ${message}` };
+  }
+
+  revalidatePath("/admin/contacts");
+  revalidatePath(`/admin/contacts/${data.id}`);
+
+  return {
+    ok: true,
+    data,
+    message: `Contact ${contactId ? "updated" : "created"} successfully!`,
+  };
+}
+
+export async function deleteContact(contactId: string): Promise<ActionResult> {
+  try {
+    await deleteContactMutation(contactId);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Unknown error";
+    return { ok: false, error: `Database error: ${message}` };
+  }
+
+  revalidatePath("/admin/contacts");
+
+  return {
+    ok: true,
+    message: "Contact deleted successfully!",
+  };
+}
+````
+
 ## File: apps/admin/lib/emailNavigation.ts
 ````typescript
 import type { ContactType } from "@bilacert/contracts/contact";
@@ -32453,37 +31488,30 @@ export function getSafeEmailReturnPath(value: unknown): string | null {
 }
 ````
 
-## File: packages/supabase/package.json
-````json
-{
-  "name": "@bilacert/supabase",
-  "version": "0.0.0",
-  "private": true,
-  "exports": {
-    "./client": "./src/client.ts",
-    "./server": "./src/server.ts",
-    "./cache": "./src/cache.ts",
-    "./session": "./src/session.ts",
-    "./supabaseType": "./src/supabaseType.ts",
-    "./auth": "./src/auth.ts",
-    "./Queries/*": "./src/Queries/*.ts",
-    "./Mutations/*": "./src/Mutations/*.ts"
-  },
-  "dependencies": {
-    "@bilacert/contracts": "workspace:*",
-    "@bilacert/shared": "workspace:*",
-    "@supabase/ssr": "catalog:",
-    "@supabase/supabase-js": "catalog:",
-    "typescript": "catalog:"
-  },
-  "devDependencies": {
-    "@bilacert/typescript-config": "workspace:*"
-  },
-  "scripts": {
-    "typecheck": "tsc --noEmit",
-    "supabase:types": "supabase gen types typescript --local > src/supabaseType.ts"
-  }
-}
+## File: packages/contracts/src/contact.ts
+````typescript
+import { z } from "zod";
+
+export const contactSchema = z.object({
+  id: z.string(),
+  name: z.string().min(1, "Name is required"),
+  email: z.string().email("Please enter a valid email"),
+  phone: z.string().optional(),
+  service: z.string().optional(),
+  message: z.string().optional(),
+  submittedAt: z.string(),
+});
+
+export const contactInputSchema = contactSchema.pick({
+  name: true,
+  email: true,
+  phone: true,
+  service: true,
+  message: true,
+});
+
+export type ContactType = z.infer<typeof contactSchema>;
+export type ContactInput = z.infer<typeof contactInputSchema>;
 ````
 
 ## File: packages/supabase/src/Mutations/formSubmissions.ts
@@ -32552,6 +31580,271 @@ export async function deleteFormSubmission(id: string) {
 }
 ````
 
+## File: packages/supabase/src/Queries/blogs.ts
+````typescript
+import type { BlogRowType as BlogType } from "@bilacert/contracts/blog";
+import {
+  createSupabaseAdminClient,
+  createSupabasePublicClient,
+} from "../server";
+import type { Database } from "../supabaseType";
+
+type BlogPostRow = Database["public"]["Tables"]["blog_posts"]["Row"];
+
+function normalizeBlogPost(row: BlogPostRow): BlogType {
+  return {
+    id: row.id,
+    title: row.title,
+    slug: row.slug,
+    excerpt: row.excerpt ?? undefined,
+    content: row.content,
+    category: row.category ?? undefined,
+    tags: row.tags ?? undefined,
+    readTime: row.readTime ?? undefined,
+    seoTitle: row.seoTitle ?? undefined,
+    seoDescription: row.seoDescription ?? undefined,
+    seoKeywords: row.seoKeywords ?? undefined,
+    featuredImage: row.featuredImage ?? undefined,
+    thumbnail: row.thumbnail ?? undefined,
+    published: row.published ?? false,
+    publishedAt: row.publishedAt ?? undefined,
+    featured: row.featured ?? false,
+    authorId: row.authorId ?? undefined,
+    authorName: row.authorName ?? undefined,
+    viewsCount: row.viewsCount ?? 0,
+    createdAt: row.createdAt ?? row.publishedAt ?? new Date(0).toISOString(),
+    updatedAt: row.updatedAt ?? undefined,
+  };
+}
+
+export async function getAllPublishedBlogSlugs() {
+  const supabase = createSupabasePublicClient();
+  const { data, error } = await supabase
+    .from("blog_posts")
+    .select("slug")
+    .eq("published", true);
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return data;
+}
+
+export async function getAllPublishedBlogPosts(): Promise<BlogType[]> {
+  const supabase = createSupabasePublicClient();
+  const { data, error } = await supabase
+    .from("blog_posts")
+    .select("*")
+    .eq("published", true)
+    .order("createdAt", { ascending: false });
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return data.map(normalizeBlogPost);
+}
+
+export async function getBlogPostBySlug(
+  slug: string,
+): Promise<BlogType | null> {
+  const supabase = createSupabasePublicClient();
+  const { data, error } = await supabase
+    .from("blog_posts")
+    .select("*")
+    .eq("slug", slug)
+    .single();
+
+  if (error) {
+    return null;
+  }
+
+  return normalizeBlogPost(data);
+}
+
+export async function getBlogPostsByCategory(
+  category: string,
+  limit: number = 3,
+): Promise<BlogType[]> {
+  const supabase = createSupabasePublicClient();
+  const { data, error } = await supabase
+    .from("blog_posts")
+    .select("*")
+    .eq("category", category)
+    .limit(limit);
+
+  if (error) {
+    return [];
+  }
+
+  return data.map(normalizeBlogPost);
+}
+
+export async function getBlogSlugById(id: string): Promise<string | null> {
+  const supabase = createSupabaseAdminClient();
+  const { data, error } = await supabase
+    .from("blog_posts")
+    .select("slug")
+    .eq("id", id)
+    .maybeSingle();
+
+  if (error) throw new Error(error.message);
+
+  return data?.slug ?? null;
+}
+````
+
+## File: packages/supabase/src/Queries/services.ts
+````typescript
+import type { ServiceRowType } from "@bilacert/contracts/service";
+import {
+  pricingPlanSchema,
+  processStepSchema,
+  successStorySchema,
+} from "@bilacert/contracts/service";
+import {
+  createSupabaseAdminClient,
+  createSupabasePublicClient,
+} from "../server";
+import type { Database } from "../supabaseType";
+
+type ServiceRow = Database["public"]["Tables"]["services"]["Row"];
+
+function toStringArray(value: unknown): string[] {
+  if (Array.isArray(value)) {
+    return value.filter((item): item is string => typeof item === "string");
+  }
+
+  if (typeof value === "string") {
+    return value
+      .split("\n")
+      .map((item) => item.trim())
+      .filter(Boolean);
+  }
+
+  return [];
+}
+
+export function normalizeService(row: ServiceRow): ServiceRowType {
+  return {
+    id: row.id,
+    title: row.title,
+    slug: row.slug,
+    href: row.href,
+    category: row.category ?? "",
+    description: row.description ?? "",
+    shortDescription: row.shortDescription ?? undefined,
+    icon: row.icon ?? undefined,
+    orderIndex: row.orderIndex ?? undefined,
+    content: row.content ?? undefined,
+    features: toStringArray(row.features),
+    requirements: toStringArray(row.requirements),
+    includes: toStringArray(row.includes),
+    published: row.published ?? false,
+    featured: row.featured ?? false,
+    processingTime: row.processingTime ?? undefined,
+    pricing: row.pricing ?? undefined,
+    image: row.image ?? undefined,
+    thumbnail: row.thumbnail ?? undefined,
+    seoTitle: row.seoTitle ?? undefined,
+    seoDescription: row.seoDescription ?? undefined,
+    seoKeywords: row.seoKeywords ?? undefined,
+    pricingPlans: pricingPlanSchema.array().catch([]).parse(row.pricingPlans),
+    processSteps: processStepSchema.array().catch([]).parse(row.processSteps),
+    successStory:
+      successStorySchema
+        .nullable()
+        .optional()
+        .catch(undefined)
+        .parse(row.successStory) ?? undefined,
+    createdAt: row.createdAt ?? new Date().toISOString(),
+    updatedAt: row.updatedAt ?? row.createdAt ?? new Date().toISOString(),
+  };
+}
+
+export async function getPublishedServices(): Promise<ServiceRowType[]> {
+  const supabase = createSupabasePublicClient();
+  const { data, error } = await supabase
+    .from("services")
+    .select("*")
+    .eq("published", true)
+    .order("orderIndex", { ascending: true });
+
+  if (error) {
+    console.error("Error fetching services:", error);
+    return [];
+  }
+
+  return (data || []).map(normalizeService);
+}
+
+export async function getFeaturedServices(): Promise<ServiceRowType[]> {
+  const supabase = createSupabasePublicClient();
+  const { data, error } = await supabase
+    .from("services")
+    .select("*")
+    .eq("published", true)
+    .eq("featured", true)
+    .order("orderIndex", { ascending: true })
+    .limit(4);
+
+  if (error) {
+    console.error("Error fetching featured services:", error);
+    return [];
+  }
+
+  return (data || []).map(normalizeService);
+}
+
+export async function getServiceBySlug(
+  slug: string,
+): Promise<ServiceRowType | null> {
+  const supabase = createSupabasePublicClient();
+  const { data, error } = await supabase
+    .from("services")
+    .select("*")
+    .eq("slug", slug)
+    .single();
+
+  if (error || !data) {
+    return null;
+  }
+
+  return normalizeService(data);
+}
+
+export async function getAllPublishedServiceSlugs(): Promise<
+  { slug: string }[]
+> {
+  const supabase = createSupabasePublicClient();
+  const { data, error } = await supabase
+    .from("services")
+    .select("slug")
+    .eq("published", true);
+
+  if (error) {
+    console.error("Error fetching service slugs:", error);
+    return [];
+  }
+
+  return data || [];
+}
+
+export async function getServiceSlugById(id: string): Promise<string | null> {
+  const supabase = createSupabaseAdminClient();
+  const { data, error } = await supabase
+    .from("services")
+    .select("slug")
+    .eq("id", id)
+    .maybeSingle();
+
+  if (error) throw new Error(error.message);
+
+  return data?.slug ?? null;
+}
+````
+
 ## File: packages/supabase/src/Queries/testimonials.ts
 ````typescript
 import type { TestimonialRowType } from "@bilacert/contracts/testimonial";
@@ -32585,8 +31878,43 @@ export async function getPublishedTestimonials(): Promise<
 }
 ````
 
+## File: packages/supabase/package.json
+````json
+{
+  "name": "@bilacert/supabase",
+  "version": "0.0.0",
+  "private": true,
+  "exports": {
+    "./client": "./src/client.ts",
+    "./server": "./src/server.ts",
+    "./cache": "./src/cache.ts",
+    "./session": "./src/session.ts",
+    "./supabaseType": "./src/supabaseType.ts",
+    "./auth": "./src/auth.ts",
+    "./Queries/*": "./src/Queries/*.ts",
+    "./Mutations/*": "./src/Mutations/*.ts"
+  },
+  "dependencies": {
+    "@bilacert/contracts": "workspace:*",
+    "@bilacert/shared": "workspace:*",
+    "@supabase/ssr": "catalog:",
+    "@supabase/supabase-js": "catalog:",
+    "typescript": "catalog:",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@bilacert/typescript-config": "workspace:*"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "supabase:types": "supabase gen types typescript --local > src/supabaseType.ts"
+  }
+}
+````
+
 ## File: packages/supabase/src/server.ts
 ````typescript
+import { getEnv } from "@bilacert/contracts/env";
 import { createServerClient } from "@supabase/ssr";
 import { createClient } from "@supabase/supabase-js";
 import { cookies } from "next/headers";
@@ -32638,10 +31966,10 @@ export function createSupabasePublicClient() {
 }
 
 export function createSupabaseAdminClient() {
-  const supabaseUrl =
-    process.env.SUPABASE_URL ?? process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const env = getEnv();
+  const supabaseUrl = env.SUPABASE_URL ?? env.NEXT_PUBLIC_SUPABASE_URL;
   const supabaseSecretKey =
-    process.env.SUPABASE_SECRET_KEY ?? process.env.SUPABASE_SERVICE_ROLE_KEY;
+    env.SUPABASE_SECRET_KEY ?? env.SUPABASE_SERVICE_ROLE_KEY;
 
   if (!supabaseUrl || !supabaseSecretKey) {
     throw new Error(
@@ -32704,7 +32032,7 @@ catalog:
   "date-fns": "^4.1.0"
   "react-hook-form": "^7.53.0"
   "@hookform/resolvers": "^5.2.2"
-  "dotenv": "^16.5.0"
+  "dotenv": "^17.2.3"
   "embla-carousel-react": "^8.6.0"
   "patch-package": "^8.0.0"
   "react-day-picker": "^9.11.3"
@@ -32736,736 +32064,6 @@ catalog:
   "@biomejs/biome": "2.2.0"
   "babel-plugin-react-compiler": "1.0.0"
   "turbo": "^2.9.14"
-````
-
-## File: apps/admin/app/admin/blogs/BlogForm.tsx
-````typescript
-"use client";
-
-import type { BlogRowType as BlogType } from "@bilacert/contracts/blog";
-import {
-  type BlogType as BlogFormValues,
-  blogSchema,
-} from "@bilacert/contracts/blog";
-import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
-import { Loader2 } from "lucide-react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useEffect, useState, useTransition } from "react";
-import { type FieldErrors, useForm } from "react-hook-form";
-import PexelsImagePicker from "@/components/PexelsImagePicker";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import ImageUpload from "@/components/ui/ImageUpload";
-import { Input } from "@/components/ui/input";
-import { Switch } from "@/components/ui/switch";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Textarea } from "@/components/ui/textarea";
-import { useToast } from "@/hooks/use-toast";
-import { upsertBlog } from "./actions";
-import BlogEditor from "./BlogEditor";
-
-interface BlogFormProps {
-  blog?: BlogType | null;
-  blogId?: string;
-}
-
-const slugify = (str: string) =>
-  str
-    .toLowerCase()
-    .trim()
-    .replace(/[^\w\s-]/g, "")
-    .replace(/[\s_-]+/g, "-")
-    .replace(/^-+|-+$/g, "");
-
-type BlogEditorTab = "core" | "media" | "content" | "seo";
-
-function getTabForError(fieldName: string): BlogEditorTab {
-  if (["featuredImage", "thumbnail"].includes(fieldName)) return "media";
-  if (fieldName === "content") return "content";
-  if (["seoTitle", "seoDescription", "seoKeywords"].includes(fieldName)) {
-    return "seo";
-  }
-  return "core";
-}
-
-function getBlogInput(blog?: BlogType | null): BlogFormValues {
-  return {
-    id: blog?.id,
-    title: blog?.title ?? "",
-    slug: blog?.slug ?? "",
-    authorName: blog?.authorName ?? "Bilacert Team",
-    readTime: blog?.readTime ?? "5 min read",
-    category: blog?.category ?? "",
-    tags: blog?.tags ?? "",
-    excerpt: blog?.excerpt ?? "",
-    content: blog?.content ?? "",
-    published: blog?.published ?? false,
-    featuredImage: blog?.featuredImage ?? "",
-    thumbnail: blog?.thumbnail ?? "",
-    featured: blog?.featured ?? false,
-    seoTitle: blog?.seoTitle ?? "",
-    seoDescription: blog?.seoDescription ?? "",
-    seoKeywords: blog?.seoKeywords ?? "",
-  };
-}
-
-function getBlogLogPayload(values: BlogFormValues) {
-  return {
-    id: values.id,
-    slug: values.slug,
-    published: values.published,
-    featured: values.featured,
-    titleLength: (values.title ?? "").length,
-    excerptLength: (values.excerpt ?? "").length,
-    contentLength: (values.content ?? "").length,
-    hasFeaturedImage: Boolean(values.featuredImage),
-    hasThumbnail: Boolean(values.thumbnail),
-  };
-}
-
-function getErrorSummary(errors: FieldErrors<BlogFormValues>) {
-  return Object.fromEntries(
-    Object.entries(errors).map(([field, error]) => [
-      field,
-      typeof error?.message === "string" ? error.message : "Invalid value",
-    ]),
-  );
-}
-
-export default function BlogForm({ blog, blogId }: BlogFormProps) {
-  const { toast } = useToast();
-  const router = useRouter();
-  const [isPending, startTransition] = useTransition();
-  const [activeTab, setActiveTab] = useState<BlogEditorTab>("core");
-
-  const form = useForm<BlogFormValues>({
-    resolver: standardSchemaResolver(blogSchema),
-    defaultValues: getBlogInput(blog),
-  });
-
-  const { handleSubmit, reset, watch, setValue } = form;
-
-  const title = watch("title");
-  const isEditing = !!blog;
-
-  useEffect(() => {
-    if (!isEditing && title) {
-      setValue("slug", slugify(title), { shouldValidate: true });
-    }
-  }, [title, setValue, isEditing]);
-
-  useEffect(() => {
-    if (blog) {
-      const normalizedValues = getBlogInput(blog);
-      console.log("[bilacert-admin/blogs] form reset", {
-        ...getBlogLogPayload(normalizedValues),
-        isEditing: true,
-      });
-      reset(normalizedValues);
-    }
-  }, [blog, reset]);
-
-  const onSubmit = (values: BlogFormValues) => {
-    const payload = {
-      ...values,
-      id: blogId ?? blog?.id ?? values.id,
-    };
-
-    console.log("[bilacert-admin/blogs] form submit start", {
-      ...getBlogLogPayload(payload),
-      activeTab,
-      isEditing,
-    });
-
-    startTransition(async () => {
-      try {
-        const result = await upsertBlog(payload);
-
-        if (!result.ok || !result.data) {
-          toast({
-            variant: "destructive",
-            title: "Error saving blog post",
-            description: result.ok
-              ? "The blog save did not return a saved post."
-              : result.error,
-          });
-          return;
-        }
-
-        toast({
-          title: "Blog post saved",
-          description: "Your changes were saved successfully.",
-        });
-        router.push(`/admin/blogs/${result.data.id}`);
-        router.refresh();
-      } catch (error) {
-        const message =
-          error instanceof Error ? error.message : "Unknown error";
-        console.error("[bilacert-admin/blogs] form submit threw", {
-          ...getBlogLogPayload(payload),
-          message,
-        });
-        toast({
-          variant: "destructive",
-          title: "Error saving blog post",
-          description: message,
-        });
-      }
-    });
-  };
-
-  const onInvalid = (errors: FieldErrors<BlogFormValues>) => {
-    const firstField = Object.keys(errors)[0] ?? "title";
-    const targetTab = getTabForError(firstField);
-    // Switch to the tab containing the first invalid field
-    setActiveTab(targetTab);
-
-    console.warn("[bilacert-admin/blogs] form validation failed", {
-      firstField,
-      targetTab,
-      errors: getErrorSummary(errors),
-    });
-
-    // After tab switch, attempt to focus the first invalid input so the user sees it.
-    // Timeout gives the TabsContent a chance to mount its fields.
-    setTimeout(() => {
-      try {
-        const el = document.querySelector(
-          `[name="${firstField}"]`,
-        ) as HTMLElement | null;
-        if (el) {
-          el.scrollIntoView({ behavior: "smooth", block: "center" });
-          el.focus();
-        }
-      } catch (_e) {
-        // ignore
-      }
-    }, 100);
-
-    toast({
-      variant: "destructive",
-      title: "Blog post was not saved",
-      description: "Please fix the highlighted field and try again.",
-    });
-  };
-
-  return (
-    <Form {...form}>
-      <form onSubmit={handleSubmit(onSubmit, onInvalid)} className="space-y-8">
-        <div className="grid gap-4 md:grid-cols-[1fr_250px] lg:grid-cols-3 lg:gap-8">
-          <div className="grid auto-rows-max items-start gap-4 lg:col-span-2 lg:gap-8">
-            <Tabs
-              value={activeTab}
-              onValueChange={(value) => setActiveTab(value as BlogEditorTab)}
-            >
-              <TabsList className="flex h-auto flex-wrap justify-start">
-                <TabsTrigger value="core">Core Details</TabsTrigger>
-                <TabsTrigger value="media">Media</TabsTrigger>
-                <TabsTrigger value="content">Content</TabsTrigger>
-                <TabsTrigger value="seo">SEO</TabsTrigger>
-              </TabsList>
-
-              <TabsContent value="core" className="mt-4">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Core Details</CardTitle>
-                    <CardDescription>
-                      Define the public-facing title, URL, and summary for this
-                      article.
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <FormField
-                      control={form.control}
-                      name="title"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Title</FormLabel>
-                          <FormControl>
-                            <Input
-                              placeholder="e.g., My Awesome Blog Post"
-                              {...field}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="slug"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Slug</FormLabel>
-                          <FormControl>
-                            <Input
-                              placeholder="e.g., my-awesome-blog-post"
-                              {...field}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="excerpt"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Excerpt</FormLabel>
-                          <FormControl>
-                            <Textarea
-                              placeholder="A short summary of the post."
-                              {...field}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </CardContent>
-                </Card>
-              </TabsContent>
-
-              <TabsContent value="media" className="mt-4">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Media</CardTitle>
-                    <CardDescription>
-                      Upload local images or pick from Pexels.
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <FormField
-                        control={form.control}
-                        name="featuredImage"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Featured Image</FormLabel>
-                            <FormControl>
-                              <ImageUpload
-                                bucket="blogs"
-                                initialUrl={field.value}
-                                onUpload={(url) => field.onChange(url)}
-                                onRemove={() => field.onChange("")}
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        control={form.control}
-                        name="thumbnail"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Thumbnail Image</FormLabel>
-                            <FormControl>
-                              <ImageUpload
-                                bucket="blogs"
-                                initialUrl={field.value}
-                                onUpload={(url) => field.onChange(url)}
-                                onRemove={() => field.onChange("")}
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    </div>
-
-                    <div className="border-t pt-6">
-                      <h3 className="text-sm font-medium mb-4">
-                        Pexels Image Picker
-                      </h3>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div className="space-y-2">
-                          <p className="text-xs text-muted-foreground">
-                            Quick pick for Featured Image
-                          </p>
-                          <PexelsImagePicker
-                            onSelect={(url) => setValue("featuredImage", url)}
-                            currentImageUrl={watch("featuredImage")}
-                            suggestions={[
-                              title,
-                              watch("category"),
-                              ...(watch("tags") || "")
-                                .split(",")
-                                .map((t) => t.trim()),
-                            ].filter((t): t is string => !!t)}
-                          />
-                        </div>
-                        <div className="space-y-2">
-                          <p className="text-xs text-muted-foreground">
-                            Quick pick for Thumbnail
-                          </p>
-                          <PexelsImagePicker
-                            onSelect={(url) => setValue("thumbnail", url)}
-                            currentImageUrl={watch("thumbnail")}
-                            suggestions={[
-                              title,
-                              watch("category"),
-                              ...(watch("tags") || "")
-                                .split(",")
-                                .map((t) => t.trim()),
-                            ].filter((t): t is string => !!t)}
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </TabsContent>
-
-              <TabsContent value="content" className="mt-4">
-                <FormField
-                  control={form.control}
-                  name="content"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Content</FormLabel>
-                      <FormControl>
-                        <BlogEditor
-                          featuredImage={watch("featuredImage")}
-                          onImageSelect={(url) =>
-                            setValue("featuredImage", url)
-                          }
-                          value={field.value ?? ""}
-                          onChange={field.onChange}
-                          title={title}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </TabsContent>
-
-              <TabsContent value="seo" className="mt-4">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>SEO</CardTitle>
-                    <CardDescription>
-                      Configure metadata for search and social previews.
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <FormField
-                      control={form.control}
-                      name="seoTitle"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>SEO Title</FormLabel>
-                          <FormControl>
-                            <Input {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="seoDescription"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>SEO Description</FormLabel>
-                          <FormControl>
-                            <Textarea {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="seoKeywords"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>SEO Keywords (comma separated)</FormLabel>
-                          <FormControl>
-                            <Input {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </CardContent>
-                </Card>
-              </TabsContent>
-            </Tabs>
-          </div>
-
-          <div className="grid auto-rows-max items-start gap-4 lg:gap-8">
-            <Card>
-              <CardHeader>
-                <CardTitle>Publishing</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <FormField
-                  control={form.control}
-                  name="published"
-                  render={({ field }) => (
-                    <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
-                      <div className="space-y-0.5">
-                        <FormLabel>Published</FormLabel>
-                        <FormDescription>
-                          Make this post visible.
-                        </FormDescription>
-                      </div>
-                      <FormControl>
-                        <Switch
-                          checked={field.value}
-                          onCheckedChange={field.onChange}
-                        />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="featured"
-                  render={({ field }) => (
-                    <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
-                      <div className="space-y-0.5">
-                        <FormLabel>Featured Post</FormLabel>
-                        <FormDescription>
-                          Display this post prominently.
-                        </FormDescription>
-                      </div>
-                      <FormControl>
-                        <Switch
-                          checked={field.value}
-                          onCheckedChange={field.onChange}
-                        />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader>
-                <CardTitle>Details</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <FormField
-                  control={form.control}
-                  name="authorName"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Author</FormLabel>
-                      <FormControl>
-                        <Input {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="readTime"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Read Time</FormLabel>
-                      <FormControl>
-                        <Input placeholder="e.g., 5 min read" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="category"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Category</FormLabel>
-                      <FormControl>
-                        <Input placeholder="e.g., Tech" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="tags"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Tags (comma separated)</FormLabel>
-                      <FormControl>
-                        <Input placeholder="e.g., icasa, nrcs" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-
-        <div className="flex justify-end gap-4">
-          <Button type="button" variant="outline" asChild>
-            <Link href="/admin/blogs">Cancel</Link>
-          </Button>
-          <Button type="submit" disabled={isPending}>
-            {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            {isEditing ? "Save Changes" : "Create Post"}
-          </Button>
-        </div>
-      </form>
-    </Form>
-  );
-}
-````
-
-## File: packages/supabase/src/Mutations/blogs.ts
-````typescript
-"use server";
-
-import { requireAdminUser } from "../auth";
-import { CACHE_PATHS, CACHE_TAGS, mutationResult } from "../cache";
-import { createSupabaseServerClient } from "../server";
-import type { Database } from "../supabaseType";
-
-type BlogRow = Database["public"]["Tables"]["blog_posts"]["Row"];
-type BlogInsert = Database["public"]["Tables"]["blog_posts"]["Insert"];
-type BlogUpdate = Database["public"]["Tables"]["blog_posts"]["Update"];
-
-function blogResultFromInput(data: BlogInsert): BlogRow {
-  return {
-    authorId: data.authorId ?? null,
-    authorName: data.authorName ?? null,
-    category: data.category ?? null,
-    content: data.content,
-    createdAt: data.createdAt ?? null,
-    excerpt: data.excerpt ?? null,
-    featured: data.featured ?? null,
-    featuredImage: data.featuredImage ?? null,
-    id: data.id,
-    published: data.published ?? null,
-    publishedAt: data.publishedAt ?? null,
-    readTime: data.readTime ?? null,
-    seoDescription: data.seoDescription ?? null,
-    seoKeywords: data.seoKeywords ?? null,
-    seoTitle: data.seoTitle ?? null,
-    slug: data.slug,
-    tags: data.tags ?? null,
-    thumbnail: data.thumbnail ?? null,
-    title: data.title,
-    updatedAt: data.updatedAt ?? null,
-    viewsCount: data.viewsCount ?? null,
-  };
-}
-
-function blogMutationResult(blog: BlogRow) {
-  return mutationResult(blog, {
-    tags: [CACHE_TAGS.blogs, CACHE_TAGS.blog(blog.slug)],
-    paths: [
-      CACHE_PATHS.home,
-      CACHE_PATHS.blog,
-      CACHE_PATHS.blogPost(blog.slug),
-    ],
-    mode: "immediate",
-  });
-}
-
-// Public-facing view counter triggered from blog pages
-// (apps/client/app/blog/[slug]). Auth is intentionally omitted
-// because this runs as an unauthenticated public read-trigger.
-export async function incrementBlogPostViews(slug: string): Promise<void> {
-  const supabase = await createSupabaseServerClient();
-  const { error } = await supabase.rpc("increment_views", { post_slug: slug });
-
-  if (error) {
-    console.error("Failed to increment views:", error.message);
-  }
-}
-
-export async function createBlog(data: BlogInsert) {
-  const supabase = await requireAdminUser();
-  const { error } = await supabase.from("blog_posts").insert(data);
-
-  if (error) throw new Error(error.message);
-
-  return blogMutationResult(blogResultFromInput(data));
-}
-
-export async function updateBlog(id: string, data: BlogInsert) {
-  const supabase = await requireAdminUser();
-  const { id: _ignoredId, ...updateData }: BlogUpdate = data;
-  const blog = blogResultFromInput(data);
-
-  const { data: updatedBlog, error } = await supabase
-    .from("blog_posts")
-    .update(updateData)
-    .eq("id", id)
-    .select("id")
-    .maybeSingle();
-
-  if (error) throw new Error(error.message);
-
-  if (!updatedBlog) {
-    throw new Error(`No blog post matches id "${id}".`);
-  }
-
-  return blogMutationResult(blog);
-}
-
-export async function deleteBlog(id: string) {
-  const supabase = await requireAdminUser();
-  const { data: existing, error: readError } = await supabase
-    .from("blog_posts")
-    .select("slug")
-    .eq("id", id)
-    .maybeSingle();
-
-  if (readError) throw new Error(readError.message);
-
-  const { data: deletedBlog, error } = await supabase
-    .from("blog_posts")
-    .delete()
-    .eq("id", id)
-    .select("id")
-    .maybeSingle();
-
-  if (error) throw new Error(error.message);
-
-  if (!deletedBlog) {
-    throw new Error(`No blog post matches id "${id}".`);
-  }
-
-  return mutationResult(undefined, {
-    tags: [
-      CACHE_TAGS.blogs,
-      ...(existing?.slug ? [CACHE_TAGS.blog(existing.slug)] : []),
-    ],
-    paths: [
-      CACHE_PATHS.home,
-      CACHE_PATHS.blog,
-      ...(existing?.slug ? [CACHE_PATHS.blogPost(existing.slug)] : []),
-    ],
-    mode: "immediate",
-  });
-}
 ````
 
 ## File: apps/admin/app/admin/analysis/AnalysisClient.tsx
@@ -34271,5 +32869,717 @@ export default function AnalysisClient() {
       </AnalyticsSection>
     </div>
   );
+}
+````
+
+## File: apps/admin/app/admin/blogs/BlogForm.tsx
+````typescript
+"use client";
+
+import type { BlogRowType as BlogType } from "@bilacert/contracts/blog";
+import {
+  type BlogType as BlogFormValues,
+  blogSchema,
+} from "@bilacert/contracts/blog";
+import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
+import { Loader2 } from "lucide-react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect, useState, useTransition } from "react";
+import { type FieldErrors, useForm } from "react-hook-form";
+import PexelsImagePicker from "@/components/PexelsImagePicker";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import ImageUpload from "@/components/ui/ImageUpload";
+import { Input } from "@/components/ui/input";
+import { Switch } from "@/components/ui/switch";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Textarea } from "@/components/ui/textarea";
+import { useToast } from "@/hooks/use-toast";
+import { upsertBlog } from "./actions";
+import BlogEditor from "./BlogEditor";
+
+interface BlogFormProps {
+  blog?: BlogType | null;
+  blogId?: string;
+}
+
+const slugify = (str: string) =>
+  str
+    .toLowerCase()
+    .trim()
+    .replace(/[^\w\s-]/g, "")
+    .replace(/[\s_-]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+
+type BlogEditorTab = "core" | "media" | "content" | "seo";
+
+function getTabForError(fieldName: string): BlogEditorTab {
+  if (["featuredImage", "thumbnail"].includes(fieldName)) return "media";
+  if (fieldName === "content") return "content";
+  if (["seoTitle", "seoDescription", "seoKeywords"].includes(fieldName)) {
+    return "seo";
+  }
+  return "core";
+}
+
+function getBlogInput(blog?: BlogType | null): BlogFormValues {
+  return {
+    id: blog?.id,
+    title: blog?.title ?? "",
+    slug: blog?.slug ?? "",
+    authorName: blog?.authorName ?? "Bilacert Team",
+    readTime: blog?.readTime ?? "5 min read",
+    category: blog?.category ?? "",
+    tags: blog?.tags ?? "",
+    excerpt: blog?.excerpt ?? "",
+    content: blog?.content ?? "",
+    published: blog?.published ?? false,
+    featuredImage: blog?.featuredImage ?? "",
+    thumbnail: blog?.thumbnail ?? "",
+    featured: blog?.featured ?? false,
+    seoTitle: blog?.seoTitle ?? "",
+    seoDescription: blog?.seoDescription ?? "",
+    seoKeywords: blog?.seoKeywords ?? "",
+  };
+}
+
+function getBlogLogPayload(values: BlogFormValues) {
+  return {
+    id: values.id,
+    slug: values.slug,
+    published: values.published,
+    featured: values.featured,
+    titleLength: (values.title ?? "").length,
+    excerptLength: (values.excerpt ?? "").length,
+    contentLength: (values.content ?? "").length,
+    hasFeaturedImage: Boolean(values.featuredImage),
+    hasThumbnail: Boolean(values.thumbnail),
+  };
+}
+
+function getErrorSummary(errors: FieldErrors<BlogFormValues>) {
+  return Object.fromEntries(
+    Object.entries(errors).map(([field, error]) => [
+      field,
+      typeof error?.message === "string" ? error.message : "Invalid value",
+    ]),
+  );
+}
+
+export default function BlogForm({ blog, blogId }: BlogFormProps) {
+  const { toast } = useToast();
+  const router = useRouter();
+  const [isPending, startTransition] = useTransition();
+  const [activeTab, setActiveTab] = useState<BlogEditorTab>("core");
+
+  const form = useForm<BlogFormValues>({
+    resolver: standardSchemaResolver(blogSchema),
+    defaultValues: getBlogInput(blog),
+  });
+
+  const { handleSubmit, reset, watch, setValue } = form;
+
+  const title = watch("title");
+  const isEditing = !!blog;
+
+  useEffect(() => {
+    if (!isEditing && title) {
+      setValue("slug", slugify(title), { shouldValidate: true });
+    }
+  }, [title, setValue, isEditing]);
+
+  useEffect(() => {
+    if (blog) {
+      const normalizedValues = getBlogInput(blog);
+      reset(normalizedValues);
+    }
+  }, [blog, reset]);
+
+  const onSubmit = (values: BlogFormValues) => {
+    const payload = {
+      ...values,
+      id: blogId ?? blog?.id ?? values.id,
+    };
+
+    startTransition(async () => {
+      try {
+        const result = await upsertBlog(payload);
+
+        if (!result.ok || !result.data) {
+          toast({
+            variant: "destructive",
+            title: "Error saving blog post",
+            description: result.ok
+              ? "The blog save did not return a saved post."
+              : result.error,
+          });
+          return;
+        }
+
+        toast({
+          title: "Blog post saved",
+          description: "Your changes were saved successfully.",
+        });
+        router.push(`/admin/blogs/${result.data.id}`);
+        router.refresh();
+      } catch (error) {
+        const message =
+          error instanceof Error ? error.message : "Unknown error";
+        console.error("[bilacert-admin/blogs] form submit threw", {
+          ...getBlogLogPayload(payload),
+          message,
+        });
+        toast({
+          variant: "destructive",
+          title: "Error saving blog post",
+          description: message,
+        });
+      }
+    });
+  };
+
+  const onInvalid = (errors: FieldErrors<BlogFormValues>) => {
+    const firstField = Object.keys(errors)[0] ?? "title";
+    const targetTab = getTabForError(firstField);
+    // Switch to the tab containing the first invalid field
+    setActiveTab(targetTab);
+
+    console.warn("[bilacert-admin/blogs] form validation failed", {
+      firstField,
+      targetTab,
+      errors: getErrorSummary(errors),
+    });
+
+    // After tab switch, attempt to focus the first invalid input so the user sees it.
+    // Timeout gives the TabsContent a chance to mount its fields.
+    setTimeout(() => {
+      try {
+        const el = document.querySelector(
+          `[name="${firstField}"]`,
+        ) as HTMLElement | null;
+        if (el) {
+          el.scrollIntoView({ behavior: "smooth", block: "center" });
+          el.focus();
+        }
+      } catch (_e) {
+        // ignore
+      }
+    }, 100);
+
+    toast({
+      variant: "destructive",
+      title: "Blog post was not saved",
+      description: "Please fix the highlighted field and try again.",
+    });
+  };
+
+  return (
+    <Form {...form}>
+      <form onSubmit={handleSubmit(onSubmit, onInvalid)} className="space-y-8">
+        <div className="grid gap-4 md:grid-cols-[1fr_250px] lg:grid-cols-3 lg:gap-8">
+          <div className="grid auto-rows-max items-start gap-4 lg:col-span-2 lg:gap-8">
+            <Tabs
+              value={activeTab}
+              onValueChange={(value) => setActiveTab(value as BlogEditorTab)}
+            >
+              <TabsList className="flex h-auto flex-wrap justify-start">
+                <TabsTrigger value="core">Core Details</TabsTrigger>
+                <TabsTrigger value="media">Media</TabsTrigger>
+                <TabsTrigger value="content">Content</TabsTrigger>
+                <TabsTrigger value="seo">SEO</TabsTrigger>
+              </TabsList>
+
+              <TabsContent value="core" className="mt-4">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Core Details</CardTitle>
+                    <CardDescription>
+                      Define the public-facing title, URL, and summary for this
+                      article.
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <FormField
+                      control={form.control}
+                      name="title"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Title</FormLabel>
+                          <FormControl>
+                            <Input
+                              placeholder="e.g., My Awesome Blog Post"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="slug"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Slug</FormLabel>
+                          <FormControl>
+                            <Input
+                              placeholder="e.g., my-awesome-blog-post"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="excerpt"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Excerpt</FormLabel>
+                          <FormControl>
+                            <Textarea
+                              placeholder="A short summary of the post."
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </CardContent>
+                </Card>
+              </TabsContent>
+
+              <TabsContent value="media" className="mt-4">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Media</CardTitle>
+                    <CardDescription>
+                      Upload local images or pick from Pexels.
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <FormField
+                        control={form.control}
+                        name="featuredImage"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Featured Image</FormLabel>
+                            <FormControl>
+                              <ImageUpload
+                                bucket="blogs"
+                                initialUrl={field.value}
+                                onUpload={(url) => field.onChange(url)}
+                                onRemove={() => field.onChange("")}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name="thumbnail"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Thumbnail Image</FormLabel>
+                            <FormControl>
+                              <ImageUpload
+                                bucket="blogs"
+                                initialUrl={field.value}
+                                onUpload={(url) => field.onChange(url)}
+                                onRemove={() => field.onChange("")}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+
+                    <div className="border-t pt-6">
+                      <h3 className="text-sm font-medium mb-4">
+                        Pexels Image Picker
+                      </h3>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="space-y-2">
+                          <p className="text-xs text-muted-foreground">
+                            Quick pick for Featured Image
+                          </p>
+                          <PexelsImagePicker
+                            onSelect={(url) => setValue("featuredImage", url)}
+                            currentImageUrl={watch("featuredImage")}
+                            suggestions={[
+                              title,
+                              watch("category"),
+                              ...(watch("tags") || "")
+                                .split(",")
+                                .map((t) => t.trim()),
+                            ].filter((t): t is string => !!t)}
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <p className="text-xs text-muted-foreground">
+                            Quick pick for Thumbnail
+                          </p>
+                          <PexelsImagePicker
+                            onSelect={(url) => setValue("thumbnail", url)}
+                            currentImageUrl={watch("thumbnail")}
+                            suggestions={[
+                              title,
+                              watch("category"),
+                              ...(watch("tags") || "")
+                                .split(",")
+                                .map((t) => t.trim()),
+                            ].filter((t): t is string => !!t)}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+
+              <TabsContent value="content" className="mt-4">
+                <FormField
+                  control={form.control}
+                  name="content"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Content</FormLabel>
+                      <FormControl>
+                        <BlogEditor
+                          featuredImage={watch("featuredImage")}
+                          onImageSelect={(url) =>
+                            setValue("featuredImage", url)
+                          }
+                          value={field.value ?? ""}
+                          onChange={field.onChange}
+                          title={title}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </TabsContent>
+
+              <TabsContent value="seo" className="mt-4">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>SEO</CardTitle>
+                    <CardDescription>
+                      Configure metadata for search and social previews.
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <FormField
+                      control={form.control}
+                      name="seoTitle"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>SEO Title</FormLabel>
+                          <FormControl>
+                            <Input {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="seoDescription"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>SEO Description</FormLabel>
+                          <FormControl>
+                            <Textarea {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="seoKeywords"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>SEO Keywords (comma separated)</FormLabel>
+                          <FormControl>
+                            <Input {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </CardContent>
+                </Card>
+              </TabsContent>
+            </Tabs>
+          </div>
+
+          <div className="grid auto-rows-max items-start gap-4 lg:gap-8">
+            <Card>
+              <CardHeader>
+                <CardTitle>Publishing</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <FormField
+                  control={form.control}
+                  name="published"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                      <div className="space-y-0.5">
+                        <FormLabel>Published</FormLabel>
+                        <FormDescription>
+                          Make this post visible.
+                        </FormDescription>
+                      </div>
+                      <FormControl>
+                        <Switch
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="featured"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                      <div className="space-y-0.5">
+                        <FormLabel>Featured Post</FormLabel>
+                        <FormDescription>
+                          Display this post prominently.
+                        </FormDescription>
+                      </div>
+                      <FormControl>
+                        <Switch
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader>
+                <CardTitle>Details</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <FormField
+                  control={form.control}
+                  name="authorName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Author</FormLabel>
+                      <FormControl>
+                        <Input {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="readTime"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Read Time</FormLabel>
+                      <FormControl>
+                        <Input placeholder="e.g., 5 min read" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="category"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Category</FormLabel>
+                      <FormControl>
+                        <Input placeholder="e.g., Tech" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="tags"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Tags (comma separated)</FormLabel>
+                      <FormControl>
+                        <Input placeholder="e.g., icasa, nrcs" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+
+        <div className="flex justify-end gap-4">
+          <Button type="button" variant="outline" asChild>
+            <Link href="/admin/blogs">Cancel</Link>
+          </Button>
+          <Button type="submit" disabled={isPending}>
+            {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            {isEditing ? "Save Changes" : "Create Post"}
+          </Button>
+        </div>
+      </form>
+    </Form>
+  );
+}
+````
+
+## File: packages/supabase/src/Mutations/blogs.ts
+````typescript
+"use server";
+
+import { requireAdminUser } from "../auth";
+import { CACHE_PATHS, CACHE_TAGS, mutationResult } from "../cache";
+import { createSupabaseServerClient } from "../server";
+import type { Database } from "../supabaseType";
+
+type BlogRow = Database["public"]["Tables"]["blog_posts"]["Row"];
+type BlogInsert = Database["public"]["Tables"]["blog_posts"]["Insert"];
+type BlogUpdate = Database["public"]["Tables"]["blog_posts"]["Update"];
+
+function blogResultFromInput(data: BlogInsert): BlogRow {
+  return {
+    authorId: data.authorId ?? null,
+    authorName: data.authorName ?? null,
+    category: data.category ?? null,
+    content: data.content,
+    createdAt: data.createdAt ?? null,
+    excerpt: data.excerpt ?? null,
+    featured: data.featured ?? null,
+    featuredImage: data.featuredImage ?? null,
+    id: data.id,
+    published: data.published ?? null,
+    publishedAt: data.publishedAt ?? null,
+    readTime: data.readTime ?? null,
+    seoDescription: data.seoDescription ?? null,
+    seoKeywords: data.seoKeywords ?? null,
+    seoTitle: data.seoTitle ?? null,
+    slug: data.slug,
+    tags: data.tags ?? null,
+    thumbnail: data.thumbnail ?? null,
+    title: data.title,
+    updatedAt: data.updatedAt ?? null,
+    viewsCount: data.viewsCount ?? null,
+  };
+}
+
+function blogMutationResult(blog: BlogRow) {
+  return mutationResult(blog, {
+    tags: [CACHE_TAGS.blogs, CACHE_TAGS.blog(blog.slug)],
+    paths: [
+      CACHE_PATHS.home,
+      CACHE_PATHS.blog,
+      CACHE_PATHS.blogPost(blog.slug),
+    ],
+    mode: "immediate",
+  });
+}
+
+// Public-facing view counter triggered from blog pages
+// (apps/client/app/blog/[slug]). Auth is intentionally omitted
+// because this runs as an unauthenticated public read-trigger.
+export async function incrementBlogPostViews(slug: string): Promise<void> {
+  const supabase = await createSupabaseServerClient();
+  const { error } = await supabase.rpc("increment_views", { post_slug: slug });
+
+  if (error) {
+    console.error("Failed to increment views:", error.message);
+  }
+}
+
+export async function createBlog(data: BlogInsert) {
+  const supabase = await requireAdminUser();
+  const { error } = await supabase.from("blog_posts").insert(data);
+
+  if (error) throw new Error(error.message);
+
+  return blogMutationResult(blogResultFromInput(data));
+}
+
+export async function updateBlog(id: string, data: BlogInsert) {
+  const supabase = await requireAdminUser();
+  const { id: _ignoredId, ...updateData }: BlogUpdate = data;
+  const blog = blogResultFromInput(data);
+
+  const { data: updatedBlog, error } = await supabase
+    .from("blog_posts")
+    .update(updateData)
+    .eq("id", id)
+    .select("id")
+    .maybeSingle();
+
+  if (error) throw new Error(error.message);
+
+  if (!updatedBlog) {
+    throw new Error(`No blog post matches id "${id}".`);
+  }
+
+  return blogMutationResult(blog);
+}
+
+export async function deleteBlog(id: string, existingSlug?: string | null) {
+  const supabase = await requireAdminUser();
+  const { data: deletedBlog, error } = await supabase
+    .from("blog_posts")
+    .delete()
+    .eq("id", id)
+    .select("id")
+    .maybeSingle();
+
+  if (error) throw new Error(error.message);
+
+  if (!deletedBlog) {
+    throw new Error(`No blog post matches id "${id}".`);
+  }
+
+  return mutationResult(undefined, {
+    tags: [
+      CACHE_TAGS.blogs,
+      ...(existingSlug ? [CACHE_TAGS.blog(existingSlug)] : []),
+    ],
+    paths: [
+      CACHE_PATHS.home,
+      CACHE_PATHS.blog,
+      ...(existingSlug ? [CACHE_PATHS.blogPost(existingSlug)] : []),
+    ],
+    mode: "immediate",
+  });
 }
 ````
