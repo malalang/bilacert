@@ -7,6 +7,7 @@ import {
   deleteBlog as deleteBlogMutation,
   updateBlog as updateBlogMutation,
 } from "@bilacert/supabase/Mutations/blogs";
+import { getBlogSlugById } from "@bilacert/supabase/Queries/blogs";
 import { revalidatePath } from "next/cache";
 import { v4 as uuidv4 } from "uuid";
 import { triggerRevalidation } from "@/lib/revalidation";
@@ -67,7 +68,8 @@ export async function upsertBlog(
 
 export async function deleteBlog(blogId: string): Promise<ActionResult> {
   try {
-    const result = await deleteBlogMutation(blogId);
+    const existingSlug = await getBlogSlugById(blogId);
+    const result = await deleteBlogMutation(blogId, existingSlug);
     await triggerRevalidation(result.revalidate);
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unknown error";

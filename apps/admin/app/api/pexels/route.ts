@@ -1,10 +1,11 @@
+import { getEnv } from "@bilacert/contracts/env";
 import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const query = searchParams.get("query");
 
-  const accessKey = process.env.PEXELS_API_KEY;
+  const accessKey = getEnv().PEXELS_API_KEY;
 
   if (!accessKey) {
     console.error("PEXELS_API_KEY is not set in environment variables");

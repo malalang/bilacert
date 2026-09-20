@@ -10,17 +10,11 @@ function uniqueValues(values: string[]) {
   return [...new Set(values.filter((value) => value.length > 0))];
 }
 
-export async function upsertService(data: ServiceInsert) {
+export async function upsertService(
+  data: ServiceInsert,
+  existingSlug?: string | null,
+) {
   const supabase = await requireAdminUser();
-  const { data: existing, error: readError } = data.id
-    ? await supabase
-        .from("services")
-        .select("slug")
-        .eq("id", data.id)
-        .maybeSingle()
-    : { data: null, error: null };
-
-  if (readError) throw new Error(readError.message);
 
   const { data: service, error } = await supabase
     .from("services")
@@ -32,7 +26,7 @@ export async function upsertService(data: ServiceInsert) {
 
   const serviceSlugs = uniqueValues([
     service.slug,
-    ...(existing?.slug ? [existing.slug] : []),
+    ...(existingSlug ? [existingSlug] : []),
   ]);
 
   return mutationResult(service, {
@@ -49,28 +43,20 @@ export async function upsertService(data: ServiceInsert) {
   });
 }
 
-export async function deleteService(id: string) {
+export async function deleteService(id: string, existingSlug?: string | null) {
   const supabase = await requireAdminUser();
-  const { data: existing, error: readError } = await supabase
-    .from("services")
-    .select("slug")
-    .eq("id", id)
-    .maybeSingle();
-
-  if (readError) throw new Error(readError.message);
-
   const { error } = await supabase.from("services").delete().eq("id", id);
   if (error) throw new Error(error.message);
 
   return mutationResult(undefined, {
     tags: [
       CACHE_TAGS.services,
-      ...(existing?.slug ? [CACHE_TAGS.service(existing.slug)] : []),
+      ...(existingSlug ? [CACHE_TAGS.service(existingSlug)] : []),
     ],
     paths: [
       CACHE_PATHS.home,
       CACHE_PATHS.services,
-      ...(existing?.slug ? [CACHE_PATHS.service(existing.slug)] : []),
+      ...(existingSlug ? [CACHE_PATHS.service(existingSlug)] : []),
     ],
     mode: "immediate",
   });

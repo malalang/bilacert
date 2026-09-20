@@ -1,5 +1,13 @@
 import type { ServiceRowType } from "@bilacert/contracts/service";
-import { createSupabasePublicClient } from "../server";
+import {
+  pricingPlanSchema,
+  processStepSchema,
+  successStorySchema,
+} from "@bilacert/contracts/service";
+import {
+  createSupabaseAdminClient,
+  createSupabasePublicClient,
+} from "../server";
 import type { Database } from "../supabaseType";
 
 type ServiceRow = Database["public"]["Tables"]["services"]["Row"];
@@ -43,9 +51,14 @@ export function normalizeService(row: ServiceRow): ServiceRowType {
     seoTitle: row.seoTitle ?? undefined,
     seoDescription: row.seoDescription ?? undefined,
     seoKeywords: row.seoKeywords ?? undefined,
-    pricingPlans: (row.pricingPlans as any) ?? [],
-    processSteps: (row.processSteps as any) ?? [],
-    successStory: (row.successStory as any) ?? undefined,
+    pricingPlans: pricingPlanSchema.array().catch([]).parse(row.pricingPlans),
+    processSteps: processStepSchema.array().catch([]).parse(row.processSteps),
+    successStory:
+      successStorySchema
+        .nullable()
+        .optional()
+        .catch(undefined)
+        .parse(row.successStory) ?? undefined,
     createdAt: row.createdAt ?? new Date().toISOString(),
     updatedAt: row.updatedAt ?? row.createdAt ?? new Date().toISOString(),
   };
@@ -117,4 +130,17 @@ export async function getAllPublishedServiceSlugs(): Promise<
   }
 
   return data || [];
+}
+
+export async function getServiceSlugById(id: string): Promise<string | null> {
+  const supabase = createSupabaseAdminClient();
+  const { data, error } = await supabase
+    .from("services")
+    .select("slug")
+    .eq("id", id)
+    .maybeSingle();
+
+  if (error) throw new Error(error.message);
+
+  return data?.slug ?? null;
 }

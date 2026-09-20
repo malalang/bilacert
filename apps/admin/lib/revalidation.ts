@@ -1,3 +1,4 @@
+import { getEnv } from "@bilacert/contracts/env";
 import type { RevalidationRequest } from "@bilacert/contracts/revalidation";
 
 const fallbackClientUrls = [
@@ -34,10 +35,11 @@ function getClientRevalidationUrl(clientUrl: string) {
 }
 
 function getClientRevalidationUrls() {
+  const env = getEnv();
   const configuredUrls = [
-    ...splitClientUrls(process.env.CLIENT_REVALIDATION_URL),
-    ...splitClientUrls(process.env.NEXT_PUBLIC_CLIENT_URL),
-    ...splitClientUrls(process.env.BILACERT_CLIENT_URL),
+    ...splitClientUrls(env.CLIENT_REVALIDATION_URL),
+    ...splitClientUrls(env.NEXT_PUBLIC_CLIENT_URL),
+    ...splitClientUrls(env.BILACERT_CLIENT_URL),
   ];
 
   const urls = [...configuredUrls, ...fallbackClientUrls]
@@ -48,7 +50,7 @@ function getClientRevalidationUrls() {
 }
 
 export async function triggerRevalidation(request: RevalidationRequest) {
-  const secret = process.env.REVALIDATION_SECRET;
+  const secret = getEnv().REVALIDATION_SECRET;
   const revalidationUrls = getClientRevalidationUrls();
   const failedAttempts: RevalidationAttemptFailure[] = [];
 

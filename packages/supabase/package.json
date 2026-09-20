@@ -17,7 +17,8 @@
     "@bilacert/shared": "workspace:*",
     "@supabase/ssr": "catalog:",
     "@supabase/supabase-js": "catalog:",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "zod": "catalog:"
   },
   "devDependencies": {
     "@bilacert/typescript-config": "workspace:*"

@@ -6,6 +6,7 @@ import {
   deleteService as deleteServiceMutation,
   upsertService as upsertServiceMutation,
 } from "@bilacert/supabase/Mutations/services";
+import { getServiceSlugById } from "@bilacert/supabase/Queries/services";
 import { revalidatePath } from "next/cache";
 import { triggerRevalidation } from "@/lib/revalidation";
 
@@ -45,7 +46,8 @@ export async function upsertService(values: unknown): Promise<ActionResult> {
   };
 
   try {
-    const result = await upsertServiceMutation(dataToUpsert as any);
+    const existingSlug = id ? await getServiceSlugById(id) : null;
+    const result = await upsertServiceMutation(dataToUpsert, existingSlug);
     await triggerRevalidation(result.revalidate);
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unknown error";
@@ -59,7 +61,8 @@ export async function upsertService(values: unknown): Promise<ActionResult> {
 
 export async function deleteService(serviceId: string): Promise<ActionResult> {
   try {
-    const result = await deleteServiceMutation(serviceId);
+    const existingSlug = await getServiceSlugById(serviceId);
+    const result = await deleteServiceMutation(serviceId, existingSlug);
     await triggerRevalidation(result.revalidate);
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unknown error";

@@ -131,10 +131,6 @@ export default function BlogForm({ blog, blogId }: BlogFormProps) {
   useEffect(() => {
     if (blog) {
       const normalizedValues = getBlogInput(blog);
-      console.log("[bilacert-admin/blogs] form reset", {
-        ...getBlogLogPayload(normalizedValues),
-        isEditing: true,
-      });
       reset(normalizedValues);
     }
   }, [blog, reset]);
@@ -144,12 +140,6 @@ export default function BlogForm({ blog, blogId }: BlogFormProps) {
       ...values,
       id: blogId ?? blog?.id ?? values.id,
     };
-
-    console.log("[bilacert-admin/blogs] form submit start", {
-      ...getBlogLogPayload(payload),
-      activeTab,
-      isEditing,
-    });
 
     startTransition(async () => {
       try {

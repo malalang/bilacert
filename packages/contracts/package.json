@@ -23,6 +23,7 @@
   },
   "devDependencies": {
     "@bilacert/typescript-config": "workspace:*",
+    "@types/node": "catalog:",
     "typescript": "catalog:"
   }
 }

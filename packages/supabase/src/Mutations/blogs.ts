@@ -89,16 +89,8 @@ export async function updateBlog(id: string, data: BlogInsert) {
   return blogMutationResult(blog);
 }
 
-export async function deleteBlog(id: string) {
+export async function deleteBlog(id: string, existingSlug?: string | null) {
   const supabase = await requireAdminUser();
-  const { data: existing, error: readError } = await supabase
-    .from("blog_posts")
-    .select("slug")
-    .eq("id", id)
-    .maybeSingle();
-
-  if (readError) throw new Error(readError.message);
-
   const { data: deletedBlog, error } = await supabase
     .from("blog_posts")
     .delete()
@@ -115,12 +107,12 @@ export async function deleteBlog(id: string) {
   return mutationResult(undefined, {
     tags: [
       CACHE_TAGS.blogs,
-      ...(existing?.slug ? [CACHE_TAGS.blog(existing.slug)] : []),
+      ...(existingSlug ? [CACHE_TAGS.blog(existingSlug)] : []),
     ],
     paths: [
       CACHE_PATHS.home,
       CACHE_PATHS.blog,
-      ...(existing?.slug ? [CACHE_PATHS.blogPost(existing.slug)] : []),
+      ...(existingSlug ? [CACHE_PATHS.blogPost(existingSlug)] : []),
     ],
     mode: "immediate",
   });

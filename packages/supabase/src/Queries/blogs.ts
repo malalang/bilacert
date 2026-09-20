@@ -1,5 +1,8 @@
 import type { BlogRowType as BlogType } from "@bilacert/contracts/blog";
-import { createSupabasePublicClient } from "../server";
+import {
+  createSupabaseAdminClient,
+  createSupabasePublicClient,
+} from "../server";
 import type { Database } from "../supabaseType";
 
 type BlogPostRow = Database["public"]["Tables"]["blog_posts"]["Row"];
@@ -92,4 +95,17 @@ export async function getBlogPostsByCategory(
   }
 
   return data.map(normalizeBlogPost);
+}
+
+export async function getBlogSlugById(id: string): Promise<string | null> {
+  const supabase = createSupabaseAdminClient();
+  const { data, error } = await supabase
+    .from("blog_posts")
+    .select("slug")
+    .eq("id", id)
+    .maybeSingle();
+
+  if (error) throw new Error(error.message);
+
+  return data?.slug ?? null;
 }

@@ -1,3 +1,4 @@
+import { getEnv } from "@bilacert/contracts/env";
 import {
   type RevalidationMode,
   revalidationPayloadSchema,
@@ -6,7 +7,7 @@ import { revalidatePath, revalidateTag } from "next/cache";
 import { type NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
-  const secret = process.env.REVALIDATION_SECRET;
+  const secret = getEnv().REVALIDATION_SECRET;
 
   if (!secret) {
     return NextResponse.json(
