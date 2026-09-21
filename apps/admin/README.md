@@ -1,3 +1,17 @@
+# bilacert Admin
+
+Next.js 16 admin application (App Router via `create-next-app`).
+
+## Auth Proxy
+
+- The app uses `proxy.ts` (Next 16 proxy convention, not `middleware.ts`) and
+  delegates Supabase session handling to `@bilacert/supabase/session`.
+- **The proxy reads the `sb-*` session cookies from the incoming request and
+  forwards them onto its responses and redirects.** Do not read the cookie jar
+  from an empty response after `session.ts` rewrites cookies, or a logged-in
+  user will be bounced back to `/login`.
+- Canonical rule: `docs/ARCHITECTURE/blueprint/07-nextjs/01-app/01-getting-started/16-proxy.md`.
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
