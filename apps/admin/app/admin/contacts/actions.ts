@@ -7,22 +7,7 @@ import {
   deleteContact as deleteContactMutation,
   upsertContact as upsertContactMutation,
 } from "@bilacert/supabase/Mutations/contacts";
-import { createSupabaseServerClient } from "@bilacert/supabase/server";
 import { revalidatePath } from "next/cache";
-
-export async function getContacts() {
-  const supabase = await createSupabaseServerClient();
-  const { data, error } = await supabase
-    .from("contacts")
-    .select("*")
-    .order("name", { ascending: true });
-
-  if (error) {
-    throw new Error(error.message);
-  }
-
-  return data as ContactType[];
-}
 
 export async function upsertContact(
   values: unknown,

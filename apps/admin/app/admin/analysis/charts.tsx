@@ -59,40 +59,6 @@ const CustomTooltip = ({ active, payload, label }: any) => {
   return null;
 };
 
-export const DetailedSubmissionsChart = ({
-  data = [],
-  serviceKeys = [],
-  statusKeys = [],
-}: {
-  data?: any[];
-  serviceKeys?: string[];
-  statusKeys?: string[];
-}) => {
-  const allKeys = ["total", ...serviceKeys, ...statusKeys];
-  return (
-    <ResponsiveContainer width="100%" height={400}>
-      <LineChart data={data}>
-        <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
-        <XAxis dataKey="date" stroke="#888" fontSize={12} />
-        <YAxis stroke="#888" fontSize={12} />
-        <Tooltip content={<CustomTooltip />} />
-        <Legend />
-        {allKeys.map((key, index) => (
-          <Line
-            key={key}
-            type="monotone"
-            dataKey={key}
-            name={formatSeriesName(key)}
-            stroke={COLORS[index % COLORS.length]}
-            strokeWidth={2}
-            dot={false}
-          />
-        ))}
-      </LineChart>
-    </ResponsiveContainer>
-  );
-};
-
 export const FilteredLineChart = ({
   data = [],
   keys = [],
@@ -239,40 +205,6 @@ export const BlogViewsChart = ({
         {data.map((_entry, index) => (
           <Cell
             key={`cell-${_entry.title}`}
-            fill={COLORS[index % COLORS.length]}
-          />
-        ))}
-      </Bar>
-    </BarChart>
-  </ResponsiveContainer>
-);
-
-export const TurnaroundTimeChart = ({
-  data = [],
-}: {
-  data?: { serviceName: string; averageDays: number }[];
-}) => (
-  <ResponsiveContainer width="100%" height={300}>
-    <BarChart data={data} layout="vertical">
-      <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
-      <XAxis type="number" stroke="#888" fontSize={12} />
-      <YAxis
-        dataKey="serviceName"
-        type="category"
-        width={150}
-        stroke="#888"
-        fontSize={12}
-      />
-      <Tooltip content={<CustomTooltip />} />
-      <Bar
-        dataKey="averageDays"
-        name="Avg. Days"
-        fill="#a234b6"
-        radius={[0, 4, 4, 0]}
-      >
-        {data.map((_entry, index) => (
-          <Cell
-            key={`cell-${_entry.serviceName}`}
             fill={COLORS[index % COLORS.length]}
           />
         ))}
