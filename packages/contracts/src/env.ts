@@ -18,6 +18,18 @@ export const envSchema = z.object({
 export type Env = z.infer<typeof envSchema>;
 
 export function getEnv(): Env {
-  const result = envSchema.safeParse(process.env);
-  return result.success ? result.data : (process.env as unknown as Env);
+  const raw: Record<string, string | undefined> = {
+    NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
+    NEXT_PUBLIC_SUPABASE_ANON_KEY: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+    SUPABASE_URL: process.env.SUPABASE_URL,
+    SUPABASE_SECRET_KEY: process.env.SUPABASE_SECRET_KEY,
+    SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY,
+    REVALIDATION_SECRET: process.env.REVALIDATION_SECRET,
+    CLIENT_REVALIDATION_URL: process.env.CLIENT_REVALIDATION_URL,
+    NEXT_PUBLIC_CLIENT_URL: process.env.NEXT_PUBLIC_CLIENT_URL,
+    BILACERT_CLIENT_URL: process.env.BILACERT_CLIENT_URL,
+    PEXELS_API_KEY: process.env.PEXELS_API_KEY,
+  };
+  const result = envSchema.safeParse(raw);
+  return result.success ? result.data : (raw as unknown as Env);
 }
