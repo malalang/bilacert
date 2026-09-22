@@ -6,6 +6,8 @@ import type {
   TaskStatus,
   TaskType,
 } from "@bilacert/contracts/task";
+import type { TaskTodoType } from "@bilacert/contracts/taskTodo";
+import { cn } from "@bilacert/shared/cn";
 import {
   AlertTriangle,
   Briefcase,
@@ -13,6 +15,7 @@ import {
   CheckCircle2,
   ClipboardList,
   Clock,
+  ListChecks,
   Loader2,
   Pencil,
   Plus,
@@ -34,6 +37,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -56,9 +60,12 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import {
   createTaskAction,
+  createTaskTodoAction,
   deleteTaskAction,
+  deleteTaskTodoAction,
   setTaskStatusAction,
   updateTaskAction,
+  updateTaskTodoAction,
 } from "./actions";
 
 const STATUS_META: Record<TaskStatus, { label: string; className: string }> = {
@@ -153,6 +160,139 @@ function emptyForm(): TaskFormState {
     serviceId: "",
     submissionId: "",
   };
+}
+
+function TodoSection({
+  task,
+  onTodosChange,
+}: {
+  task: TaskType;
+  onTodosChange: (todos: TaskTodoType[]) => void;
+}) {
+  const { toast } = useToast();
+  const [draft, setDraft] = useState("");
+  const [busyId, setBusyId] = useState<string | null>(null);
+  const todos = task.todos ?? [];
+  const doneCount = todos.filter((todo) => todo.done).length;
+
+  const handleAdd = async (event: React.FormEvent) => {
+    event.preventDefault();
+    const title = draft.trim();
+    if (!title) return;
+    const result = await createTaskTodoAction(task.id, { title });
+    if (!result.ok) {
+      toast({
+        variant: "destructive",
+        title: "Failed to add checklist item",
+        description: result.error,
+      });
+      return;
+    }
+    setDraft("");
+    if (result.data) onTodosChange([...todos, result.data]);
+  };
+
+  const handleToggle = async (todo: TaskTodoType) => {
+    setBusyId(todo.id);
+    try {
+      const result = await updateTaskTodoAction(todo.id, { done: !todo.done });
+      if (!result.ok) {
+        toast({
+          variant: "destructive",
+          title: "Failed to update checklist item",
+          description: result.error,
+        });
+        return;
+      }
+      if (result.data) {
+        const updated = result.data;
+        onTodosChange(todos.map((t) => (t.id === todo.id ? updated : t)));
+      }
+    } finally {
+      setBusyId(null);
+    }
+  };
+
+  const handleDelete = async (todo: TaskTodoType) => {
+    setBusyId(todo.id);
+    try {
+      const result = await deleteTaskTodoAction(todo.id);
+      if (!result.ok) {
+        toast({
+          variant: "destructive",
+          title: "Failed to remove checklist item",
+          description: result.error,
+        });
+        return;
+      }
+      onTodosChange(todos.filter((t) => t.id !== todo.id));
+    } finally {
+      setBusyId(null);
+    }
+  };
+
+  return (
+    <div className="mt-4 border-t pt-4">
+      <div className="flex items-center justify-between">
+        <span className="flex items-center gap-1.5 text-xs font-semibold text-muted-foreground">
+          <ListChecks className="h-3.5 w-3.5" />
+          Checklist
+        </span>
+        <span className="text-xs font-medium text-muted-foreground">
+          {doneCount}/{todos.length}
+        </span>
+      </div>
+      {todos.length > 0 && (
+        <ul className="mt-2.5 space-y-1.5">
+          {todos.map((todo) => (
+            <li key={todo.id} className="group flex items-center gap-2">
+              <Checkbox
+                id={`todo-${todo.id}`}
+                checked={todo.done}
+                disabled={busyId === todo.id}
+                onCheckedChange={() => handleToggle(todo)}
+              />
+              <label
+                htmlFor={`todo-${todo.id}`}
+                className={cn(
+                  "flex-1 cursor-pointer select-none text-sm",
+                  todo.done && "text-muted-foreground line-through",
+                )}
+              >
+                {todo.title}
+              </label>
+              <Button
+                size="sm"
+                variant="ghost"
+                className="h-7 w-7 p-0 text-muted-foreground opacity-0 group-hover:opacity-100 focus:opacity-100 hover:text-destructive hover:bg-destructive/10"
+                onClick={() => handleDelete(todo)}
+                title="Remove checklist item"
+              >
+                <Trash2 className="h-3.5 w-3.5" />
+              </Button>
+            </li>
+          ))}
+        </ul>
+      )}
+      <form onSubmit={handleAdd} className="mt-2 flex items-center gap-2">
+        <Input
+          value={draft}
+          onChange={(e) => setDraft(e.target.value)}
+          placeholder="Add a checklist item..."
+          className="h-8 text-sm"
+        />
+        <Button
+          type="submit"
+          size="sm"
+          className="h-8 w-8 p-0"
+          disabled={!draft.trim() || busyId !== null}
+          title="Add checklist item"
+        >
+          <Plus className="h-3.5 w-3.5" />
+        </Button>
+      </form>
+    </div>
+  );
 }
 
 export default function TasksClient({
@@ -551,6 +691,16 @@ export default function TasksClient({
                         </Button>
                       </div>
                     </div>
+                    <TodoSection
+                      task={task}
+                      onTodosChange={(todos) =>
+                        setTasks((prev) =>
+                          prev.map((t) =>
+                            t.id === task.id ? { ...t, todos } : t,
+                          ),
+                        )
+                      }
+                    />
                   </div>
                 </CardContent>
               </Card>

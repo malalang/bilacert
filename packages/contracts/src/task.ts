@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { taskTodoSchema } from "./taskTodo";
 
 export const taskStatusSchema = z.enum([
   "pending",
@@ -30,6 +31,7 @@ export const taskSchema = z.object({
   createdAt: z.string().nullable(),
   updatedAt: z.string().nullable(),
   completedAt: z.string().nullable(),
+  todos: z.array(taskTodoSchema).default([]),
 });
 
 export type TaskType = z.infer<typeof taskSchema>;
@@ -42,6 +44,7 @@ export const taskInputSchema = taskSchema.omit({
   serviceTitle: true,
   assigneeName: true,
   submissionFullName: true,
+  todos: true,
 });
 
 export type TaskInputType = z.infer<typeof taskInputSchema>;

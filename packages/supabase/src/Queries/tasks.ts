@@ -1,5 +1,6 @@
 import type { TaskType } from "@bilacert/contracts/task";
-import { createSupabaseAdminClient } from "../server";
+import type { TaskTodoType } from "@bilacert/contracts/taskTodo";
+import { createSupabaseServerClient } from "../server";
 
 export interface TaskOption {
   id: string;
@@ -27,6 +28,15 @@ interface TaskDbRow {
     email: string | null;
   } | null;
   form_submissions: { fullName: string | null } | null;
+}
+
+interface TaskTodoDbRow {
+  id: string;
+  taskId: string;
+  title: string;
+  done: boolean;
+  createdAt: string | null;
+  updatedAt: string | null;
 }
 
 type TaskQueryClient = {
@@ -99,7 +109,7 @@ interface SubmissionOptionDbRow {
   email: string | null;
 }
 
-function mapTaskRow(row: TaskDbRow): TaskType {
+function mapTaskRow(row: TaskDbRow): Omit<TaskType, "todos"> {
   return {
     id: row.id,
     title: row.title,
@@ -123,6 +133,29 @@ function mapTaskRow(row: TaskDbRow): TaskType {
   };
 }
 
+function mapTaskTodoRow(row: TaskTodoDbRow): TaskTodoType {
+  return {
+    id: row.id,
+    taskId: row.taskId,
+    title: row.title,
+    done: row.done,
+    createdAt: row.createdAt,
+    updatedAt: row.updatedAt,
+  };
+}
+
+export async function getTaskTodos(): Promise<TaskTodoType[]> {
+  const supabase =
+    createSupabaseAdminClient() as unknown as SelectOrderClient<TaskTodoDbRow>;
+  const { data, error } = await supabase
+    .from("task_todos")
+    .select("id, taskId, title, done, createdAt, updatedAt")
+    .order("createdAt", { ascending: true });
+
+  if (error) throw new Error(error.message);
+  return (data ?? []).map(mapTaskTodoRow);
+}
+
 export async function getTasks(): Promise<TaskType[]> {
   const supabase = createSupabaseAdminClient() as unknown as TaskQueryClient;
   const { data, error } = await supabase
@@ -133,7 +166,23 @@ export async function getTasks(): Promise<TaskType[]> {
     .order("createdAt", { ascending: false });
 
   if (error) throw new Error(error.message);
-  return (data ?? []).map(mapTaskRow);
+
+  const todosByTask = new Map<string, TaskTodoType[]>();
+  try {
+    const todos = await getTaskTodos();
+    for (const todo of todos) {
+      const list = todosByTask.get(todo.taskId) ?? [];
+      list.push(todo);
+      todosByTask.set(todo.taskId, list);
+    }
+  } catch {
+    // task_todos table not applied yet — tasks still load with empty checklists.
+  }
+
+  return (data ?? []).map((row) => ({
+    ...mapTaskRow(row),
+    todos: todosByTask.get(row.id) ?? [],
+  }));
 }
 
 export async function getAssignableUsers(): Promise<TaskOption[]> {

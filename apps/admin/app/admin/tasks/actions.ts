@@ -6,10 +6,18 @@ import {
   taskInputSchema,
   taskUpdateInputSchema,
 } from "@bilacert/contracts/task";
+import type { TaskTodoType } from "@bilacert/contracts/taskTodo";
+import {
+  taskTodoInputSchema,
+  taskTodoUpdateInputSchema,
+} from "@bilacert/contracts/taskTodo";
 import {
   createTask,
+  createTaskTodo,
   deleteTask,
+  deleteTaskTodo,
   updateTask,
+  updateTaskTodo,
 } from "@bilacert/supabase/Mutations/tasks";
 import { revalidatePath } from "next/cache";
 
@@ -75,4 +83,53 @@ export async function deleteTaskAction(id: string): Promise<ActionResult> {
 
   revalidatePath("/admin/tasks");
   return { ok: true, message: "Task deleted successfully" };
+}
+
+// --- TASK TODO ACTIONS ---
+
+export async function createTaskTodoAction(
+  taskId: string,
+  data: unknown,
+): Promise<ActionResult<TaskTodoType>> {
+  const parsed = taskTodoInputSchema.safeParse(data);
+  if (!parsed.success) {
+    return { ok: false, error: parsed.error.message };
+  }
+
+  try {
+    const result = await createTaskTodo(taskId, parsed.data);
+    revalidatePath("/admin/tasks");
+    return { ok: true, message: "Checklist item created", data: result.data };
+  } catch (error) {
+    return { ok: false, error: `Database error: ${errorMessage(error)}` };
+  }
+}
+
+export async function updateTaskTodoAction(
+  id: string,
+  data: unknown,
+): Promise<ActionResult<TaskTodoType>> {
+  const parsed = taskTodoUpdateInputSchema.safeParse(data);
+  if (!parsed.success) {
+    return { ok: false, error: parsed.error.message };
+  }
+
+  try {
+    const result = await updateTaskTodo(id, parsed.data);
+    revalidatePath("/admin/tasks");
+    return { ok: true, message: "Checklist item updated", data: result.data };
+  } catch (error) {
+    return { ok: false, error: `Database error: ${errorMessage(error)}` };
+  }
+}
+
+export async function deleteTaskTodoAction(id: string): Promise<ActionResult> {
+  try {
+    await deleteTaskTodo(id);
+  } catch (error) {
+    return { ok: false, error: `Database error: ${errorMessage(error)}` };
+  }
+
+  revalidatePath("/admin/tasks");
+  return { ok: true, message: "Checklist item removed" };
 }

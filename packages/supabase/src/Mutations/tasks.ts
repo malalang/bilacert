@@ -5,6 +5,11 @@ import type {
   TaskStatus,
   TaskUpdateInputType,
 } from "@bilacert/contracts/task";
+import type {
+  TaskTodoInputType,
+  TaskTodoType,
+  TaskTodoUpdateInputType,
+} from "@bilacert/contracts/taskTodo";
 import { requireAdminUser } from "../auth";
 import { CACHE_TAGS, mutationResult } from "../cache";
 
@@ -109,6 +114,92 @@ export async function updateTask(id: string, data: TaskUpdateInputType) {
 export async function deleteTask(id: string) {
   const supabase = (await requireAdminUser()) as unknown as MutationTaskClient;
   const { error } = await supabase.from("tasks").delete().eq("id", id);
+
+  if (error) throw new Error(error.message);
+  return mutationResult(null, taskRevalidation);
+}
+
+// --- TASK TODO MUTATIONS ---
+// The applied remote `task_todos` table uses camelCase column names.
+
+interface TaskTodoMutationClient {
+  from: (table: string) => {
+    insert: (values: Record<string, unknown>) => {
+      select: () => {
+        single: () => Promise<{
+          data: TaskTodoType | null;
+          error: { message: string } | null;
+        }>;
+      };
+    };
+    update: (values: Record<string, unknown>) => {
+      eq: (
+        column: string,
+        value: string,
+      ) => {
+        select: () => {
+          single: () => Promise<{
+            data: TaskTodoType | null;
+            error: { message: string } | null;
+          }>;
+        };
+      };
+    };
+    delete: () => {
+      eq: (
+        column: string,
+        value: string,
+      ) => Promise<{ error: { message: string } | null }>;
+    };
+  };
+}
+
+export async function createTaskTodo(taskId: string, data: TaskTodoInputType) {
+  const supabase =
+    (await requireAdminUser()) as unknown as TaskTodoMutationClient;
+  const { data: todo, error } = await supabase
+    .from("task_todos")
+    .insert({
+      taskId,
+      title: data.title,
+      done: data.done,
+    })
+    .select()
+    .single();
+
+  if (error) throw new Error(error.message);
+  if (!todo) throw new Error("Checklist item not found");
+  return mutationResult(todo, taskRevalidation);
+}
+
+export async function updateTaskTodo(
+  id: string,
+  data: TaskTodoUpdateInputType,
+) {
+  const supabase =
+    (await requireAdminUser()) as unknown as TaskTodoMutationClient;
+  const write: Record<string, unknown> = {
+    updatedAt: new Date().toISOString(),
+  };
+  if (data.title !== undefined) write.title = data.title;
+  if (data.done !== undefined) write.done = data.done;
+
+  const { data: todo, error } = await supabase
+    .from("task_todos")
+    .update(write)
+    .eq("id", id)
+    .select()
+    .single();
+
+  if (error) throw new Error(error.message);
+  if (!todo) throw new Error("Checklist item not found");
+  return mutationResult(todo, taskRevalidation);
+}
+
+export async function deleteTaskTodo(id: string) {
+  const supabase =
+    (await requireAdminUser()) as unknown as TaskTodoMutationClient;
+  const { error } = await supabase.from("task_todos").delete().eq("id", id);
 
   if (error) throw new Error(error.message);
   return mutationResult(null, taskRevalidation);

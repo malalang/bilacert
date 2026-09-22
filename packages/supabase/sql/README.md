@@ -22,6 +22,7 @@ This directory is a schema snapshot reconstructed from the live Bilacert Supabas
 | `009_views.sql` | Public view snapshot |
 | `010_seed.sql` | Intentionally empty schema-only seed file |
 | `011_tasks.sql` | Task management dashboard table (idempotent additions) |
+| `012_task_todos.sql` | Task checklist items table (idempotent additions) |
 
 ## Important
 
