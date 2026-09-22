@@ -9,6 +9,8 @@ import {
 } from "@bilacert/supabase/Queries/tasks";
 import TasksClient from "./TasksClient";
 
+export const dynamic = "force-dynamic";
+
 export const metadata = {
   title: "Task Management | Bilacert Admin Pro",
   description: "Plan, assign and track internal work.",
