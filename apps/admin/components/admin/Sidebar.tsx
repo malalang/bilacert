@@ -4,6 +4,7 @@ import { createSupabaseBrowserClient } from "@bilacert/supabase/client";
 import {
   BarChart,
   Briefcase,
+  ClipboardList,
   FileSpreadsheet,
   FileText,
   LayoutDashboard,
@@ -33,6 +34,7 @@ const supabase = createSupabaseBrowserClient();
 const navItems = [
   { href: "/admin/dashboard", icon: LayoutDashboard, label: "Dashboard" },
   { href: "/admin/analysis", icon: BarChart, label: "Analysis" },
+  { href: "/admin/tasks", icon: ClipboardList, label: "Tasks" },
   { href: "/admin/services", icon: Briefcase, label: "Services" },
   { href: "/admin/blogs", icon: FileText, label: "Blogs" },
   { href: "/admin/emails", icon: Mail, label: "Email" },

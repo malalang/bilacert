@@ -8,6 +8,7 @@ export const CACHE_TAGS = {
   testimonials: "testimonials",
   contacts: "contacts",
   formSubmissions: "form-submissions",
+  tasks: "tasks",
 } as const;
 
 export const CACHE_PATHS = {

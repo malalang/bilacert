@@ -8,6 +8,7 @@
     "./email": "./src/email.ts",
     "./formSubmission": "./src/formSubmission.ts",
     "./service": "./src/service.ts",
+    "./task": "./src/task.ts",
     "./testimonial": "./src/testimonial.ts",
     "./actionResult": "./src/actionResult.ts",
     "./revalidation": "./src/revalidation.ts",
