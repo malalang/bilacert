@@ -351,6 +351,22 @@ const ServiceCard = ({
   );
 };
 
+interface ServiceDeleteDialogProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onDeleted: () => void;
+  item: ServiceRowType | null;
+}
+
+const ServiceDeleteDialog = (props: ServiceDeleteDialogProps) => (
+  <DeleteServiceDialog
+    isOpen={props.isOpen}
+    onClose={props.onClose}
+    service={props.item}
+    onDeleted={props.onDeleted}
+  />
+);
+
 export default function ServicesClient() {
   const { data: submissions } = useSubmissions();
 
@@ -374,7 +390,7 @@ export default function ServicesClient() {
           onDelete={onDelete}
         />
       )}
-      DeleteDialog={DeleteServiceDialog as any}
+      DeleteDialog={ServiceDeleteDialog}
     />
   );
 }

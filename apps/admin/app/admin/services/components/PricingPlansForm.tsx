@@ -1,6 +1,7 @@
 "use client";
 
-import { useFieldArray } from "react-hook-form";
+import type { ServiceType } from "@bilacert/contracts/service";
+import { type UseFormReturn, useFieldArray } from "react-hook-form";
 import { ArrayInput } from "@/components/admin/ArrayInput";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -14,7 +15,11 @@ import {
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 
-export default function PricingPlansForm({ form }: { form: any }) {
+interface PricingPlansFormProps {
+  form: UseFormReturn<ServiceType>;
+}
+
+export default function PricingPlansForm({ form }: PricingPlansFormProps) {
   const { fields: pricingPlanFields } = useFieldArray({
     control: form.control,
     name: "pricingPlans",

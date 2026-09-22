@@ -113,7 +113,22 @@ export default function TestimonialsClient() {
       newItemButtonText="Add Testimonial"
       newItemLink="/admin/testimonials/new"
       renderItem={renderTestimonial}
-      DeleteDialog={DeleteTestimonialDialog as any}
+      DeleteDialog={TestimonialDeleteDialog}
     />
   );
 }
+
+interface TestimonialDeleteDialogProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onDeleted: () => void;
+  item: TestimonialRowType | null;
+}
+
+const TestimonialDeleteDialog = (props: TestimonialDeleteDialogProps) => (
+  <DeleteTestimonialDialog
+    isOpen={props.isOpen}
+    onClose={props.onClose}
+    testimonial={props.item}
+  />
+);

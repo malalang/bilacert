@@ -1,5 +1,7 @@
 "use client";
 
+import type { ServiceType } from "@bilacert/contracts/service";
+import type { UseFormReturn } from "react-hook-form";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   FormControl,
@@ -9,7 +11,11 @@ import {
 } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
 
-export default function SuccessStoryForm({ form }: { form: any }) {
+interface SuccessStoryFormProps {
+  form: UseFormReturn<ServiceType>;
+}
+
+export default function SuccessStoryForm({ form }: SuccessStoryFormProps) {
   return (
     <Card>
       <CardHeader>

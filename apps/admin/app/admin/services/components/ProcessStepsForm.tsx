@@ -1,7 +1,8 @@
 "use client";
 
+import type { ServiceType } from "@bilacert/contracts/service";
 import { PlusCircle, Trash2 } from "lucide-react";
-import { useFieldArray } from "react-hook-form";
+import { type UseFormReturn, useFieldArray } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -14,7 +15,11 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 
-export default function ProcessStepsForm({ form }: { form: any }) {
+interface ProcessStepsFormProps {
+  form: UseFormReturn<ServiceType>;
+}
+
+export default function ProcessStepsForm({ form }: ProcessStepsFormProps) {
   const { fields, append, remove } = useFieldArray({
     control: form.control,
     name: "processSteps",

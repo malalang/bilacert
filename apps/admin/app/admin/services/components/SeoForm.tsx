@@ -1,5 +1,7 @@
 "use client";
 
+import type { ServiceType } from "@bilacert/contracts/service";
+import type { UseFormReturn } from "react-hook-form";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   FormControl,
@@ -11,7 +13,11 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 
-export default function SeoForm({ form }: { form: any }) {
+interface SeoFormProps {
+  form: UseFormReturn<ServiceType>;
+}
+
+export default function SeoForm({ form }: SeoFormProps) {
   return (
     <Card>
       <CardHeader>

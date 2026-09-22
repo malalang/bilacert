@@ -54,11 +54,11 @@ export default function ImageUpload({
       setImageUrl(publicUrl);
       onUpload(publicUrl);
       toast({ title: "Image uploaded successfully" });
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast({
         variant: "destructive",
         title: "Error uploading image",
-        description: error.message,
+        description: error instanceof Error ? error.message : String(error),
       });
       throw error;
     } finally {

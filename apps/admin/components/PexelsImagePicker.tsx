@@ -62,8 +62,8 @@ const PexelsImagePicker: React.FC<PexelsImagePickerProps> = ({
       if (!response.ok) throw new Error("Failed to fetch curated photos");
       const data = await response.json();
       setImages(data.photos || []);
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : String(err));
     } finally {
       setLoading(false);
     }
@@ -89,8 +89,12 @@ const PexelsImagePicker: React.FC<PexelsImagePickerProps> = ({
         }
         const data = await response.json();
         setImages(data.photos || []);
-      } catch (err: any) {
-        setError(err.message || "An error occurred while searching");
+      } catch (err: unknown) {
+        setError(
+          err instanceof Error
+            ? err.message
+            : String(err) || "An error occurred while searching",
+        );
       } finally {
         setLoading(false);
       }

@@ -1,5 +1,7 @@
 "use client";
 
+import type { ServiceType } from "@bilacert/contracts/service";
+import type { UseFormReturn } from "react-hook-form";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   FormControl,
@@ -10,7 +12,11 @@ import {
 } from "@/components/ui/form";
 import { Switch } from "@/components/ui/switch";
 
-export default function PublishingForm({ form }: { form: any }) {
+interface PublishingFormProps {
+  form: UseFormReturn<ServiceType>;
+}
+
+export default function PublishingForm({ form }: PublishingFormProps) {
   return (
     <Card>
       <CardHeader>
