@@ -11,7 +11,6 @@ import type {
   TaskTodoUpdateInputType,
 } from "@bilacert/contracts/taskTodo";
 import { requireAdminUser } from "../auth";
-import { CACHE_TAGS, mutationResult } from "../cache";
 
 interface TaskDbRow {
   id: string;
@@ -81,11 +80,6 @@ function toDbWrite(
   return write;
 }
 
-const taskRevalidation = {
-  tags: [CACHE_TAGS.tasks],
-  mode: "immediate" as const,
-};
-
 export async function createTask(data: TaskInputType) {
   const supabase = (await requireAdminUser()) as unknown as MutationTaskClient;
   const { data: task, error } = await supabase
@@ -95,7 +89,7 @@ export async function createTask(data: TaskInputType) {
     .single();
 
   if (error) throw new Error(error.message);
-  return mutationResult(task, taskRevalidation);
+  return task;
 }
 
 export async function updateTask(id: string, data: TaskUpdateInputType) {
@@ -108,7 +102,7 @@ export async function updateTask(id: string, data: TaskUpdateInputType) {
     .single();
 
   if (error) throw new Error(error.message);
-  return mutationResult(task, taskRevalidation);
+  return task;
 }
 
 export async function deleteTask(id: string) {
@@ -116,7 +110,6 @@ export async function deleteTask(id: string) {
   const { error } = await supabase.from("tasks").delete().eq("id", id);
 
   if (error) throw new Error(error.message);
-  return mutationResult(null, taskRevalidation);
 }
 
 // --- TASK TODO MUTATIONS ---
@@ -169,7 +162,7 @@ export async function createTaskTodo(taskId: string, data: TaskTodoInputType) {
 
   if (error) throw new Error(error.message);
   if (!todo) throw new Error("Checklist item not found");
-  return mutationResult(todo, taskRevalidation);
+  return todo;
 }
 
 export async function updateTaskTodo(
@@ -193,7 +186,7 @@ export async function updateTaskTodo(
 
   if (error) throw new Error(error.message);
   if (!todo) throw new Error("Checklist item not found");
-  return mutationResult(todo, taskRevalidation);
+  return todo;
 }
 
 export async function deleteTaskTodo(id: string) {
@@ -202,5 +195,4 @@ export async function deleteTaskTodo(id: string) {
   const { error } = await supabase.from("task_todos").delete().eq("id", id);
 
   if (error) throw new Error(error.message);
-  return mutationResult(null, taskRevalidation);
 }

@@ -97,9 +97,9 @@ export async function createTaskTodoAction(
   }
 
   try {
-    const result = await createTaskTodo(taskId, parsed.data);
+    const data = await createTaskTodo(taskId, parsed.data);
     revalidatePath("/admin/tasks");
-    return { ok: true, message: "Checklist item created", data: result.data };
+    return { ok: true, message: "Checklist item created", data };
   } catch (error) {
     return { ok: false, error: `Database error: ${errorMessage(error)}` };
   }
@@ -115,9 +115,9 @@ export async function updateTaskTodoAction(
   }
 
   try {
-    const result = await updateTaskTodo(id, parsed.data);
+    const data = await updateTaskTodo(id, parsed.data);
     revalidatePath("/admin/tasks");
-    return { ok: true, message: "Checklist item updated", data: result.data };
+    return { ok: true, message: "Checklist item updated", data };
   } catch (error) {
     return { ok: false, error: `Database error: ${errorMessage(error)}` };
   }
