@@ -3,14 +3,23 @@
   "version": "0.0.0",
   "private": true,
   "exports": {
+    ".": "./src/client.ts",
     "./client": "./src/client.ts",
     "./server": "./src/server.ts",
-    "./cache": "./src/cache.ts",
     "./session": "./src/session.ts",
-    "./supabaseType": "./src/supabaseType.ts",
     "./auth": "./src/auth.ts",
-    "./Queries/*": "./src/Queries/*.ts",
-    "./Mutations/*": "./src/Mutations/*.ts"
+    "./cache": "./src/cache.ts",
+    "./supabaseType": "./src/supabaseType.ts",
+    "./Mutations/blogs": "./src/Mutations/blogs.ts",
+    "./Mutations/contacts": "./src/Mutations/contacts.ts",
+    "./Mutations/formSubmissions": "./src/Mutations/formSubmissions.ts",
+    "./Mutations/services": "./src/Mutations/services.ts",
+    "./Mutations/tasks": "./src/Mutations/tasks.ts",
+    "./Mutations/testimonials": "./src/Mutations/testimonials.ts",
+    "./Queries/blogs": "./src/Queries/blogs.ts",
+    "./Queries/services": "./src/Queries/services.ts",
+    "./Queries/tasks": "./src/Queries/tasks.ts",
+    "./Queries/testimonials": "./src/Queries/testimonials.ts"
   },
   "dependencies": {
     "@bilacert/contracts": "workspace:*",
