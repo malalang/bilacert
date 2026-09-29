@@ -61,7 +61,9 @@ max_client_conn = 100
 enabled = true
 # Specifies an ordered list of schema files that describe your database.
 # Supports glob patterns relative to supabase directory: "./schemas/*.sql"
-schema_paths = []
+# Canonical committed schema lives in ../sql/ (sibling of this supabase/ dir). Per the
+# 2026-09-29 workspace ruling, packages/supabase/sql/ is the single schema location.
+schema_paths = ["../sql/*.sql"]
 
 [db.seed]
 # If enabled, seeds the database after migrations during a db reset.
