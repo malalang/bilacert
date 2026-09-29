@@ -1,7 +1,31 @@
+import type { Metadata, Viewport } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import LicensingApplicationForm from "../_components/LicensingApplicationForm";
 
+export const metadata: Metadata = {
+  title: "NRCS LOA Application",
+  description:
+    "Submit your NRCS Letter of Authority (LOA) application with Bilacert for regulated products sold in South Africa.",
+  robots: {
+    index: true,
+    follow: true,
+  },
+  alternates: {
+    canonical: "https://bilacert.co.za/forms/nrcs-loa-applications",
+  },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#1f2937" },
+  ],
+};
 export default function NrcsLoaApplicationsPage() {
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">

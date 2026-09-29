@@ -1,3 +1,4 @@
+import type { Viewport } from "next";
 import { Suspense } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -26,6 +27,16 @@ function SubmissionsLoading() {
   );
 }
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#1f2937" },
+  ],
+};
 export default function FormSubmissionsPage() {
   return (
     <div className="space-y-6">

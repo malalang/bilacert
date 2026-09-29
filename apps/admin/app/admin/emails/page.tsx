@@ -12,6 +12,7 @@ import {
   Send,
   Trash2,
 } from "lucide-react";
+import type { Viewport } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -92,6 +93,16 @@ function FolderIcon({ folder }: { folder: ZohoMailFolder }) {
   return <Mail className="h-4 w-4" />;
 }
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#1f2937" },
+  ],
+};
 export default async function EmailsPage({ searchParams }: EmailsPageProps) {
   const access = await getAdminAccess();
 

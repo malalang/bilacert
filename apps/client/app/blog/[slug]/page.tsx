@@ -1,6 +1,6 @@
 import { format } from "date-fns";
 import { Calendar, Clock, Folder, User } from "lucide-react";
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { FaFacebook, FaLinkedin, FaTwitter } from "react-icons/fa";
@@ -70,6 +70,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#1f2937" },
+  ],
+};
 export default async function BlogPostPage({ params }: Props) {
   const { slug } = await params;
   const post = await getCachedBlogBySlug(slug);

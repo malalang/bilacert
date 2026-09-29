@@ -3,7 +3,7 @@ import type { ServiceRowType } from "@bilacert/contracts/service";
 import { normalizeService } from "@bilacert/supabase/Queries/services";
 import { createSupabaseServerClient } from "@bilacert/supabase/server";
 import { Eye } from "lucide-react";
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
@@ -152,6 +152,16 @@ export async function generateMetadata({
   };
 }
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#1f2937" },
+  ],
+};
 export default async function ServiceDetailsPage({
   params,
 }: {

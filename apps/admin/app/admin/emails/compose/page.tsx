@@ -1,4 +1,5 @@
 import { ArrowLeft } from "lucide-react";
+import type { Viewport } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -35,6 +36,16 @@ function safeInitialValue(value: string | undefined, maxLength: number) {
   return value?.slice(0, maxLength) ?? "";
 }
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#1f2937" },
+  ],
+};
 export default async function ComposeEmailPage({
   searchParams,
 }: ComposeEmailPageProps) {

@@ -7,6 +7,7 @@ import {
   Reply,
   UserRound,
 } from "lucide-react";
+import type { Viewport } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -34,6 +35,14 @@ import {
 } from "../_components/EmailState";
 import { updateEmailReadStateAction } from "../actions";
 
+export const metadata = {
+  title: "Email Message | Bilacert Admin Pro",
+  description: "View an email message in Bilacert Admin.",
+  robots: {
+    index: false,
+  },
+};
+
 export const dynamic = "force-dynamic";
 
 type EmailMessagePageProps = {
@@ -55,6 +64,16 @@ function formatMessageDate(value: string | null) {
   }).format(new Date(value));
 }
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#1f2937" },
+  ],
+};
 export default async function EmailMessagePage({
   params,
   searchParams,

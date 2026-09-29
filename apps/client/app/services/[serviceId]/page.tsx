@@ -9,7 +9,7 @@ import {
   FileCheck2,
   ListChecks,
 } from "lucide-react";
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
 import { CTASection } from "@/components/service/CTASection";
@@ -158,6 +158,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#1f2937" },
+  ],
+};
 export default async function ServiceDetailPage({ params }: Props) {
   const { serviceId } = await params;
   const service = await getCachedServiceBySlug(serviceId);

@@ -1,7 +1,31 @@
+import type { Metadata, Viewport } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import LicensingApplicationForm from "../_components/LicensingApplicationForm";
 
+export const metadata: Metadata = {
+  title: "License Exemptions Application",
+  description:
+    "Apply for radio licence exemptions with Bilacert's compliance experts for ICASA-regulated equipment and services.",
+  robots: {
+    index: true,
+    follow: true,
+  },
+  alternates: {
+    canonical: "https://bilacert.co.za/forms/license-exemptions",
+  },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#1f2937" },
+  ],
+};
 export default function LicenseExemptionsPage() {
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">

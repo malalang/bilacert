@@ -1,6 +1,7 @@
 import type { BlogRowType as BlogType } from "@bilacert/contracts/blog";
 import { createSupabaseServerClient } from "@bilacert/supabase/server";
 import { ArrowLeft } from "lucide-react";
+import type { Viewport } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -55,6 +56,16 @@ async function getBlog(id: string): Promise<BlogType | null> {
   } as BlogType;
 }
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#1f2937" },
+  ],
+};
 export default async function EditBlogPage({
   params,
 }: {

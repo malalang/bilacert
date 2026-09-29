@@ -1,5 +1,5 @@
 import { Clock, Mail, Phone } from "lucide-react";
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import HeroSection from "@/components/HeroSection";
 import { businessInfo } from "@/lib/business";
 import ContactMessageForm from "./ContactMessageForm";
@@ -26,6 +26,16 @@ export const metadata: Metadata = {
   },
 };
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#1f2937" },
+  ],
+};
 export default function ContactPage() {
   const heroHighlights = [
     {

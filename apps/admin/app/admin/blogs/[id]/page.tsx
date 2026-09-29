@@ -1,6 +1,6 @@
 import type { BlogRowType as BlogType } from "@bilacert/contracts/blog";
 import { createSupabaseServerClient } from "@bilacert/supabase/server";
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { notFound } from "next/navigation";
 import BlogDetails from "../BlogDetails";
 
@@ -58,6 +58,16 @@ export async function generateMetadata({
   };
 }
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#1f2937" },
+  ],
+};
 export default async function BlogDetailsPage({
   params,
 }: {

@@ -1,7 +1,31 @@
+import type { Metadata, Viewport } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import LicensingApplicationForm from "../_components/LicensingApplicationForm";
 
+export const metadata: Metadata = {
+  title: "Class ECS/ECNS Licensing Application",
+  description:
+    "Apply for a Class ECS or ECNS electronic communications service licence with Bilacert's expert regulatory guidance.",
+  robots: {
+    index: true,
+    follow: true,
+  },
+  alternates: {
+    canonical: "https://bilacert.co.za/forms/class-ecs-ecns-licensing",
+  },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#1f2937" },
+  ],
+};
 export default function ClassEcsEcnsLicensingPage() {
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">

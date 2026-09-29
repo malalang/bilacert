@@ -2,6 +2,7 @@ import type { ServiceRowType } from "@bilacert/contracts/service";
 import { normalizeService } from "@bilacert/supabase/Queries/services";
 import { createSupabaseServerClient } from "@bilacert/supabase/server";
 import { ArrowLeft } from "lucide-react";
+import type { Viewport } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -35,6 +36,16 @@ async function getService(id: string): Promise<ServiceRowType | null> {
   return data ? normalizeService(data) : null;
 }
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#1f2937" },
+  ],
+};
 export default async function EditServicePage({
   params,
 }: {

@@ -7,6 +7,7 @@ import {
   getTasks,
   type TaskOption,
 } from "@bilacert/supabase/Queries/tasks";
+import type { Viewport } from "next";
 import TasksClient from "./TasksClient";
 
 export const metadata = {
@@ -14,6 +15,16 @@ export const metadata = {
   description: "Plan, assign and track internal work.",
 };
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#1f2937" },
+  ],
+};
 export default async function AdminTasksPage() {
   let tasks: TaskType[] = [];
   let services: ServiceRowType[] = [];
