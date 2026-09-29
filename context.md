@@ -111,6 +111,9 @@ apps/admin/app/admin/services/new/page.tsx
 apps/admin/app/admin/services/page.tsx
 apps/admin/app/admin/services/ServiceForm.tsx
 apps/admin/app/admin/services/ServicesClient.tsx
+apps/admin/app/admin/tasks/actions.ts
+apps/admin/app/admin/tasks/page.tsx
+apps/admin/app/admin/tasks/TasksClient.tsx
 apps/admin/app/admin/testimonials/[id]/edit/page.tsx
 apps/admin/app/admin/testimonials/[id]/page.tsx
 apps/admin/app/admin/testimonials/actions.ts
@@ -125,6 +128,7 @@ apps/admin/app/admin/testimonials/TestimonialsClient.tsx
 apps/admin/app/api/pexels/route.ts
 apps/admin/app/favicon.ico
 apps/admin/app/globals.css
+apps/admin/app/icon.png
 apps/admin/app/layout.tsx
 apps/admin/app/page.tsx
 apps/admin/biome.json
@@ -182,7 +186,6 @@ apps/admin/hooks/use-mobile.tsx
 apps/admin/hooks/use-toast.ts
 apps/admin/lib/adminAccess.ts
 apps/admin/lib/emailNavigation.ts
-apps/admin/lib/hooks/useAnalyticsData.ts
 apps/admin/lib/hooks/useBlogs.ts
 apps/admin/lib/hooks/useContacts.ts
 apps/admin/lib/hooks/useDashboardData.ts
@@ -255,6 +258,7 @@ apps/client/app/forms/nrcs-loa-applications/page.tsx
 apps/client/app/forms/radio-dealer-licensing/page.tsx
 apps/client/app/forms/ski-boat-vhf-licensing/page.tsx
 apps/client/app/globals.css
+apps/client/app/icon.png
 apps/client/app/layout.tsx
 apps/client/app/page.tsx
 apps/client/app/robots.ts
@@ -266,10 +270,8 @@ apps/client/app/sitemap.ts
 apps/client/app/south-africa-local-representative/page.tsx
 apps/client/app/south-africa-market-access/page.tsx
 apps/client/biome.json
-apps/client/components/blog/AboutAuthor.tsx
 apps/client/components/blog/RelatedPosts.tsx
 apps/client/components/blog/StickyShare.tsx
-apps/client/components/blog/TableOfContents.tsx
 apps/client/components/blog/view.tsx
 apps/client/components/cards/BlogCard.tsx
 apps/client/components/cards/ServiceCard.tsx
@@ -280,7 +282,6 @@ apps/client/components/service/CTASection.tsx
 apps/client/components/service/PricingPlans.tsx
 apps/client/components/service/ProcessSteps.tsx
 apps/client/components/service/ServiceHero.tsx
-apps/client/components/service/ServicesGrid.tsx
 apps/client/components/service/SuccessStory.tsx
 apps/client/components/service/WhatIsSection.tsx
 apps/client/components/service/WhyChooseUs.tsx
@@ -351,8 +352,9 @@ packages/contracts/src/env.ts
 packages/contracts/src/formSubmission.ts
 packages/contracts/src/revalidation.ts
 packages/contracts/src/service.ts
+packages/contracts/src/task.ts
+packages/contracts/src/taskTodo.ts
 packages/contracts/src/testimonial.ts
-packages/contracts/src/user.ts
 packages/contracts/tsconfig.json
 packages/shared/package.json
 packages/shared/src/components/Icon.tsx
@@ -370,6 +372,8 @@ packages/supabase/sql/007_policies.sql
 packages/supabase/sql/008_storage.sql
 packages/supabase/sql/009_views.sql
 packages/supabase/sql/010_seed.sql
+packages/supabase/sql/011_tasks.sql
+packages/supabase/sql/012_task_todos.sql
 packages/supabase/sql/README.md
 packages/supabase/sql/zohoEmailManagement.sql
 packages/supabase/src/auth.ts
@@ -379,12 +383,12 @@ packages/supabase/src/Mutations/blogs.ts
 packages/supabase/src/Mutations/contacts.ts
 packages/supabase/src/Mutations/formSubmissions.ts
 packages/supabase/src/Mutations/services.ts
+packages/supabase/src/Mutations/tasks.ts
 packages/supabase/src/Mutations/testimonials.ts
 packages/supabase/src/Queries/blogs.ts
-packages/supabase/src/Queries/formSubmissions.ts
 packages/supabase/src/Queries/services.ts
+packages/supabase/src/Queries/tasks.ts
 packages/supabase/src/Queries/testimonials.ts
-packages/supabase/src/Queries/users.ts
 packages/supabase/src/server.ts
 packages/supabase/src/session.ts
 packages/supabase/src/supabaseType.ts
@@ -594,26 +598,6 @@ export default function AnalysisLoading() {
 }
 ````
 
-## File: apps/admin/app/admin/analysis/page.tsx
-````typescript
-import { Suspense } from "react";
-import AnalysisClient from "./AnalysisClient";
-import AnalysisLoading from "./loading";
-
-export const metadata = {
-  title: "Analysis | Bilacert Admin Pro",
-  description: "In-depth analysis of submissions and content.",
-};
-
-export default function AnalysisPage() {
-  return (
-    <Suspense fallback={<AnalysisLoading />}>
-      <AnalysisClient />
-    </Suspense>
-  );
-}
-````
-
 ## File: apps/admin/app/admin/blogs/loading.tsx
 ````typescript
 import {
@@ -654,72 +638,6 @@ export default function BlogsLoading() {
 }
 ````
 
-## File: apps/admin/app/admin/blogs/new/page.tsx
-````typescript
-import { ArrowLeft } from "lucide-react";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import BlogForm from "../BlogForm";
-
-export const metadata = {
-  title: "New Blog Post | Bilacert Admin Pro",
-  description: "Create a new blog post.",
-};
-
-export default function NewBlogPage() {
-  return (
-    <div className="space-y-6">
-      <Button variant="outline" asChild>
-        <Link href="/admin/blogs">
-          <ArrowLeft className="mr-2 h-4 w-4" />
-          Back to Blogs
-        </Link>
-      </Button>
-      <Card>
-        <CardHeader>
-          <CardTitle>Add New Post</CardTitle>
-          <CardDescription>
-            Fill out the form below to create a new post.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <BlogForm />
-        </CardContent>
-      </Card>
-    </div>
-  );
-}
-````
-
-## File: apps/admin/app/admin/blogs/page.tsx
-````typescript
-import { Suspense } from "react";
-import BlogsClient from "./BlogsClient";
-import BlogsLoading from "./loading";
-
-export const metadata = {
-  title: "Blogs | Bilacert Admin Pro",
-  description: "Create and manage blog posts.",
-};
-
-export default function BlogsPage() {
-  return (
-    <div className="space-y-6">
-      <Suspense fallback={<BlogsLoading />}>
-        <BlogsClient />
-      </Suspense>
-    </div>
-  );
-}
-````
-
 ## File: apps/admin/app/admin/contacts/loading.tsx
 ````typescript
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
@@ -743,72 +661,6 @@ export default function ContactsLoading() {
           </CardContent>
         </Card>
       ))}
-    </div>
-  );
-}
-````
-
-## File: apps/admin/app/admin/contacts/new/page.tsx
-````typescript
-import { ArrowLeft } from "lucide-react";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import ContactForm from "../ContactForm";
-
-export const metadata = {
-  title: "New Contact | Bilacert Admin Pro",
-  description: "Add a new contact to your records.",
-};
-
-export default function NewContactPage() {
-  return (
-    <div className="space-y-6">
-      <Button variant="outline" asChild>
-        <Link href="/admin/contacts">
-          <ArrowLeft className="mr-2 h-4 w-4" />
-          Back to Contacts
-        </Link>
-      </Button>
-      <Card>
-        <CardHeader>
-          <CardTitle>Add New Contact</CardTitle>
-          <CardDescription>
-            Fill out the form below to add a new contact.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <ContactForm />
-        </CardContent>
-      </Card>
-    </div>
-  );
-}
-````
-
-## File: apps/admin/app/admin/contacts/page.tsx
-````typescript
-import { Suspense } from "react";
-import ContactsClient from "./ContactsClient";
-import ContactsLoading from "./loading";
-
-export const metadata = {
-  title: "Contacts | Bilacert Admin Pro",
-  description: "Manage your contacts.",
-};
-
-export default function ContactsPage() {
-  return (
-    <div className="space-y-6">
-      <Suspense fallback={<ContactsLoading />}>
-        <ContactsClient />
-      </Suspense>
     </div>
   );
 }
@@ -881,221 +733,6 @@ export default function DashboardLoading() {
           </CardContent>
         </Card>
       </div>
-    </div>
-  );
-}
-````
-
-## File: apps/admin/app/admin/dashboard/page.tsx
-````typescript
-import { Suspense } from "react";
-import DashboardClient from "./DashboardClient";
-import DashboardLoading from "./loading";
-
-export const metadata = {
-  title: "Dashboard | Bilacert Admin Pro",
-  description: "Real-time overview of submissions and metrics.",
-};
-
-export default function DashboardPage() {
-  return (
-    <Suspense fallback={<DashboardLoading />}>
-      <DashboardClient />
-    </Suspense>
-  );
-}
-````
-
-## File: apps/admin/app/admin/formSubmissions/[id]/edit/page.tsx
-````typescript
-import type { SubmissionType } from "@bilacert/contracts/formSubmission";
-import { createSupabaseBrowserClient } from "@bilacert/supabase/client";
-import { ArrowLeft } from "lucide-react";
-import Link from "next/link";
-import { notFound } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import SubmissionForm from "../../SubmissionForm";
-
-const supabase = createSupabaseBrowserClient();
-
-export const metadata = {
-  title: "Edit Submission | Bilacert Admin Pro",
-  description: "Edit a form submission.",
-};
-
-async function getSubmission(id: string): Promise<SubmissionType | null> {
-  const { data, error } = await supabase
-    .from("form_submissions")
-    .select("*")
-    .eq("id", id)
-    .single();
-
-  if (error || !data) {
-    return null;
-  }
-
-  return {
-    id: data.id,
-    formType: data.formType,
-    status: data.status,
-    serviceId: data.serviceId,
-    serviceName: data.serviceName,
-    fullName: data.fullName,
-    email: data.email,
-    phone: data.phone,
-    company: data.company,
-    industry: data.industry,
-    details: data.details,
-    internalNotes: data.internalNotes,
-    assignedTo: data.assignedTo,
-    createdAt: data.createdAt,
-    updatedAt: data.updatedAt,
-    completedAt: data.completedAt,
-  } as SubmissionType;
-}
-
-export default async function EditSubmissionPage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
-  const { id } = await params;
-  const submission = await getSubmission(id);
-
-  if (!submission) {
-    notFound();
-  }
-
-  return (
-    <div className="space-y-6">
-      <Button variant="outline" asChild>
-        <Link href={`/admin/formSubmissions/${submission.id}`}>
-          <ArrowLeft className="mr-2 h-4 w-4" />
-          Back to Submission
-        </Link>
-      </Button>
-      <Card>
-        <CardHeader>
-          <CardTitle>Edit Submission</CardTitle>
-          <CardDescription>
-            Update details for submission from "{submission.fullName}".
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <SubmissionForm submission={submission} />
-        </CardContent>
-      </Card>
-    </div>
-  );
-}
-````
-
-## File: apps/admin/app/admin/formSubmissions/[id]/page.tsx
-````typescript
-import type { SubmissionType } from "@bilacert/contracts/formSubmission";
-import { createSupabaseBrowserClient } from "@bilacert/supabase/client";
-import type { Metadata } from "next";
-import { notFound } from "next/navigation";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { getSubmissionEmailComposeHref } from "@/lib/emailNavigation";
-import SubmissionDetails from "../SubmissionDetails";
-
-const supabase = createSupabaseBrowserClient();
-
-type SubmissionDetailsPageProps = {
-  params: Promise<{ id: string }>;
-  searchParams: Promise<{ emailStatus?: string }>;
-};
-
-async function getSubmission(id: string): Promise<SubmissionType | null> {
-  const { data, error } = await supabase
-    .from("form_submissions")
-    .select("*")
-    .eq("id", id)
-    .single();
-
-  if (error || !data) {
-    return null;
-  }
-
-  return {
-    id: data.id,
-    formType: data.formType,
-    status: data.status,
-    serviceId: data.serviceId,
-    serviceName: data.serviceName,
-    fullName: data.fullName,
-    email: data.email,
-    phone: data.phone,
-    company: data.company,
-    industry: data.industry,
-    details: data.details,
-    internalNotes: data.internalNotes,
-    assignedTo: data.assignedTo,
-    createdAt: data.createdAt,
-    updatedAt: data.updatedAt,
-    completedAt: data.completedAt,
-  } as SubmissionType;
-}
-
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}): Promise<Metadata> {
-  const { id } = await params;
-  const submission = await getSubmission(id);
-  if (!submission) {
-    return {
-      title: "Submission Not Found",
-    };
-  }
-  return {
-    title: `Submission from ${submission.fullName} | Bilacert Admin Pro`,
-  };
-}
-
-export default async function SubmissionDetailsPage({
-  params,
-  searchParams,
-}: SubmissionDetailsPageProps) {
-  const [{ id }, query] = await Promise.all([params, searchParams]);
-  const submission = await getSubmission(id);
-
-  if (!submission) {
-    notFound();
-  }
-
-  const emailStatus =
-    query.emailStatus === "sent" || query.emailStatus === "draft"
-      ? query.emailStatus
-      : null;
-
-  return (
-    <div className="space-y-6">
-      {emailStatus && (
-        <Alert className="border-emerald-200 bg-emerald-50 text-emerald-900">
-          <AlertTitle>
-            {emailStatus === "sent" ? "Email sent" : "Draft saved"}
-          </AlertTitle>
-          <AlertDescription>
-            {emailStatus === "sent"
-              ? `Your email to ${submission.fullName} was sent through Zoho Mail.`
-              : `Your email to ${submission.fullName} was saved in Zoho Drafts.`}
-          </AlertDescription>
-        </Alert>
-      )}
-      <SubmissionDetails
-        submission={submission}
-        emailComposeHref={getSubmissionEmailComposeHref(submission)}
-      />
     </div>
   );
 }
@@ -1219,47 +856,6 @@ export const columns = ({
     },
   },
 ];
-````
-
-## File: apps/admin/app/admin/formSubmissions/page.tsx
-````typescript
-import { Suspense } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
-import SubmissionsClient from "./SubmissionsClient";
-
-export const metadata = {
-  title: "Form Submissions | Bilacert Admin Pro",
-  description: "View and manage all form submissions.",
-};
-
-function SubmissionsLoading() {
-  return (
-    <Card>
-      <CardHeader>
-        <CardTitle>All Submissions</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="space-y-4">
-          <Skeleton className="h-10 w-full" />
-          <Skeleton className="h-10 w-full" />
-          <Skeleton className="h-10 w-full" />
-          <Skeleton className="h-10 w-full" />
-        </div>
-      </CardContent>
-    </Card>
-  );
-}
-
-export default function FormSubmissionsPage() {
-  return (
-    <div className="space-y-6">
-      <Suspense fallback={<SubmissionsLoading />}>
-        <SubmissionsClient />
-      </Suspense>
-    </div>
-  );
-}
 ````
 
 ## File: apps/admin/app/admin/formSubmissions/StatusUpdate.tsx
@@ -2694,429 +2290,6 @@ export default function MediaForm({ form }: { form: any }) {
 }
 ````
 
-## File: apps/admin/app/admin/services/components/PricingPlansForm.tsx
-````typescript
-"use client";
-
-import { useFieldArray } from "react-hook-form";
-import { ArrayInput } from "@/components/admin/ArrayInput";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Switch } from "@/components/ui/switch";
-
-export default function PricingPlansForm({ form }: { form: any }) {
-  const { fields: pricingPlanFields } = useFieldArray({
-    control: form.control,
-    name: "pricingPlans",
-  });
-
-  return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Pricing Plans</CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        <div className="grid grid-cols-1 gap-6">
-          {pricingPlanFields.map((field, index) => (
-            <Card key={field.id} className="bg-muted/30">
-              <CardHeader>
-                <CardTitle className="text-lg">{`Plan ${index + 1}`}</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <FormField
-                  control={form.control}
-                  name={`pricingPlans.${index}.title`}
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Plan Title</FormLabel>
-                      <FormControl>
-                        <Input {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name={`pricingPlans.${index}.description`}
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Plan Description</FormLabel>
-                      <FormControl>
-                        <Input {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name={`pricingPlans.${index}.price`}
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Price</FormLabel>
-                      <FormControl>
-                        <Input {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <ArrayInput
-                  control={form.control}
-                  name={`pricingPlans.${index}.features`}
-                  label="Plan Features"
-                  addLabel="Add plan feature"
-                  placeholder="Add a plan feature"
-                />
-                <FormField
-                  control={form.control}
-                  name={`pricingPlans.${index}.popular`}
-                  render={({ field }) => (
-                    <FormItem className="flex flex-row items-center justify-between rounded-lg border bg-card p-4">
-                      <div className="space-y-0.5">
-                        <FormLabel className="text-base">
-                          Most Popular
-                        </FormLabel>
-                        <FormDescription>Highlight this plan.</FormDescription>
-                      </div>
-                      <FormControl>
-                        <Switch
-                          checked={field.value}
-                          onCheckedChange={field.onChange}
-                        />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      </CardContent>
-    </Card>
-  );
-}
-````
-
-## File: apps/admin/app/admin/services/components/ProcessStepsForm.tsx
-````typescript
-"use client";
-
-import { PlusCircle, Trash2 } from "lucide-react";
-import { useFieldArray } from "react-hook-form";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-
-export default function ProcessStepsForm({ form }: { form: any }) {
-  const { fields, append, remove } = useFieldArray({
-    control: form.control,
-    name: "processSteps",
-  });
-
-  return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Process Steps</CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        {fields.map((field, index) => (
-          <div
-            key={field.id}
-            className="flex items-start gap-4 p-4 border rounded-md"
-          >
-            <div className="grid gap-2 flex-grow">
-              <FormField
-                control={form.control}
-                name={`processSteps.${index}.step`}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Step Number</FormLabel>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name={`processSteps.${index}.title`}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Step Title</FormLabel>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name={`processSteps.${index}.description`}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Step Description</FormLabel>
-                    <FormControl>
-                      <Textarea {...field} rows={2} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-            <Button
-              type="button"
-              variant="destructive"
-              size="icon"
-              onClick={() => remove(index)}
-              className="mt-7"
-            >
-              <Trash2 className="h-4 w-4" />
-            </Button>
-          </div>
-        ))}
-        <Button
-          type="button"
-          variant="outline"
-          onClick={() =>
-            append({ step: `${fields.length + 1}`, title: "", description: "" })
-          }
-        >
-          <PlusCircle className="mr-2 h-4 w-4" /> Add Step
-        </Button>
-      </CardContent>
-    </Card>
-  );
-}
-````
-
-## File: apps/admin/app/admin/services/components/PublishingForm.tsx
-````typescript
-"use client";
-
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-} from "@/components/ui/form";
-import { Switch } from "@/components/ui/switch";
-
-export default function PublishingForm({ form }: { form: any }) {
-  return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Publishing</CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        <FormField
-          control={form.control}
-          name="published"
-          render={({ field }) => (
-            <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
-              <div className="space-y-0.5">
-                <FormLabel>Published</FormLabel>
-                <FormDescription>
-                  Make this service visible on the site.
-                </FormDescription>
-              </div>
-              <FormControl>
-                <Switch
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                />
-              </FormControl>
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="featured"
-          render={({ field }) => (
-            <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
-              <div className="space-y-0.5">
-                <FormLabel>Featured</FormLabel>
-                <FormDescription>
-                  Feature this service on the homepage.
-                </FormDescription>
-              </div>
-              <FormControl>
-                <Switch
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                />
-              </FormControl>
-            </FormItem>
-          )}
-        />
-      </CardContent>
-    </Card>
-  );
-}
-````
-
-## File: apps/admin/app/admin/services/components/SeoForm.tsx
-````typescript
-"use client";
-
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-
-export default function SeoForm({ form }: { form: any }) {
-  return (
-    <Card>
-      <CardHeader>
-        <CardTitle>SEO</CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        <FormField
-          control={form.control}
-          name="seoTitle"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>SEO Title</FormLabel>
-              <FormControl>
-                <Input {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="seoDescription"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>SEO Description</FormLabel>
-              <FormControl>
-                <Textarea {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="seoKeywords"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>SEO Keywords</FormLabel>
-              <FormControl>
-                <Input {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-      </CardContent>
-    </Card>
-  );
-}
-````
-
-## File: apps/admin/app/admin/services/components/SuccessStoryForm.tsx
-````typescript
-"use client";
-
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-} from "@/components/ui/form";
-import { Textarea } from "@/components/ui/textarea";
-
-export default function SuccessStoryForm({ form }: { form: any }) {
-  return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Success Story</CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        <FormField
-          control={form.control}
-          name="successStory.scenario"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Scenario</FormLabel>
-              <FormControl>
-                <Textarea {...field} value={field.value ?? ""} />
-              </FormControl>
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="successStory.challenge"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Challenge</FormLabel>
-              <FormControl>
-                <Textarea {...field} value={field.value ?? ""} />
-              </FormControl>
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="successStory.solution"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Solution</FormLabel>
-              <FormControl>
-                <Textarea {...field} value={field.value ?? ""} />
-              </FormControl>
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="successStory.result"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Result</FormLabel>
-              <FormControl>
-                <Textarea {...field} value={field.value ?? ""} />
-              </FormControl>
-            </FormItem>
-          )}
-        />
-      </CardContent>
-    </Card>
-  );
-}
-````
-
 ## File: apps/admin/app/admin/services/loading.tsx
 ````typescript
 import {
@@ -3152,70 +2325,6 @@ export default function ServicesLoading() {
         </Card>
       ))}
     </div>
-  );
-}
-````
-
-## File: apps/admin/app/admin/services/new/page.tsx
-````typescript
-import { ArrowLeft } from "lucide-react";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import ServiceForm from "../ServiceForm";
-
-export const metadata = {
-  title: "New Service | Bilacert Admin Pro",
-  description: "Add a new regulatory service.",
-};
-
-export default function NewServicePage() {
-  return (
-    <div className="space-y-6">
-      <Button variant="outline" asChild>
-        <Link href="/admin/services">
-          <ArrowLeft className="mr-2 h-4 w-4" />
-          Back to Services
-        </Link>
-      </Button>
-      <Card>
-        <CardHeader>
-          <CardTitle>Add New Service</CardTitle>
-          <CardDescription>
-            Fill out the form below to create a new service.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <ServiceForm />
-        </CardContent>
-      </Card>
-    </div>
-  );
-}
-````
-
-## File: apps/admin/app/admin/services/page.tsx
-````typescript
-import { Suspense } from "react";
-import ServicesLoading from "./loading";
-import ServicesClient from "./ServicesClient";
-
-export const metadata = {
-  title: "Services | Bilacert Admin Pro",
-  description: "Manage regulatory services.",
-};
-
-export default function ServicesPage() {
-  return (
-    <Suspense fallback={<ServicesLoading />}>
-      <ServicesClient />
-    </Suspense>
   );
 }
 ````
@@ -3259,72 +2368,6 @@ export default function TestimonialsLoading() {
           </Card>
         ))}
       </div>
-    </div>
-  );
-}
-````
-
-## File: apps/admin/app/admin/testimonials/new/page.tsx
-````typescript
-import { ArrowLeft } from "lucide-react";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import TestimonialForm from "../TestimonialForm";
-
-export const metadata = {
-  title: "New Testimonial | Bilacert Admin Pro",
-  description: "Add a new testimonial from a Facebook post.",
-};
-
-export default function NewTestimonialPage() {
-  return (
-    <div className="space-y-6">
-      <Button variant="outline" asChild>
-        <Link href="/admin/testimonials">
-          <ArrowLeft className="mr-2 h-4 w-4" />
-          Back to Testimonials
-        </Link>
-      </Button>
-      <Card>
-        <CardHeader>
-          <CardTitle>Add New Testimonial</CardTitle>
-          <CardDescription>
-            Enter the URL of the Facebook post below.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <TestimonialForm />
-        </CardContent>
-      </Card>
-    </div>
-  );
-}
-````
-
-## File: apps/admin/app/admin/testimonials/page.tsx
-````typescript
-import { Suspense } from "react";
-import TestimonialsLoading from "./loading";
-import TestimonialsClient from "./TestimonialsClient";
-
-export const metadata = {
-  title: "Testimonials | Bilacert Admin Pro",
-  description: "Manage customer testimonials from social media.",
-};
-
-export default function TestimonialsPage() {
-  return (
-    <div className="space-y-6">
-      <Suspense fallback={<TestimonialsLoading />}>
-        <TestimonialsClient />
-      </Suspense>
     </div>
   );
 }
@@ -3572,62 +2615,6 @@ export default function TestimonialEmbed({ postUrl }: TestimonialEmbedProps) {
     overflow-wrap: break-word;
     white-space: pre-wrap;
   }
-}
-````
-
-## File: apps/admin/app/layout.tsx
-````typescript
-import type { Metadata } from "next";
-import "./globals.css";
-import { Toaster } from "@/components/ui/toaster";
-
-export const metadata: Metadata = {
-  title: {
-    default: "Bilacert Admin Pro",
-    template: "%s | Bilacert Admin",
-  },
-  description: "Administrative dashboard for Bilacert.",
-  icons: {
-    icon: "/favicon.ico",
-    shortcut: "/favicon.ico",
-    apple: "/logo.png",
-  },
-};
-
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
-  return (
-    <html lang="en" suppressHydrationWarning>
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link
-          rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossOrigin="anonymous"
-        />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
-          rel="stylesheet"
-        />
-      </head>
-      <body className="font-body antialiased bg-background text-foreground">
-        {children}
-        <Toaster />
-      </body>
-    </html>
-  );
-}
-````
-
-## File: apps/admin/app/page.tsx
-````typescript
-import { redirect } from "next/navigation";
-
-export default function HomePage() {
-  redirect("/admin/login");
 }
 ````
 
@@ -4134,355 +3121,6 @@ export const Logo = (props: SVGProps<SVGSVGElement>) => (
     <path d="M2 12l10 5 10-5" />
   </svg>
 );
-````
-
-## File: apps/admin/components/PexelsImagePicker.tsx
-````typescript
-"use client";
-
-import {
-  ExternalLink,
-  Image as ImageIcon,
-  Loader2,
-  Search,
-} from "lucide-react";
-import Image from "next/image";
-import type React from "react";
-import { useCallback, useEffect, useState } from "react";
-
-interface PexelsImage {
-  id: number;
-  width: number;
-  height: number;
-  url: string;
-  photographer: string;
-  photographer_url: string;
-  photographer_id: number;
-  avg_color: string;
-  src: {
-    original: string;
-    large2x: string;
-    large: string;
-    medium: string;
-    small: string;
-    portrait: string;
-    landscape: string;
-    tiny: string;
-  };
-  alt: string;
-}
-
-interface PexelsImagePickerProps {
-  onSelect: (url: string) => void;
-  currentImageUrl?: string;
-  suggestions?: string[];
-}
-
-const PexelsImagePicker: React.FC<PexelsImagePickerProps> = ({
-  onSelect,
-  currentImageUrl,
-  suggestions = [],
-}) => {
-  const [query, setQuery] = useState("");
-  const [images, setImages] = useState<PexelsImage[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [selectedUrl, setSelectedUrl] = useState(currentImageUrl || "");
-  const [showSearch, setShowSearch] = useState(false);
-
-  useEffect(() => {
-    setSelectedUrl(currentImageUrl || "");
-  }, [currentImageUrl]);
-
-  const loadInitialPhotos = useCallback(async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const response = await fetch("/api/pexels");
-      if (!response.ok) throw new Error("Failed to fetch curated photos");
-      const data = await response.json();
-      setImages(data.photos || []);
-    } catch (err: any) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  const searchImages = useCallback(
-    async (searchQuery?: string) => {
-      const q = searchQuery || query;
-      if (!q.trim()) {
-        loadInitialPhotos();
-        return;
-      }
-
-      setLoading(true);
-      setError(null);
-
-      try {
-        const response = await fetch(
-          `/api/pexels?query=${encodeURIComponent(q)}`,
-        );
-        if (!response.ok) {
-          throw new Error("Failed to fetch images from Pexels");
-        }
-        const data = await response.json();
-        setImages(data.photos || []);
-      } catch (err: any) {
-        setError(err.message || "An error occurred while searching");
-      } finally {
-        setLoading(false);
-      }
-    },
-    [query, loadInitialPhotos],
-  );
-
-  // Fetch curated photos when searching panel is opened
-  useEffect(() => {
-    if (showSearch && images.length === 0) {
-      // If we have suggestions, use the first one as initial query
-      if (suggestions.length > 0) {
-        setQuery(suggestions[0] || "");
-        searchImages(suggestions[0]);
-      } else {
-        loadInitialPhotos();
-      }
-    }
-  }, [showSearch, images.length, suggestions, searchImages, loadInitialPhotos]);
-
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      searchImages();
-    }
-  };
-
-  const handleSuggestionClick = (suggestion: string) => {
-    setQuery(suggestion);
-    searchImages(suggestion);
-  };
-
-  const handleSelect = (image: PexelsImage, size: keyof PexelsImage["src"]) => {
-    const url = image.src[size];
-    setSelectedUrl(url);
-    onSelect(url);
-    setShowSearch(false);
-  };
-
-  return (
-    <div className="space-y-4 mb-6">
-      <div className="flex items-center justify-between">
-        <span className="block text-sm font-medium text-gray-700">
-          Select from Pexels
-        </span>
-        {/* Requirement: Prominent link to Pexels */}
-        <a
-          href="https://www.pexels.com"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-[10px] text-gray-400 hover:text-emerald-600 flex items-center gap-1"
-        >
-          Photos provided by Pexels
-        </a>
-      </div>
-
-      {/* Preview Section */}
-      <div className="relative aspect-video w-full max-w-md rounded-lg overflow-hidden border-2 border-dashed border-gray-300 bg-gray-50 flex items-center justify-center group">
-        {selectedUrl ? (
-          <>
-            <Image
-              src={selectedUrl}
-              alt="Preview"
-              fill
-              className="object-cover"
-              unoptimized={selectedUrl.includes("pexels.com")}
-            />
-            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
-              <button
-                type="button"
-                onClick={() => setShowSearch(!showSearch)}
-                className="bg-white text-gray-900 px-4 py-2 rounded-lg font-medium text-sm hover:bg-gray-100 flex items-center gap-2"
-              >
-                <ImageIcon size={16} />
-                Change Image
-              </button>
-            </div>
-          </>
-        ) : (
-          <button
-            type="button"
-            onClick={() => setShowSearch(true)}
-            className="flex flex-col items-center gap-2 text-gray-500 hover:text-emerald-600 transition-colors"
-          >
-            <ImageIcon size={48} strokeWidth={1} />
-            <span className="font-medium">
-              Click to select an image from Pexels
-            </span>
-          </button>
-        )}
-      </div>
-
-      {/* Search Toggle */}
-      {selectedUrl && (
-        <button
-          type="button"
-          onClick={() => setShowSearch(!showSearch)}
-          className="text-sm font-medium text-emerald-600 hover:text-emerald-700 flex items-center gap-1"
-        >
-          {showSearch ? "Hide Pexels Search" : "Search Pexels for new image"}
-        </button>
-      )}
-
-      {/* Search Section */}
-      {showSearch && (
-        <div className="bg-gray-50 p-4 rounded-xl border border-gray-200 space-y-4 animate-in fade-in slide-in-from-top-2 duration-200">
-          <div className="flex gap-2">
-            <div className="relative flex-1">
-              <Search
-                className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
-                size={18}
-              />
-              <input
-                type="text"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                onKeyDown={handleKeyDown}
-                placeholder="Search Pexels (e.g. 'coding', 'business', 'tech')..."
-                className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all"
-              />
-            </div>
-            <button
-              type="button"
-              onClick={() => searchImages()}
-              disabled={loading}
-              className="bg-emerald-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-emerald-700 disabled:opacity-50 flex items-center gap-2"
-            >
-              {loading ? (
-                <Loader2 size={18} className="animate-spin" />
-              ) : (
-                "Search"
-              )}
-            </button>
-          </div>
-
-          {suggestions.length > 0 && (
-            <div className="flex flex-wrap gap-2">
-              <span className="text-[10px] uppercase tracking-wider text-gray-400 font-bold w-full mb-1">
-                Suggestions from tags:
-              </span>
-              {suggestions.map((tag) => (
-                <button
-                  key={tag}
-                  type="button"
-                  onClick={() => handleSuggestionClick(tag)}
-                  className={`text-xs px-3 py-1 rounded-full border transition-all ${
-                    query.toLowerCase() === tag.toLowerCase()
-                      ? "bg-emerald-600 border-emerald-600 text-white"
-                      : "bg-white border-gray-200 text-gray-600 hover:border-emerald-500 hover:text-emerald-600"
-                  }`}
-                >
-                  {tag}
-                </button>
-              ))}
-            </div>
-          )}
-
-          {error && <p className="text-sm text-red-600">{error}</p>}
-
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
-            {images.map((image) => (
-              <div
-                key={image.id}
-                className="group relative bg-white rounded-lg border border-gray-200 overflow-hidden shadow-sm hover:border-emerald-500 transition-colors"
-              >
-                <div className="relative aspect-square">
-                  <Image
-                    src={image.src.small}
-                    alt={image.alt}
-                    fill
-                    className="object-cover"
-                    unoptimized
-                  />
-                </div>
-                <div className="p-2 space-y-2">
-                  <div className="flex flex-col gap-1">
-                    <button
-                      type="button"
-                      onClick={() => handleSelect(image, "large")}
-                      className="text-[10px] w-full bg-emerald-50 text-emerald-700 py-1 rounded hover:bg-emerald-100 font-bold"
-                    >
-                      SELECT LARGE
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => handleSelect(image, "medium")}
-                      className="text-[10px] w-full bg-blue-50 text-blue-700 py-1 rounded hover:bg-blue-100 font-bold"
-                    >
-                      SELECT MEDIUM
-                    </button>
-                  </div>
-                  <div className="flex items-center justify-between text-[10px] text-gray-500 border-t pt-2">
-                    {/* Requirement: Credit photographers with links */}
-                    <span className="truncate max-w-[80px]">
-                      By {image.photographer}
-                    </span>
-                    <div className="flex items-center gap-1.5">
-                      <a
-                        href={image.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="hover:text-emerald-600"
-                        title="View photo on Pexels"
-                      >
-                        <ImageIcon size={12} />
-                      </a>
-                      <a
-                        href={image.photographer_url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="hover:text-emerald-600"
-                        title={`View ${image.photographer}'s profile`}
-                      >
-                        <ExternalLink size={12} />
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
-            {!loading && images.length === 0 && (
-              <div className="col-span-full py-8 text-center text-gray-500">
-                {query
-                  ? `No images found for "${query}"`
-                  : "No photos available."}
-              </div>
-            )}
-          </div>
-
-          <div className="pt-2 border-t border-gray-100 flex justify-center">
-            <a
-              href="https://www.pexels.com"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <Image
-                src="https://images.pexels.com/lib/api/pexels.png"
-                alt="Pexels Logo"
-                width={100}
-                height={24}
-                className="h-6 w-auto opacity-50 hover:opacity-100 transition-opacity"
-                unoptimized
-              />
-            </a>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-};
-
-export default PexelsImagePicker;
 ````
 
 ## File: apps/admin/components/ui/accordion.tsx
@@ -6068,142 +4706,6 @@ export {
 };
 ````
 
-## File: apps/admin/components/ui/ImageUpload.tsx
-````typescript
-"use client";
-
-import { createSupabaseBrowserClient } from "@bilacert/supabase/client";
-import { Loader2, Upload, X } from "lucide-react";
-import Image from "next/image";
-import { useEffect, useState } from "react";
-import { useToast } from "@/hooks/use-toast";
-import { Button } from "./button";
-
-const supabase = createSupabaseBrowserClient();
-
-interface ImageUploadProps {
-  bucket: string;
-  onUpload: (url: string) => void;
-  initialUrl?: string | null;
-  onRemove?: () => void;
-}
-
-export default function ImageUpload({
-  bucket,
-  onUpload,
-  initialUrl,
-  onRemove,
-}: ImageUploadProps) {
-  const { toast } = useToast();
-  const [uploading, setUploading] = useState(false);
-  const [imageUrl, setImageUrl] = useState<string | null>(null);
-
-  useEffect(() => {
-    setImageUrl(initialUrl || null);
-  }, [initialUrl]);
-
-  const handleFileChange = async (
-    event: React.ChangeEvent<HTMLInputElement>,
-  ) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
-
-    setUploading(true);
-    try {
-      const fileName = `${Date.now()}_${file.name.replace(/\s/g, "_")}`;
-      const filePath = fileName;
-
-      const { error } = await supabase.storage
-        .from(bucket)
-        .upload(filePath, file);
-
-      if (error) throw error;
-
-      const {
-        data: { publicUrl },
-      } = supabase.storage.from(bucket).getPublicUrl(filePath);
-
-      setImageUrl(publicUrl);
-      onUpload(publicUrl);
-      toast({ title: "Image uploaded successfully" });
-    } catch (error: any) {
-      toast({
-        variant: "destructive",
-        title: "Error uploading image",
-        description: error.message,
-      });
-      throw error;
-    } finally {
-      setUploading(false);
-    }
-  };
-
-  const handleRemoveImage = () => {
-    setImageUrl(null);
-    if (onRemove) {
-      onRemove();
-    } else {
-      onUpload("");
-    }
-  };
-
-  return (
-    <div className="space-y-2">
-      {imageUrl ? (
-        <div className="relative group w-full max-w-sm">
-          <Image
-            src={imageUrl}
-            alt="Uploaded image"
-            width={400}
-            height={200}
-            className="rounded-lg object-cover border"
-          />
-          <Button
-            type="button"
-            variant="destructive"
-            size="icon"
-            className="absolute top-2 right-2 h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity"
-            onClick={handleRemoveImage}
-          >
-            <X className="h-4 w-4" />
-          </Button>
-        </div>
-      ) : (
-        <div className="flex items-center justify-center w-full">
-          <label
-            htmlFor={`image-upload-${bucket}`}
-            className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer bg-muted/50 hover:bg-muted"
-          >
-            <div className="flex flex-col items-center justify-center pt-5 pb-6">
-              {uploading ? (
-                <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
-              ) : (
-                <>
-                  <Upload className="h-8 w-8 text-muted-foreground" />
-                  <p className="mb-2 text-sm text-muted-foreground">
-                    <span className="font-semibold">Click to upload</span> or
-                    drag and drop
-                  </p>
-                  <p className="text-xs text-muted-foreground">PNG, JPG, GIF</p>
-                </>
-              )}
-            </div>
-            <input
-              id={`image-upload-${bucket}`}
-              type="file"
-              className="hidden"
-              onChange={handleFileChange}
-              disabled={uploading}
-              accept="image/*"
-            />
-          </label>
-        </div>
-      )}
-    </div>
-  );
-}
-````
-
 ## File: apps/admin/components/ui/input.tsx
 ````typescript
 import { cn } from "@bilacert/shared/cn";
@@ -7725,120 +6227,6 @@ function useToast() {
 export { useToast, toast };
 ````
 
-## File: apps/admin/lib/hooks/useAnalyticsData.ts
-````typescript
-"use client";
-
-import { format, isValid, startOfDay } from "date-fns";
-import { useMemo } from "react";
-import { useBlogs } from "./useBlogs";
-import { useServices } from "./useServices";
-import { useSubmissions } from "./useSubmissions";
-
-export function useAnalyticsData() {
-  const {
-    data: submissions,
-    loading: submissionsLoading,
-    error: submissionsError,
-  } = useSubmissions();
-  const {
-    data: services,
-    loading: servicesLoading,
-    error: servicesError,
-  } = useServices();
-  const { data: blogs, loading: blogsLoading, error: blogsError } = useBlogs();
-
-  const loading = submissionsLoading || servicesLoading || blogsLoading;
-  const error = submissionsError || servicesError || blogsError;
-
-  const totalSubmissions = useMemo(() => {
-    if (!submissions || !services) return [];
-    return submissions.map((submission) => {
-      const service = services.find((s) => s.slug === submission.serviceName);
-      const serviceName = service ? service.title : "Unknown Service";
-      const submitterName = submission.fullName || "Anonymous";
-      return `${submitterName} - ${serviceName}`;
-    });
-  }, [submissions, services]);
-
-  const totalRevenue = useMemo(() => {
-    if (!submissions || !services) return 0;
-    return submissions
-      .filter((s) => s.status === "archived")
-      .reduce((acc, submission) => {
-        const service = services.find((s) => s.slug === submission.serviceName);
-        return acc + (service?.pricing || 0);
-      }, 0);
-  }, [submissions, services]);
-
-  const revenueSubmissions = useMemo(() => {
-    if (!submissions || !services) return [];
-    return submissions
-      .filter((s) => s.status === "archived")
-      .map((submission) => {
-        const service = services.find((s) => s.slug === submission.serviceName);
-        const serviceName = service ? service.title : "Unknown Service";
-        const submitterName = submission.fullName || "Anonymous";
-        return `${submitterName} - ${serviceName}`;
-      });
-  }, [submissions, services]);
-
-  const newApplications = useMemo(() => {
-    if (!submissions) return [];
-    return submissions.filter((s) => s.status === "pending");
-  }, [submissions]);
-
-  const submissionsByDay = useMemo(() => {
-    if (!submissions) return [];
-    const counts = submissions.reduce(
-      (acc, submission) => {
-        if (submission.createdAt) {
-          const date = new Date(submission.createdAt);
-          if (isValid(date)) {
-            const day = format(startOfDay(date), "yyyy-MM-dd");
-            acc[day] = (acc[day] || 0) + 1;
-          }
-        }
-        return acc;
-      },
-      {} as Record<string, number>,
-    );
-
-    return Object.entries(counts)
-      .map(([day, count]) => ({ day, count }))
-      .sort((a, b) => new Date(a.day).getTime() - new Date(b.day).getTime());
-  }, [submissions]);
-
-  const submissionsByService = useMemo(() => {
-    if (!submissions) return [];
-    const counts = submissions.reduce(
-      (acc, submission) => {
-        const serviceName = submission.serviceName || "Unknown";
-        acc[serviceName] = (acc[serviceName] || 0) + 1;
-        return acc;
-      },
-      {} as Record<string, number>,
-    );
-
-    return Object.entries(counts).map(([name, count]) => ({ name, count }));
-  }, [submissions]);
-
-  return {
-    submissions,
-    services,
-    blogs,
-    totalSubmissions,
-    totalRevenue,
-    revenueSubmissions,
-    newApplications,
-    submissionsByDay,
-    submissionsByService,
-    loading,
-    error,
-  };
-}
-````
-
 ## File: apps/admin/lib/hooks/useDataFetching.ts
 ````typescript
 "use client";
@@ -8062,46 +6450,6 @@ export default config;
 <svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path fill-rule="evenodd" clip-rule="evenodd" d="M1.5 2.5h13v10a1 1 0 0 1-1 1h-11a1 1 0 0 1-1-1zM0 1h16v11.5a2.5 2.5 0 0 1-2.5 2.5h-11A2.5 2.5 0 0 1 0 12.5zm3.75 4.5a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5M7 4.75a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0m1.75.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5" fill="#666"/></svg>
 ````
 
-## File: apps/admin/README.md
-````markdown
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
-
-## Getting Started
-
-First, run the development server:
-
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-````
-
 ## File: apps/admin/tsconfig.json
 ````json
 {
@@ -8243,305 +6591,6 @@ export const getCachedTestimonials = unstable_cache(
   ["published-testimonials"],
   { tags: [CACHE_TAGS.testimonials] },
 );
-````
-
-## File: apps/client/app/about/page.tsx
-````typescript
-import {
-  CheckCircle,
-  Eye,
-  Heart,
-  Shield,
-  Target,
-  Users,
-  Zap,
-} from "lucide-react";
-import type { Metadata } from "next";
-import HeroSection from "@/components/HeroSection";
-
-export const metadata: Metadata = {
-  title: "About Us",
-  description:
-    "Learn about Bilacert, South Africa's trusted compliance partner. We simplify ICASA and NRCS approvals with our values of simplicity, clarity, efficiency, and support.",
-  keywords: [
-    "about Bilacert",
-    "compliance consultant South Africa",
-    "ICASA NRCS experts",
-    "regulatory compliance team",
-    "South Africa compliance company",
-    "telecommunications compliance experts",
-  ],
-  openGraph: {
-    title: "About Bilacert - Your Trusted Compliance Partner",
-    description:
-      "Learn about Bilacert, South Africa's trusted compliance partner. We simplify ICASA and NRCS approvals with our values of simplicity, clarity, efficiency, and support.",
-    url: "https://bilacert.co.za/about",
-    type: "website",
-  },
-  alternates: {
-    canonical: "https://bilacert.co.za/about",
-  },
-};
-
-export default function AboutPage() {
-  const values = [
-    {
-      title: "Simplicity",
-      description:
-        "We believe compliance should be clear and straightforward. We break down complex regulations into simple, actionable steps, removing unnecessary barriers for businesses.",
-      icon: <Eye className="h-8 w-8" />,
-    },
-    {
-      title: "Clarity",
-      description:
-        "We communicate in a way that is direct and transparent, avoiding unnecessary jargon. Our goal is to ensure our clients always understand their compliance status and next steps.",
-      icon: <Target className="h-8 w-8" />,
-    },
-    {
-      title: "Efficiency",
-      description:
-        "We prioritize speed and accuracy, ensuring applications are processed correctly the first time. Our refined processes and deep industry knowledge minimize delays and streamline approvals.",
-      icon: <Zap className="h-8 w-8" />,
-    },
-    {
-      title: "Support",
-      description:
-        "We are more than just a service provider; we are a partner. We walk alongside our clients through the entire compliance process, offering guidance and solutions every step of the way.",
-      icon: <Heart className="h-8 w-8" />,
-    },
-    {
-      title: "Trust & Integrity",
-      description:
-        "Regulatory compliance is a critical business function. We operate with honesty and integrity, ensuring our clients can trust us to handle their approvals with the utmost professionalism.",
-      icon: <Shield className="h-8 w-8" />,
-    },
-  ];
-
-  const process = [
-    {
-      step: "1",
-      title: "Consultation",
-      description:
-        "We assess your business needs and determine the required approvals.",
-    },
-    {
-      step: "2",
-      title: "Documentation & Application Preparation",
-      description:
-        "We gather all necessary paperwork, ensuring accuracy and compliance with regulatory standards.",
-    },
-    {
-      step: "3",
-      title: "Submission & Liaison",
-      description:
-        "We submit applications on your behalf and manage all communication with regulatory bodies.",
-    },
-    {
-      step: "4",
-      title: "Follow-Up & Resolution",
-      description:
-        "We track application progress, address any issues, and ensure smooth approval.",
-    },
-    {
-      step: "5",
-      title: "Ongoing Compliance Support",
-      description:
-        "We assist with renewals, amendments, and compliance updates to keep your business aligned with regulations.",
-    },
-  ];
-
-  const heroHighlights = [
-    {
-      title: "Trusted Compliance Partner",
-      description: "Clear support for ICASA and NRCS approvals.",
-      icon: <Shield className="h-6 w-6 text-white" />,
-    },
-    {
-      title: "Simple, Guided Process",
-      description: "We turn complex requirements into clear next steps.",
-      icon: <Target className="h-6 w-6 text-white" />,
-    },
-    {
-      title: "Reliable Support",
-      description: "Guidance from consultation through approval.",
-      icon: <CheckCircle className="h-6 w-6 text-white" />,
-    },
-  ];
-
-  return (
-    <div className="min-h-screen">
-      <HeroSection
-        imageSrc="/herosetion/About-Us.jpg"
-        imageAlt="About Bilacert"
-        eyebrow="About Bilacert"
-        title="Your Trusted Compliance Partner"
-        description="We simplify ICASA and NRCS approvals for South African businesses with clear guidance, efficient processes, and reliable support."
-        actions={[
-          { label: "Start Your Journey", href: "/contact" },
-          { label: "View Services", href: "/services", variant: "secondary" },
-        ]}
-        highlights={heroHighlights}
-      />
-
-      {/* Mission & Purpose */}
-      <section className="py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div>
-              <h2 className="text-3xl lg:text-4xl font-bold text-primary mb-6">
-                Our Mission & Purpose
-              </h2>
-              <div className="space-y-6">
-                <div>
-                  <h3 className="text-xl font-semibold text-primary mb-3">
-                    Our Purpose
-                  </h3>
-                  <p className="text-gray-600 text-lg">
-                    To make compliance easy, accessible, and efficient for
-                    businesses, so they can focus on innovation and growth while
-                    we handle the regulatory complexities.
-                  </p>
-                </div>
-                <div>
-                  <h3 className="text-xl font-semibold text-primary mb-3">
-                    Our Mission
-                  </h3>
-                  <p className="text-gray-600 text-lg">
-                    Bilacert is committed to being the trusted partner in
-                    regulatory compliance, providing businesses with expert
-                    guidance, seamless application processes, and reliable
-                    support. Our mission is to remove the guesswork from
-                    licensing and approvals, ensuring businesses meet South
-                    African regulatory requirements with confidence and ease.
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div className="bg-secondary-gray p-8 rounded-2xl">
-              <div className="space-y-6">
-                <div className="flex items-center space-x-4">
-                  <div className="bg-accent p-3 rounded-lg">
-                    <Users className="h-6 w-6 text-white" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-primary">
-                      500+ Clients Served
-                    </h3>
-                    <p className="text-gray-600">
-                      From startups to multinationals
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-center space-x-4">
-                  <div className="bg-accent p-3 rounded-lg">
-                    <CheckCircle className="h-6 w-6 text-white" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-primary">
-                      100% Success Rate
-                    </h3>
-                    <p className="text-gray-600">On first-time applications</p>
-                  </div>
-                </div>
-                <div className="flex items-center space-x-4">
-                  <div className="bg-accent p-3 rounded-lg">
-                    <Zap className="h-6 w-6 text-white" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-primary">30% Faster</h3>
-                    <p className="text-gray-600">Than industry average</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Our Values */}
-      <section className="py-20 bg-secondary-gray">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl lg:text-4xl font-bold text-primary mb-4">
-              Our Values
-            </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              The principles that guide everything we do and shape our
-              commitment to excellence
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {values.map((value) => (
-              <div
-                key={value.title}
-                className="bg-white p-6 rounded-xl shadow-sm"
-              >
-                <div className="text-accent mb-4">{value.icon}</div>
-                <h3 className="text-xl font-semibold text-primary mb-3">
-                  {value.title}
-                </h3>
-                <p className="text-gray-600">{value.description}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Our Process */}
-      <section className="py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl lg:text-4xl font-bold text-primary mb-4">
-              How We Work
-            </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Our proven 5-step process ensures your compliance journey is
-              smooth and successful
-            </p>
-          </div>
-
-          <div className="space-y-8">
-            {process.map((step) => (
-              <div key={step.step} className="flex items-start space-x-6">
-                <div className="flex-shrink-0">
-                  <div className="bg-primary text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-lg">
-                    {step.step}
-                  </div>
-                </div>
-                <div className="flex-1">
-                  <h3 className="text-xl font-semibold text-primary mb-2">
-                    {step.title}
-                  </h3>
-                  <p className="text-gray-600 text-lg">{step.description}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-r from-primary to-primary-light text-white">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl lg:text-4xl font-bold mb-6">
-            Ready to Work With Us?
-          </h2>
-          <p className="text-xl mb-8 text-gray-200">
-            Let&apos;s discuss how we can help simplify your compliance
-            requirements and accelerate your business growth.
-          </p>
-          <a
-            href="/contact"
-            className="bg-accent text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-accent-light transition-all duration-200 transform hover:-translate-y-1 inline-block"
-          >
-            Start Your Compliance Journey
-          </a>
-        </div>
-      </section>
-    </div>
-  );
-}
 ````
 
 ## File: apps/client/app/about/team.md
@@ -8918,41 +6967,6 @@ export default function FAQAccordion({
 }
 ````
 
-## File: apps/client/app/faq/page.tsx
-````typescript
-import type { Metadata } from "next";
-import FAQContent from "./FAQContent";
-
-export const metadata: Metadata = {
-  title: "Frequently Asked Questions",
-  description:
-    "Find answers to common questions about ICASA and NRCS compliance, type approvals, licensing, and regulatory requirements in South Africa.",
-  keywords: [
-    "ICASA FAQ",
-    "NRCS LOA questions",
-    "compliance FAQ South Africa",
-    "type approval questions",
-    "licensing FAQ",
-    "regulatory compliance questions",
-    "ICASA NRCS help",
-  ],
-  openGraph: {
-    title: "FAQ - ICASA & NRCS Compliance Questions Answered",
-    description:
-      "Find answers to common questions about ICASA and NRCS compliance, type approvals, licensing, and regulatory requirements in South Africa.",
-    url: "https://bilacert.co.za/faq",
-    type: "website",
-  },
-  alternates: {
-    canonical: "https://bilacert.co.za/faq",
-  },
-};
-
-export default function FAQPage() {
-  return <FAQContent />;
-}
-````
-
 ## File: apps/client/app/forms/_components/LicensingApplicationForm.tsx
 ````typescript
 "use client";
@@ -9170,246 +7184,6 @@ export default function LicensingApplicationForm({
         </button>
       </div>
     </form>
-  );
-}
-````
-
-## File: apps/client/app/forms/class-ecs-ecns-licensing/page.tsx
-````typescript
-import Image from "next/image";
-import Link from "next/link";
-import LicensingApplicationForm from "../_components/LicensingApplicationForm";
-
-export default function ClassEcsEcnsLicensingPage() {
-  return (
-    <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-      <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <Link href="/">
-          <Image
-            className="mx-auto h-12 w-auto"
-            src="/logo.png"
-            alt="Bilacert"
-            width={100}
-            height={100}
-          />
-        </Link>
-        <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-          Class ECS/ECNS Licensing Application
-        </h2>
-        <p className="mt-2 text-center text-sm text-gray-600">
-          Fill out the form below to begin the process.
-        </p>
-      </div>
-
-      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-xl">
-        <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-          <LicensingApplicationForm
-            formType="class-ecs-ecns"
-            serviceName="Class ECS/ECNS Licensing"
-          />
-        </div>
-      </div>
-    </div>
-  );
-}
-````
-
-## File: apps/client/app/forms/icasa-type-approvals/page.tsx
-````typescript
-import Image from "next/image";
-import Link from "next/link";
-import LicensingApplicationForm from "../_components/LicensingApplicationForm";
-
-export default function IcasaTypeApprovalsPage() {
-  return (
-    <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-      <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <Link href="/">
-          <Image
-            className="mx-auto h-12 w-auto"
-            src="/logo.png"
-            alt="Bilacert"
-            width={100}
-            height={100}
-          />
-        </Link>
-        <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-          ICASA Type Approval Application
-        </h2>
-        <p className="mt-2 text-center text-sm text-gray-600">
-          Fill out the form below to begin the process.
-        </p>
-      </div>
-
-      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-xl">
-        <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-          <LicensingApplicationForm
-            formType="icasa-type-approvals"
-            serviceName="ICASA Type Approval"
-          />
-        </div>
-      </div>
-    </div>
-  );
-}
-````
-
-## File: apps/client/app/forms/license-exemptions/page.tsx
-````typescript
-import Image from "next/image";
-import Link from "next/link";
-import LicensingApplicationForm from "../_components/LicensingApplicationForm";
-
-export default function LicenseExemptionsPage() {
-  return (
-    <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-      <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <Link href="/">
-          <Image
-            className="mx-auto h-12 w-auto"
-            src="/logo.png"
-            alt="Bilacert"
-            width={100}
-            height={100}
-          />
-        </Link>
-        <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-          License Exemptions Application
-        </h2>
-        <p className="mt-2 text-center text-sm text-gray-600">
-          Fill out the form below to begin the process.
-        </p>
-      </div>
-
-      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-xl">
-        <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-          <LicensingApplicationForm
-            formType="license-exemptions"
-            serviceName="License Exemptions"
-          />
-        </div>
-      </div>
-    </div>
-  );
-}
-````
-
-## File: apps/client/app/forms/nrcs-loa-applications/page.tsx
-````typescript
-import Image from "next/image";
-import Link from "next/link";
-import LicensingApplicationForm from "../_components/LicensingApplicationForm";
-
-export default function NrcsLoaApplicationsPage() {
-  return (
-    <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-      <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <Link href="/">
-          <Image
-            className="mx-auto h-12 w-auto"
-            src="/logo.png"
-            alt="Bilacert"
-            width={100}
-            height={100}
-          />
-        </Link>
-        <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-          NRCS LOA Application
-        </h2>
-        <p className="mt-2 text-center text-sm text-gray-600">
-          Fill out the form below to begin the process.
-        </p>
-      </div>
-
-      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-xl">
-        <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-          <LicensingApplicationForm
-            formType="nrcs-loa"
-            serviceName="NRCS LOA Applications"
-          />
-        </div>
-      </div>
-    </div>
-  );
-}
-````
-
-## File: apps/client/app/forms/radio-dealer-licensing/page.tsx
-````typescript
-import Image from "next/image";
-import Link from "next/link";
-import LicensingApplicationForm from "../_components/LicensingApplicationForm";
-
-export default function RadioDealerLicensingPage() {
-  return (
-    <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-      <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <Link href="/">
-          <Image
-            className="mx-auto h-12 w-auto"
-            src="/logo.png"
-            alt="Bilacert"
-            width={100}
-            height={100}
-          />
-        </Link>
-        <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-          Radio Dealer Licensing Application
-        </h2>
-        <p className="mt-2 text-center text-sm text-gray-600">
-          Fill out the form below to begin the process.
-        </p>
-      </div>
-
-      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-xl">
-        <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-          <LicensingApplicationForm
-            formType="radio-dealer"
-            serviceName="Radio Dealer Licensing"
-          />
-        </div>
-      </div>
-    </div>
-  );
-}
-````
-
-## File: apps/client/app/forms/ski-boat-vhf-licensing/page.tsx
-````typescript
-import Image from "next/image";
-import Link from "next/link";
-import LicensingApplicationForm from "../_components/LicensingApplicationForm";
-
-export default function SkiBoatVhfLicensingPage() {
-  return (
-    <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-      <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <Link href="/">
-          <Image
-            className="mx-auto h-12 w-auto"
-            src="/logo.png"
-            alt="Bilacert"
-            width={100}
-            height={100}
-          />
-        </Link>
-        <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-          Ski Boat VHF Licensing Application
-        </h2>
-        <p className="mt-2 text-center text-sm text-gray-600">
-          Fill out the form below to begin the process.
-        </p>
-      </div>
-
-      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-xl">
-        <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-          <LicensingApplicationForm
-            formType="ski-boat-vhf"
-            serviceName="Ski Boat VHF Licensing"
-          />
-        </div>
-      </div>
-    </div>
   );
 }
 ````
@@ -9666,379 +7440,6 @@ html {
 }
 ````
 
-## File: apps/client/app/layout.tsx
-````typescript
-import { Analytics } from "@vercel/analytics/next";
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import "./globals.css";
-import { GoogleAnalytics } from "@next/third-parties/google";
-import Footer from "@/components/Footer";
-import Header from "@/components/Header";
-import WhatsAppButton from "@/components/WhatsAppButton";
-
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
-});
-
-export const metadata: Metadata = {
-  title: {
-    default: "Bilacert - Your Compliance Partner | ICASA & NRCS Approvals",
-    template: "%s | Bilacert - Compliance Made Simple",
-  },
-  description:
-    "Bilacert simplifies ICASA and NRCS LOA compliance for South African businesses. Expert guidance for type approvals, licensing, and regulatory compliance. Get your approvals faster with our streamlined process.",
-  keywords: [
-    "ICASA type approval",
-    "NRCS LOA",
-    "South Africa compliance",
-    "radio dealer license",
-    "ECS ECNS licensing",
-    "VHF radio license",
-    "compliance consultant",
-    "regulatory approval",
-    "telecommunications compliance",
-    "electronic communications",
-  ],
-  authors: [{ name: "Bilacert (Pty) Ltd" }],
-  creator: "Bilacert",
-  publisher: "Bilacert",
-  formatDetection: {
-    email: false,
-    address: false,
-    telephone: false,
-  },
-  metadataBase: new URL("https://bilacert.co.za"),
-  alternates: {
-    canonical: "/",
-  },
-  openGraph: {
-    title: "Bilacert - Your Compliance Partner | ICASA & NRCS Approvals",
-    description:
-      "Simplifying ICASA and NRCS compliance for South African businesses. Expert guidance for type approvals, licensing, and regulatory compliance.",
-    url: "https://bilacert.co.za",
-    siteName: "Bilacert",
-    images: [
-      {
-        url: "/logo.jpg",
-        width: 1200,
-        height: 630,
-        alt: "Bilacert - Your Compliance Partner",
-      },
-    ],
-    locale: "en_ZA",
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Bilacert - Your Compliance Partner",
-    description:
-      "Simplifying ICASA and NRCS compliance for South African businesses",
-    images: ["/logo.jpg"],
-  },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      "max-video-preview": -1,
-      "max-image-preview": "large",
-      "max-snippet": -1,
-    },
-  },
-  verification: {
-    google: "your-google-verification-code",
-    // Add other verification codes as needed
-  },
-};
-
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
-  return (
-    <html lang="en" className={inter.variable}>
-      <body className="font-sans antialiased">
-        <Header />
-        <main className="min-h-screen">{children}</main>
-        <Footer />
-        <WhatsAppButton />
-        <Analytics />
-      </body>
-      <GoogleAnalytics gaId="G-6Y6G6PC48C" />
-    </html>
-  );
-}
-````
-
-## File: apps/client/app/page.tsx
-````typescript
-import { Icon } from "@bilacert/shared/Icon";
-import { CheckCircle, Clock, Users } from "lucide-react";
-import type { Metadata } from "next";
-import Image from "next/image";
-import Link from "next/link";
-import BlogCard from "@/components/cards/BlogCard";
-import ServiceCard from "@/components/cards/ServiceCard";
-import StructuredData from "@/components/StructuredData";
-import Testimonials from "@/components/Testimonials";
-import {
-  getCachedFeaturedServices,
-  getCachedPublishedBlogs,
-} from "./_lib/cached-public-data";
-
-export const metadata: Metadata = {
-  title: "Home",
-  description:
-    "Bilacert simplifies ICASA and NRCS LOA compliance for South African businesses. Expert guidance for type approvals, licensing, and regulatory compliance. Get your approvals faster with our streamlined process.",
-  keywords: [
-    "ICASA type approval South Africa",
-    "NRCS LOA applications",
-    "radio dealer licensing",
-    "ECS ECNS licensing",
-    "VHF radio license",
-    "compliance consultant South Africa",
-    "regulatory approval services",
-    "telecommunications compliance",
-  ],
-  openGraph: {
-    title: "Bilacert - Your Compliance Partner | ICASA & NRCS Approvals",
-    description:
-      "Simplifying ICASA and NRCS compliance for South African businesses. Expert guidance for type approvals, licensing, and regulatory compliance.",
-    url: "https://bilacert.co.za",
-    type: "website",
-  },
-  alternates: {
-    canonical: "https://bilacert.co.za",
-  },
-};
-
-export default async function HomePage() {
-  const organizationData = {
-    name: "Bilacert (Pty) Ltd",
-    description:
-      "Bilacert simplifies ICASA and NRCS LOA compliance for South African businesses. Expert guidance for type approvals, licensing, and regulatory compliance.",
-    serviceType: "Compliance Consulting",
-    price: "From R1,000",
-  };
-
-  const services = (await getCachedFeaturedServices()).slice(0, 3);
-  const allBlogPosts = await getCachedPublishedBlogs();
-  const blogPosts = allBlogPosts.slice(0, 3);
-
-  const whyChooseUs = [
-    {
-      title: "Expert Guidance",
-      description:
-        "Deep industry knowledge and regulatory expertise to guide you through complex compliance requirements.",
-      icon: <Users className="h-6 w-6" />,
-    },
-    {
-      title: "Efficient Process",
-      description:
-        "Streamlined applications and proactive problem-solving to minimize delays and maximize success rates.",
-      icon: <Clock className="h-6 w-6" />,
-    },
-    {
-      title: "Client-Centric Approach",
-      description:
-        "Personalized support and clear communication throughout your compliance journey.",
-      icon: <CheckCircle className="h-6 w-6" />,
-    },
-  ];
-
-  return (
-    <div className="min-h-screen">
-      <StructuredData type="Organization" data={organizationData} />
-      {/* Hero Section */}
-      <section className="relative text-white py-20 lg:py-32">
-        <Image
-          src="/herosetion/Home-Page.jpg"
-          alt="Bilacert compliance"
-          fill
-          priority
-          className="object-cover"
-        />
-        <div className="absolute inset-0 bg-black/40" />
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div>
-              <h1 className="text-4xl lg:text-6xl font-bold mb-6 leading-tight">
-                Compliance Simplified
-              </h1>
-              <p className="text-xl lg:text-2xl mb-8 text-gray-200">
-                Expert guidance for ICASA and NRCS approvals. We handle the
-                complexity so you can focus on growing your business.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Link
-                  href="/contact"
-                  className="bg-accent text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-accent-light transition-all duration-200 transform hover:-translate-y-1 text-center"
-                >
-                  Get Free Consultation
-                </Link>
-                <Link
-                  href="/services"
-                  className="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-white hover:text-primary transition-all duration-200 text-center"
-                >
-                  View Our Services
-                </Link>
-              </div>
-            </div>
-            <div className="hidden lg:block">
-              <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8">
-                <div className="space-y-6">
-                  <div className="flex items-center space-x-4">
-                    <div className="bg-accent p-3 rounded-lg">
-                      <CheckCircle className="h-6 w-6 text-white" />
-                    </div>
-                    <div>
-                      <h3 className="font-semibold">30+ Days Faster</h3>
-                      <p className="text-gray-300">Than industry average</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center space-x-4">
-                    <div className="bg-accent p-3 rounded-lg">
-                      <Icon name="Shield" className="h-6 w-6 text-white" />
-                    </div>
-                    <div>
-                      <h3 className="font-semibold">100% Compliance</h3>
-                      <p className="text-gray-300">Guaranteed approval</p>
-                    </div>
-                  </div>
-                  {/* <div className='flex items-center space-x-4'>
-										<div className='bg-accent p-3 rounded-lg'>
-											<Users className='h-6 w-6 text-white' />
-										</div>
-										<div>
-											<h3 className='font-semibold'>500+ Clients</h3>
-											<p className='text-gray-300'>Successfully served</p>
-										</div>
-									</div> */}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Services Overview */}
-      <section className="py-20 bg-secondary-gray">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl lg:text-4xl font-bold text-primary mb-4">
-              Our Services
-            </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Comprehensive compliance solutions covering all aspects of ICASA
-              and NRCS regulatory approvals
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch">
-            {services.map((service) => (
-              <ServiceCard key={service.id} service={service} />
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Why Choose Us */}
-      <section className="py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl lg:text-4xl font-bold text-primary mb-4">
-              Why Choose Bilacert?
-            </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              We make compliance simple, efficient, and stress-free for
-              businesses of all sizes
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {whyChooseUs.map((item) => (
-              <div key={item.title} className="text-center">
-                <div className="bg-accent/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
-                  <div className="text-accent">{item.icon}</div>
-                </div>
-                <h3 className="text-xl font-semibold text-primary mb-4">
-                  {item.title}
-                </h3>
-                <p className="text-gray-600">{item.description}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Testimonials */}
-      <Testimonials />
-
-      {/* Blog Preview */}
-      <section className="py-20 bg-secondary-gray">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl lg:text-4xl font-bold text-primary mb-4">
-              Latest Insights
-            </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Stay informed with our latest compliance insights and industry
-              updates
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {blogPosts.map((post) => (
-              <BlogCard key={post.id} post={post} />
-            ))}
-          </div>
-
-          <div className="text-center mt-12">
-            <Link
-              href="/blog"
-              className="bg-primary text-white px-8 py-3 rounded-lg font-semibold hover:bg-primary-light transition-colors duration-200"
-            >
-              View All Posts
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* Final CTA */}
-      <section className="py-20 bg-gradient-to-r from-primary to-primary-light text-white">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl lg:text-4xl font-bold mb-6">
-            Ready to Simplify Your Compliance?
-          </h2>
-          <p className="text-xl mb-8 text-gray-200">
-            Get expert guidance and streamline your ICASA and NRCS approval
-            process. Contact us today for a free consultation.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              href="/contact"
-              className="bg-accent text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-accent-light transition-all duration-200 transform hover:-translate-y-1"
-            >
-              Get Free Consultation
-            </Link>
-            <Link
-              href="tel:0754304433"
-              className="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-white hover:text-primary transition-all duration-200"
-            >
-              Call 075 430 4433
-            </Link>
-          </div>
-        </div>
-      </section>
-    </div>
-  );
-}
-````
-
 ## File: apps/client/app/robots.ts
 ````typescript
 import type { MetadataRoute } from "next";
@@ -10052,28 +7453,6 @@ export default function robots(): MetadataRoute.Robots {
     },
     sitemap: "https://bilacert.co.za/sitemap.xml",
   };
-}
-````
-
-## File: apps/client/app/services/[serviceId]/form/page.tsx
-````typescript
-import { notFound } from "next/navigation";
-import { getCachedServiceBySlug } from "@/app/_lib/cached-public-data";
-import ServiceApplicationForm from "./ServiceApplicationForm";
-
-export default async function ServiceFormPage({
-  params,
-}: {
-  params: Promise<{ serviceId: string }>;
-}) {
-  const { serviceId } = await params;
-  const service = await getCachedServiceBySlug(serviceId);
-
-  if (!service) {
-    notFound();
-  }
-
-  return <ServiceApplicationForm service={service} serviceSlug={serviceId} />;
 }
 ````
 
@@ -10128,27 +7507,6 @@ export default async function ServiceFormPage({
 }
 ````
 
-## File: apps/client/components/blog/AboutAuthor.tsx
-````typescript
-interface AboutAuthorProps {
-  author: string;
-}
-
-export function AboutAuthor({ author }: AboutAuthorProps) {
-  return (
-    <div className="bg-gray-100 p-6 rounded-lg mt-8">
-      <div className="flex items-center">
-        {/* <Image src={author} alt={author} width={80} height={80} className="rounded-full" /> */}
-        <div className="ml-4">
-          <h3 className="text-xl font-bold">About {author}</h3>
-          <p className="text-gray-600">best writer since 2002</p>
-        </div>
-      </div>
-    </div>
-  );
-}
-````
-
 ## File: apps/client/components/blog/StickyShare.tsx
 ````typescript
 import { FaFacebook, FaLinkedin, FaTwitter } from "react-icons/fa";
@@ -10176,67 +7534,6 @@ export function StickyShare() {
           <FaFacebook className="h-5 w-5" />
         </button>
       </div>
-    </div>
-  );
-}
-````
-
-## File: apps/client/components/blog/TableOfContents.tsx
-````typescript
-"use client";
-import { useEffect, useState } from "react";
-
-interface Heading {
-  id: string;
-  text: string;
-  level: number;
-}
-
-interface TableOfContentsProps {
-  content: string;
-}
-
-export function TableOfContents({ content: _content }: TableOfContentsProps) {
-  const [headings, setHeadings] = useState<Heading[]>([]);
-
-  useEffect(() => {
-    // Note: HTML only goes up to h6! I left h7 in case you have custom styling,
-    // but standard HTML stops at <h6>.
-    const headingElements = document.querySelectorAll("h1, h2, h3, h4, h5, h6");
-    const newHeadings: Heading[] = [];
-
-    headingElements.forEach((heading) => {
-      const id =
-        heading.id || `heading-${Math.random().toString(36).substring(7)}`;
-      if (!heading.id) {
-        heading.id = id;
-      }
-      newHeadings.push({
-        id,
-        text: heading.textContent || "",
-        level: Number(heading.tagName.substring(1)),
-      });
-    });
-
-    setHeadings(newHeadings);
-  }, []);
-
-  return (
-    /* Added 'hidden md:block' here */
-    <div className="hidden md:block bg-gray-100 p-6 rounded-lg">
-      <h3 className="text-xl font-bold mb-4">Table of Contents</h3>
-      <ul>
-        {headings.map((heading) => (
-          <li
-            key={heading.id}
-            style={{ marginLeft: `${(heading.level - 2) * 1}rem` }}
-          >
-            <a href={`#${heading.id}`} className="text-primary hover:underline">
-              {heading.text}
-            </a>
-          </li>
-        ))}
-      </ul>
     </div>
   );
 }
@@ -10568,59 +7865,6 @@ export function HeroStatsBackdrop({ processingTime }: HeroStatsBackdropProps) {
         </div>
       </div>
     </div>
-  );
-}
-````
-
-## File: apps/client/components/service/ServicesGrid.tsx
-````typescript
-interface ServicesGridProps {
-  title: string;
-  subtitle: string;
-  items: Array<{
-    icon: string;
-    title: string;
-    description: string;
-  }>;
-  bgColor?: string;
-}
-
-import { getServiceIcon } from "@/lib/service-icons";
-
-export function ServicesGrid({
-  title,
-  subtitle,
-  items,
-  bgColor = "bg-secondary-gray",
-}: ServicesGridProps) {
-  return (
-    <section className={`py-20 ${bgColor}`}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl lg:text-4xl font-bold text-primary mb-4">
-            {title}
-          </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">{subtitle}</p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {items.map((item, index) => {
-            const Icon = getServiceIcon(item.icon);
-            return (
-              <div key={index} className="bg-white p-6 rounded-xl shadow-sm">
-                <div className="bg-accent/10 w-12 h-12 rounded-lg flex items-center justify-center mb-4">
-                  <Icon className="h-6 w-6 text-accent" />
-                </div>
-                <h3 className="text-lg font-semibold text-primary mb-2">
-                  {item.title}
-                </h3>
-                <p className="text-gray-600 text-sm">{item.description}</p>
-              </div>
-            );
-          })}
-        </div>
-      </div>
-    </section>
   );
 }
 ````
@@ -11942,264 +9186,6 @@ For more information on what to do next, we recommend the following sections
   - API reference for the generateStaticParams function.
 ````
 
-## File: apps/client/lib/seo.ts
-````typescript
-import type { Metadata } from "next";
-import { businessInfo } from "./business";
-
-interface SEOConfig {
-  title: string;
-  description: string;
-  keywords?: string[];
-  url?: string;
-  image?: string;
-  type?: "website" | "article";
-  publishedTime?: string;
-  modifiedTime?: string;
-  author?: string;
-}
-
-export function generateMetadata({
-  title,
-  description,
-  keywords = [],
-  url,
-  image = "/logo.jpg",
-  type = "website",
-  publishedTime,
-  modifiedTime,
-  author = businessInfo.defaultBlogAuthor,
-}: SEOConfig): Metadata {
-  const baseUrl = businessInfo.domain;
-  const fullUrl = url ? `${baseUrl}${url}` : baseUrl;
-  const fullImageUrl = image.startsWith("http") ? image : `${baseUrl}${image}`;
-
-  return {
-    title,
-    description,
-    keywords: [
-      ...keywords,
-      "ICASA",
-      "NRCS",
-      "compliance",
-      "South Africa",
-      "regulatory approval",
-      businessInfo.name,
-    ],
-    authors: [{ name: author }],
-    creator: author,
-    publisher: businessInfo.name,
-    metadataBase: new URL(baseUrl),
-    alternates: {
-      canonical: fullUrl,
-    },
-    openGraph: {
-      title,
-      description,
-      url: fullUrl,
-      siteName: businessInfo.name,
-      images: [
-        {
-          url: fullImageUrl,
-          width: 1200,
-          height: 630,
-          alt: title,
-        },
-      ],
-      locale: "en_ZA",
-      type,
-      ...(publishedTime && { publishedTime }),
-      ...(modifiedTime && { modifiedTime }),
-    },
-    twitter: {
-      card: "summary_large_image",
-      title,
-      description,
-      images: [fullImageUrl],
-      creator: businessInfo.social.twitterCreator,
-    },
-    robots: {
-      index: true,
-      follow: true,
-      googleBot: {
-        index: true,
-        follow: true,
-        "max-video-preview": -1,
-        "max-image-preview": "large",
-        "max-snippet": -1,
-      },
-    },
-    verification: {
-      google: "your-google-verification-code",
-      // Add other verification codes as needed
-    },
-  };
-}
-
-// Common SEO configurations for different page types
-export const seoConfigs = {
-  home: {
-    title: "Bilacert - Your Compliance Partner | ICASA & NRCS Approvals",
-    description:
-      "Bilacert simplifies ICASA and NRCS LOA compliance for South African businesses. Expert guidance for type approvals, licensing, and regulatory compliance.",
-    keywords: [
-      "ICASA type approval South Africa",
-      "NRCS LOA applications",
-      "radio dealer licensing",
-      "ECS ECNS licensing",
-      "VHF radio license",
-      "compliance consultant South Africa",
-    ],
-    url: "/",
-  },
-
-  about: {
-    title: "About Us - Bilacert Compliance Experts",
-    description:
-      "Learn about Bilacert, South Africa's trusted compliance partner. We simplify ICASA and NRCS approvals with our values of simplicity, clarity, efficiency, and support.",
-    keywords: [
-      "about Bilacert",
-      "compliance consultant South Africa",
-      "ICASA NRCS experts",
-      "regulatory compliance team",
-    ],
-    url: "/about",
-  },
-
-  services: {
-    title: "Our Services - ICASA & NRCS Compliance Solutions",
-    description:
-      "Comprehensive ICASA and NRCS compliance services including type approvals, licensing, and regulatory support. Expert guidance for South African businesses.",
-    keywords: [
-      "ICASA type approval services",
-      "NRCS LOA applications",
-      "radio dealer licensing",
-      "ECS ECNS licensing services",
-    ],
-    url: "/services",
-  },
-
-  contact: {
-    title: "Contact Us - Get Expert Compliance Guidance",
-    description: `Get in touch with ${businessInfo.name} for expert ICASA and NRCS compliance guidance. Call ${businessInfo.phone} or email ${businessInfo.email} for a free consultation.`,
-    keywords: [
-      "contact Bilacert",
-      "ICASA compliance consultation",
-      "NRCS LOA consultation",
-      "free compliance consultation",
-    ],
-    url: "/contact",
-  },
-
-  faq: {
-    title: "FAQ - ICASA & NRCS Compliance Questions Answered",
-    description:
-      "Find answers to common questions about ICASA and NRCS compliance, type approvals, licensing, and regulatory requirements in South Africa.",
-    keywords: [
-      "ICASA FAQ",
-      "NRCS LOA questions",
-      "compliance FAQ South Africa",
-      "type approval questions",
-    ],
-    url: "/faq",
-  },
-
-  blog: {
-    title: "Blog - ICASA & NRCS Compliance Insights",
-    description:
-      "Stay updated with the latest ICASA and NRCS compliance news, guides, and insights. Expert articles on type approvals, licensing, and regulatory changes in South Africa.",
-    keywords: [
-      "ICASA compliance blog",
-      "NRCS LOA news",
-      "compliance articles South Africa",
-      "type approval guides",
-    ],
-    url: "/blog",
-  },
-};
-
-// Service-specific SEO configurations
-export const serviceSeoConfigs = {
-  "icasa-type-approvals": {
-    title: "ICASA Type Approvals - Expert Certification Services",
-    description:
-      "Expert ICASA type approval services for South African businesses. We handle Standard, Simplified, Tested, and Untested approvals with fast processing and comprehensive support.",
-    keywords: [
-      "ICASA type approval",
-      "ICASA certification",
-      "telecommunications approval",
-      "radio frequency approval",
-    ],
-    url: "/services/icasa-type-approvals",
-  },
-
-  "nrcs-loa-applications": {
-    title: "NRCS LOA Applications - Expert Certification Services",
-    description:
-      "Professional NRCS Letter of Authority (LOA) application services for South African businesses. Expert guidance for electrical and electronic product compliance.",
-    keywords: [
-      "NRCS LOA",
-      "NRCS Letter of Authority",
-      "NRCS certification",
-      "electrical product approval",
-    ],
-    url: "/services/nrcs-loa-applications",
-  },
-
-  "radio-dealer-licensing": {
-    title: "Radio Dealer Licensing - ICASA License Services",
-    description:
-      "Complete Radio Dealer License services for South African businesses selling radio communication equipment. Expert ICASA licensing support and compliance guidance.",
-    keywords: [
-      "radio dealer license",
-      "ICASA radio license",
-      "radio communication license",
-      "two-way radio license",
-    ],
-    url: "/services/radio-dealer-licensing",
-  },
-
-  "class-ecs-ecns-licensing": {
-    title: "Class ECS/ECNS Licensing - Telecommunications License Services",
-    description:
-      "Professional ECS and ECNS licensing services for South African telecommunications providers. Expert guidance for Electronic Communications Service and Network Service licenses.",
-    keywords: [
-      "ECS license",
-      "ECNS license",
-      "electronic communications service",
-      "telecommunications license",
-    ],
-    url: "/services/class-ecs-ecns-licensing",
-  },
-
-  "license-exemptions": {
-    title: "License Exemptions - ECS/ECNS Exemption Services",
-    description:
-      "Expert ECS/ECNS license exemption services for South African businesses. We help determine if your business qualifies for ICASA license exemptions and provide compliance documentation.",
-    keywords: [
-      "license exemption",
-      "ECS exemption",
-      "ECNS exemption",
-      "ICASA exemption",
-    ],
-    url: "/services/license-exemptions",
-  },
-
-  "ski-boat-vhf-licensing": {
-    title: "Ski Boat VHF Licensing - Marine Radio License Services",
-    description:
-      "Professional VHF radio licensing services for South African marine vessels including ski boats, yachts, and recreational watercraft. Expert ICASA maritime compliance support.",
-    keywords: [
-      "VHF radio license",
-      "ski boat VHF",
-      "marine radio license",
-      "boat VHF license",
-    ],
-    url: "/services/ski-boat-vhf-licensing",
-  },
-};
-````
-
 ## File: apps/client/lib/service-icons.ts
 ````typescript
 import {
@@ -12603,24 +9589,36 @@ export type RevalidationPayload = z.infer<typeof revalidationPayloadSchema>;
 export type RevalidationRequest = RevalidationPayload;
 ````
 
-## File: packages/contracts/src/user.ts
+## File: packages/contracts/src/taskTodo.ts
 ````typescript
-export interface UserType {
-  id: string;
-  email: string;
-  firstName?: string;
-  lastName?: string;
-  role: "admin" | "editor" | "user";
-  phone?: string;
-  company?: string;
-  profileImage?: string;
-  bio?: string;
-  isActive: boolean;
-  createdAt: string;
-  updatedAt: string;
-  createdBy?: string;
-  updatedBy?: string;
-}
+import { z } from "zod";
+
+export const taskTodoSchema = z.object({
+  id: z.string(),
+  taskId: z.string(),
+  title: z.string().min(1, "Checklist item title is required"),
+  done: z.boolean().default(false),
+  createdAt: z.string().nullable(),
+  updatedAt: z.string().nullable(),
+});
+
+export type TaskTodoType = z.infer<typeof taskTodoSchema>;
+
+export const taskTodoInputSchema = taskTodoSchema.omit({
+  id: true,
+  taskId: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export type TaskTodoInputType = z.infer<typeof taskTodoInputSchema>;
+
+export const taskTodoUpdateInputSchema = z.object({
+  title: z.string().min(1, "Checklist item title is required").optional(),
+  done: z.boolean().optional(),
+});
+
+export type TaskTodoUpdateInputType = z.infer<typeof taskTodoUpdateInputSchema>;
 ````
 
 ## File: packages/contracts/tsconfig.json
@@ -13599,45 +10597,112 @@ using (bucket_id = 'services');
 -- Add safe, non-secret reference data here when required.
 ````
 
-## File: packages/supabase/sql/README.md
-````markdown
-# Bilacert Supabase SQL
+## File: packages/supabase/sql/011_tasks.sql
+````sql
+-- Task management dashboard table.
+-- Idempotent: safe to re-run (Supabase SQL editor) — no 42P07 on re-run.
+-- The applied remote table uses camelCase column names, matching the bilacert
+-- schema convention; the app's Queries/Mutations read/write it directly
+-- (packages/supabase/src/Queries/tasks.ts, Mutations/tasks.ts). After applying,
+-- regenerate database types so the table joins `supabaseType.ts`:
+--   pnpm gen:types
+create table if not exists public.tasks (
+  id uuid primary key default gen_random_uuid(),
+  title text not null,
+  description text,
+  status text not null default 'pending',
+  priority text not null default 'normal',
+  category text,
+  "assignedTo" uuid references public.users (id) on delete set null,
+  "dueAt" timestamptz,
+  "serviceId" uuid references public.services (id) on delete set null,
+  "submissionId" uuid references public.form_submissions (id) on delete set null,
+  "createdAt" timestamptz not null default now(),
+  "updatedAt" timestamptz not null default now(),
+  "completedAt" timestamptz
+);
 
-This directory is a schema snapshot reconstructed from the live Bilacert Supabase project:
+-- Self-heal partial or legacy states so re-runs converge on the camelCase
+-- schema (create table if not exists alone skips already-existing tables).
+alter table public.tasks add column if not exists title text;
+alter table public.tasks add column if not exists description text;
+alter table public.tasks add column if not exists status text not null default 'pending';
+alter table public.tasks add column if not exists priority text not null default 'normal';
+alter table public.tasks add column if not exists category text;
+alter table public.tasks add column if not exists "assignedTo" uuid;
+alter table public.tasks add column if not exists "dueAt" timestamptz;
+alter table public.tasks add column if not exists "serviceId" uuid;
+alter table public.tasks add column if not exists "submissionId" uuid;
+alter table public.tasks add column if not exists "createdAt" timestamptz not null default now();
+alter table public.tasks add column if not exists "updatedAt" timestamptz not null default now();
+alter table public.tasks add column if not exists "completedAt" timestamptz;
 
-- Project ref: `zpgxnohxizcmuwbosapx`
-- Repository: `malalang/bilacert`
-- Snapshot date: 2026-08-18
+create index if not exists tasks_status_idx on public.tasks (status);
+create index if not exists tasks_priority_idx on public.tasks (priority);
+create index if not exists tasks_createdat_idx on public.tasks ("createdAt" desc);
+create index if not exists tasks_assignedto_idx on public.tasks ("assignedTo");
+create index if not exists tasks_serviceid_idx on public.tasks ("serviceId");
+create index if not exists tasks_submissionid_idx on public.tasks ("submissionId");
 
-## Files
+alter table public.tasks enable row level security;
 
-| File | Purpose |
-| --- | --- |
-| `000_extensions.sql` | Verified database extensions and private schema |
-| `001_tables.sql` | Public table definitions |
-| `002_constraints.sql` | Primary keys, unique keys, checks and foreign keys |
-| `003_indexes.sql` | Explicit indexes from `pg_indexes` |
-| `004_functions.sql` | Public/private functions used by the schema |
-| `005_triggers.sql` | Database triggers |
-| `006_rls.sql` | RLS enabled/forced state |
-| `007_policies.sql` | Public-schema RLS policies |
-| `008_storage.sql` | Storage buckets and storage object policies |
-| `009_views.sql` | Public view snapshot |
-| `010_seed.sql` | Intentionally empty schema-only seed file |
+drop policy if exists "Tasks readable by authenticated users" on public.tasks;
+create policy "Tasks readable by authenticated users"
+on public.tasks for select
+to authenticated
+using (true);
 
-## Important
+drop policy if exists "Tasks writable by authenticated users" on public.tasks;
+create policy "Tasks writable by authenticated users"
+on public.tasks for all
+to authenticated
+using (true)
+with check (true);
+````
 
-This is a **schema clone**, not a production data dump. No user records, submissions, contacts, email contents, credentials, OAuth tokens, or other production data are committed here.
+## File: packages/supabase/sql/012_task_todos.sql
+````sql
+-- Task checklist items (per-task todo list).
+-- Idempotent: safe to re-run (Supabase SQL editor) — no 42P07 on re-run.
+-- The applied remote table uses camelCase column names, matching the bilacert
+-- schema convention; the app's Queries/Mutations read/write it directly
+-- (packages/supabase/src/Queries/tasks.ts, Mutations/tasks.ts). After applying,
+-- regenerate database types so the table joins `supabaseType.ts`:
+--   pnpm gen:types
+create table if not exists public.task_todos (
+  id uuid primary key default gen_random_uuid(),
+  "taskId" uuid not null references public.tasks (id) on delete cascade,
+  title text not null,
+  done boolean not null default false,
+  "createdAt" timestamptz not null default now(),
+  "updatedAt" timestamptz not null default now()
+);
 
-The SQL intentionally preserves the live RLS state. In particular, `form_submissions` and `services` currently have RLS disabled. Before exposing either table through the browser/client API, define and test appropriate policies.
+-- Self-heal partial or legacy states so re-runs converge on the camelCase
+-- schema (create table if not exists alone skips already-existing tables).
+alter table public.task_todos add column if not exists "taskId" uuid;
+alter table public.task_todos add column if not exists title text;
+alter table public.task_todos add column if not exists done boolean not null default false;
+alter table public.task_todos add column if not exists "createdAt" timestamptz not null default now();
+alter table public.task_todos add column if not exists "updatedAt" timestamptz not null default now();
 
-The live project also contains a `public.increment_views(text)` function whose current production body references `views_count`, while the table column is `viewsCount`. That mismatch is preserved in `004_functions.sql` as part of the clone; it should be fixed separately as an application/database bug rather than silently changing the production snapshot.
+create index if not exists task_todos_taskid_idx on public.task_todos ("taskId");
+create index if not exists task_todos_done_idx on public.task_todos (done);
 
-## Recreating locally
+alter table public.task_todos enable row level security;
 
-For a clean Supabase database, apply the files in numeric order after the normal Supabase-managed schemas (`auth`, `storage`, etc.) have been initialized. The storage file expects Supabase Storage to be available.
+drop policy if exists "Task todos readable by authenticated users" on public.task_todos;
+create policy "Task todos readable by authenticated users"
+on public.task_todos for select
+to authenticated
+using (true);
 
-For future changes, prefer normal Supabase migrations under `supabase/migrations` and keep this directory synchronized as a readable SQL source snapshot.
+drop policy if exists "Task todos writable by authenticated users" on public.task_todos;
+create policy "Task todos writable by authenticated users"
+on public.task_todos for all
+to authenticated
+using (true)
+with check (true);
 ````
 
 ## File: packages/supabase/src/auth.ts
@@ -13695,41 +10760,6 @@ export async function requireAdminUser() {
   }
 
   return adminClient;
-}
-````
-
-## File: packages/supabase/src/cache.ts
-````typescript
-import type { RevalidationRequest } from "@bilacert/contracts/revalidation";
-
-export const CACHE_TAGS = {
-  blogs: "blogs",
-  blog: (slug: string) => `blog:${slug}`,
-  services: "services",
-  service: (slug: string) => `service:${slug}`,
-  testimonials: "testimonials",
-  contacts: "contacts",
-  formSubmissions: "form-submissions",
-} as const;
-
-export const CACHE_PATHS = {
-  home: "/",
-  blog: "/blog",
-  blogPost: (slug: string) => `/blog/${slug}`,
-  services: "/services",
-  service: (slug: string) => `/services/${slug}`,
-} as const;
-
-export interface MutationResult<T> {
-  data: T;
-  revalidate: RevalidationRequest;
-}
-
-export function mutationResult<T>(
-  data: T,
-  revalidate: RevalidationRequest,
-): MutationResult<T> {
-  return { data, revalidate };
 }
 ````
 
@@ -13791,514 +10821,6 @@ export const createClient = (request: NextRequest) => {
 
   return supabaseResponse;
 };
-````
-
-## File: packages/supabase/src/supabaseType.ts
-````typescript
-export type Json =
-  | string
-  | number
-  | boolean
-  | null
-  | { [key: string]: Json | undefined }
-  | Json[];
-
-export type Database = {
-  public: {
-    Tables: {
-      blog_posts: {
-        Row: {
-          authorId: string | null;
-          authorName: string | null;
-          category: string | null;
-          content: string;
-          createdAt: string | null;
-          excerpt: string | null;
-          featured: boolean | null;
-          featuredImage: string | null;
-          id: string;
-          published: boolean | null;
-          publishedAt: string | null;
-          readTime: string | null;
-          seoDescription: string | null;
-          seoKeywords: string | null;
-          seoTitle: string | null;
-          slug: string;
-          tags: string | null;
-          thumbnail: string | null;
-          title: string;
-          updatedAt: string | null;
-          viewsCount: number | null;
-        };
-        Insert: {
-          authorId?: string | null;
-          authorName?: string | null;
-          category?: string | null;
-          content: string;
-          createdAt?: string | null;
-          excerpt?: string | null;
-          featured?: boolean | null;
-          featuredImage?: string | null;
-          id: string;
-          published?: boolean | null;
-          publishedAt?: string | null;
-          readTime?: string | null;
-          seoDescription?: string | null;
-          seoKeywords?: string | null;
-          seoTitle?: string | null;
-          slug: string;
-          tags?: string | null;
-          thumbnail?: string | null;
-          title: string;
-          updatedAt?: string | null;
-          viewsCount?: number | null;
-        };
-        Update: {
-          authorId?: string | null;
-          authorName?: string | null;
-          category?: string | null;
-          content?: string;
-          createdAt?: string | null;
-          excerpt?: string | null;
-          featured?: boolean | null;
-          featuredImage?: string | null;
-          id?: string;
-          published?: boolean | null;
-          publishedAt?: string | null;
-          readTime?: string | null;
-          seoDescription?: string | null;
-          seoKeywords?: string | null;
-          seoTitle?: string | null;
-          slug?: string;
-          tags?: string | null;
-          thumbnail?: string | null;
-          title?: string;
-          updatedAt?: string | null;
-          viewsCount?: number | null;
-        };
-        Relationships: [
-          {
-            foreignKeyName: "blog_posts_author_id_fkey";
-            columns: ["authorId"];
-            isOneToOne: false;
-            referencedRelation: "users";
-            referencedColumns: ["id"];
-          },
-        ];
-      };
-      contacts: {
-        Row: {
-          email: string;
-          id: string;
-          message: string | null;
-          name: string | null;
-          phone: string | null;
-          service: string | null;
-          submittedAt: string;
-        };
-        Insert: {
-          email: string;
-          id?: string;
-          message?: string | null;
-          name?: string | null;
-          phone?: string | null;
-          service?: string | null;
-          submittedAt?: string;
-        };
-        Update: {
-          email?: string;
-          id?: string;
-          message?: string | null;
-          name?: string | null;
-          phone?: string | null;
-          service?: string | null;
-          submittedAt?: string;
-        };
-        Relationships: [];
-      };
-      form_submissions: {
-        Row: {
-          assignedTo: string | null;
-          company: string | null;
-          completedAt: string | null;
-          createdAt: string | null;
-          details: Json | null;
-          email: string;
-          formType: string;
-          fullName: string;
-          id: string;
-          industry: string | null;
-          internalNotes: string | null;
-          phone: string | null;
-          serviceId: string | null;
-          serviceName: string | null;
-          status: string;
-          updatedAt: string | null;
-        };
-        Insert: {
-          assignedTo?: string | null;
-          company?: string | null;
-          completedAt?: string | null;
-          createdAt?: string | null;
-          details?: Json | null;
-          email: string;
-          formType: string;
-          fullName: string;
-          id?: string;
-          industry?: string | null;
-          internalNotes?: string | null;
-          phone?: string | null;
-          serviceId?: string | null;
-          serviceName?: string | null;
-          status?: string;
-          updatedAt?: string | null;
-        };
-        Update: {
-          assignedTo?: string | null;
-          company?: string | null;
-          completedAt?: string | null;
-          createdAt?: string | null;
-          details?: Json | null;
-          email?: string;
-          formType?: string;
-          fullName?: string;
-          id?: string;
-          industry?: string | null;
-          internalNotes?: string | null;
-          phone?: string | null;
-          serviceId?: string | null;
-          serviceName?: string | null;
-          status?: string;
-          updatedAt?: string | null;
-        };
-        Relationships: [
-          {
-            foreignKeyName: "form_submissions_assigned_to_fkey";
-            columns: ["assignedTo"];
-            isOneToOne: false;
-            referencedRelation: "users";
-            referencedColumns: ["id"];
-          },
-        ];
-      };
-      services: {
-        Row: {
-          category: string | null;
-          content: string | null;
-          createdAt: string | null;
-          description: string | null;
-          featured: boolean | null;
-          features: string[] | null;
-          href: string;
-          icon: string | null;
-          id: string;
-          image: string | null;
-          includes: string[] | null;
-          orderIndex: number | null;
-          pricing: number | null;
-          pricingPlans: Json | null;
-          processingTime: string | null;
-          processSteps: Json | null;
-          published: boolean | null;
-          requirements: string[] | null;
-          seoDescription: string | null;
-          seoKeywords: string | null;
-          seoTitle: string | null;
-          shortDescription: string | null;
-          slug: string;
-          successStory: Json | null;
-          thumbnail: string | null;
-          title: string;
-          updatedAt: string | null;
-        };
-        Insert: {
-          category?: string | null;
-          content?: string | null;
-          createdAt?: string | null;
-          description?: string | null;
-          featured?: boolean | null;
-          features?: string[] | null;
-          href: string;
-          icon?: string | null;
-          id?: string;
-          image?: string | null;
-          includes?: string[] | null;
-          orderIndex?: number | null;
-          pricing?: number | null;
-          pricingPlans?: Json | null;
-          processingTime?: string | null;
-          processSteps?: Json | null;
-          published?: boolean | null;
-          requirements?: string[] | null;
-          seoDescription?: string | null;
-          seoKeywords?: string | null;
-          seoTitle?: string | null;
-          shortDescription?: string | null;
-          slug: string;
-          successStory?: Json | null;
-          thumbnail?: string | null;
-          title: string;
-          updatedAt?: string | null;
-        };
-        Update: {
-          category?: string | null;
-          content?: string | null;
-          createdAt?: string | null;
-          description?: string | null;
-          featured?: boolean | null;
-          features?: string[] | null;
-          href?: string;
-          icon?: string | null;
-          id?: string;
-          image?: string | null;
-          includes?: string[] | null;
-          orderIndex?: number | null;
-          pricing?: number | null;
-          pricingPlans?: Json | null;
-          processingTime?: string | null;
-          processSteps?: Json | null;
-          published?: boolean | null;
-          requirements?: string[] | null;
-          seoDescription?: string | null;
-          seoKeywords?: string | null;
-          seoTitle?: string | null;
-          shortDescription?: string | null;
-          slug?: string;
-          successStory?: Json | null;
-          thumbnail?: string | null;
-          title?: string;
-          updatedAt?: string | null;
-        };
-        Relationships: [];
-      };
-      testimonials: {
-        Row: {
-          createdAt: string | null;
-          id: string;
-          postUrl: string;
-        };
-        Insert: {
-          createdAt?: string | null;
-          id?: string;
-          postUrl: string;
-        };
-        Update: {
-          createdAt?: string | null;
-          id?: string;
-          postUrl?: string;
-        };
-        Relationships: [];
-      };
-      users: {
-        Row: {
-          bio: string | null;
-          company: string | null;
-          createdAt: string | null;
-          createdBy: string | null;
-          email: string;
-          firstName: string | null;
-          id: string;
-          isActive: boolean | null;
-          lastName: string | null;
-          phone: string | null;
-          profileImage: string | null;
-          role: string;
-          updatedAt: string | null;
-          updatedBy: string | null;
-        };
-        Insert: {
-          bio?: string | null;
-          company?: string | null;
-          createdAt?: string | null;
-          createdBy?: string | null;
-          email: string;
-          firstName?: string | null;
-          id: string;
-          isActive?: boolean | null;
-          lastName?: string | null;
-          phone?: string | null;
-          profileImage?: string | null;
-          role?: string;
-          updatedAt?: string | null;
-          updatedBy?: string | null;
-        };
-        Update: {
-          bio?: string | null;
-          company?: string | null;
-          createdAt?: string | null;
-          createdBy?: string | null;
-          email?: string;
-          firstName?: string | null;
-          id?: string;
-          isActive?: boolean | null;
-          lastName?: string | null;
-          phone?: string | null;
-          profileImage?: string | null;
-          role?: string;
-          updatedAt?: string | null;
-          updatedBy?: string | null;
-        };
-        Relationships: [
-          {
-            foreignKeyName: "users_created_by_fkey";
-            columns: ["createdBy"];
-            isOneToOne: false;
-            referencedRelation: "users";
-            referencedColumns: ["id"];
-          },
-          {
-            foreignKeyName: "users_updated_by_fkey";
-            columns: ["updatedBy"];
-            isOneToOne: false;
-            referencedRelation: "users";
-            referencedColumns: ["id"];
-          },
-        ];
-      };
-    };
-    Views: {
-      [_ in never]: never;
-    };
-    Functions: {
-      increment_views: {
-        Args: { post_slug: string };
-        Returns: undefined;
-      };
-    };
-    Enums: {
-      [_ in never]: never;
-    };
-    CompositeTypes: {
-      [_ in never]: never;
-    };
-  };
-};
-
-type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">;
-
-type DefaultSchema = DatabaseWithoutInternals[Extract<
-  keyof Database,
-  "public"
->];
-
-export type Tables<
-  DefaultSchemaTableNameOrOptions extends
-    | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
-    | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals;
-  }
-    ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
-        DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
-    : never = never,
-> = DefaultSchemaTableNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals;
-}
-  ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
-      DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
-      Row: infer R;
-    }
-    ? R
-    : never
-  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema["Tables"] &
-        DefaultSchema["Views"])
-    ? (DefaultSchema["Tables"] &
-        DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends {
-        Row: infer R;
-      }
-      ? R
-      : never
-    : never;
-
-export type TablesInsert<
-  DefaultSchemaTableNameOrOptions extends
-    | keyof DefaultSchema["Tables"]
-    | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals;
-  }
-    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
-    : never = never,
-> = DefaultSchemaTableNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals;
-}
-  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
-      Insert: infer I;
-    }
-    ? I
-    : never
-  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
-    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
-        Insert: infer I;
-      }
-      ? I
-      : never
-    : never;
-
-export type TablesUpdate<
-  DefaultSchemaTableNameOrOptions extends
-    | keyof DefaultSchema["Tables"]
-    | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals;
-  }
-    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
-    : never = never,
-> = DefaultSchemaTableNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals;
-}
-  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
-      Update: infer U;
-    }
-    ? U
-    : never
-  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
-    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
-        Update: infer U;
-      }
-      ? U
-      : never
-    : never;
-
-export type Enums<
-  DefaultSchemaEnumNameOrOptions extends
-    | keyof DefaultSchema["Enums"]
-    | { schema: keyof DatabaseWithoutInternals },
-  EnumName extends DefaultSchemaEnumNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals;
-  }
-    ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
-    : never = never,
-> = DefaultSchemaEnumNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals;
-}
-  ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
-  : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
-    ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
-    : never;
-
-export type CompositeTypes<
-  PublicCompositeTypeNameOrOptions extends
-    | keyof DefaultSchema["CompositeTypes"]
-    | { schema: keyof DatabaseWithoutInternals },
-  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals;
-  }
-    ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
-    : never = never,
-> = PublicCompositeTypeNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals;
-}
-  ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
-  : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
-    ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
-    : never;
-
-export const Constants = {
-  public: {
-    Enums: {},
-  },
-} as const;
 ````
 
 ## File: packages/supabase/supabase/.gitignore
@@ -14838,6 +11360,858 @@ s3_secret_key = "env(S3_SECRET_KEY)"
 }
 ````
 
+## File: apps/admin/app/admin/analysis/charts.tsx
+````typescript
+"use client";
+
+import {
+  Bar,
+  BarChart,
+  CartesianGrid,
+  Cell,
+  Legend,
+  Line,
+  LineChart,
+  Pie,
+  PieChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
+
+const COLORS = [
+  "#1f77b4",
+  "#ff7f0e",
+  "#2ca02c",
+  "#d62728",
+  "#9467bd",
+  "#8c564b",
+  "#e377c2",
+  "#7f7f7f",
+  "#bcbd22",
+  "#17becf",
+];
+
+const truncateLabel = (value: string, maxLength = 24) => {
+  if (!value) return "";
+  return value.length > maxLength ? `${value.slice(0, maxLength)}...` : value;
+};
+
+const formatSeriesName = (key: string) =>
+  key
+    .replace(/-/g, "_")
+    .split("_")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+
+const CustomTooltip = ({ active, payload, label }: any) => {
+  if (active && payload && payload.length) {
+    const data = payload[0].payload;
+    return (
+      <div className="rounded-lg border border-slate-200 bg-white/80 p-3 text-slate-700 shadow-lg backdrop-blur-sm">
+        <p className="font-bold">{label || data.name || data.author}</p>
+        {payload.map((p: any, i: number) => (
+          <p
+            key={`${p.name}-${i}`}
+            style={{ color: p.color }}
+          >{`${p.name}: ${p.value}`}</p>
+        ))}
+      </div>
+    );
+  }
+  return null;
+};
+
+export const FilteredLineChart = ({
+  data = [],
+  keys = [],
+  height = 400,
+  showLegend = true,
+  seriesNameFormatter = formatSeriesName,
+}: {
+  data?: { date: string; [key: string]: number | string }[];
+  keys?: string[];
+  height?: number;
+  showLegend?: boolean;
+  seriesNameFormatter?: (key: string) => string;
+}) => (
+  <ResponsiveContainer width="100%" height={height}>
+    <LineChart data={data}>
+      <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
+      <XAxis dataKey="date" stroke="#888" fontSize={12} />
+      <YAxis stroke="#888" fontSize={12} />
+      <Tooltip content={<CustomTooltip />} />
+      {showLegend && <Legend />}
+      {keys.map((key, index) => (
+        <Line
+          key={key}
+          type="monotone"
+          dataKey={key}
+          name={seriesNameFormatter(key)}
+          stroke={COLORS[index % COLORS.length]}
+          strokeWidth={2}
+          dot={false}
+        />
+      ))}
+    </LineChart>
+  </ResponsiveContainer>
+);
+
+export const SubmissionsLineChart = ({
+  data = [],
+}: {
+  data?: { date: string; count: number }[];
+}) => (
+  <ResponsiveContainer width="100%" height={300}>
+    <LineChart data={data}>
+      <defs>
+        <linearGradient id="colorSubmissions" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="5%" stopColor="#8884d8" stopOpacity={0.8} />
+          <stop offset="95%" stopColor="#8884d8" stopOpacity={0} />
+        </linearGradient>
+      </defs>
+      <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
+      <XAxis dataKey="date" stroke="#888" fontSize={12} />
+      <YAxis stroke="#888" fontSize={12} />
+      <Tooltip content={<CustomTooltip />} />
+      <Line
+        type="monotone"
+        dataKey="count"
+        name="Submissions"
+        stroke="#8884d8"
+        strokeWidth={2}
+        fillOpacity={1}
+        fill="url(#colorSubmissions)"
+        dot={{ r: 4, fill: "#8884d8" }}
+      />
+    </LineChart>
+  </ResponsiveContainer>
+);
+
+export const SubmissionsBarChart = ({
+  data = [],
+}: {
+  data?: { serviceName: string; count: number }[];
+}) => (
+  <ResponsiveContainer width="100%" height={300}>
+    <BarChart data={data}>
+      <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
+      <XAxis dataKey="serviceName" stroke="#888" fontSize={12} />
+      <YAxis stroke="#888" fontSize={12} />
+      <Tooltip content={<CustomTooltip />} />
+      <Bar
+        dataKey="count"
+        name="Submissions"
+        fill="#82ca9d"
+        radius={[4, 4, 0, 0]}
+      >
+        {data.map((_entry, index) => (
+          <Cell
+            key={`cell-${_entry.serviceName}`}
+            fill={COLORS[index % COLORS.length]}
+          />
+        ))}
+      </Bar>
+    </BarChart>
+  </ResponsiveContainer>
+);
+
+export const ContentBarChart = ({
+  data = [],
+}: {
+  data?: { contentType: string; count: number }[];
+}) => (
+  <ResponsiveContainer width="100%" height={300}>
+    <BarChart data={data} layout="vertical">
+      <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
+      <XAxis type="number" stroke="#888" fontSize={12} />
+      <YAxis
+        dataKey="contentType"
+        type="category"
+        width={120}
+        stroke="#888"
+        fontSize={12}
+      />
+      <Tooltip content={<CustomTooltip />} />
+      <Bar dataKey="count" name="Count" fill="#ffc658" radius={[0, 4, 4, 0]}>
+        {data.map((_entry, index) => (
+          <Cell
+            key={`cell-${_entry.contentType}`}
+            fill={COLORS[index % COLORS.length]}
+          />
+        ))}
+      </Bar>
+    </BarChart>
+  </ResponsiveContainer>
+);
+
+export const BlogViewsChart = ({
+  data = [],
+}: {
+  data?: { title: string; views: number }[];
+}) => (
+  <ResponsiveContainer width="100%" height={400}>
+    <BarChart data={data} layout="vertical">
+      <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
+      <XAxis type="number" stroke="#888" fontSize={12} />
+      <YAxis
+        dataKey="title"
+        type="category"
+        width={110}
+        stroke="#888"
+        fontSize={10}
+        interval={0}
+        tickFormatter={(value) => truncateLabel(String(value), 18)}
+      />
+      <Tooltip content={<CustomTooltip />} />
+      <Bar dataKey="views" name="Views" fill="#ff8042" radius={[0, 4, 4, 0]}>
+        {data.map((_entry, index) => (
+          <Cell
+            key={`cell-${_entry.title}`}
+            fill={COLORS[index % COLORS.length]}
+          />
+        ))}
+      </Bar>
+    </BarChart>
+  </ResponsiveContainer>
+);
+
+export const SubmissionStatusPieChart = ({
+  data = [],
+}: {
+  data?: { status: string; count: number }[];
+}) => (
+  <ResponsiveContainer width="100%" height={300}>
+    <PieChart>
+      <Pie
+        data={data}
+        dataKey="count"
+        nameKey="status"
+        cx="50%"
+        cy="50%"
+        outerRadius={100}
+        label
+      >
+        {data.map((_entry, index) => (
+          <Cell
+            key={`cell-${_entry.status}`}
+            fill={COLORS[index % COLORS.length]}
+          />
+        ))}
+      </Pie>
+      <Tooltip content={<CustomTooltip />} />
+      <Legend />
+    </PieChart>
+  </ResponsiveContainer>
+);
+
+export const SubmissionsByServicePieChart = ({
+  data = [],
+}: {
+  data?: { serviceName: string; count: number }[];
+}) => (
+  <ResponsiveContainer width="100%" height={300}>
+    <PieChart>
+      <Pie
+        data={data}
+        dataKey="count"
+        nameKey="serviceName"
+        cx="50%"
+        cy="50%"
+        outerRadius={100}
+        label
+      >
+        {data.map((_entry, index) => (
+          <Cell
+            key={`cell-${_entry.serviceName}`}
+            fill={COLORS[index % COLORS.length]}
+          />
+        ))}
+      </Pie>
+      <Tooltip content={<CustomTooltip />} />
+      <Legend />
+    </PieChart>
+  </ResponsiveContainer>
+);
+
+export const BlogViewsLineChart = ({
+  data = [],
+  keys = ["views"],
+}: {
+  data?: { date: string; [key: string]: number | string }[];
+  keys?: string[];
+}) => <FilteredLineChart data={data} keys={keys} height={300} />;
+
+export const CombinedActivityChart = ({
+  data = [],
+  keys = [],
+}: {
+  data?: { date: string; [key: string]: number | string }[];
+  keys?: string[];
+}) => <FilteredLineChart data={data} keys={keys} height={400} />;
+````
+
+## File: apps/admin/app/admin/analysis/page.tsx
+````typescript
+import type { Viewport } from "next";
+import { Suspense } from "react";
+import AnalysisClient from "./AnalysisClient";
+import AnalysisLoading from "./loading";
+
+export const metadata = {
+  title: "Analysis | Bilacert Admin Pro",
+  description: "In-depth analysis of submissions and content.",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#1f2937" },
+  ],
+};
+export default function AnalysisPage() {
+  return (
+    <Suspense fallback={<AnalysisLoading />}>
+      <AnalysisClient />
+    </Suspense>
+  );
+}
+````
+
+## File: apps/admin/app/admin/blogs/BlogEditor.tsx
+````typescript
+"use client";
+import DOMPurify from "isomorphic-dompurify";
+import dynamic from "next/dynamic";
+import Image from "next/image";
+import { useEffect, useState } from "react";
+import "react-quill-new/dist/quill.snow.css";
+import { Card, CardHeader } from "@/components/ui/card";
+
+const ReactQuill = dynamic(() => import("react-quill-new"), {
+  ssr: false,
+  loading: () => (
+    <div className="h-64 flex items-center justify-center bg-slate-50 rounded-lg">
+      Loading Editor...
+    </div>
+  ),
+});
+
+const modules = {
+  toolbar: [
+    [{ header: [1, 2, 3, false] }],
+    ["bold", "italic", "underline", "strike"],
+    [{ list: "ordered" }, { list: "bullet" }],
+    ["link", "image", "video"],
+    ["clean"],
+  ],
+};
+
+const bilacertArticlePreviewStyles = `
+  .bilacert-article {
+    color: #1f2937;
+    font-size: 1.0625rem;
+    line-height: 1.9;
+    max-width: 100%;
+    overflow-wrap: normal;
+    position: relative;
+    word-break: normal;
+    z-index: 0;
+  }
+
+  .bilacert-article * {
+    max-width: 100%;
+  }
+
+  .bilacert-article p {
+    margin-bottom: 1.5rem;
+    overflow-wrap: normal;
+    text-wrap: pretty;
+    white-space: normal;
+    word-break: normal;
+  }
+
+  .bilacert-article h1,
+  .bilacert-article h2,
+  .bilacert-article h3,
+  .bilacert-article h4 {
+    color: #0a2b4c;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.2;
+    text-wrap: balance;
+  }
+
+  .bilacert-article h1 {
+    font-size: 2.5rem;
+    margin: 0 0 1.5rem;
+  }
+
+  .bilacert-article h2 {
+    font-size: 2rem;
+    margin: 3rem 0 1rem;
+  }
+
+  .bilacert-article h3 {
+    font-size: 1.5rem;
+    margin: 2rem 0 0.75rem;
+  }
+
+  .bilacert-article strong {
+    color: #334155;
+    font-weight: 800;
+  }
+
+  .bilacert-article a {
+    color: #1a4a6b;
+    font-weight: 700;
+    text-decoration: underline;
+    text-decoration-color: #f2994a;
+    text-underline-offset: 0.2em;
+  }
+
+  .bilacert-article ul,
+  .bilacert-article ol {
+    margin: 1.5rem 0 1.5rem 1.5rem;
+    padding-left: 1rem;
+  }
+
+  .bilacert-article ul {
+    list-style: disc;
+  }
+
+  .bilacert-article ol {
+    list-style: decimal;
+  }
+
+  .bilacert-article li {
+    margin-bottom: 0.75rem;
+    padding-left: 0.25rem;
+  }
+
+  .bilacert-article blockquote {
+    border-left: 4px solid #f2994a;
+    color: #475569;
+    font-size: 1.125rem;
+    font-style: italic;
+    margin: 2rem 0;
+    padding: 1rem 0 1rem 1.5rem;
+  }
+
+  .bilacert-article img,
+  .bilacert-article iframe,
+  .bilacert-article video {
+    border-radius: 1rem;
+    display: block;
+    height: auto;
+    margin: 2rem auto;
+    max-width: 100%;
+  }
+
+  .bilacert-article pre {
+    background: #0a2b4c;
+    border-radius: 1rem;
+    color: white;
+    margin: 2rem 0;
+    overflow-x: auto;
+    padding: 1.25rem;
+    white-space: pre-wrap;
+  }
+
+  .bilacert-article code {
+    overflow-wrap: break-word;
+    white-space: pre-wrap;
+  }
+
+  .bilacert-article table {
+    display: block;
+    margin: 2rem 0;
+    max-width: 100%;
+    overflow-x: auto;
+    width: 100%;
+  }
+
+  .bilacert-article .ql-align-center {
+    text-align: center;
+  }
+
+  .bilacert-article .ql-align-right {
+    text-align: right;
+  }
+
+  .bilacert-article .ql-align-justify {
+    text-align: justify;
+  }
+
+  .bilacert-article .ql-size-small {
+    font-size: 0.875em;
+  }
+
+  .bilacert-article .ql-size-large {
+    font-size: 1.25em;
+  }
+
+  .bilacert-article .ql-size-huge {
+    font-size: 1.5em;
+  }
+
+  @media (min-width: 768px) {
+    .bilacert-article {
+      font-size: 1.125rem;
+    }
+  }
+`;
+
+interface BlogEditorProps {
+  value: string;
+  onChange: (value: string) => void;
+  onImageSelect?: (url: string) => void;
+  title: string;
+  featuredImage: string | null | undefined;
+}
+
+export default function BlogEditor({
+  value,
+  onChange,
+  onImageSelect: _onImageSelect,
+  title,
+  featuredImage,
+}: BlogEditorProps) {
+  const [view, setView] = useState<"edit" | "preview">("edit");
+  const [sanitized, setSanitized] = useState("");
+
+  useEffect(() => {
+    setSanitized(DOMPurify.sanitize(value));
+  }, [value]);
+
+  useEffect(() => {
+    document
+      .querySelectorAll<HTMLButtonElement>(
+        ".bilacert-blog-editor .ql-toolbar button",
+      )
+      .forEach((button) => {
+        button.type = "button";
+      });
+  }, []);
+
+  return (
+    <Card className="bilacert-blog-editor relative z-0 mx-auto w-full max-w-5xl overflow-hidden p-4 md:p-8">
+      <CardHeader className="flex flex-col gap-3 border-b border-slate-100 bg-white py-2 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-wrap gap-1 rounded-xl bg-slate-100 p-1">
+          <button
+            type="button"
+            onClick={() => setView("edit")}
+            className={`px-6 py-2 text-sm font-semibold rounded-lg transition-all ${
+              view === "edit"
+                ? "bg-white shadow-sm text-indigo-600"
+                : "text-slate-500 hover:text-slate-700"
+            }`}
+          >
+            Edit Content
+          </button>
+          <button
+            type="button"
+            onClick={() => setView("preview")}
+            className={`px-6 py-2 text-sm font-semibold rounded-lg transition-all ${
+              view === "preview"
+                ? "bg-white shadow-sm text-indigo-600"
+                : "text-slate-500 hover:text-slate-700"
+            }`}
+          >
+            Live Preview
+          </button>
+        </div>
+      </CardHeader>
+
+      <div className="relative z-0 w-full overflow-hidden">
+        {view === "edit" ? (
+          <div className="animate-in fade-in duration-300 overflow-hidden rounded-2xl border border-slate-200 shadow-sm">
+            <style>{`
+              .bilacert-blog-editor .ql-container {
+                font-size: 16px;
+                border-bottom-left-radius: 12px;
+                border-bottom-right-radius: 12px;
+              }
+              .bilacert-blog-editor .ql-toolbar {
+                border-top-left-radius: 12px;
+                border-top-right-radius: 12px;
+                border-color: #f1f5f9 !important;
+                background: #f8fafc;
+                border-bottom: 1px solid #f1f5f9;
+              }
+              .bilacert-blog-editor .ql-editor {
+                min-height: 400px;
+                max-width: 100%;
+                overflow-wrap: break-word;
+              }
+            `}</style>
+            <ReactQuill
+              theme="snow"
+              value={value}
+              onChange={onChange}
+              modules={modules}
+              className="border-none"
+            />
+          </div>
+        ) : (
+          <div className="relative z-0 animate-in slide-in-from-bottom-2 overflow-hidden rounded-2xl bg-white p-4 duration-300">
+            <style>{bilacertArticlePreviewStyles}</style>
+            {featuredImage && (
+              <div className="mb-8 overflow-hidden">
+                <h2 className="text-lg font-bold mb-4 text-slate-800">
+                  Featured Image
+                </h2>
+                <div className="relative aspect-video w-full max-w-2xl mx-auto overflow-hidden rounded-lg shadow-lg border border-slate-200">
+                  <Image
+                    src={featuredImage}
+                    alt="Featured Image Preview"
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+              </div>
+            )}
+            <div className="mb-10 border-b border-slate-100 pb-8">
+              <h1 className="text-2xl font-black text-slate-900 mb-4 tracking-tight leading-tight">
+                {title || "Untitled Post"}
+              </h1>
+              <div className="flex flex-wrap items-center gap-3 text-slate-400 text-sm">
+                <span className="bg-slate-100 px-2 py-1 rounded">Preview</span>
+                <span>•</span>
+                <span>{new Date().toLocaleDateString()}</span>
+                <span>•</span>
+                <span>5 min read</span>
+              </div>
+            </div>
+
+            <article
+              className="bilacert-article"
+              dangerouslySetInnerHTML={{
+                __html:
+                  sanitized ||
+                  '<p class="text-slate-400 italic">No content to display yet...</p>',
+              }}
+            />
+          </div>
+        )}
+      </div>
+    </Card>
+  );
+}
+````
+
+## File: apps/admin/app/admin/blogs/new/page.tsx
+````typescript
+import { ArrowLeft } from "lucide-react";
+import type { Viewport } from "next";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import BlogForm from "../BlogForm";
+
+export const metadata = {
+  title: "New Blog Post | Bilacert Admin Pro",
+  description: "Create a new blog post.",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#1f2937" },
+  ],
+};
+export default function NewBlogPage() {
+  return (
+    <div className="space-y-6">
+      <Button variant="outline" asChild>
+        <Link href="/admin/blogs">
+          <ArrowLeft className="mr-2 h-4 w-4" />
+          Back to Blogs
+        </Link>
+      </Button>
+      <Card>
+        <CardHeader>
+          <CardTitle>Add New Post</CardTitle>
+          <CardDescription>
+            Fill out the form below to create a new post.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <BlogForm />
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+````
+
+## File: apps/admin/app/admin/blogs/page.tsx
+````typescript
+import type { Viewport } from "next";
+import { Suspense } from "react";
+import BlogsClient from "./BlogsClient";
+import BlogsLoading from "./loading";
+
+export const metadata = {
+  title: "Blogs | Bilacert Admin Pro",
+  description: "Create and manage blog posts.",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#1f2937" },
+  ],
+};
+export default function BlogsPage() {
+  return (
+    <div className="space-y-6">
+      <Suspense fallback={<BlogsLoading />}>
+        <BlogsClient />
+      </Suspense>
+    </div>
+  );
+}
+````
+
+## File: apps/admin/app/admin/contacts/new/page.tsx
+````typescript
+import { ArrowLeft } from "lucide-react";
+import type { Viewport } from "next";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import ContactForm from "../ContactForm";
+
+export const metadata = {
+  title: "New Contact | Bilacert Admin Pro",
+  description: "Add a new contact to your records.",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#1f2937" },
+  ],
+};
+export default function NewContactPage() {
+  return (
+    <div className="space-y-6">
+      <Button variant="outline" asChild>
+        <Link href="/admin/contacts">
+          <ArrowLeft className="mr-2 h-4 w-4" />
+          Back to Contacts
+        </Link>
+      </Button>
+      <Card>
+        <CardHeader>
+          <CardTitle>Add New Contact</CardTitle>
+          <CardDescription>
+            Fill out the form below to add a new contact.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <ContactForm />
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+````
+
+## File: apps/admin/app/admin/contacts/page.tsx
+````typescript
+import type { Viewport } from "next";
+import { Suspense } from "react";
+import ContactsClient from "./ContactsClient";
+import ContactsLoading from "./loading";
+
+export const metadata = {
+  title: "Contacts | Bilacert Admin Pro",
+  description: "Manage your contacts.",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#1f2937" },
+  ],
+};
+export default function ContactsPage() {
+  return (
+    <div className="space-y-6">
+      <Suspense fallback={<ContactsLoading />}>
+        <ContactsClient />
+      </Suspense>
+    </div>
+  );
+}
+````
+
+## File: apps/admin/app/admin/dashboard/page.tsx
+````typescript
+import type { Viewport } from "next";
+import { Suspense } from "react";
+import DashboardClient from "./DashboardClient";
+import DashboardLoading from "./loading";
+
+export const metadata = {
+  title: "Dashboard | Bilacert Admin Pro",
+  description: "Real-time overview of submissions and metrics.",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#1f2937" },
+  ],
+};
+export default function DashboardPage() {
+  return (
+    <Suspense fallback={<DashboardLoading />}>
+      <DashboardClient />
+    </Suspense>
+  );
+}
+````
+
 ## File: apps/admin/app/admin/emails/_components/EmailContent.tsx
 ````typescript
 import "server-only";
@@ -15028,223 +12402,6 @@ export function EmailAccessState({ message }: { message: string }) {
 }
 ````
 
-## File: apps/admin/app/admin/emails/[messageId]/page.tsx
-````typescript
-import {
-  ArrowLeft,
-  CalendarClock,
-  Mail,
-  MailOpen,
-  Paperclip,
-  Reply,
-  UserRound,
-} from "lucide-react";
-import Link from "next/link";
-import { redirect } from "next/navigation";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
-import { getAdminAccess } from "@/lib/adminAccess";
-import {
-  getZohoMailAccount,
-  getZohoMailConfigurationStatus,
-  getZohoMailMessage,
-} from "@/lib/zohoMail";
-import EmailContent from "../_components/EmailContent";
-import {
-  EmailAccessState,
-  EmailConnectionState,
-  EmailSetupState,
-} from "../_components/EmailState";
-import { updateEmailReadStateAction } from "../actions";
-
-export const dynamic = "force-dynamic";
-
-type EmailMessagePageProps = {
-  params: Promise<{ messageId: string }>;
-  searchParams: Promise<{
-    folderId?: string;
-    actionError?: string;
-    updated?: string;
-  }>;
-};
-
-function formatMessageDate(value: string | null) {
-  if (!value) return "Unknown date";
-
-  return new Intl.DateTimeFormat("en-ZA", {
-    dateStyle: "full",
-    timeStyle: "short",
-    timeZone: "Africa/Johannesburg",
-  }).format(new Date(value));
-}
-
-export default async function EmailMessagePage({
-  params,
-  searchParams,
-}: EmailMessagePageProps) {
-  const access = await getAdminAccess();
-
-  if (!access.allowed) {
-    if (access.reason === "unauthenticated") redirect("/admin/login");
-    return <EmailAccessState message={access.message} />;
-  }
-
-  const configuration = getZohoMailConfigurationStatus();
-  if (!configuration.configured) {
-    return (
-      <EmailSetupState missingVariables={configuration.missingVariables} />
-    );
-  }
-
-  const [{ messageId }, query] = await Promise.all([params, searchParams]);
-  const folderId = query.folderId;
-
-  if (!/^\d+$/.test(messageId) || !folderId || !/^\d+$/.test(folderId)) {
-    return (
-      <EmailConnectionState message="The message link is incomplete or invalid. Return to the mailbox and open the message again." />
-    );
-  }
-
-  let detail: Awaited<ReturnType<typeof getZohoMailMessage>>;
-
-  try {
-    const account = await getZohoMailAccount();
-    detail = await getZohoMailMessage(account.accountId, folderId, messageId);
-  } catch (error) {
-    return (
-      <EmailConnectionState
-        message={
-          error instanceof Error
-            ? error.message
-            : "Zoho Mail could not load this message."
-        }
-      />
-    );
-  }
-
-  const { message, content } = detail;
-  const replySubject = message.subject.toLowerCase().startsWith("re:")
-    ? message.subject
-    : `Re: ${message.subject}`;
-  const replyHref = `/admin/emails/compose?to=${encodeURIComponent(message.fromAddress)}&subject=${encodeURIComponent(replySubject)}`;
-  const updatedState =
-    query.updated === "read" || query.updated === "unread"
-      ? query.updated
-      : undefined;
-
-  return (
-    <div className="mx-auto max-w-5xl space-y-6">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <Button asChild variant="ghost" className="w-fit -ml-3">
-          <Link href={`/admin/emails?folderId=${encodeURIComponent(folderId)}`}>
-            <ArrowLeft className="h-4 w-4" />
-            Back to mailbox
-          </Link>
-        </Button>
-        <div className="flex flex-wrap gap-2">
-          <form action={updateEmailReadStateAction}>
-            <input type="hidden" name="messageId" value={message.messageId} />
-            <input type="hidden" name="folderId" value={message.folderId} />
-            <input
-              type="hidden"
-              name="readState"
-              value={message.isRead ? "unread" : "read"}
-            />
-            <Button type="submit" variant="outline">
-              {message.isRead ? (
-                <Mail className="h-4 w-4" />
-              ) : (
-                <MailOpen className="h-4 w-4" />
-              )}
-              Mark {message.isRead ? "unread" : "read"}
-            </Button>
-          </form>
-          <Button asChild>
-            <Link href={replyHref}>
-              <Reply className="h-4 w-4" />
-              Reply
-            </Link>
-          </Button>
-        </div>
-      </div>
-
-      {query.actionError && (
-        <Alert variant="destructive">
-          <AlertTitle>Message update failed</AlertTitle>
-          <AlertDescription>
-            Zoho could not update this message. Please try again.
-          </AlertDescription>
-        </Alert>
-      )}
-
-      {updatedState && (
-        <Alert className="border-emerald-200 bg-emerald-50 text-emerald-900">
-          <AlertTitle>Message updated</AlertTitle>
-          <AlertDescription>
-            The message is now marked as {updatedState}.
-          </AlertDescription>
-        </Alert>
-      )}
-
-      <Card className="border border-border/70 shadow-xl shadow-black/5">
-        <CardHeader className="space-y-5">
-          <div className="flex flex-wrap items-center gap-2">
-            <Badge variant={message.isRead ? "outline" : "default"}>
-              {message.isRead ? "Read" : "Unread"}
-            </Badge>
-            {message.hasAttachment && (
-              <Badge variant="secondary">
-                <Paperclip className="mr-1 h-3 w-3" />
-                Attachment
-              </Badge>
-            )}
-          </div>
-          <div>
-            <CardTitle className="text-2xl leading-tight md:text-3xl">
-              {message.subject}
-            </CardTitle>
-            <CardDescription className="mt-4 space-y-2">
-              <span className="flex items-center gap-2">
-                <UserRound className="h-4 w-4" />
-                From: {message.sender || message.fromAddress} &lt;
-                {message.fromAddress}&gt;
-              </span>
-              <span className="flex items-center gap-2">
-                <Mail className="h-4 w-4" />
-                To: {message.toAddress || "Not provided"}
-              </span>
-              {message.ccAddress && (
-                <span className="flex items-center gap-2">
-                  <Mail className="h-4 w-4" />
-                  Cc: {message.ccAddress}
-                </span>
-              )}
-              <span className="flex items-center gap-2">
-                <CalendarClock className="h-4 w-4" />
-                {formatMessageDate(message.receivedAt)}
-              </span>
-            </CardDescription>
-          </div>
-        </CardHeader>
-        <Separator />
-        <CardContent className="pt-6">
-          <EmailContent content={content} />
-        </CardContent>
-      </Card>
-    </div>
-  );
-}
-````
-
 ## File: apps/admin/app/admin/emails/error.tsx
 ````typescript
 "use client";
@@ -15312,401 +12469,217 @@ export default function EmailsLoading() {
 }
 ````
 
-## File: apps/admin/app/admin/emails/page.tsx
+## File: apps/admin/app/admin/formSubmissions/[id]/edit/page.tsx
 ````typescript
-import {
-  Archive,
-  CheckCircle2,
-  ChevronLeft,
-  ChevronRight,
-  FileText,
-  Inbox,
-  Mail,
-  MailOpen,
-  Paperclip,
-  PenLine,
-  Send,
-  Trash2,
-} from "lucide-react";
+import type { SubmissionType } from "@bilacert/contracts/formSubmission";
+import { createSupabaseBrowserClient } from "@bilacert/supabase/client";
+import { ArrowLeft } from "lucide-react";
+import type { Viewport } from "next";
 import Link from "next/link";
-import { redirect } from "next/navigation";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Badge } from "@/components/ui/badge";
+import { notFound } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { getAdminAccess } from "@/lib/adminAccess";
-import {
-  getZohoMailAccount,
-  getZohoMailConfigurationStatus,
-  listZohoMailFolders,
-  listZohoMailMessages,
-  type ZohoMailFolder,
-} from "@/lib/zohoMail";
-import {
-  EmailAccessState,
-  EmailConnectionState,
-  EmailSetupState,
-} from "./_components/EmailState";
+import SubmissionForm from "../../SubmissionForm";
 
-export const dynamic = "force-dynamic";
+const supabase = createSupabaseBrowserClient();
 
 export const metadata = {
-  title: "Email | Bilacert Admin",
-  description: "Manage the Bilacert Zoho Mail inbox.",
+  title: "Edit Submission | Bilacert Admin Pro",
+  description: "Edit a form submission.",
 };
 
-const PAGE_SIZE = 25;
+async function getSubmission(id: string): Promise<SubmissionType | null> {
+  const { data, error } = await supabase
+    .from("form_submissions")
+    .select("*")
+    .eq("id", id)
+    .single();
 
-type EmailsPageProps = {
-  searchParams: Promise<{
-    folderId?: string;
-    page?: string;
-    status?: string;
-    sent?: string;
-    draftSaved?: string;
-    actionError?: string;
-  }>;
+  if (error || !data) {
+    return null;
+  }
+
+  return {
+    id: data.id,
+    formType: data.formType,
+    status: data.status,
+    serviceId: data.serviceId,
+    serviceName: data.serviceName,
+    fullName: data.fullName,
+    email: data.email,
+    phone: data.phone,
+    company: data.company,
+    industry: data.industry,
+    details: data.details,
+    internalNotes: data.internalNotes,
+    assignedTo: data.assignedTo,
+    createdAt: data.createdAt,
+    updatedAt: data.updatedAt,
+    completedAt: data.completedAt,
+  } as SubmissionType;
+}
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#1f2937" },
+  ],
 };
+export default async function EditSubmissionPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
+  const submission = await getSubmission(id);
 
-function parsePage(value?: string) {
-  const page = Number(value);
-  return Number.isInteger(page) && page > 0 ? Math.min(page, 10_000) : 1;
-}
-
-function mailboxHref(folderId: string, status: "all" | "unread", page = 1) {
-  const query = new URLSearchParams({ folderId });
-  if (status === "unread") query.set("status", status);
-  if (page > 1) query.set("page", String(page));
-  return `/admin/emails?${query.toString()}`;
-}
-
-function formatMessageDate(value: string | null) {
-  if (!value) return "Unknown date";
-
-  return new Intl.DateTimeFormat("en-ZA", {
-    dateStyle: "medium",
-    timeStyle: "short",
-    timeZone: "Africa/Johannesburg",
-  }).format(new Date(value));
-}
-
-function FolderIcon({ folder }: { folder: ZohoMailFolder }) {
-  const type = folder.folderType.toLowerCase();
-
-  if (type.includes("inbox")) return <Inbox className="h-4 w-4" />;
-  if (type.includes("sent")) return <Send className="h-4 w-4" />;
-  if (type.includes("draft")) return <FileText className="h-4 w-4" />;
-  if (type.includes("trash")) return <Trash2 className="h-4 w-4" />;
-  if (type.includes("archive")) return <Archive className="h-4 w-4" />;
-  return <Mail className="h-4 w-4" />;
-}
-
-export default async function EmailsPage({ searchParams }: EmailsPageProps) {
-  const access = await getAdminAccess();
-
-  if (!access.allowed) {
-    if (access.reason === "unauthenticated") redirect("/admin/login");
-    return <EmailAccessState message={access.message} />;
+  if (!submission) {
+    notFound();
   }
-
-  const configuration = getZohoMailConfigurationStatus();
-  if (!configuration.configured) {
-    return (
-      <EmailSetupState missingVariables={configuration.missingVariables} />
-    );
-  }
-
-  const query = await searchParams;
-  const page = parsePage(query.page);
-  const status = query.status === "unread" ? "unread" : "all";
-
-  let mailbox:
-    | {
-        accountAddress: string;
-        folders: ZohoMailFolder[];
-        selectedFolder: ZohoMailFolder;
-        messages: Awaited<ReturnType<typeof listZohoMailMessages>>;
-      }
-    | undefined;
-
-  try {
-    const account = await getZohoMailAccount();
-    const folders = await listZohoMailFolders(account.accountId);
-    const selectedFolder =
-      folders.find((folder) => folder.folderId === query.folderId) ??
-      folders.find((folder) => folder.folderType.toLowerCase() === "inbox") ??
-      folders[0];
-
-    if (!selectedFolder) {
-      throw new Error("Zoho returned no folders for this mailbox.");
-    }
-
-    const messages = await listZohoMailMessages(account.accountId, {
-      folderId: selectedFolder.folderId,
-      page,
-      pageSize: PAGE_SIZE,
-      status,
-    });
-
-    mailbox = {
-      accountAddress: account.fromAddress,
-      folders,
-      selectedFolder,
-      messages,
-    };
-  } catch (error) {
-    return (
-      <EmailConnectionState
-        message={
-          error instanceof Error
-            ? error.message
-            : "Zoho Mail could not load the mailbox."
-        }
-      />
-    );
-  }
-
-  const unreadCount = mailbox.messages.filter(
-    (message) => !message.isRead,
-  ).length;
-  const hasNextPage = mailbox.messages.length === PAGE_SIZE;
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <div className="flex flex-wrap items-center gap-3">
-            <h1 className="text-3xl font-bold tracking-tight">Email</h1>
-            <Badge variant="secondary">{mailbox.accountAddress}</Badge>
-          </div>
-          <p className="mt-1 text-muted-foreground">
-            Read, compose, and manage mail through Zoho.
-          </p>
-        </div>
-        <Button asChild>
-          <Link href="/admin/emails/compose">
-            <PenLine className="h-4 w-4" />
-            Compose
-          </Link>
-        </Button>
-      </div>
+      <Button variant="outline" asChild>
+        <Link href={`/admin/formSubmissions/${submission.id}`}>
+          <ArrowLeft className="mr-2 h-4 w-4" />
+          Back to Submission
+        </Link>
+      </Button>
+      <Card>
+        <CardHeader>
+          <CardTitle>Edit Submission</CardTitle>
+          <CardDescription>
+            Update details for submission from "{submission.fullName}".
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <SubmissionForm submission={submission} />
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+````
 
-      {query.sent === "1" && (
+## File: apps/admin/app/admin/formSubmissions/[id]/page.tsx
+````typescript
+import type { SubmissionType } from "@bilacert/contracts/formSubmission";
+import { createSupabaseBrowserClient } from "@bilacert/supabase/client";
+import type { Metadata, Viewport } from "next";
+import { notFound } from "next/navigation";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { getSubmissionEmailComposeHref } from "@/lib/emailNavigation";
+import SubmissionDetails from "../SubmissionDetails";
+
+const supabase = createSupabaseBrowserClient();
+
+type SubmissionDetailsPageProps = {
+  params: Promise<{ id: string }>;
+  searchParams: Promise<{ emailStatus?: string }>;
+};
+
+async function getSubmission(id: string): Promise<SubmissionType | null> {
+  const { data, error } = await supabase
+    .from("form_submissions")
+    .select("*")
+    .eq("id", id)
+    .single();
+
+  if (error || !data) {
+    return null;
+  }
+
+  return {
+    id: data.id,
+    formType: data.formType,
+    status: data.status,
+    serviceId: data.serviceId,
+    serviceName: data.serviceName,
+    fullName: data.fullName,
+    email: data.email,
+    phone: data.phone,
+    company: data.company,
+    industry: data.industry,
+    details: data.details,
+    internalNotes: data.internalNotes,
+    assignedTo: data.assignedTo,
+    createdAt: data.createdAt,
+    updatedAt: data.updatedAt,
+    completedAt: data.completedAt,
+  } as SubmissionType;
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}): Promise<Metadata> {
+  const { id } = await params;
+  const submission = await getSubmission(id);
+  if (!submission) {
+    return {
+      title: "Submission Not Found",
+    };
+  }
+  return {
+    title: `Submission from ${submission.fullName} | Bilacert Admin Pro`,
+  };
+}
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#1f2937" },
+  ],
+};
+export default async function SubmissionDetailsPage({
+  params,
+  searchParams,
+}: SubmissionDetailsPageProps) {
+  const [{ id }, query] = await Promise.all([params, searchParams]);
+  const submission = await getSubmission(id);
+
+  if (!submission) {
+    notFound();
+  }
+
+  const emailStatus =
+    query.emailStatus === "sent" || query.emailStatus === "draft"
+      ? query.emailStatus
+      : null;
+
+  return (
+    <div className="space-y-6">
+      {emailStatus && (
         <Alert className="border-emerald-200 bg-emerald-50 text-emerald-900">
-          <CheckCircle2 className="h-4 w-4" />
-          <AlertTitle>Email sent</AlertTitle>
+          <AlertTitle>
+            {emailStatus === "sent" ? "Email sent" : "Draft saved"}
+          </AlertTitle>
           <AlertDescription>
-            Zoho accepted the message for delivery.
+            {emailStatus === "sent"
+              ? `Your email to ${submission.fullName} was sent through Zoho Mail.`
+              : `Your email to ${submission.fullName} was saved in Zoho Drafts.`}
           </AlertDescription>
         </Alert>
       )}
-
-      {query.draftSaved === "1" && (
-        <Alert className="border-emerald-200 bg-emerald-50 text-emerald-900">
-          <CheckCircle2 className="h-4 w-4" />
-          <AlertTitle>Draft saved</AlertTitle>
-          <AlertDescription>
-            The message is available in the Zoho Drafts folder.
-          </AlertDescription>
-        </Alert>
-      )}
-
-      {query.actionError && (
-        <Alert variant="destructive">
-          <AlertTitle>Email action failed</AlertTitle>
-          <AlertDescription>
-            The requested message update could not be completed. Please try
-            again.
-          </AlertDescription>
-        </Alert>
-      )}
-
-      <div className="grid min-w-0 gap-6 xl:grid-cols-[240px_minmax(0,1fr)]">
-        <Card className="h-fit border border-border/70">
-          <CardHeader>
-            <CardTitle className="text-base">Folders</CardTitle>
-            <CardDescription>
-              {mailbox.folders.length} available
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-1">
-            {mailbox.folders.map((folder) => {
-              const isSelected =
-                folder.folderId === mailbox.selectedFolder.folderId;
-              return (
-                <Link
-                  key={folder.folderId}
-                  href={mailboxHref(folder.folderId, status)}
-                  className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors ${
-                    isSelected
-                      ? "bg-primary text-primary-foreground"
-                      : "text-muted-foreground hover:bg-muted hover:text-foreground"
-                  }`}
-                >
-                  <FolderIcon folder={folder} />
-                  <span className="truncate">{folder.folderName}</span>
-                </Link>
-              );
-            })}
-          </CardContent>
-        </Card>
-
-        <Card className="min-w-0 border border-border/70 shadow-xl shadow-black/5">
-          <CardHeader className="gap-4 border-b sm:flex-row sm:items-center sm:justify-between sm:space-y-0">
-            <div>
-              <CardTitle>{mailbox.selectedFolder.folderName}</CardTitle>
-              <CardDescription>
-                {mailbox.messages.length} messages on this page · {unreadCount}{" "}
-                unread
-              </CardDescription>
-            </div>
-            <div className="flex gap-2">
-              <Button
-                asChild
-                size="sm"
-                variant={status === "all" ? "default" : "outline"}
-              >
-                <Link
-                  href={mailboxHref(mailbox.selectedFolder.folderId, "all")}
-                >
-                  <MailOpen className="h-4 w-4" />
-                  All
-                </Link>
-              </Button>
-              <Button
-                asChild
-                size="sm"
-                variant={status === "unread" ? "default" : "outline"}
-              >
-                <Link
-                  href={mailboxHref(mailbox.selectedFolder.folderId, "unread")}
-                >
-                  <Mail className="h-4 w-4" />
-                  Unread
-                </Link>
-              </Button>
-            </div>
-          </CardHeader>
-
-          <CardContent className="p-0">
-            {mailbox.messages.length === 0 ? (
-              <div className="flex min-h-72 flex-col items-center justify-center px-6 text-center">
-                <MailOpen className="mb-4 h-10 w-10 text-muted-foreground/50" />
-                <h2 className="font-semibold">No messages found</h2>
-                <p className="mt-1 text-sm text-muted-foreground">
-                  This folder has no messages matching the current filter.
-                </p>
-              </div>
-            ) : (
-              <div className="divide-y">
-                {mailbox.messages.map((message) => (
-                  <Link
-                    key={message.messageId}
-                    href={`/admin/emails/${encodeURIComponent(message.messageId)}?folderId=${encodeURIComponent(message.folderId)}`}
-                    className="grid gap-3 px-5 py-4 transition-colors hover:bg-muted/50 md:grid-cols-[minmax(150px,0.8fr)_minmax(0,2fr)_auto] md:items-center"
-                  >
-                    <div className="min-w-0">
-                      <div className="flex items-center gap-2">
-                        {!message.isRead && (
-                          <>
-                            <span className="h-2 w-2 shrink-0 rounded-full bg-accent" />
-                            <span className="sr-only">Unread</span>
-                          </>
-                        )}
-                        <span
-                          className={`truncate text-sm ${
-                            message.isRead ? "font-medium" : "font-bold"
-                          }`}
-                        >
-                          {message.sender ||
-                            message.fromAddress ||
-                            "Unknown sender"}
-                        </span>
-                      </div>
-                      <p className="mt-1 truncate text-xs text-muted-foreground">
-                        {message.fromAddress}
-                      </p>
-                    </div>
-
-                    <div className="min-w-0">
-                      <div className="flex items-center gap-2">
-                        <p
-                          className={`truncate text-sm ${
-                            message.isRead ? "font-medium" : "font-bold"
-                          }`}
-                        >
-                          {message.subject}
-                        </p>
-                        {message.hasAttachment && (
-                          <Paperclip className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
-                        )}
-                      </div>
-                      <p className="mt-1 truncate text-sm text-muted-foreground">
-                        {message.summary || "No preview available"}
-                      </p>
-                    </div>
-
-                    <time className="whitespace-nowrap text-xs text-muted-foreground">
-                      {formatMessageDate(message.receivedAt)}
-                    </time>
-                  </Link>
-                ))}
-              </div>
-            )}
-          </CardContent>
-
-          <CardFooter className="justify-between border-t pt-6">
-            <span className="text-sm text-muted-foreground">Page {page}</span>
-            <div className="flex gap-2">
-              {page > 1 ? (
-                <Button asChild size="sm" variant="outline">
-                  <Link
-                    href={mailboxHref(
-                      mailbox.selectedFolder.folderId,
-                      status,
-                      page - 1,
-                    )}
-                  >
-                    <ChevronLeft className="h-4 w-4" />
-                    Previous
-                  </Link>
-                </Button>
-              ) : (
-                <Button size="sm" variant="outline" disabled>
-                  <ChevronLeft className="h-4 w-4" />
-                  Previous
-                </Button>
-              )}
-              {hasNextPage ? (
-                <Button asChild size="sm" variant="outline">
-                  <Link
-                    href={mailboxHref(
-                      mailbox.selectedFolder.folderId,
-                      status,
-                      page + 1,
-                    )}
-                  >
-                    Next
-                    <ChevronRight className="h-4 w-4" />
-                  </Link>
-                </Button>
-              ) : (
-                <Button size="sm" variant="outline" disabled>
-                  Next
-                  <ChevronRight className="h-4 w-4" />
-                </Button>
-              )}
-            </div>
-          </CardFooter>
-        </Card>
-      </div>
+      <SubmissionDetails
+        submission={submission}
+        emailComposeHref={getSubmissionEmailComposeHref(submission)}
+      />
     </div>
   );
 }
@@ -15804,6 +12777,58 @@ export default function DeleteSubmissionDialog({
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
+  );
+}
+````
+
+## File: apps/admin/app/admin/formSubmissions/page.tsx
+````typescript
+import type { Viewport } from "next";
+import { Suspense } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
+import SubmissionsClient from "./SubmissionsClient";
+
+export const metadata = {
+  title: "Form Submissions | Bilacert Admin Pro",
+  description: "View and manage all form submissions.",
+};
+
+function SubmissionsLoading() {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>All Submissions</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="space-y-4">
+          <Skeleton className="h-10 w-full" />
+          <Skeleton className="h-10 w-full" />
+          <Skeleton className="h-10 w-full" />
+          <Skeleton className="h-10 w-full" />
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#1f2937" },
+  ],
+};
+export default function FormSubmissionsPage() {
+  return (
+    <div className="space-y-6">
+      <Suspense fallback={<SubmissionsLoading />}>
+        <SubmissionsClient />
+      </Suspense>
+    </div>
   );
 }
 ````
@@ -16215,6 +13240,1477 @@ export default function SubmissionsClient() {
 }
 ````
 
+## File: apps/admin/app/admin/services/components/PricingPlansForm.tsx
+````typescript
+"use client";
+
+import type { ServiceType } from "@bilacert/contracts/service";
+import { type UseFormReturn, useFieldArray } from "react-hook-form";
+import { ArrayInput } from "@/components/admin/ArrayInput";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Switch } from "@/components/ui/switch";
+
+interface PricingPlansFormProps {
+  form: UseFormReturn<ServiceType>;
+}
+
+export default function PricingPlansForm({ form }: PricingPlansFormProps) {
+  const { fields: pricingPlanFields } = useFieldArray({
+    control: form.control,
+    name: "pricingPlans",
+  });
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Pricing Plans</CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <div className="grid grid-cols-1 gap-6">
+          {pricingPlanFields.map((field, index) => (
+            <Card key={field.id} className="bg-muted/30">
+              <CardHeader>
+                <CardTitle className="text-lg">{`Plan ${index + 1}`}</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <FormField
+                  control={form.control}
+                  name={`pricingPlans.${index}.title`}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Plan Title</FormLabel>
+                      <FormControl>
+                        <Input {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name={`pricingPlans.${index}.description`}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Plan Description</FormLabel>
+                      <FormControl>
+                        <Input {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name={`pricingPlans.${index}.price`}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Price</FormLabel>
+                      <FormControl>
+                        <Input {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <ArrayInput
+                  control={form.control}
+                  name={`pricingPlans.${index}.features`}
+                  label="Plan Features"
+                  addLabel="Add plan feature"
+                  placeholder="Add a plan feature"
+                />
+                <FormField
+                  control={form.control}
+                  name={`pricingPlans.${index}.popular`}
+                  render={({ field }) => (
+                    <FormItem className="flex flex-row items-center justify-between rounded-lg border bg-card p-4">
+                      <div className="space-y-0.5">
+                        <FormLabel className="text-base">
+                          Most Popular
+                        </FormLabel>
+                        <FormDescription>Highlight this plan.</FormDescription>
+                      </div>
+                      <FormControl>
+                        <Switch
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+````
+
+## File: apps/admin/app/admin/services/components/ProcessStepsForm.tsx
+````typescript
+"use client";
+
+import type { ServiceType } from "@bilacert/contracts/service";
+import { PlusCircle, Trash2 } from "lucide-react";
+import { type UseFormReturn, useFieldArray } from "react-hook-form";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+
+interface ProcessStepsFormProps {
+  form: UseFormReturn<ServiceType>;
+}
+
+export default function ProcessStepsForm({ form }: ProcessStepsFormProps) {
+  const { fields, append, remove } = useFieldArray({
+    control: form.control,
+    name: "processSteps",
+  });
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Process Steps</CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        {fields.map((field, index) => (
+          <div
+            key={field.id}
+            className="flex items-start gap-4 p-4 border rounded-md"
+          >
+            <div className="grid gap-2 flex-grow">
+              <FormField
+                control={form.control}
+                name={`processSteps.${index}.step`}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Step Number</FormLabel>
+                    <FormControl>
+                      <Input {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name={`processSteps.${index}.title`}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Step Title</FormLabel>
+                    <FormControl>
+                      <Input {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name={`processSteps.${index}.description`}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Step Description</FormLabel>
+                    <FormControl>
+                      <Textarea {...field} rows={2} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <Button
+              type="button"
+              variant="destructive"
+              size="icon"
+              onClick={() => remove(index)}
+              className="mt-7"
+            >
+              <Trash2 className="h-4 w-4" />
+            </Button>
+          </div>
+        ))}
+        <Button
+          type="button"
+          variant="outline"
+          onClick={() =>
+            append({ step: `${fields.length + 1}`, title: "", description: "" })
+          }
+        >
+          <PlusCircle className="mr-2 h-4 w-4" /> Add Step
+        </Button>
+      </CardContent>
+    </Card>
+  );
+}
+````
+
+## File: apps/admin/app/admin/services/components/PublishingForm.tsx
+````typescript
+"use client";
+
+import type { ServiceType } from "@bilacert/contracts/service";
+import type { UseFormReturn } from "react-hook-form";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+} from "@/components/ui/form";
+import { Switch } from "@/components/ui/switch";
+
+interface PublishingFormProps {
+  form: UseFormReturn<ServiceType>;
+}
+
+export default function PublishingForm({ form }: PublishingFormProps) {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Publishing</CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <FormField
+          control={form.control}
+          name="published"
+          render={({ field }) => (
+            <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+              <div className="space-y-0.5">
+                <FormLabel>Published</FormLabel>
+                <FormDescription>
+                  Make this service visible on the site.
+                </FormDescription>
+              </div>
+              <FormControl>
+                <Switch
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                />
+              </FormControl>
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="featured"
+          render={({ field }) => (
+            <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+              <div className="space-y-0.5">
+                <FormLabel>Featured</FormLabel>
+                <FormDescription>
+                  Feature this service on the homepage.
+                </FormDescription>
+              </div>
+              <FormControl>
+                <Switch
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                />
+              </FormControl>
+            </FormItem>
+          )}
+        />
+      </CardContent>
+    </Card>
+  );
+}
+````
+
+## File: apps/admin/app/admin/services/components/SeoForm.tsx
+````typescript
+"use client";
+
+import type { ServiceType } from "@bilacert/contracts/service";
+import type { UseFormReturn } from "react-hook-form";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+
+interface SeoFormProps {
+  form: UseFormReturn<ServiceType>;
+}
+
+export default function SeoForm({ form }: SeoFormProps) {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>SEO</CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <FormField
+          control={form.control}
+          name="seoTitle"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>SEO Title</FormLabel>
+              <FormControl>
+                <Input {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="seoDescription"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>SEO Description</FormLabel>
+              <FormControl>
+                <Textarea {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="seoKeywords"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>SEO Keywords</FormLabel>
+              <FormControl>
+                <Input {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+      </CardContent>
+    </Card>
+  );
+}
+````
+
+## File: apps/admin/app/admin/services/components/SuccessStoryForm.tsx
+````typescript
+"use client";
+
+import type { ServiceType } from "@bilacert/contracts/service";
+import type { UseFormReturn } from "react-hook-form";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+} from "@/components/ui/form";
+import { Textarea } from "@/components/ui/textarea";
+
+interface SuccessStoryFormProps {
+  form: UseFormReturn<ServiceType>;
+}
+
+export default function SuccessStoryForm({ form }: SuccessStoryFormProps) {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Success Story</CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <FormField
+          control={form.control}
+          name="successStory.scenario"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Scenario</FormLabel>
+              <FormControl>
+                <Textarea {...field} value={field.value ?? ""} />
+              </FormControl>
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="successStory.challenge"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Challenge</FormLabel>
+              <FormControl>
+                <Textarea {...field} value={field.value ?? ""} />
+              </FormControl>
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="successStory.solution"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Solution</FormLabel>
+              <FormControl>
+                <Textarea {...field} value={field.value ?? ""} />
+              </FormControl>
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="successStory.result"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Result</FormLabel>
+              <FormControl>
+                <Textarea {...field} value={field.value ?? ""} />
+              </FormControl>
+            </FormItem>
+          )}
+        />
+      </CardContent>
+    </Card>
+  );
+}
+````
+
+## File: apps/admin/app/admin/services/new/page.tsx
+````typescript
+import { ArrowLeft } from "lucide-react";
+import type { Viewport } from "next";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import ServiceForm from "../ServiceForm";
+
+export const metadata = {
+  title: "New Service | Bilacert Admin Pro",
+  description: "Add a new regulatory service.",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#1f2937" },
+  ],
+};
+export default function NewServicePage() {
+  return (
+    <div className="space-y-6">
+      <Button variant="outline" asChild>
+        <Link href="/admin/services">
+          <ArrowLeft className="mr-2 h-4 w-4" />
+          Back to Services
+        </Link>
+      </Button>
+      <Card>
+        <CardHeader>
+          <CardTitle>Add New Service</CardTitle>
+          <CardDescription>
+            Fill out the form below to create a new service.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <ServiceForm />
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+````
+
+## File: apps/admin/app/admin/services/page.tsx
+````typescript
+import type { Viewport } from "next";
+import { Suspense } from "react";
+import ServicesLoading from "./loading";
+import ServicesClient from "./ServicesClient";
+
+export const metadata = {
+  title: "Services | Bilacert Admin Pro",
+  description: "Manage regulatory services.",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#1f2937" },
+  ],
+};
+export default function ServicesPage() {
+  return (
+    <Suspense fallback={<ServicesLoading />}>
+      <ServicesClient />
+    </Suspense>
+  );
+}
+````
+
+## File: apps/admin/app/admin/tasks/TasksClient.tsx
+````typescript
+"use client";
+
+import type { ServiceRowType } from "@bilacert/contracts/service";
+import type {
+  TaskPriority,
+  TaskStatus,
+  TaskType,
+} from "@bilacert/contracts/task";
+import type { TaskTodoType } from "@bilacert/contracts/taskTodo";
+import { cn } from "@bilacert/shared/cn";
+import {
+  AlertTriangle,
+  Briefcase,
+  Calendar,
+  CheckCircle2,
+  ClipboardList,
+  Clock,
+  ListChecks,
+  Loader2,
+  Pencil,
+  Plus,
+  Search,
+  Trash2,
+  User,
+} from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import {
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Textarea } from "@/components/ui/textarea";
+import { useToast } from "@/hooks/use-toast";
+import {
+  createTaskAction,
+  createTaskTodoAction,
+  deleteTaskAction,
+  deleteTaskTodoAction,
+  setTaskStatusAction,
+  updateTaskAction,
+  updateTaskTodoAction,
+} from "./actions";
+
+const STATUS_META: Record<TaskStatus, { label: string; className: string }> = {
+  pending: { label: "Pending", className: "bg-amber-100 text-amber-800" },
+  in_progress: { label: "In Progress", className: "bg-blue-100 text-blue-800" },
+  completed: {
+    label: "Completed",
+    className: "bg-emerald-100 text-emerald-800",
+  },
+  cancelled: { label: "Cancelled", className: "bg-zinc-200 text-zinc-600" },
+};
+
+const PRIORITY_META: Record<
+  TaskPriority,
+  { label: string; className: string }
+> = {
+  low: { label: "Low", className: "bg-muted text-muted-foreground" },
+  normal: { label: "Normal", className: "bg-slate-100 text-slate-700" },
+  high: { label: "High", className: "bg-orange-100 text-orange-700" },
+  urgent: { label: "Urgent", className: "bg-red-100 text-red-700" },
+};
+
+const STATUS_TABS = [
+  { value: "all", label: "All" },
+  ...Object.entries(STATUS_META).map(([value, meta]) => ({
+    value,
+    label: meta.label,
+  })),
+] as const;
+
+interface OptionItem {
+  id: string;
+  label: string;
+}
+
+interface TaskFormState {
+  title: string;
+  description: string;
+  category: string;
+  priority: TaskPriority;
+  status: TaskStatus;
+  assignedTo: string;
+  dueAt: string;
+  serviceId: string;
+  submissionId: string;
+}
+
+interface TasksClientProps {
+  initialTasks: TaskType[];
+  services: ServiceRowType[];
+  users: OptionItem[];
+  submissions: OptionItem[];
+  loadError?: string | null;
+}
+
+function toLocalInput(iso: string | null): string {
+  if (!iso) return "";
+  const date = new Date(iso);
+  if (Number.isNaN(date.getTime())) return "";
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(
+    date.getDate(),
+  )}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
+}
+
+function fromLocalInput(value: string): string | null {
+  if (!value) return null;
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? null : date.toISOString();
+}
+
+function fmtDate(iso: string | null | undefined): string {
+  if (!iso) return "—";
+  const date = new Date(iso);
+  if (Number.isNaN(date.getTime())) return "—";
+  return date.toLocaleDateString("en-ZA", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  });
+}
+
+function emptyForm(): TaskFormState {
+  return {
+    title: "",
+    description: "",
+    category: "",
+    priority: "normal",
+    status: "pending",
+    assignedTo: "",
+    dueAt: "",
+    serviceId: "",
+    submissionId: "",
+  };
+}
+
+function TodoSection({
+  task,
+  onTodosChange,
+}: {
+  task: TaskType;
+  onTodosChange: (todos: TaskTodoType[]) => void;
+}) {
+  const { toast } = useToast();
+  const [draft, setDraft] = useState("");
+  const [busyId, setBusyId] = useState<string | null>(null);
+  const todos = task.todos ?? [];
+  const doneCount = todos.filter((todo) => todo.done).length;
+
+  const handleAdd = async (event: React.FormEvent) => {
+    event.preventDefault();
+    const title = draft.trim();
+    if (!title) return;
+    const result = await createTaskTodoAction(task.id, { title });
+    if (!result.ok) {
+      toast({
+        variant: "destructive",
+        title: "Failed to add checklist item",
+        description: result.error,
+      });
+      return;
+    }
+    setDraft("");
+    if (result.data) onTodosChange([...todos, result.data]);
+  };
+
+  const handleToggle = async (todo: TaskTodoType) => {
+    setBusyId(todo.id);
+    try {
+      const result = await updateTaskTodoAction(todo.id, { done: !todo.done });
+      if (!result.ok) {
+        toast({
+          variant: "destructive",
+          title: "Failed to update checklist item",
+          description: result.error,
+        });
+        return;
+      }
+      if (result.data) {
+        const updated = result.data;
+        onTodosChange(todos.map((t) => (t.id === todo.id ? updated : t)));
+      }
+    } finally {
+      setBusyId(null);
+    }
+  };
+
+  const handleDelete = async (todo: TaskTodoType) => {
+    setBusyId(todo.id);
+    try {
+      const result = await deleteTaskTodoAction(todo.id);
+      if (!result.ok) {
+        toast({
+          variant: "destructive",
+          title: "Failed to remove checklist item",
+          description: result.error,
+        });
+        return;
+      }
+      onTodosChange(todos.filter((t) => t.id !== todo.id));
+    } finally {
+      setBusyId(null);
+    }
+  };
+
+  return (
+    <div className="mt-4 border-t pt-4">
+      <div className="flex items-center justify-between">
+        <span className="flex items-center gap-1.5 text-xs font-semibold text-muted-foreground">
+          <ListChecks className="h-3.5 w-3.5" />
+          Checklist
+        </span>
+        <span className="text-xs font-medium text-muted-foreground">
+          {doneCount}/{todos.length}
+        </span>
+      </div>
+      {todos.length > 0 && (
+        <ul className="mt-2.5 space-y-1.5">
+          {todos.map((todo) => (
+            <li key={todo.id} className="group flex items-center gap-2">
+              <Checkbox
+                id={`todo-${todo.id}`}
+                checked={todo.done}
+                disabled={busyId === todo.id}
+                onCheckedChange={() => handleToggle(todo)}
+              />
+              <label
+                htmlFor={`todo-${todo.id}`}
+                className={cn(
+                  "flex-1 cursor-pointer select-none text-sm",
+                  todo.done && "text-muted-foreground line-through",
+                )}
+              >
+                {todo.title}
+              </label>
+              <Button
+                size="sm"
+                variant="ghost"
+                className="h-7 w-7 p-0 text-muted-foreground opacity-0 group-hover:opacity-100 focus:opacity-100 hover:text-destructive hover:bg-destructive/10"
+                onClick={() => handleDelete(todo)}
+                title="Remove checklist item"
+              >
+                <Trash2 className="h-3.5 w-3.5" />
+              </Button>
+            </li>
+          ))}
+        </ul>
+      )}
+      <form onSubmit={handleAdd} className="mt-2 flex items-center gap-2">
+        <Input
+          value={draft}
+          onChange={(e) => setDraft(e.target.value)}
+          placeholder="Add a checklist item..."
+          className="h-8 text-sm"
+        />
+        <Button
+          type="submit"
+          size="sm"
+          className="h-8 w-8 p-0"
+          disabled={!draft.trim() || busyId !== null}
+          title="Add checklist item"
+        >
+          <Plus className="h-3.5 w-3.5" />
+        </Button>
+      </form>
+    </div>
+  );
+}
+
+export default function TasksClient({
+  initialTasks,
+  services,
+  users,
+  submissions,
+  loadError,
+}: TasksClientProps) {
+  const router = useRouter();
+  const { toast } = useToast();
+  const [tasks, setTasks] = useState<TaskType[]>(initialTasks);
+  const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [sheetOpen, setSheetOpen] = useState(false);
+  const [editing, setEditing] = useState<TaskType | null>(null);
+  const [form, setForm] = useState<TaskFormState>(emptyForm());
+  const [submitting, setSubmitting] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState<TaskType | null>(null);
+  const [deleting, setDeleting] = useState(false);
+
+  const pendingCount = tasks.filter((t) => t.status === "pending").length;
+  const inProgressCount = tasks.filter(
+    (t) => t.status === "in_progress",
+  ).length;
+  const completedCount = tasks.filter((t) => t.status === "completed").length;
+
+  const filteredTasks = tasks.filter((t) => {
+    const matchesStatus = statusFilter === "all" || t.status === statusFilter;
+    if (!matchesStatus) return false;
+    const s = search.toLowerCase();
+    return (
+      t.title.toLowerCase().includes(s) ||
+      (t.description ?? "").toLowerCase().includes(s) ||
+      (t.category ?? "").toLowerCase().includes(s) ||
+      (t.assigneeName ?? "").toLowerCase().includes(s) ||
+      (t.serviceTitle ?? "").toLowerCase().includes(s)
+    );
+  });
+
+  const updateField = <K extends keyof TaskFormState>(
+    key: K,
+    value: TaskFormState[K],
+  ) => setForm((prev) => ({ ...prev, [key]: value }));
+
+  const openCreate = () => {
+    setEditing(null);
+    setForm(emptyForm());
+    setSheetOpen(true);
+  };
+
+  const openEdit = (task: TaskType) => {
+    setEditing(task);
+    setForm({
+      title: task.title,
+      description: task.description ?? "",
+      category: task.category ?? "",
+      priority: task.priority,
+      status: task.status,
+      assignedTo: task.assignedTo ?? "",
+      dueAt: toLocalInput(task.dueAt),
+      serviceId: task.serviceId ?? "",
+      submissionId: task.submissionId ?? "",
+    });
+    setSheetOpen(true);
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!form.title.trim()) {
+      toast({
+        variant: "destructive",
+        title: "Task title is required",
+      });
+      return;
+    }
+
+    setSubmitting(true);
+    try {
+      const payload = {
+        title: form.title.trim(),
+        description: form.description.trim() || null,
+        category: form.category.trim() || null,
+        priority: form.priority,
+        status: form.status,
+        assignedTo: form.assignedTo || null,
+        dueAt: fromLocalInput(form.dueAt),
+        serviceId: form.serviceId || null,
+        submissionId: form.submissionId || null,
+      };
+
+      const result = editing
+        ? await updateTaskAction(editing.id, payload)
+        : await createTaskAction(payload);
+
+      if (!result.ok) {
+        toast({
+          variant: "destructive",
+          title: "Failed to save task",
+          description: result.error,
+        });
+        return;
+      }
+
+      toast({
+        title: editing ? "Task updated" : "Task created",
+        description: result.message,
+      });
+      setSheetOpen(false);
+      router.refresh();
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      toast({
+        variant: "destructive",
+        title: "Unexpected error",
+        description: message || "Unknown error",
+      });
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleStatusChange = async (task: TaskType, status: TaskStatus) => {
+    try {
+      const result = await setTaskStatusAction(task.id, status);
+      if (!result.ok) {
+        toast({
+          variant: "destructive",
+          title: "Failed to update task",
+          description: result.error,
+        });
+        return;
+      }
+      setTasks((prev) =>
+        prev.map((t) =>
+          t.id === task.id
+            ? {
+                ...t,
+                status,
+                completedAt:
+                  status === "completed" ? new Date().toISOString() : null,
+              }
+            : t,
+        ),
+      );
+      toast({ title: "Task updated" });
+    } catch {
+      toast({
+        variant: "destructive",
+        title: "Failed to update task",
+      });
+    }
+  };
+
+  const handleDelete = async () => {
+    if (!deleteTarget) return;
+    setDeleting(true);
+    try {
+      const result = await deleteTaskAction(deleteTarget.id);
+      if (!result.ok) {
+        toast({
+          variant: "destructive",
+          title: "Failed to delete task",
+          description: result.error,
+        });
+        return;
+      }
+      setTasks((prev) => prev.filter((t) => t.id !== deleteTarget.id));
+      toast({ title: "Task deleted", description: result.message });
+      setDeleteTarget(null);
+    } catch {
+      toast({
+        variant: "destructive",
+        title: "Failed to delete task",
+      });
+    } finally {
+      setDeleting(false);
+    }
+  };
+
+  const nextStatus = (
+    task: TaskType,
+  ): { status: TaskStatus; label: string } => {
+    if (task.status === "pending")
+      return { status: "in_progress", label: "Start" };
+    if (task.status === "in_progress")
+      return { status: "completed", label: "Complete" };
+    return { status: "pending", label: "Reopen" };
+  };
+
+  const statCards = [
+    { label: "Total Tasks", value: tasks.length, icon: ClipboardList },
+    { label: "Pending", value: pendingCount, icon: Clock },
+    { label: "In Progress", value: inProgressCount, icon: Loader2 },
+    { label: "Completed", value: completedCount, icon: CheckCircle2 },
+  ];
+
+  return (
+    <div className="space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">Task Management</h1>
+          <p className="text-muted-foreground">
+            Plan, assign and track internal work for Bilacert.
+          </p>
+        </div>
+        <Button className="gap-2 font-bold" onClick={openCreate}>
+          <Plus className="h-4 w-4" />
+          New Task
+        </Button>
+      </div>
+
+      {loadError && (
+        <Card className="border-destructive/50 bg-destructive/5">
+          <CardContent className="flex items-start gap-3 py-4">
+            <AlertTriangle className="h-5 w-5 text-destructive shrink-0 mt-0.5" />
+            <div className="text-sm">
+              <p className="font-semibold text-destructive">
+                Could not load tasks
+              </p>
+              <p className="text-muted-foreground">{loadError}</p>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+        {statCards.map(({ label, value, icon: Icon }) => (
+          <Card key={label}>
+            <CardContent className="flex items-center gap-4 py-5">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                <Icon className="h-5 w-5" />
+              </div>
+              <div>
+                <div className="text-2xl font-bold leading-none">{value}</div>
+                <div className="mt-1 text-xs font-medium text-muted-foreground">
+                  {label}
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <Tabs value={statusFilter} onValueChange={setStatusFilter}>
+          <TabsList className="flex-wrap h-auto">
+            {STATUS_TABS.map((tab) => (
+              <TabsTrigger key={tab.value} value={tab.value} className="h-9">
+                {tab.label}
+                {tab.value !== "all" && (
+                  <span className="ml-1.5 text-xs text-muted-foreground">
+                    {tasks.filter((t) => t.status === tab.value).length}
+                  </span>
+                )}
+              </TabsTrigger>
+            ))}
+          </TabsList>
+        </Tabs>
+        <div className="relative w-full md:w-72">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Input
+            placeholder="Search tasks..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="pl-9"
+          />
+        </div>
+      </div>
+
+      {filteredTasks.length === 0 ? (
+        <Card className="border-dashed py-12">
+          <CardContent className="flex flex-col items-center justify-center text-center">
+            <div className="h-16 w-16 rounded-full bg-muted flex items-center justify-center mb-4">
+              <ClipboardList className="h-8 w-8 text-muted-foreground/50" />
+            </div>
+            <h3 className="text-lg font-semibold">
+              {tasks.length === 0 ? "No tasks yet" : "No tasks found"}
+            </h3>
+            <p className="text-sm text-muted-foreground max-w-xs mt-2">
+              {tasks.length === 0
+                ? "Create a task to start tracking the work that needs to get done."
+                : "Try adjusting your search or status filter."}
+            </p>
+            {tasks.length === 0 && (
+              <Button className="mt-4" onClick={openCreate}>
+                <Plus className="h-4 w-4 mr-2" />
+                New Task
+              </Button>
+            )}
+          </CardContent>
+        </Card>
+      ) : (
+        <div className="grid gap-4">
+          {filteredTasks.map((task) => {
+            const statusMeta = STATUS_META[task.status];
+            const priorityMeta = PRIORITY_META[task.priority];
+            const next = nextStatus(task);
+            return (
+              <Card key={task.id} className="group overflow-hidden">
+                <CardContent className="p-0">
+                  <div className="flex flex-col gap-4 p-6">
+                    <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-4">
+                      <div className="min-w-0 space-y-2">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <h3 className="font-bold text-lg leading-none">
+                            {task.title}
+                          </h3>
+                          <Badge className={statusMeta.className}>
+                            {statusMeta.label}
+                          </Badge>
+                          <Badge className={priorityMeta.className}>
+                            {priorityMeta.label}
+                          </Badge>
+                          {task.category && (
+                            <Badge variant="outline">{task.category}</Badge>
+                          )}
+                        </div>
+                        {task.description && (
+                          <p className="text-sm text-muted-foreground leading-relaxed">
+                            {task.description}
+                          </p>
+                        )}
+                        <div className="flex flex-wrap items-center gap-x-4 gap-y-1 pt-1 text-xs text-muted-foreground font-medium">
+                          {task.dueAt && (
+                            <span className="flex items-center gap-1.5">
+                              <Calendar className="h-3.5 w-3.5" />
+                              Due {fmtDate(task.dueAt)}
+                            </span>
+                          )}
+                          {task.assigneeName && (
+                            <span className="flex items-center gap-1.5">
+                              <User className="h-3.5 w-3.5" />
+                              {task.assigneeName}
+                            </span>
+                          )}
+                          {task.serviceTitle && (
+                            <span className="flex items-center gap-1.5">
+                              <Briefcase className="h-3.5 w-3.5" />
+                              {task.serviceTitle}
+                            </span>
+                          )}
+                          {task.submissionFullName && (
+                            <span className="flex items-center gap-1.5">
+                              <ClipboardList className="h-3.5 w-3.5" />
+                              {task.submissionFullName}
+                            </span>
+                          )}
+                          <span className="ml-auto text-muted-foreground/70">
+                            Created {fmtDate(task.createdAt)}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2 shrink-0">
+                        {task.status !== "completed" &&
+                          task.status !== "cancelled" && (
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              className="font-semibold"
+                              onClick={() =>
+                                handleStatusChange(task, next.status)
+                              }
+                            >
+                              {next.label}
+                            </Button>
+                          )}
+                        {task.status === "completed" ||
+                        task.status === "cancelled" ? (
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="font-semibold"
+                            onClick={() => handleStatusChange(task, "pending")}
+                          >
+                            Reopen
+                          </Button>
+                        ) : null}
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          className="text-muted-foreground"
+                          onClick={() => openEdit(task)}
+                          title="Edit task"
+                        >
+                          <Pencil className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          className="text-muted-foreground hover:text-destructive hover:bg-destructive/10"
+                          onClick={() => setDeleteTarget(task)}
+                          title="Delete task"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </div>
+                    <TodoSection
+                      task={task}
+                      onTodosChange={(todos) =>
+                        setTasks((prev) =>
+                          prev.map((t) =>
+                            t.id === task.id ? { ...t, todos } : t,
+                          ),
+                        )
+                      }
+                    />
+                  </div>
+                </CardContent>
+              </Card>
+            );
+          })}
+        </div>
+      )}
+
+      <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
+        <SheetContent className="sm:max-w-lg overflow-y-auto">
+          <form onSubmit={handleSubmit}>
+            <SheetHeader className="mb-6">
+              <SheetTitle>{editing ? "Edit Task" : "New Task"}</SheetTitle>
+              <SheetDescription>
+                {editing
+                  ? "Update the details of this task."
+                  : "Add a task to the queue for the team to pick up."}
+              </SheetDescription>
+            </SheetHeader>
+
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="title">
+                  Title <span className="text-destructive">*</span>
+                </Label>
+                <Input
+                  id="title"
+                  value={form.title}
+                  onChange={(e) => updateField("title", e.target.value)}
+                  placeholder="e.g. Deploy monthly website maintenance"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="priority">Priority</Label>
+                  <Select
+                    value={form.priority}
+                    onValueChange={(v) =>
+                      updateField("priority", v as TaskPriority)
+                    }
+                  >
+                    <SelectTrigger id="priority">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {Object.entries(PRIORITY_META).map(([value, meta]) => (
+                        <SelectItem key={value} value={value}>
+                          {meta.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="status">Status</Label>
+                  <Select
+                    value={form.status}
+                    onValueChange={(v) =>
+                      updateField("status", v as TaskStatus)
+                    }
+                  >
+                    <SelectTrigger id="status">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {Object.entries(STATUS_META).map(([value, meta]) => (
+                        <SelectItem key={value} value={value}>
+                          {meta.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="category">Category</Label>
+                  <Input
+                    id="category"
+                    value={form.category}
+                    onChange={(e) => updateField("category", e.target.value)}
+                    placeholder="e.g. Website, Domain, Social"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="assignedTo">Assigned To</Label>
+                  <Select
+                    value={form.assignedTo}
+                    onValueChange={(v) => updateField("assignedTo", v)}
+                  >
+                    <SelectTrigger id="assignedTo">
+                      <SelectValue placeholder="Unassigned" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {users.map((user) => (
+                        <SelectItem key={user.id} value={user.id}>
+                          {user.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="dueAt">Due Date</Label>
+                <Input
+                  id="dueAt"
+                  type="datetime-local"
+                  value={form.dueAt}
+                  onChange={(e) => updateField("dueAt", e.target.value)}
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="serviceId">Service</Label>
+                  <Select
+                    value={form.serviceId}
+                    onValueChange={(v) => updateField("serviceId", v)}
+                  >
+                    <SelectTrigger id="serviceId">
+                      <SelectValue placeholder="No service" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {services.map((service) => (
+                        <SelectItem key={service.id} value={service.id}>
+                          {service.title}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="submissionId">Submission</Label>
+                  <Select
+                    value={form.submissionId}
+                    onValueChange={(v) => updateField("submissionId", v)}
+                  >
+                    <SelectTrigger id="submissionId">
+                      <SelectValue placeholder="No submission" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {submissions.map((submission) => (
+                        <SelectItem
+                          key={submission.id}
+                          value={submission.id}
+                          className="truncate"
+                        >
+                          {submission.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="description">Description</Label>
+                <Textarea
+                  id="description"
+                  value={form.description}
+                  onChange={(e) => updateField("description", e.target.value)}
+                  rows={3}
+                  placeholder="Anything the team needs to know..."
+                />
+              </div>
+            </div>
+
+            <SheetFooter className="mt-6">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setSheetOpen(false)}
+                disabled={submitting}
+              >
+                Cancel
+              </Button>
+              <Button type="submit" disabled={submitting}>
+                {submitting ? (
+                  <Loader2 className="animate-spin h-4 w-4 mr-2" />
+                ) : (
+                  <Plus className="h-4 w-4 mr-2" />
+                )}
+                {submitting
+                  ? "Saving..."
+                  : editing
+                    ? "Save Changes"
+                    : "Create Task"}
+              </Button>
+            </SheetFooter>
+          </form>
+        </SheetContent>
+      </Sheet>
+
+      <AlertDialog
+        open={deleteTarget !== null}
+        onOpenChange={(open) => {
+          if (!open) setDeleteTarget(null);
+        }}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete task</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete "{deleteTarget?.title}"? This
+              cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={deleting}>Cancel</AlertDialogCancel>
+            <Button
+              variant="destructive"
+              onClick={handleDelete}
+              disabled={deleting}
+            >
+              {deleting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              Delete
+            </Button>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </div>
+  );
+}
+````
+
 ## File: apps/admin/app/admin/testimonials/actions.ts
 ````typescript
 "use server";
@@ -16271,6 +14767,94 @@ export async function deleteTestimonial(
 }
 ````
 
+## File: apps/admin/app/admin/testimonials/new/page.tsx
+````typescript
+import { ArrowLeft } from "lucide-react";
+import type { Viewport } from "next";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import TestimonialForm from "../TestimonialForm";
+
+export const metadata = {
+  title: "New Testimonial | Bilacert Admin Pro",
+  description: "Add a new testimonial from a Facebook post.",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#1f2937" },
+  ],
+};
+export default function NewTestimonialPage() {
+  return (
+    <div className="space-y-6">
+      <Button variant="outline" asChild>
+        <Link href="/admin/testimonials">
+          <ArrowLeft className="mr-2 h-4 w-4" />
+          Back to Testimonials
+        </Link>
+      </Button>
+      <Card>
+        <CardHeader>
+          <CardTitle>Add New Testimonial</CardTitle>
+          <CardDescription>
+            Enter the URL of the Facebook post below.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <TestimonialForm />
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+````
+
+## File: apps/admin/app/admin/testimonials/page.tsx
+````typescript
+import type { Viewport } from "next";
+import { Suspense } from "react";
+import TestimonialsLoading from "./loading";
+import TestimonialsClient from "./TestimonialsClient";
+
+export const metadata = {
+  title: "Testimonials | Bilacert Admin Pro",
+  description: "Manage customer testimonials from social media.",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#1f2937" },
+  ],
+};
+export default function TestimonialsPage() {
+  return (
+    <div className="space-y-6">
+      <Suspense fallback={<TestimonialsLoading />}>
+        <TestimonialsClient />
+      </Suspense>
+    </div>
+  );
+}
+````
+
 ## File: apps/admin/app/api/pexels/route.ts
 ````typescript
 import { getEnv } from "@bilacert/contracts/env";
@@ -16318,6 +14902,91 @@ export async function GET(request: Request) {
       { status: 500 },
     );
   }
+}
+````
+
+## File: apps/admin/app/layout.tsx
+````typescript
+import type { Metadata, Viewport } from "next";
+import "./globals.css";
+import { Toaster } from "@/components/ui/toaster";
+
+export const metadata: Metadata = {
+  title: {
+    default: "Bilacert Admin Pro",
+    template: "%s | Bilacert Admin",
+  },
+  description: "Administrative dashboard for Bilacert.",
+  icons: {
+    icon: "/favicon.ico",
+    shortcut: "/favicon.ico",
+    apple: "/logo.png",
+  },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#1f2937" },
+  ],
+};
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return (
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin="anonymous"
+        />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+          rel="stylesheet"
+        />
+      </head>
+      <body className="font-body antialiased bg-background text-foreground">
+        {children}
+        <Toaster />
+      </body>
+    </html>
+  );
+}
+````
+
+## File: apps/admin/app/page.tsx
+````typescript
+import type { Viewport } from "next";
+import { redirect } from "next/navigation";
+
+export const metadata = {
+  title: "Bilacert Admin Pro",
+  description: "Administrative dashboard for Bilacert.",
+  robots: {
+    index: false,
+  },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#1f2937" },
+  ],
+};
+export default function HomePage() {
+  redirect("/admin/login");
 }
 ````
 
@@ -16567,381 +15236,493 @@ export default function AdminHeader() {
 import React from "react";
 ````
 
-## File: apps/admin/components/ui/chart.tsx
+## File: apps/admin/components/PexelsImagePicker.tsx
 ````typescript
 "use client";
 
-import { cn } from "@bilacert/shared/cn";
-import * as React from "react";
-import * as RechartsPrimitive from "recharts";
+import {
+  ExternalLink,
+  Image as ImageIcon,
+  Loader2,
+  Search,
+} from "lucide-react";
+import Image from "next/image";
+import type React from "react";
+import { useCallback, useEffect, useState } from "react";
 
-// Format: { THEME_NAME: CSS_SELECTOR }
-const THEMES = { light: "", dark: ".dark" } as const;
-
-export type ChartConfig = {
-  [k in string]: {
-    label?: React.ReactNode;
-    icon?: React.ComponentType;
-  } & (
-    | { color?: string; theme?: never }
-    | { color?: never; theme: Record<keyof typeof THEMES, string> }
-  );
-};
-
-type ChartContextProps = {
-  config: ChartConfig;
-};
-
-const ChartContext = React.createContext<ChartContextProps | null>(null);
-
-function useChart() {
-  const context = React.useContext(ChartContext);
-
-  if (!context) {
-    throw new Error("useChart must be used within a <ChartContainer />");
-  }
-
-  return context;
+interface PexelsImage {
+  id: number;
+  width: number;
+  height: number;
+  url: string;
+  photographer: string;
+  photographer_url: string;
+  photographer_id: number;
+  avg_color: string;
+  src: {
+    original: string;
+    large2x: string;
+    large: string;
+    medium: string;
+    small: string;
+    portrait: string;
+    landscape: string;
+    tiny: string;
+  };
+  alt: string;
 }
 
-const ChartContainer = React.forwardRef<
-  HTMLDivElement,
-  React.ComponentProps<"div"> & {
-    config: ChartConfig;
-    children: React.ComponentProps<
-      typeof RechartsPrimitive.ResponsiveContainer
-    >["children"];
-  }
->(({ id, className, children, config, ...props }, ref) => {
-  const uniqueId = React.useId();
-  const chartId = `chart-${id || uniqueId.replace(/:/g, "")}`;
-
-  return (
-    <ChartContext.Provider value={{ config }}>
-      <div
-        data-chart={chartId}
-        ref={ref}
-        className={cn(
-          "flex aspect-video justify-center text-xs [&_.recharts-cartesian-axis-tick_text]:fill-muted-foreground [&_.recharts-cartesian-grid_line[stroke='#ccc']]:stroke-border/50 [&_.recharts-curve.recharts-tooltip-cursor]:stroke-border [&_.recharts-dot[stroke='#fff']]:stroke-transparent [&_.recharts-layer]:outline-none [&_.recharts-polar-grid_[stroke='#ccc']]:stroke-border [&_.recharts-radial-bar-background-sector]:fill-muted [&_.recharts-rectangle.recharts-tooltip-cursor]:fill-muted [&_.recharts-reference-line_[stroke='#ccc']]:stroke-border [&_.recharts-sector[stroke='#fff']]:stroke-transparent [&_.recharts-sector]:outline-none [&_.recharts-surface]:outline-none",
-          className,
-        )}
-        {...props}
-      >
-        <ChartStyle id={chartId} config={config} />
-        <RechartsPrimitive.ResponsiveContainer>
-          {children}
-        </RechartsPrimitive.ResponsiveContainer>
-      </div>
-    </ChartContext.Provider>
-  );
-});
-ChartContainer.displayName = "Chart";
-
-const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
-  const colorConfig = Object.entries(config).filter(
-    ([, config]) => config.theme || config.color,
-  );
-
-  if (!colorConfig.length) {
-    return null;
-  }
-
-  return (
-    <style
-      dangerouslySetInnerHTML={{
-        __html: Object.entries(THEMES)
-          .map(
-            ([theme, prefix]) => `
-${prefix} [data-chart=${id}] {
-${colorConfig
-  .map(([key, itemConfig]) => {
-    const color =
-      itemConfig.theme?.[theme as keyof typeof itemConfig.theme] ||
-      itemConfig.color;
-    return color ? `  --color-${key}: ${color};` : null;
-  })
-  .join("\n")}
+interface PexelsImagePickerProps {
+  onSelect: (url: string) => void;
+  currentImageUrl?: string;
+  suggestions?: string[];
 }
-`,
-          )
-          .join("\n"),
-      }}
-    />
-  );
-};
 
-const ChartTooltip = RechartsPrimitive.Tooltip;
+const PexelsImagePicker: React.FC<PexelsImagePickerProps> = ({
+  onSelect,
+  currentImageUrl,
+  suggestions = [],
+}) => {
+  const [query, setQuery] = useState("");
+  const [images, setImages] = useState<PexelsImage[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [selectedUrl, setSelectedUrl] = useState(currentImageUrl || "");
+  const [showSearch, setShowSearch] = useState(false);
 
-const ChartTooltipContent = React.forwardRef<
-  HTMLDivElement,
-  React.ComponentProps<typeof RechartsPrimitive.Tooltip> &
-    React.ComponentProps<"div"> & {
-      hideLabel?: boolean;
-      hideIndicator?: boolean;
-      indicator?: "line" | "dot" | "dashed";
-      nameKey?: string;
-      labelKey?: string;
+  useEffect(() => {
+    setSelectedUrl(currentImageUrl || "");
+  }, [currentImageUrl]);
+
+  const loadInitialPhotos = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await fetch("/api/pexels");
+      if (!response.ok) throw new Error("Failed to fetch curated photos");
+      const data = await response.json();
+      setImages(data.photos || []);
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : String(err));
+    } finally {
+      setLoading(false);
     }
->(
-  (
-    {
-      active,
-      payload,
-      className,
-      indicator = "dot",
-      hideLabel = false,
-      hideIndicator = false,
-      label,
-      labelFormatter,
-      labelClassName,
-      formatter,
-      color,
-      nameKey,
-      labelKey,
-    },
-    ref,
-  ) => {
-    const { config } = useChart();
+  }, []);
 
-    const tooltipLabel = React.useMemo(() => {
-      if (hideLabel || !payload?.length) {
-        return null;
+  const searchImages = useCallback(
+    async (searchQuery?: string) => {
+      const q = searchQuery || query;
+      if (!q.trim()) {
+        loadInitialPhotos();
+        return;
       }
 
-      const [item] = payload;
-      if (!item) return null;
-      const key = `${labelKey || item.dataKey || item.name || "value"}`;
-      const itemConfig = getPayloadConfigFromPayload(config, item as any, key);
-      const value =
-        !labelKey && typeof label === "string"
-          ? config[label as keyof typeof config]?.label || label
-          : itemConfig?.label;
+      setLoading(true);
+      setError(null);
 
-      if (labelFormatter) {
-        return (
-          <div className={cn("font-medium", labelClassName)}>
-            {labelFormatter(value, payload)}
-          </div>
+      try {
+        const response = await fetch(
+          `/api/pexels?query=${encodeURIComponent(q)}`,
         );
+        if (!response.ok) {
+          throw new Error("Failed to fetch images from Pexels");
+        }
+        const data = await response.json();
+        setImages(data.photos || []);
+      } catch (err: unknown) {
+        setError(
+          err instanceof Error
+            ? err.message
+            : String(err) || "An error occurred while searching",
+        );
+      } finally {
+        setLoading(false);
       }
+    },
+    [query, loadInitialPhotos],
+  );
 
-      if (!value) {
-        return null;
+  // Fetch curated photos when searching panel is opened
+  useEffect(() => {
+    if (showSearch && images.length === 0) {
+      // If we have suggestions, use the first one as initial query
+      if (suggestions.length > 0) {
+        setQuery(suggestions[0] || "");
+        searchImages(suggestions[0]);
+      } else {
+        loadInitialPhotos();
       }
-
-      return <div className={cn("font-medium", labelClassName)}>{value}</div>;
-    }, [
-      label,
-      labelFormatter,
-      payload,
-      hideLabel,
-      labelClassName,
-      config,
-      labelKey,
-    ]);
-
-    if (!active || !payload?.length) {
-      return null;
     }
+  }, [showSearch, images.length, suggestions, searchImages, loadInitialPhotos]);
 
-    const nestLabel = payload.length === 1 && indicator !== "dot";
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      searchImages();
+    }
+  };
 
-    return (
-      <div
-        ref={ref}
-        className={cn(
-          "grid min-w-[8rem] items-start gap-1.5 rounded-lg border border-border/50 bg-background px-2.5 py-1.5 text-xs shadow-xl",
-          className,
-        )}
-      >
-        {!nestLabel ? tooltipLabel : null}
-        <div className="grid gap-1.5">
-          {payload.map((item: any, index: number) => {
-            const key = `${nameKey || item.name || item.dataKey || "value"}`;
-            const itemConfig = getPayloadConfigFromPayload(
-              config,
-              item as any,
-              key,
-            );
-            const indicatorColor = color || item.payload.fill || item.color;
+  const handleSuggestionClick = (suggestion: string) => {
+    setQuery(suggestion);
+    searchImages(suggestion);
+  };
 
-            return (
-              <div
-                key={item.dataKey}
-                className={cn(
-                  "flex w-full flex-wrap items-stretch gap-2 [&>svg]:h-2.5 [&>svg]:w-2.5 [&>svg]:text-muted-foreground",
-                  indicator === "dot" && "items-center",
-                )}
+  const handleSelect = (image: PexelsImage, size: keyof PexelsImage["src"]) => {
+    const url = image.src[size];
+    setSelectedUrl(url);
+    onSelect(url);
+    setShowSearch(false);
+  };
+
+  return (
+    <div className="space-y-4 mb-6">
+      <div className="flex items-center justify-between">
+        <span className="block text-sm font-medium text-gray-700">
+          Select from Pexels
+        </span>
+        {/* Requirement: Prominent link to Pexels */}
+        <a
+          href="https://www.pexels.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-[10px] text-gray-400 hover:text-emerald-600 flex items-center gap-1"
+        >
+          Photos provided by Pexels
+        </a>
+      </div>
+
+      {/* Preview Section */}
+      <div className="relative aspect-video w-full max-w-md rounded-lg overflow-hidden border-2 border-dashed border-gray-300 bg-gray-50 flex items-center justify-center group">
+        {selectedUrl ? (
+          <>
+            <Image
+              src={selectedUrl}
+              alt="Preview"
+              fill
+              className="object-cover"
+              unoptimized={selectedUrl.includes("pexels.com")}
+            />
+            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+              <button
+                type="button"
+                onClick={() => setShowSearch(!showSearch)}
+                className="bg-white text-gray-900 px-4 py-2 rounded-lg font-medium text-sm hover:bg-gray-100 flex items-center gap-2"
               >
-                {formatter && item?.value !== undefined && item.name ? (
-                  formatter(item.value, item.name, item, index, item.payload)
-                ) : (
-                  <>
-                    {itemConfig?.icon ? (
-                      <itemConfig.icon />
-                    ) : (
-                      !hideIndicator && (
-                        <div
-                          className={cn(
-                            "shrink-0 rounded-[2px] border-(--color-border) bg-(--color-bg)",
-                            {
-                              "h-2.5 w-2.5": indicator === "dot",
-                              "w-1": indicator === "line",
-                              "w-0 border-[1.5px] border-dashed bg-transparent":
-                                indicator === "dashed",
-                              "my-0.5": nestLabel && indicator === "dashed",
-                            },
-                          )}
-                          style={
-                            {
-                              "--color-bg": indicatorColor,
-                              "--color-border": indicatorColor,
-                            } as React.CSSProperties
-                          }
-                        />
-                      )
-                    )}
-                    <div
-                      className={cn(
-                        "flex flex-1 justify-between leading-none",
-                        nestLabel ? "items-end" : "items-center",
-                      )}
-                    >
-                      <div className="grid gap-1.5">
-                        {nestLabel ? tooltipLabel : null}
-                        <span className="text-muted-foreground">
-                          {itemConfig?.label || item.name}
-                        </span>
-                      </div>
-                      {item.value && (
-                        <span className="font-mono font-medium tabular-nums text-foreground">
-                          {item.value.toLocaleString()}
-                        </span>
-                      )}
-                    </div>
-                  </>
-                )}
-              </div>
-            );
-          })}
-        </div>
-      </div>
-    );
-  },
-);
-ChartTooltipContent.displayName = "ChartTooltip";
-
-const ChartLegend = RechartsPrimitive.Legend;
-
-const ChartLegendContent = React.forwardRef<
-  HTMLDivElement,
-  React.ComponentProps<"div"> &
-    Pick<RechartsPrimitive.LegendProps, "payload" | "verticalAlign"> & {
-      hideIcon?: boolean;
-      nameKey?: string;
-    }
->(
-  (
-    { className, hideIcon = false, payload, verticalAlign = "bottom", nameKey },
-    ref,
-  ) => {
-    const { config } = useChart();
-
-    if (!payload?.length) {
-      return null;
-    }
-
-    return (
-      <div
-        ref={ref}
-        className={cn(
-          "flex items-center justify-center gap-4",
-          verticalAlign === "top" ? "pb-3" : "pt-3",
-          className,
-        )}
-      >
-        {payload.map((item: any) => {
-          const key = `${nameKey || item.dataKey || "value"}`;
-          const itemConfig = getPayloadConfigFromPayload(
-            config,
-            item as any,
-            key,
-          );
-
-          return (
-            <div
-              key={item.value}
-              className={cn(
-                "flex items-center gap-1.5 [&>svg]:h-3 [&>svg]:w-3 [&>svg]:text-muted-foreground",
-              )}
-            >
-              {itemConfig?.icon && !hideIcon ? (
-                <itemConfig.icon />
-              ) : (
-                <div
-                  className="h-2 w-2 shrink-0 rounded-[2px]"
-                  style={{
-                    backgroundColor: item.color,
-                  }}
-                />
-              )}
-              {itemConfig?.label}
+                <ImageIcon size={16} />
+                Change Image
+              </button>
             </div>
-          );
-        })}
+          </>
+        ) : (
+          <button
+            type="button"
+            onClick={() => setShowSearch(true)}
+            className="flex flex-col items-center gap-2 text-gray-500 hover:text-emerald-600 transition-colors"
+          >
+            <ImageIcon size={48} strokeWidth={1} />
+            <span className="font-medium">
+              Click to select an image from Pexels
+            </span>
+          </button>
+        )}
       </div>
-    );
-  },
-);
-ChartLegendContent.displayName = "ChartLegend";
 
-// Helper to extract item config from a payload.
-function getPayloadConfigFromPayload(
-  config: ChartConfig,
-  payload: unknown,
-  key: string,
-) {
-  if (typeof payload !== "object" || payload === null) {
-    return undefined;
-  }
+      {/* Search Toggle */}
+      {selectedUrl && (
+        <button
+          type="button"
+          onClick={() => setShowSearch(!showSearch)}
+          className="text-sm font-medium text-emerald-600 hover:text-emerald-700 flex items-center gap-1"
+        >
+          {showSearch ? "Hide Pexels Search" : "Search Pexels for new image"}
+        </button>
+      )}
 
-  const payloadPayload =
-    "payload" in payload &&
-    typeof payload.payload === "object" &&
-    payload.payload !== null
-      ? payload.payload
-      : undefined;
+      {/* Search Section */}
+      {showSearch && (
+        <div className="bg-gray-50 p-4 rounded-xl border border-gray-200 space-y-4 animate-in fade-in slide-in-from-top-2 duration-200">
+          <div className="flex gap-2">
+            <div className="relative flex-1">
+              <Search
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+                size={18}
+              />
+              <input
+                type="text"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                onKeyDown={handleKeyDown}
+                placeholder="Search Pexels (e.g. 'coding', 'business', 'tech')..."
+                className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all"
+              />
+            </div>
+            <button
+              type="button"
+              onClick={() => searchImages()}
+              disabled={loading}
+              className="bg-emerald-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-emerald-700 disabled:opacity-50 flex items-center gap-2"
+            >
+              {loading ? (
+                <Loader2 size={18} className="animate-spin" />
+              ) : (
+                "Search"
+              )}
+            </button>
+          </div>
 
-  let configLabelKey: string = key;
+          {suggestions.length > 0 && (
+            <div className="flex flex-wrap gap-2">
+              <span className="text-[10px] uppercase tracking-wider text-gray-400 font-bold w-full mb-1">
+                Suggestions from tags:
+              </span>
+              {suggestions.map((tag) => (
+                <button
+                  key={tag}
+                  type="button"
+                  onClick={() => handleSuggestionClick(tag)}
+                  className={`text-xs px-3 py-1 rounded-full border transition-all ${
+                    query.toLowerCase() === tag.toLowerCase()
+                      ? "bg-emerald-600 border-emerald-600 text-white"
+                      : "bg-white border-gray-200 text-gray-600 hover:border-emerald-500 hover:text-emerald-600"
+                  }`}
+                >
+                  {tag}
+                </button>
+              ))}
+            </div>
+          )}
 
-  if (
-    key in payload &&
-    typeof payload[key as keyof typeof payload] === "string"
-  ) {
-    configLabelKey = payload[key as keyof typeof payload] as string;
-  } else if (
-    payloadPayload &&
-    key in payloadPayload &&
-    typeof payloadPayload[key as keyof typeof payloadPayload] === "string"
-  ) {
-    configLabelKey = payloadPayload[
-      key as keyof typeof payloadPayload
-    ] as string;
-  }
+          {error && <p className="text-sm text-red-600">{error}</p>}
 
-  return configLabelKey in config
-    ? config[configLabelKey]
-    : config[key as keyof typeof config];
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
+            {images.map((image) => (
+              <div
+                key={image.id}
+                className="group relative bg-white rounded-lg border border-gray-200 overflow-hidden shadow-sm hover:border-emerald-500 transition-colors"
+              >
+                <div className="relative aspect-square">
+                  <Image
+                    src={image.src.small}
+                    alt={image.alt}
+                    fill
+                    className="object-cover"
+                    unoptimized
+                  />
+                </div>
+                <div className="p-2 space-y-2">
+                  <div className="flex flex-col gap-1">
+                    <button
+                      type="button"
+                      onClick={() => handleSelect(image, "large")}
+                      className="text-[10px] w-full bg-emerald-50 text-emerald-700 py-1 rounded hover:bg-emerald-100 font-bold"
+                    >
+                      SELECT LARGE
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleSelect(image, "medium")}
+                      className="text-[10px] w-full bg-blue-50 text-blue-700 py-1 rounded hover:bg-blue-100 font-bold"
+                    >
+                      SELECT MEDIUM
+                    </button>
+                  </div>
+                  <div className="flex items-center justify-between text-[10px] text-gray-500 border-t pt-2">
+                    {/* Requirement: Credit photographers with links */}
+                    <span className="truncate max-w-[80px]">
+                      By {image.photographer}
+                    </span>
+                    <div className="flex items-center gap-1.5">
+                      <a
+                        href={image.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="hover:text-emerald-600"
+                        title="View photo on Pexels"
+                      >
+                        <ImageIcon size={12} />
+                      </a>
+                      <a
+                        href={image.photographer_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="hover:text-emerald-600"
+                        title={`View ${image.photographer}'s profile`}
+                      >
+                        <ExternalLink size={12} />
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+            {!loading && images.length === 0 && (
+              <div className="col-span-full py-8 text-center text-gray-500">
+                {query
+                  ? `No images found for "${query}"`
+                  : "No photos available."}
+              </div>
+            )}
+          </div>
+
+          <div className="pt-2 border-t border-gray-100 flex justify-center">
+            <a
+              href="https://www.pexels.com"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Image
+                src="https://images.pexels.com/lib/api/pexels.png"
+                alt="Pexels Logo"
+                width={100}
+                height={24}
+                className="h-6 w-auto opacity-50 hover:opacity-100 transition-opacity"
+                unoptimized
+              />
+            </a>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default PexelsImagePicker;
+````
+
+## File: apps/admin/components/ui/ImageUpload.tsx
+````typescript
+"use client";
+
+import { createSupabaseBrowserClient } from "@bilacert/supabase/client";
+import { Loader2, Upload, X } from "lucide-react";
+import Image from "next/image";
+import { useEffect, useState } from "react";
+import { useToast } from "@/hooks/use-toast";
+import { Button } from "./button";
+
+const supabase = createSupabaseBrowserClient();
+
+interface ImageUploadProps {
+  bucket: string;
+  onUpload: (url: string) => void;
+  initialUrl?: string | null;
+  onRemove?: () => void;
 }
 
-export {
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-  ChartLegend,
-  ChartLegendContent,
-  ChartStyle,
-};
+export default function ImageUpload({
+  bucket,
+  onUpload,
+  initialUrl,
+  onRemove,
+}: ImageUploadProps) {
+  const { toast } = useToast();
+  const [uploading, setUploading] = useState(false);
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    setImageUrl(initialUrl || null);
+  }, [initialUrl]);
+
+  const handleFileChange = async (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    setUploading(true);
+    try {
+      const fileName = `${Date.now()}_${file.name.replace(/\s/g, "_")}`;
+      const filePath = fileName;
+
+      const { error } = await supabase.storage
+        .from(bucket)
+        .upload(filePath, file);
+
+      if (error) throw error;
+
+      const {
+        data: { publicUrl },
+      } = supabase.storage.from(bucket).getPublicUrl(filePath);
+
+      setImageUrl(publicUrl);
+      onUpload(publicUrl);
+      toast({ title: "Image uploaded successfully" });
+    } catch (error: unknown) {
+      toast({
+        variant: "destructive",
+        title: "Error uploading image",
+        description: error instanceof Error ? error.message : String(error),
+      });
+      throw error;
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const handleRemoveImage = () => {
+    setImageUrl(null);
+    if (onRemove) {
+      onRemove();
+    } else {
+      onUpload("");
+    }
+  };
+
+  return (
+    <div className="space-y-2">
+      {imageUrl ? (
+        <div className="relative group w-full max-w-sm">
+          <Image
+            src={imageUrl}
+            alt="Uploaded image"
+            width={400}
+            height={200}
+            className="rounded-lg object-cover border"
+          />
+          <Button
+            type="button"
+            variant="destructive"
+            size="icon"
+            className="absolute top-2 right-2 h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity"
+            onClick={handleRemoveImage}
+          >
+            <X className="h-4 w-4" />
+          </Button>
+        </div>
+      ) : (
+        <div className="flex items-center justify-center w-full">
+          <label
+            htmlFor={`image-upload-${bucket}`}
+            className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer bg-muted/50 hover:bg-muted"
+          >
+            <div className="flex flex-col items-center justify-center pt-5 pb-6">
+              {uploading ? (
+                <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+              ) : (
+                <>
+                  <Upload className="h-8 w-8 text-muted-foreground" />
+                  <p className="mb-2 text-sm text-muted-foreground">
+                    <span className="font-semibold">Click to upload</span> or
+                    drag and drop
+                  </p>
+                  <p className="text-xs text-muted-foreground">PNG, JPG, GIF</p>
+                </>
+              )}
+            </div>
+            <input
+              id={`image-upload-${bucket}`}
+              type="file"
+              className="hidden"
+              onChange={handleFileChange}
+              disabled={uploading}
+              accept="image/*"
+            />
+          </label>
+        </div>
+      )}
+    </div>
+  );
+}
 ````
 
 ## File: apps/admin/components/ui/toggle-group.tsx
@@ -17815,612 +16596,362 @@ export const config = {
 };
 ````
 
-## File: apps/client/app/blog/[slug]/page.tsx
+## File: apps/admin/README.md
+````markdown
+# bilacert Admin
+
+Next.js 16 admin application (App Router via `create-next-app`).
+
+## Auth Proxy
+
+- The app uses `proxy.ts` (Next 16 proxy convention, not `middleware.ts`) and
+  delegates Supabase session handling to `@bilacert/supabase/session`.
+- **The proxy reads the `sb-*` session cookies from the incoming request and
+  forwards them onto its responses and redirects.** Do not read the cookie jar
+  from an empty response after `session.ts` rewrites cookies, or a logged-in
+  user will be bounced back to `/login`.
+- Canonical rule: `docs/ARCHITECTURE/blueprint/07-nextjs/01-app/01-getting-started/16-proxy.md`.
+
+This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+
+## Getting Started
+
+First, run the development server:
+
+```bash
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
+```
+
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+
+You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+
+This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+
+## Learn More
+
+To learn more about Next.js, take a look at the following resources:
+
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+
+## Deploy on Vercel
+
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+````
+
+## File: apps/client/app/about/page.tsx
 ````typescript
-import { format } from "date-fns";
-import { Calendar, Clock, Folder, User } from "lucide-react";
-import type { Metadata } from "next";
-import Link from "next/link";
-import { notFound } from "next/navigation";
-import { FaFacebook, FaLinkedin, FaTwitter } from "react-icons/fa";
-import { RelatedPosts } from "@/components/blog/RelatedPosts";
-import { StickyShare } from "@/components/blog/StickyShare";
-import { ViewTracker } from "@/components/blog/view";
-import HeroSection from "@/components/HeroSection";
 import {
-  getCachedBlogBySlug,
-  getCachedBlogPostsByCategory,
-  getCachedPublishedBlogSlugs,
-} from "../../_lib/cached-public-data";
-
-export async function generateStaticParams() {
-  const slugs = await getCachedPublishedBlogSlugs();
-  return slugs.map((item) => ({ slug: item.slug }));
-}
-
-interface Props {
-  params: Promise<{
-    slug: string;
-  }>;
-}
-
-function normalizeArticleHtml(html: string | null | undefined) {
-  if (!html)
-    return '<p class="text-slate-400 italic">No content to display yet...</p>';
-
-  return html
-    .replace(/<br\s*\/?>(\s*)/gi, " ")
-    .replace(/&nbsp;/gi, " ")
-    .replace(/([A-Za-z])[-‐‑‒–—]\s+([A-Za-z])/g, "$1$2")
-    .replace(/\s{2,}/g, " ")
-    .trim();
-}
-
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { slug } = await params;
-  const post = await getCachedBlogBySlug(slug);
-
-  if (!post) {
-    return {
-      title: "Post Not Found - Bilacert",
-    };
-  }
-
-  return {
-    title: post.seoTitle || `${post.title} - Bilacert`,
-    description: post.seoDescription || post.excerpt,
-    keywords: post.seoKeywords || [
-      post.title.toLowerCase(),
-      ...(post.category?.split(", ").map((c: string) => c.toLowerCase()) || []),
-      "blog",
-      "compliance",
-      "South Africa",
-    ],
-    openGraph: {
-      title: post.seoTitle || post.title,
-      description: post.seoDescription || post.excerpt,
-      url: `https://bilacert.co.za/blog/${slug}`,
-      type: "article",
-      images: post.featuredImage ? [{ url: post.featuredImage }] : [],
-    },
-    alternates: {
-      canonical: `https://bilacert.co.za/blog/${slug}`,
-    },
-  };
-}
-
-export default async function BlogPostPage({ params }: Props) {
-  const { slug } = await params;
-  const post = await getCachedBlogBySlug(slug);
-
-  if (!post) {
-    notFound();
-  }
-
-  const relatedPosts = post.category
-    ? await getCachedBlogPostsByCategory(post.category, 3)
-    : [];
-  const publishedDate = post.createdAt
-    ? format(new Date(post.createdAt), "PP")
-    : "Published insight";
-  const authorName = post.authorName || "Bilacert Team";
-  const heroHighlights = [
-    {
-      title: authorName,
-      description: "Compliance insight author",
-      icon: <User className="h-6 w-6 text-white" />,
-    },
-    {
-      title: publishedDate,
-      description: "Published date",
-      icon: <Calendar className="h-6 w-6 text-white" />,
-    },
-    {
-      title: post.readTime || "Quick read",
-      description: "Estimated reading time",
-      icon: <Clock className="h-6 w-6 text-white" />,
-    },
-  ];
-
-  return (
-    <div className="min-h-screen bg-white">
-      <ViewTracker slug={slug} />
-      <StickyShare />
-
-      <HeroSection
-        imageSrc={post.featuredImage || "/herosetion/Blog.jpg"}
-        imageAlt={post.title}
-        eyebrow={post.category || "Bilacert Insight"}
-        title={post.title}
-        description={
-          post.excerpt || "Expert compliance guidance from Bilacert."
-        }
-        actions={[
-          { label: "Get Free Consultation", href: "/contact" },
-          { label: "View All Articles", href: "/blog", variant: "secondary" },
-        ]}
-        highlights={heroHighlights}
-      />
-
-      <section className="py-14">
-        <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-          <article
-            className="bilacert-article"
-            dangerouslySetInnerHTML={{
-              __html: normalizeArticleHtml(post.content),
-            }}
-          />
-
-          {post.category && (
-            <div className="mt-10 rounded-xl bg-white p-6 shadow-sm shadow-black/5">
-              <div className="flex items-center gap-2 text-gray-600">
-                <Folder className="h-5 w-5" />
-                <span>{post.category}</span>
-              </div>
-            </div>
-          )}
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-8 md:py-12 bg-secondary-gray">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-white rounded-xl shadow-sm p-5 md:p-8 text-center">
-            <h3 className="text-xl md:text-2xl font-bold text-primary mb-4">
-              Found this helpful?
-            </h3>
-
-            <div className="grid grid-cols-1 gap-3 md:flex md:justify-center md:space-x-4 md:gap-0 mb-8">
-              <button
-                type="button"
-                className="flex items-center justify-center space-x-2 bg-blue-400 text-white px-4 py-2.5 rounded-lg hover:bg-blue-500 w-full md:w-auto"
-              >
-                <FaTwitter className="h-5 w-5" />
-                <span>Twitter</span>
-              </button>
-              <button
-                type="button"
-                className="flex items-center justify-center space-x-2 bg-blue-600 text-white px-4 py-2.5 rounded-lg hover:bg-blue-700 w-full md:w-auto"
-              >
-                <FaLinkedin className="h-5 w-5" />
-                <span>LinkedIn</span>
-              </button>
-              <button
-                type="button"
-                className="flex items-center justify-center space-x-2 bg-blue-800 text-white px-4 py-2.5 rounded-lg hover:bg-blue-900 w-full md:w-auto"
-              >
-                <FaFacebook className="h-5 w-5" />
-                <span>Facebook</span>
-              </button>
-            </div>
-
-            <div className="border-t pt-8">
-              <Link
-                href="/contact"
-                className="bg-primary text-white px-6 py-3 rounded-lg font-semibold inline-block w-full md:w-auto text-center"
-              >
-                Get Free Consultation
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {relatedPosts.length > 0 && <RelatedPosts posts={relatedPosts} />}
-    </div>
-  );
-}
-````
-
-## File: apps/client/app/blog/page.tsx
-````typescript
-import { ArrowRight, BookOpen, Calendar, Clock, User } from "lucide-react";
-import type { Metadata } from "next";
-import Image from "next/image";
-import Link from "next/link";
-import BlogCard from "@/components/cards/BlogCard";
+  CheckCircle,
+  Eye,
+  Heart,
+  Shield,
+  Target,
+  Users,
+  Zap,
+} from "lucide-react";
+import type { Metadata, Viewport } from "next";
 import HeroSection from "@/components/HeroSection";
-import { Badge } from "@/components/ui/badge";
-import { getCachedPublishedBlogs } from "../_lib/cached-public-data";
 
 export const metadata: Metadata = {
-  title: "Blog",
+  title: "About Us",
   description:
-    "Stay updated with the latest ICASA and NRCS compliance news, guides, and insights. Expert articles on type approvals, licensing, and regulatory changes in South Africa.",
+    "Learn about Bilacert, South Africa's trusted compliance partner. We simplify ICASA and NRCS approvals with our values of simplicity, clarity, efficiency, and support.",
   keywords: [
-    "ICASA compliance blog",
-    "NRCS LOA news",
-    "compliance articles South Africa",
-    "type approval guides",
-    "licensing updates",
-    "regulatory compliance news",
-    "ICASA NRCS insights",
+    "about Bilacert",
+    "compliance consultant South Africa",
+    "ICASA NRCS experts",
+    "regulatory compliance team",
+    "South Africa compliance company",
+    "telecommunications compliance experts",
   ],
   openGraph: {
-    title: "Blog - ICASA & NRCS Compliance Insights",
+    title: "About Bilacert - Your Trusted Compliance Partner",
     description:
-      "Stay updated with the latest ICASA and NRCS compliance news, guides, and insights. Expert articles on type approvals, licensing, and regulatory changes in South Africa.",
-    url: "https://bilacert.co.za/blog",
+      "Learn about Bilacert, South Africa's trusted compliance partner. We simplify ICASA and NRCS approvals with our values of simplicity, clarity, efficiency, and support.",
+    url: "https://bilacert.co.za/about",
     type: "website",
   },
   alternates: {
-    canonical: "https://bilacert.co.za/blog",
+    canonical: "https://bilacert.co.za/about",
   },
 };
 
-export const revalidate = 0;
-
-export default async function BlogPage() {
-  const categories = [
-    "All",
-    "ICASA Approvals",
-    "NRCS Compliance",
-    "Licensing",
-    "Telecom Licensing",
-    "Business Strategy",
-    "Marine Compliance",
-  ];
-
-  const blogPosts = await getCachedPublishedBlogs();
-
-  if (blogPosts.length === 0) {
-    return (
-      <div className="min-h-screen flex items-center justify-center py-20 bg-secondary-gray">
-        <div className="text-center px-4">
-          <h2 className="text-2xl font-bold text-primary mb-2">
-            No blog posts found
-          </h2>
-          <p className="text-gray-600">Check back later for more updates.</p>
-        </div>
-      </div>
-    );
-  }
-
-  const featuredPost = blogPosts[0];
-  const regularPosts = blogPosts.slice(1);
-  const heroHighlights = [
-    {
-      title: `${blogPosts.length} Published Insights`,
-      description: "Guides and updates for regulated businesses.",
-      icon: <BookOpen className="h-6 w-6 text-white" />,
-    },
-    {
-      title: "Regulatory Updates",
-      description: "ICASA, NRCS, licensing, and approval guidance.",
-      icon: <Calendar className="h-6 w-6 text-white" />,
-    },
-    {
-      title: "Practical Reading",
-      description: "Actionable advice from compliance specialists.",
-      icon: <Clock className="h-6 w-6 text-white" />,
-    },
-  ];
-
-  return (
-    <div className="min-h-screen bg-white">
-      <HeroSection
-        imageSrc="/herosetion/Blog.jpg"
-        imageAlt="Compliance Insights & Updates"
-        eyebrow="Insights Hub"
-        title="Compliance Insights & Updates"
-        description="Stay informed with the latest compliance news, regulatory updates, and expert guidance to keep your business ahead of the curve."
-        actions={[
-          { label: "Read Latest Articles", href: "#latest-articles" },
-          { label: "Ask an Expert", href: "/contact", variant: "secondary" },
-        ]}
-        highlights={heroHighlights}
-      />
-
-      {/* Featured Post */}
-      {featuredPost && (
-        <section className="py-12 md:py-20 bg-secondary-gray">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100 group">
-              <div className="grid grid-cols-1 lg:grid-cols-2">
-                <div className="relative h-64 sm:h-80 md:h-96 lg:h-full min-h-[300px] overflow-hidden">
-                  <Image
-                    src={
-                      featuredPost.featuredImage ||
-                      `https://picsum.photos/seed/${featuredPost.id}/600/400`
-                    }
-                    alt={featuredPost.title}
-                    fill
-                    sizes="(max-width: 1024px) 100vw, 50vw"
-                    className="object-cover transition-transform duration-700 group-hover:scale-105"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent lg:hidden" />
-                  <div className="absolute top-6 left-6">
-                    <Badge className="bg-accent text-white px-4 py-1.5 border-none shadow-lg">
-                      Featured Article
-                    </Badge>
-                  </div>
-                </div>
-                <div className="p-8 md:p-12 lg:p-16 flex flex-col justify-center">
-                  <div className="flex items-center gap-4 mb-6 text-sm text-gray-500">
-                    <span className="flex items-center gap-1.5">
-                      <Calendar className="h-4 w-4 text-accent" />
-                      {new Date(featuredPost.createdAt).toLocaleDateString(
-                        "en-ZA",
-                        {
-                          year: "numeric",
-                          month: "long",
-                          day: "numeric",
-                        },
-                      )}
-                    </span>
-                    {featuredPost.readTime && (
-                      <>
-                        <span className="w-1.5 h-1.5 rounded-full bg-gray-300" />
-                        <span className="flex items-center gap-1.5">
-                          <Clock className="h-4 w-4 text-accent" />
-                          {featuredPost.readTime}
-                        </span>
-                      </>
-                    )}
-                  </div>
-
-                  <Link
-                    href={`/blog/${featuredPost.slug}`}
-                    className="block group"
-                  >
-                    <h2 className="text-2xl md:text-4xl font-extrabold text-primary mb-6 leading-tight group-hover:text-accent transition-colors duration-200">
-                      {featuredPost.title}
-                    </h2>
-                  </Link>
-
-                  <p className="text-base md:text-lg text-gray-600 mb-8 leading-relaxed line-clamp-4">
-                    {featuredPost.excerpt}
-                  </p>
-
-                  <div className="flex flex-wrap items-center justify-between gap-6 mt-auto">
-                    <div className="flex items-center gap-3">
-                      <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
-                        <User className="h-5 w-5" />
-                      </div>
-                      <div>
-                        <p className="text-sm font-bold text-primary">
-                          {featuredPost.authorName || "Bilacert Team"}
-                        </p>
-                        <p className="text-xs text-gray-500">
-                          Compliance Expert
-                        </p>
-                      </div>
-                    </div>
-
-                    <Link
-                      href={`/blog/${featuredPost.slug}`}
-                      className="inline-flex items-center bg-accent text-white px-8 py-3 rounded-full font-bold hover:bg-accent-light transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-1"
-                    >
-                      Read Full Article
-                      <ArrowRight className="h-5 w-5 ml-2" />
-                    </Link>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* Blog Posts Grid */}
-      <section id="latest-articles" className="py-16 md:py-24 scroll-mt-24">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
-            <div className="max-w-2xl">
-              <h2 className="text-3xl md:text-4xl font-extrabold text-primary mb-4">
-                Latest Articles
-              </h2>
-              <p className="text-lg text-gray-600">
-                Expert insights and practical guidance to help you navigate
-                South African compliance requirements with ease.
-              </p>
-            </div>
-
-            <div className="flex flex-wrap gap-2">
-              {categories.slice(0, 5).map((category) => (
-                <button
-                  key={category}
-                  type="button"
-                  className="px-4 py-2 rounded-full text-xs md:text-sm font-medium border border-gray-200 text-gray-600 hover:border-accent hover:text-accent transition-all whitespace-nowrap"
-                >
-                  {category}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Posts Grid */}
-          {regularPosts.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 lg:gap-10">
-              {regularPosts.map((post) => (
-                <BlogCard key={post.id} post={post} />
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-20 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-200">
-              <p className="text-gray-500">More articles coming soon.</p>
-            </div>
-          )}
-        </div>
-      </section>
-
-      {/* Newsletter Signup */}
-      <section className="py-20 md:py-28 bg-primary relative overflow-hidden">
-        {/* Background Pattern/Overlay */}
-        <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/3 w-96 h-96 bg-accent/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/3 w-96 h-96 bg-accent/10 rounded-full blur-3xl" />
-
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-          <Badge className="bg-accent/20 text-accent-light border-accent/30 mb-6 px-4 py-1 border shadow-sm">
-            Newsletter
-          </Badge>
-          <h2 className="text-3xl md:text-4xl font-extrabold mb-6 text-white leading-tight">
-            Stay Ahead of Regulatory Changes
-          </h2>
-          <p className="text-lg md:text-xl mb-10 text-gray-300 max-w-2xl mx-auto">
-            Subscribe to our newsletter for the latest compliance insights,
-            regulatory updates, and expert guidance delivered straight to your
-            inbox.
-          </p>
-          <form className="max-w-md mx-auto flex flex-col sm:flex-row gap-4">
-            <input
-              type="email"
-              placeholder="Enter your email address"
-              className="flex-1 px-6 py-4 rounded-full bg-white/10 border border-white/20 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all"
-              required
-            />
-            <button
-              type="submit"
-              className="bg-accent text-white px-8 py-4 rounded-full font-bold hover:bg-accent-light transition-all duration-300 shadow-lg hover:shadow-accent/20"
-            >
-              Subscribe Now
-            </button>
-          </form>
-          <p className="mt-6 text-sm text-gray-400">
-            Join 500+ businesses receiving our weekly compliance updates.
-          </p>
-        </div>
-      </section>
-    </div>
-  );
-}
-````
-
-## File: apps/client/app/contact/page.tsx
-````typescript
-import { Clock, Mail, Phone } from "lucide-react";
-import type { Metadata } from "next";
-import HeroSection from "@/components/HeroSection";
-import { businessInfo } from "@/lib/business";
-import ContactMessageForm from "./ContactMessageForm";
-
-export const metadata: Metadata = {
-  title: "Contact Us",
-  description: `Get in touch with ${businessInfo.name} for expert ICASA and NRCS compliance guidance. Call ${businessInfo.phone} or email ${businessInfo.email} for a free consultation.`,
-  keywords: [
-    "contact Bilacert",
-    "ICASA compliance consultation",
-    "NRCS LOA consultation",
-    "compliance expert South Africa",
-    "regulatory approval consultation",
-    "free compliance consultation",
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#1f2937" },
   ],
-  openGraph: {
-    title: `Contact ${businessInfo.name} - Get Expert Compliance Guidance`,
-    description: `Get in touch with ${businessInfo.name} for expert ICASA and NRCS compliance guidance. Call ${businessInfo.phone} or email ${businessInfo.email} for a free consultation.`,
-    url: `${businessInfo.domain}/contact`,
-    type: "website",
-  },
-  alternates: {
-    canonical: `${businessInfo.domain}/contact`,
-  },
 };
+export default function AboutPage() {
+  const values = [
+    {
+      title: "Simplicity",
+      description:
+        "We believe compliance should be clear and straightforward. We break down complex regulations into simple, actionable steps, removing unnecessary barriers for businesses.",
+      icon: <Eye className="h-8 w-8" />,
+    },
+    {
+      title: "Clarity",
+      description:
+        "We communicate in a way that is direct and transparent, avoiding unnecessary jargon. Our goal is to ensure our clients always understand their compliance status and next steps.",
+      icon: <Target className="h-8 w-8" />,
+    },
+    {
+      title: "Efficiency",
+      description:
+        "We prioritize speed and accuracy, ensuring applications are processed correctly the first time. Our refined processes and deep industry knowledge minimize delays and streamline approvals.",
+      icon: <Zap className="h-8 w-8" />,
+    },
+    {
+      title: "Support",
+      description:
+        "We are more than just a service provider; we are a partner. We walk alongside our clients through the entire compliance process, offering guidance and solutions every step of the way.",
+      icon: <Heart className="h-8 w-8" />,
+    },
+    {
+      title: "Trust & Integrity",
+      description:
+        "Regulatory compliance is a critical business function. We operate with honesty and integrity, ensuring our clients can trust us to handle their approvals with the utmost professionalism.",
+      icon: <Shield className="h-8 w-8" />,
+    },
+  ];
 
-export default function ContactPage() {
+  const process = [
+    {
+      step: "1",
+      title: "Consultation",
+      description:
+        "We assess your business needs and determine the required approvals.",
+    },
+    {
+      step: "2",
+      title: "Documentation & Application Preparation",
+      description:
+        "We gather all necessary paperwork, ensuring accuracy and compliance with regulatory standards.",
+    },
+    {
+      step: "3",
+      title: "Submission & Liaison",
+      description:
+        "We submit applications on your behalf and manage all communication with regulatory bodies.",
+    },
+    {
+      step: "4",
+      title: "Follow-Up & Resolution",
+      description:
+        "We track application progress, address any issues, and ensure smooth approval.",
+    },
+    {
+      step: "5",
+      title: "Ongoing Compliance Support",
+      description:
+        "We assist with renewals, amendments, and compliance updates to keep your business aligned with regulations.",
+    },
+  ];
+
   const heroHighlights = [
     {
-      title: businessInfo.phone,
-      description: "Speak to a compliance specialist.",
-      icon: <Phone className="h-6 w-6 text-white" />,
+      title: "Trusted Compliance Partner",
+      description: "Clear support for ICASA and NRCS approvals.",
+      icon: <Shield className="h-6 w-6 text-white" />,
     },
     {
-      title: businessInfo.email,
-      description: "Send your compliance questions.",
-      icon: <Mail className="h-6 w-6 text-white" />,
+      title: "Simple, Guided Process",
+      description: "We turn complex requirements into clear next steps.",
+      icon: <Target className="h-6 w-6 text-white" />,
     },
     {
-      title: "Mon-Fri 08:00 - 16:30",
-      description: "Business hours for direct support.",
-      icon: <Clock className="h-6 w-6 text-white" />,
+      title: "Reliable Support",
+      description: "Guidance from consultation through approval.",
+      icon: <CheckCircle className="h-6 w-6 text-white" />,
     },
   ];
 
   return (
     <div className="min-h-screen">
       <HeroSection
-        imageSrc="/herosetion/Contact-Us.jpg"
-        imageAlt="Get in touch"
-        eyebrow="Contact Bilacert"
-        title="Get Expert Compliance Guidance"
-        description="Ready to simplify your compliance journey? Contact our experts for a free consultation and discover how we can help your business navigate ICASA and NRCS requirements."
+        imageSrc="/herosetion/About-Us.jpg"
+        imageAlt="About Bilacert"
+        eyebrow="About Bilacert"
+        title="Your Trusted Compliance Partner"
+        description="We simplify ICASA and NRCS approvals for South African businesses with clear guidance, efficient processes, and reliable support."
         actions={[
-          { label: "Call Now", href: businessInfo.telHref },
-          {
-            label: "WhatsApp Us",
-            href: businessInfo.whatsappHref,
-            variant: "secondary",
-            external: true,
-          },
+          { label: "Start Your Journey", href: "/contact" },
+          { label: "View Services", href: "/services", variant: "secondary" },
         ]}
         highlights={heroHighlights}
       />
 
+      {/* Mission & Purpose */}
       <section className="py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-16">
-            <div className="text-center">
-              <div className="bg-accent/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Phone className="h-8 w-8 text-accent" />
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div>
+              <h2 className="text-3xl lg:text-4xl font-bold text-primary mb-6">
+                Our Mission & Purpose
+              </h2>
+              <div className="space-y-6">
+                <div>
+                  <h3 className="text-xl font-semibold text-primary mb-3">
+                    Our Purpose
+                  </h3>
+                  <p className="text-gray-600 text-lg">
+                    To make compliance easy, accessible, and efficient for
+                    businesses, so they can focus on innovation and growth while
+                    we handle the regulatory complexities.
+                  </p>
+                </div>
+                <div>
+                  <h3 className="text-xl font-semibold text-primary mb-3">
+                    Our Mission
+                  </h3>
+                  <p className="text-gray-600 text-lg">
+                    Bilacert is committed to being the trusted partner in
+                    regulatory compliance, providing businesses with expert
+                    guidance, seamless application processes, and reliable
+                    support. Our mission is to remove the guesswork from
+                    licensing and approvals, ensuring businesses meet South
+                    African regulatory requirements with confidence and ease.
+                  </p>
+                </div>
               </div>
-              <h3 className="text-xl font-semibold text-primary mb-2">Phone</h3>
-              <p className="text-gray-600 mb-2">{businessInfo.phone}</p>
-              <p className="text-sm text-gray-500">Mon-Fri 08:00 - 16:30</p>
             </div>
-
-            <div className="text-center">
-              <div className="bg-accent/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Mail className="h-8 w-8 text-accent" />
+            <div className="bg-secondary-gray p-8 rounded-2xl">
+              <div className="space-y-6">
+                <div className="flex items-center space-x-4">
+                  <div className="bg-accent p-3 rounded-lg">
+                    <Users className="h-6 w-6 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-primary">
+                      500+ Clients Served
+                    </h3>
+                    <p className="text-gray-600">
+                      From startups to multinationals
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-center space-x-4">
+                  <div className="bg-accent p-3 rounded-lg">
+                    <CheckCircle className="h-6 w-6 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-primary">
+                      100% Success Rate
+                    </h3>
+                    <p className="text-gray-600">On first-time applications</p>
+                  </div>
+                </div>
+                <div className="flex items-center space-x-4">
+                  <div className="bg-accent p-3 rounded-lg">
+                    <Zap className="h-6 w-6 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-primary">30% Faster</h3>
+                    <p className="text-gray-600">Than industry average</p>
+                  </div>
+                </div>
               </div>
-              <h3 className="text-xl font-semibold text-primary mb-2">Email</h3>
-              <p className="text-gray-600 mb-2">{businessInfo.email}</p>
-              <p className="text-sm text-gray-500">
-                We&apos;ll respond within 24 hours
-              </p>
             </div>
-
-            <div className="text-center">
-              <div className="bg-accent/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Clock className="h-8 w-8 text-accent" />
-              </div>
-              <h3 className="text-xl font-semibold text-primary mb-2">
-                Business Hours
-              </h3>
-              <p className="text-gray-600 mb-2">Monday - Friday</p>
-              <p className="text-sm text-gray-500">08:00 - 16:30</p>
-            </div>
-          </div>
-
-          <div className="max-w-2xl mx-auto">
-            <ContactMessageForm />
           </div>
         </div>
       </section>
 
+      {/* Our Values */}
       <section className="py-20 bg-secondary-gray">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl font-bold text-primary mb-6">
-            Need Immediate Assistance?
-          </h2>
-          <p className="text-xl text-gray-600 mb-8">
-            For urgent compliance matters, call us directly at{" "}
-            {businessInfo.phone} or reach out via WhatsApp for instant support.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a
-              href={businessInfo.telHref}
-              className="bg-accent text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-accent-light transition-colors duration-200"
-            >
-              Call Now
-            </a>
-            <a
-              href={businessInfo.whatsappHref}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="bg-green-500 text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-green-600 transition-colors duration-200"
-            >
-              WhatsApp Us
-            </a>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl lg:text-4xl font-bold text-primary mb-4">
+              Our Values
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              The principles that guide everything we do and shape our
+              commitment to excellence
+            </p>
           </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {values.map((value) => (
+              <div
+                key={value.title}
+                className="bg-white p-6 rounded-xl shadow-sm"
+              >
+                <div className="text-accent mb-4">{value.icon}</div>
+                <h3 className="text-xl font-semibold text-primary mb-3">
+                  {value.title}
+                </h3>
+                <p className="text-gray-600">{value.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Our Process */}
+      <section className="py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl lg:text-4xl font-bold text-primary mb-4">
+              How We Work
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Our proven 5-step process ensures your compliance journey is
+              smooth and successful
+            </p>
+          </div>
+
+          <div className="space-y-8">
+            {process.map((step) => (
+              <div key={step.step} className="flex items-start space-x-6">
+                <div className="flex-shrink-0">
+                  <div className="bg-primary text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-lg">
+                    {step.step}
+                  </div>
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-xl font-semibold text-primary mb-2">
+                    {step.title}
+                  </h3>
+                  <p className="text-gray-600 text-lg">{step.description}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-20 bg-gradient-to-r from-primary to-primary-light text-white">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-3xl lg:text-4xl font-bold mb-6">
+            Ready to Work With Us?
+          </h2>
+          <p className="text-xl mb-8 text-gray-200">
+            Let&apos;s discuss how we can help simplify your compliance
+            requirements and accelerate your business growth.
+          </p>
+          <a
+            href="/contact"
+            className="bg-accent text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-accent-light transition-all duration-200 transform hover:-translate-y-1 inline-block"
+          >
+            Start Your Compliance Journey
+          </a>
         </div>
       </section>
     </div>
@@ -18642,6 +17173,51 @@ export default function FAQContent() {
 }
 ````
 
+## File: apps/client/app/faq/page.tsx
+````typescript
+import type { Metadata, Viewport } from "next";
+import FAQContent from "./FAQContent";
+
+export const metadata: Metadata = {
+  title: "Frequently Asked Questions",
+  description:
+    "Find answers to common questions about ICASA and NRCS compliance, type approvals, licensing, and regulatory requirements in South Africa.",
+  keywords: [
+    "ICASA FAQ",
+    "NRCS LOA questions",
+    "compliance FAQ South Africa",
+    "type approval questions",
+    "licensing FAQ",
+    "regulatory compliance questions",
+    "ICASA NRCS help",
+  ],
+  openGraph: {
+    title: "FAQ - ICASA & NRCS Compliance Questions Answered",
+    description:
+      "Find answers to common questions about ICASA and NRCS compliance, type approvals, licensing, and regulatory requirements in South Africa.",
+    url: "https://bilacert.co.za/faq",
+    type: "website",
+  },
+  alternates: {
+    canonical: "https://bilacert.co.za/faq",
+  },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#1f2937" },
+  ],
+};
+export default function FAQPage() {
+  return <FAQContent />;
+}
+````
+
 ## File: apps/client/app/forms/actions.ts
 ````typescript
 "use server";
@@ -18712,43 +17288,572 @@ export async function submitFormAction(
 }
 ````
 
-## File: apps/client/app/services/page.tsx
+## File: apps/client/app/forms/class-ecs-ecns-licensing/page.tsx
 ````typescript
-import { CheckCircle, Clock, Users } from "lucide-react";
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
+import Image from "next/image";
 import Link from "next/link";
-import ServiceCard from "@/components/cards/ServiceCard";
-import HeroSection from "@/components/HeroSection";
-import { Button } from "@/components/ui/button";
-import { getCachedServices } from "../_lib/cached-public-data";
+import LicensingApplicationForm from "../_components/LicensingApplicationForm";
 
 export const metadata: Metadata = {
-  title: "Our Services - Bilacert",
+  title: "Class ECS/ECNS Licensing Application",
   description:
-    "Comprehensive licensing and certification services for South African businesses. ICASA type approvals, NRCS LOA, radio dealer licensing, and more.",
-  keywords: [
-    "ICASA licensing",
-    "NRCS certification",
-    "radio licensing",
-    "VHF licensing",
-    "ECS ECNS licensing",
-    "license exemptions",
-    "compliance services South Africa",
-  ],
-  openGraph: {
-    title: "Services - Bilacert",
-    description:
-      "Comprehensive licensing and certification services for South African businesses.",
-    url: "https://bilacert.co.za/services",
-    type: "website",
+    "Apply for a Class ECS or ECNS electronic communications service licence with Bilacert's expert regulatory guidance.",
+  robots: {
+    index: true,
+    follow: true,
   },
   alternates: {
-    canonical: "https://bilacert.co.za/services",
+    canonical: "https://bilacert.co.za/forms/class-ecs-ecns-licensing",
   },
 };
 
-export default async function ServicesPage() {
-  const services = await getCachedServices();
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#1f2937" },
+  ],
+};
+export default function ClassEcsEcnsLicensingPage() {
+  return (
+    <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+      <div className="sm:mx-auto sm:w-full sm:max-w-md">
+        <Link href="/">
+          <Image
+            className="mx-auto h-12 w-auto"
+            src="/logo.png"
+            alt="Bilacert"
+            width={100}
+            height={100}
+          />
+        </Link>
+        <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+          Class ECS/ECNS Licensing Application
+        </h2>
+        <p className="mt-2 text-center text-sm text-gray-600">
+          Fill out the form below to begin the process.
+        </p>
+      </div>
+
+      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-xl">
+        <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+          <LicensingApplicationForm
+            formType="class-ecs-ecns"
+            serviceName="Class ECS/ECNS Licensing"
+          />
+        </div>
+      </div>
+    </div>
+  );
+}
+````
+
+## File: apps/client/app/forms/icasa-type-approvals/page.tsx
+````typescript
+import type { Metadata, Viewport } from "next";
+import Image from "next/image";
+import Link from "next/link";
+import LicensingApplicationForm from "../_components/LicensingApplicationForm";
+
+export const metadata: Metadata = {
+  title: "ICASA Type Approval Application",
+  description:
+    "Submit your ICASA type approval application with Bilacert and accelerate your path to South African market access.",
+  robots: {
+    index: true,
+    follow: true,
+  },
+  alternates: {
+    canonical: "https://bilacert.co.za/forms/icasa-type-approvals",
+  },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#1f2937" },
+  ],
+};
+export default function IcasaTypeApprovalsPage() {
+  return (
+    <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+      <div className="sm:mx-auto sm:w-full sm:max-w-md">
+        <Link href="/">
+          <Image
+            className="mx-auto h-12 w-auto"
+            src="/logo.png"
+            alt="Bilacert"
+            width={100}
+            height={100}
+          />
+        </Link>
+        <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+          ICASA Type Approval Application
+        </h2>
+        <p className="mt-2 text-center text-sm text-gray-600">
+          Fill out the form below to begin the process.
+        </p>
+      </div>
+
+      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-xl">
+        <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+          <LicensingApplicationForm
+            formType="icasa-type-approvals"
+            serviceName="ICASA Type Approval"
+          />
+        </div>
+      </div>
+    </div>
+  );
+}
+````
+
+## File: apps/client/app/forms/license-exemptions/page.tsx
+````typescript
+import type { Metadata, Viewport } from "next";
+import Image from "next/image";
+import Link from "next/link";
+import LicensingApplicationForm from "../_components/LicensingApplicationForm";
+
+export const metadata: Metadata = {
+  title: "License Exemptions Application",
+  description:
+    "Apply for radio licence exemptions with Bilacert's compliance experts for ICASA-regulated equipment and services.",
+  robots: {
+    index: true,
+    follow: true,
+  },
+  alternates: {
+    canonical: "https://bilacert.co.za/forms/license-exemptions",
+  },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#1f2937" },
+  ],
+};
+export default function LicenseExemptionsPage() {
+  return (
+    <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+      <div className="sm:mx-auto sm:w-full sm:max-w-md">
+        <Link href="/">
+          <Image
+            className="mx-auto h-12 w-auto"
+            src="/logo.png"
+            alt="Bilacert"
+            width={100}
+            height={100}
+          />
+        </Link>
+        <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+          License Exemptions Application
+        </h2>
+        <p className="mt-2 text-center text-sm text-gray-600">
+          Fill out the form below to begin the process.
+        </p>
+      </div>
+
+      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-xl">
+        <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+          <LicensingApplicationForm
+            formType="license-exemptions"
+            serviceName="License Exemptions"
+          />
+        </div>
+      </div>
+    </div>
+  );
+}
+````
+
+## File: apps/client/app/forms/nrcs-loa-applications/page.tsx
+````typescript
+import type { Metadata, Viewport } from "next";
+import Image from "next/image";
+import Link from "next/link";
+import LicensingApplicationForm from "../_components/LicensingApplicationForm";
+
+export const metadata: Metadata = {
+  title: "NRCS LOA Application",
+  description:
+    "Submit your NRCS Letter of Authority (LOA) application with Bilacert for regulated products sold in South Africa.",
+  robots: {
+    index: true,
+    follow: true,
+  },
+  alternates: {
+    canonical: "https://bilacert.co.za/forms/nrcs-loa-applications",
+  },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#1f2937" },
+  ],
+};
+export default function NrcsLoaApplicationsPage() {
+  return (
+    <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+      <div className="sm:mx-auto sm:w-full sm:max-w-md">
+        <Link href="/">
+          <Image
+            className="mx-auto h-12 w-auto"
+            src="/logo.png"
+            alt="Bilacert"
+            width={100}
+            height={100}
+          />
+        </Link>
+        <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+          NRCS LOA Application
+        </h2>
+        <p className="mt-2 text-center text-sm text-gray-600">
+          Fill out the form below to begin the process.
+        </p>
+      </div>
+
+      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-xl">
+        <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+          <LicensingApplicationForm
+            formType="nrcs-loa"
+            serviceName="NRCS LOA Applications"
+          />
+        </div>
+      </div>
+    </div>
+  );
+}
+````
+
+## File: apps/client/app/forms/radio-dealer-licensing/page.tsx
+````typescript
+import type { Metadata, Viewport } from "next";
+import Image from "next/image";
+import Link from "next/link";
+import LicensingApplicationForm from "../_components/LicensingApplicationForm";
+
+export const metadata: Metadata = {
+  title: "Radio Dealer Licensing Application",
+  description:
+    "Apply for your radio dealer license with Bilacert and trade ICASA-regulated radio equipment legally.",
+  robots: {
+    index: true,
+    follow: true,
+  },
+  alternates: {
+    canonical: "https://bilacert.co.za/forms/radio-dealer-licensing",
+  },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#1f2937" },
+  ],
+};
+export default function RadioDealerLicensingPage() {
+  return (
+    <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+      <div className="sm:mx-auto sm:w-full sm:max-w-md">
+        <Link href="/">
+          <Image
+            className="mx-auto h-12 w-auto"
+            src="/logo.png"
+            alt="Bilacert"
+            width={100}
+            height={100}
+          />
+        </Link>
+        <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+          Radio Dealer Licensing Application
+        </h2>
+        <p className="mt-2 text-center text-sm text-gray-600">
+          Fill out the form below to begin the process.
+        </p>
+      </div>
+
+      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-xl">
+        <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+          <LicensingApplicationForm
+            formType="radio-dealer"
+            serviceName="Radio Dealer Licensing"
+          />
+        </div>
+      </div>
+    </div>
+  );
+}
+````
+
+## File: apps/client/app/forms/ski-boat-vhf-licensing/page.tsx
+````typescript
+import type { Metadata, Viewport } from "next";
+import Image from "next/image";
+import Link from "next/link";
+import LicensingApplicationForm from "../_components/LicensingApplicationForm";
+
+export const metadata: Metadata = {
+  title: "Ski Boat VHF Licensing Application",
+  description:
+    "Apply for a ski boat VHF radio licence with Bilacert and stay compliant on South African waters.",
+  robots: {
+    index: true,
+    follow: true,
+  },
+  alternates: {
+    canonical: "https://bilacert.co.za/forms/ski-boat-vhf-licensing",
+  },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#1f2937" },
+  ],
+};
+export default function SkiBoatVhfLicensingPage() {
+  return (
+    <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+      <div className="sm:mx-auto sm:w-full sm:max-w-md">
+        <Link href="/">
+          <Image
+            className="mx-auto h-12 w-auto"
+            src="/logo.png"
+            alt="Bilacert"
+            width={100}
+            height={100}
+          />
+        </Link>
+        <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+          Ski Boat VHF Licensing Application
+        </h2>
+        <p className="mt-2 text-center text-sm text-gray-600">
+          Fill out the form below to begin the process.
+        </p>
+      </div>
+
+      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-xl">
+        <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+          <LicensingApplicationForm
+            formType="ski-boat-vhf"
+            serviceName="Ski Boat VHF Licensing"
+          />
+        </div>
+      </div>
+    </div>
+  );
+}
+````
+
+## File: apps/client/app/layout.tsx
+````typescript
+import { Analytics } from "@vercel/analytics/next";
+import type { Metadata, Viewport } from "next";
+import { Inter } from "next/font/google";
+import "./globals.css";
+import { GoogleAnalytics } from "@next/third-parties/google";
+import Footer from "@/components/Footer";
+import Header from "@/components/Header";
+import WhatsAppButton from "@/components/WhatsAppButton";
+
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+});
+
+export const metadata: Metadata = {
+  title: {
+    default: "Bilacert - Your Compliance Partner | ICASA & NRCS Approvals",
+    template: "%s | Bilacert - Compliance Made Simple",
+  },
+  description:
+    "Bilacert simplifies ICASA and NRCS LOA compliance for South African businesses. Expert guidance for type approvals, licensing, and regulatory compliance. Get your approvals faster with our streamlined process.",
+  keywords: [
+    "ICASA type approval",
+    "NRCS LOA",
+    "South Africa compliance",
+    "radio dealer license",
+    "ECS ECNS licensing",
+    "VHF radio license",
+    "compliance consultant",
+    "regulatory approval",
+    "telecommunications compliance",
+    "electronic communications",
+  ],
+  authors: [{ name: "Bilacert (Pty) Ltd" }],
+  creator: "Bilacert",
+  publisher: "Bilacert",
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
+  metadataBase: new URL("https://bilacert.co.za"),
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    title: "Bilacert - Your Compliance Partner | ICASA & NRCS Approvals",
+    description:
+      "Simplifying ICASA and NRCS compliance for South African businesses. Expert guidance for type approvals, licensing, and regulatory compliance.",
+    url: "https://bilacert.co.za",
+    siteName: "Bilacert",
+    images: [
+      {
+        url: "/logo.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Bilacert - Your Compliance Partner",
+      },
+    ],
+    locale: "en_ZA",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Bilacert - Your Compliance Partner",
+    description:
+      "Simplifying ICASA and NRCS compliance for South African businesses",
+    images: ["/logo.jpg"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+  verification: {
+    google: "your-google-verification-code",
+    // Add other verification codes as needed
+  },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#1f2937" },
+  ],
+};
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return (
+    <html lang="en" className={inter.variable}>
+      <body className="font-sans antialiased">
+        <Header />
+        <main className="min-h-screen">{children}</main>
+        <Footer />
+        <WhatsAppButton />
+        <Analytics />
+      </body>
+      <GoogleAnalytics gaId="G-6Y6G6PC48C" />
+    </html>
+  );
+}
+````
+
+## File: apps/client/app/page.tsx
+````typescript
+import { Icon } from "@bilacert/shared/Icon";
+import { CheckCircle, Clock, Users } from "lucide-react";
+import type { Metadata, Viewport } from "next";
+import Image from "next/image";
+import Link from "next/link";
+import BlogCard from "@/components/cards/BlogCard";
+import ServiceCard from "@/components/cards/ServiceCard";
+import StructuredData from "@/components/StructuredData";
+import Testimonials from "@/components/Testimonials";
+import {
+  getCachedFeaturedServices,
+  getCachedPublishedBlogs,
+} from "./_lib/cached-public-data";
+
+export const metadata: Metadata = {
+  title: "Home",
+  description:
+    "Bilacert simplifies ICASA and NRCS LOA compliance for South African businesses. Expert guidance for type approvals, licensing, and regulatory compliance. Get your approvals faster with our streamlined process.",
+  keywords: [
+    "ICASA type approval South Africa",
+    "NRCS LOA applications",
+    "radio dealer licensing",
+    "ECS ECNS licensing",
+    "VHF radio license",
+    "compliance consultant South Africa",
+    "regulatory approval services",
+    "telecommunications compliance",
+  ],
+  openGraph: {
+    title: "Bilacert - Your Compliance Partner | ICASA & NRCS Approvals",
+    description:
+      "Simplifying ICASA and NRCS compliance for South African businesses. Expert guidance for type approvals, licensing, and regulatory compliance.",
+    url: "https://bilacert.co.za",
+    type: "website",
+  },
+  alternates: {
+    canonical: "https://bilacert.co.za",
+  },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#1f2937" },
+  ],
+};
+export default async function HomePage() {
+  const organizationData = {
+    name: "Bilacert (Pty) Ltd",
+    description:
+      "Bilacert simplifies ICASA and NRCS LOA compliance for South African businesses. Expert guidance for type approvals, licensing, and regulatory compliance.",
+    serviceType: "Compliance Consulting",
+    price: "From R1,000",
+  };
+
+  const services = (await getCachedFeaturedServices()).slice(0, 3);
+  const allBlogPosts = await getCachedPublishedBlogs();
+  const blogPosts = allBlogPosts.slice(0, 3);
 
   const whyChooseUs = [
     {
@@ -18771,48 +17876,95 @@ export default async function ServicesPage() {
     },
   ];
 
-  const heroHighlights = [
-    {
-      title: "Expert Compliance Guidance",
-      description: "ICASA, NRCS, licensing, and approval support.",
-      icon: <Users className="h-6 w-6 text-white" />,
-    },
-    {
-      title: "Streamlined Application Process",
-      description: "Clear steps, fewer delays, and proactive support.",
-      icon: <Clock className="h-6 w-6 text-white" />,
-    },
-    {
-      title: `${services.length} Active Services`,
-      description: "Purpose-built services for regulated businesses.",
-      icon: <CheckCircle className="h-6 w-6 text-white" />,
-    },
-  ];
-
   return (
     <div className="min-h-screen">
-      <HeroSection
-        imageSrc="/images/services/services-hero.svg"
-        imageAlt="Bilacert compliance services"
-        imageUnoptimized
-        eyebrow="Services built for South African compliance"
-        title="Compliance Services for Your Business"
-        description="Licensing, certification, and regulatory approval support for businesses that need clear guidance and reliable compliance outcomes."
-        actions={[
-          { label: "Get Free Consultation", href: "/contact" },
-          {
-            label: "Explore Services",
-            href: "#services-grid",
-            variant: "secondary",
-          },
-        ]}
-        highlights={heroHighlights}
-      />
+      <StructuredData type="Organization" data={organizationData} />
+      {/* Hero Section */}
+      <section className="relative text-white py-20 lg:py-32">
+        <Image
+          src="/herosetion/Home-Page.jpg"
+          alt="Bilacert compliance"
+          fill
+          priority
+          className="object-cover"
+        />
+        <div className="absolute inset-0 bg-black/40" />
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div>
+              <h1 className="text-4xl lg:text-6xl font-bold mb-6 leading-tight">
+                Compliance Simplified
+              </h1>
+              <p className="text-xl lg:text-2xl mb-8 text-gray-200">
+                Expert guidance for ICASA and NRCS approvals. We handle the
+                complexity so you can focus on growing your business.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4">
+                <Link
+                  href="/contact"
+                  className="bg-accent text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-accent-light transition-all duration-200 transform hover:-translate-y-1 text-center"
+                >
+                  Get Free Consultation
+                </Link>
+                <Link
+                  href="/services"
+                  className="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-white hover:text-primary transition-all duration-200 text-center"
+                >
+                  View Our Services
+                </Link>
+              </div>
+            </div>
+            <div className="hidden lg:block">
+              <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8">
+                <div className="space-y-6">
+                  <div className="flex items-center space-x-4">
+                    <div className="bg-accent p-3 rounded-lg">
+                      <CheckCircle className="h-6 w-6 text-white" />
+                    </div>
+                    <div>
+                      <h3 className="font-semibold">30+ Days Faster</h3>
+                      <p className="text-gray-300">Than industry average</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center space-x-4">
+                    <div className="bg-accent p-3 rounded-lg">
+                      <Icon name="Shield" className="h-6 w-6 text-white" />
+                    </div>
+                    <div>
+                      <h3 className="font-semibold">100% Compliance</h3>
+                      <p className="text-gray-300">Guaranteed approval</p>
+                    </div>
+                  </div>
+                  {/* <div className='flex items-center space-x-4'>
+										<div className='bg-accent p-3 rounded-lg'>
+											<Users className='h-6 w-6 text-white' />
+										</div>
+										<div>
+											<h3 className='font-semibold'>500+ Clients</h3>
+											<p className='text-gray-300'>Successfully served</p>
+										</div>
+									</div> */}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
-      {/* Services Grid */}
-      <section id="services-grid" className="py-20 scroll-mt-24">
+      {/* Services Overview */}
+      <section className="py-20 bg-secondary-gray">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl lg:text-4xl font-bold text-primary mb-4">
+              Our Services
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Comprehensive compliance solutions covering all aspects of ICASA
+              and NRCS regulatory approvals
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch">
             {services.map((service) => (
               <ServiceCard key={service.id} service={service} />
             ))}
@@ -18821,7 +17973,7 @@ export default async function ServicesPage() {
       </section>
 
       {/* Why Choose Us */}
-      <section className="py-20 bg-secondary-gray">
+      <section className="py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl lg:text-4xl font-bold text-primary mb-4">
@@ -18834,8 +17986,8 @@ export default async function ServicesPage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {whyChooseUs.map((item, index) => (
-              <div key={index} className="text-center">
+            {whyChooseUs.map((item) => (
+              <div key={item.title} className="text-center">
                 <div className="bg-accent/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
                   <div className="text-accent">{item.icon}</div>
                 </div>
@@ -18849,28 +18001,129 @@ export default async function ServicesPage() {
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-20">
+      {/* Testimonials */}
+      <Testimonials />
+
+      {/* Blog Preview */}
+      <section className="py-20 bg-secondary-gray">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl lg:text-4xl font-bold text-primary mb-4">
+              Latest Insights
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Stay informed with our latest compliance insights and industry
+              updates
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {blogPosts.map((post) => (
+              <BlogCard key={post.id} post={post} />
+            ))}
+          </div>
+
+          <div className="text-center mt-12">
+            <Link
+              href="/blog"
+              className="bg-primary text-white px-8 py-3 rounded-lg font-semibold hover:bg-primary-light transition-colors duration-200"
+            >
+              View All Posts
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Final CTA */}
+      <section className="py-20 bg-gradient-to-r from-primary to-primary-light text-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl lg:text-4xl font-bold text-primary mb-6">
-            Don't see what you need?
+          <h2 className="text-3xl lg:text-4xl font-bold mb-6">
+            Ready to Simplify Your Compliance?
           </h2>
-          <p className="text-xl text-gray-600 mb-8">
-            Contact us today to discuss your specific licensing and
-            certification needs.
+          <p className="text-xl mb-8 text-gray-200">
+            Get expert guidance and streamline your ICASA and NRCS approval
+            process. Contact us today for a free consultation.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" asChild>
-              <Link href="/contact">Get in Touch</Link>
-            </Button>
-            <Button size="lg" variant="outline" asChild>
-              <a href="tel:0754304433">Call 075 430 4433</a>
-            </Button>
+            <Link
+              href="/contact"
+              className="bg-accent text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-accent-light transition-all duration-200 transform hover:-translate-y-1"
+            >
+              Get Free Consultation
+            </Link>
+            <Link
+              href="tel:0754304433"
+              className="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-white hover:text-primary transition-all duration-200"
+            >
+              Call 075 430 4433
+            </Link>
           </div>
         </div>
       </section>
     </div>
   );
+}
+````
+
+## File: apps/client/app/services/[serviceId]/form/page.tsx
+````typescript
+import type { Metadata, Viewport } from "next";
+import { notFound } from "next/navigation";
+import { getCachedServiceBySlug } from "@/app/_lib/cached-public-data";
+import ServiceApplicationForm from "./ServiceApplicationForm";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ serviceId: string }>;
+}): Promise<Metadata> {
+  const { serviceId } = await params;
+  const service = await getCachedServiceBySlug(serviceId);
+
+  if (!service) {
+    return {
+      title: "Service Form Not Found - Bilacert",
+    };
+  }
+
+  return {
+    title: `Apply for ${service.seoTitle || service.title} - Bilacert`,
+    description:
+      service.seoDescription ||
+      `Apply online for the ${service.title} with Bilacert's expert compliance guidance.`,
+    robots: {
+      index: true,
+      follow: true,
+    },
+    alternates: {
+      canonical: `https://bilacert.co.za/services/${serviceId}/form`,
+    },
+  };
+}
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#1f2937" },
+  ],
+};
+export default async function ServiceFormPage({
+  params,
+}: {
+  params: Promise<{ serviceId: string }>;
+}) {
+  const { serviceId } = await params;
+  const service = await getCachedServiceBySlug(serviceId);
+
+  if (!service) {
+    notFound();
+  }
+
+  return <ServiceApplicationForm service={service} serviceSlug={serviceId} />;
 }
 ````
 
@@ -18957,568 +18210,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }));
 
   return [...staticPages, ...servicePages, ...blogPosts];
-}
-````
-
-## File: apps/client/app/south-africa-local-representative/page.tsx
-````typescript
-import {
-  ArrowRight,
-  CheckCircle2,
-  FileCheck2,
-  Globe2,
-  Handshake,
-  MessageSquareText,
-  ShieldCheck,
-  TestTube2,
-} from "lucide-react";
-import type { Metadata } from "next";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-
-export const metadata: Metadata = {
-  title: "South Africa Local Representative for ICASA & NRCS | BILACERT",
-  description:
-    "BILACERT provides South African local regulatory representation for international manufacturers, testing laboratories, certification bodies and compliance partners.",
-  alternates: {
-    canonical: "https://bilacert.co.za/south-africa-local-representative",
-  },
-  openGraph: {
-    title: "South Africa Local Representative for ICASA & NRCS | BILACERT",
-    description:
-      "Your regulatory representative in South Africa for ICASA and NRCS processes.",
-    url: "https://bilacert.co.za/south-africa-local-representative",
-    type: "website",
-  },
-};
-
-const capabilities = [
-  {
-    title: "ICASA Local Representation",
-    description:
-      "BILACERT acts as the South African applicant or representative for applicable Type Approval matters.",
-    icon: ShieldCheck,
-  },
-  {
-    title: "NRCS Regulatory Support",
-    description:
-      "Support with LOA applications, technical-document review and communication with NRCS.",
-    icon: FileCheck2,
-  },
-  {
-    title: "Representation for Test Laboratories",
-    description:
-      "International laboratories can partner with BILACERT to support their clients entering South Africa.",
-    icon: TestTube2,
-  },
-  {
-    title: "Certificate & Compliance Management",
-    description:
-      "Maintain regulatory records and support future product applications and compliance activities.",
-    icon: CheckCircle2,
-  },
-  {
-    title: "Testing Coordination",
-    description:
-      "Identify missing South African compliance requirements and coordinate the required testing.",
-    icon: Globe2,
-  },
-  {
-    title: "Regulatory Communication",
-    description:
-      "BILACERT handles communication with the relevant South African authorities as part of the regulatory process.",
-    icon: MessageSquareText,
-  },
-];
-
-const process = [
-  "Send Product Information",
-  "Compliance Review",
-  "Testing Gap Analysis",
-  "Application",
-  "Approval",
-  "Ongoing Representation",
-];
-
-export default function SouthAfricaLocalRepresentativePage() {
-  return (
-    <div className="min-h-screen bg-white">
-      <section className="relative overflow-hidden bg-primary text-white">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(212,175,55,0.22),transparent_42%)]" />
-        <div className="relative mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8 lg:py-28">
-          <div className="max-w-4xl">
-            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-accent/40 bg-white/5 px-4 py-2 text-sm font-medium text-accent">
-              <Handshake className="h-4 w-4" />
-              South African regulatory representation
-            </div>
-            <h1 className="text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
-              Your Regulatory Representative in South Africa
-            </h1>
-            <p className="mt-6 max-w-3xl text-lg leading-8 text-gray-200 sm:text-xl">
-              Expand into the South African market with a trusted local
-              compliance partner. BILACERT represents international
-              manufacturers, test laboratories and certification partners for
-              ICASA and NRCS regulatory processes.
-            </p>
-            <div className="mt-10 flex flex-col gap-4 sm:flex-row">
-              <Button size="lg" asChild>
-                <Link href="/contact">
-                  Request Local Representation
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
-              </Button>
-              <Button
-                size="lg"
-                variant="outline"
-                asChild
-                className="border-white/30 bg-transparent text-white hover:bg-white/10 hover:text-white"
-              >
-                <Link href="/south-africa-market-access">
-                  Explore Market Access
-                </Link>
-              </Button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="py-20 sm:py-24">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="mx-auto max-w-3xl text-center">
-            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-accent">
-              One local partner
-            </p>
-            <h2 className="mt-3 text-3xl font-bold tracking-tight text-primary sm:text-4xl">
-              Navigate South African regulation with confidence
-            </h2>
-            <p className="mt-5 text-lg leading-8 text-gray-600">
-              International companies do not need to navigate South African
-              regulatory processes alone. BILACERT provides local compliance
-              support from technical document review through regulatory
-              submission, approval and ongoing support.
-            </p>
-          </div>
-
-          <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {capabilities.map((item) => {
-              const Icon = item.icon;
-              return (
-                <article
-                  key={item.title}
-                  className="rounded-2xl border border-gray-200 bg-white p-7 shadow-sm transition-shadow hover:shadow-md"
-                >
-                  <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-accent/10 text-accent">
-                    <Icon className="h-6 w-6" />
-                  </div>
-                  <h3 className="text-xl font-semibold text-primary">
-                    {item.title}
-                  </h3>
-                  <p className="mt-3 leading-7 text-gray-600">
-                    {item.description}
-                  </p>
-                </article>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      <section className="bg-secondary-gray py-20 sm:py-24">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
-            <div>
-              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-accent">
-                For international laboratories
-              </p>
-              <h2 className="mt-3 text-3xl font-bold tracking-tight text-primary sm:text-4xl">
-                Are You an International Testing Laboratory?
-              </h2>
-              <p className="mt-5 text-lg leading-8 text-gray-600">
-                Partner with BILACERT to provide your clients with a complete
-                South African market-access solution. Your laboratory handles
-                testing.
-                <span className="font-semibold text-primary">
-                  {" "}
-                  BILACERT handles South Africa.
-                </span>
-              </p>
-              <p className="mt-4 leading-7 text-gray-600">
-                When your clients require ICASA Type Approval, NRCS LOA or South
-                African regulatory guidance, BILACERT can act as your local
-                compliance partner.
-              </p>
-            </div>
-
-            <div className="rounded-2xl bg-primary p-8 text-white shadow-xl sm:p-10">
-              <h3 className="text-2xl font-bold">A clear regulatory pathway</h3>
-              <div className="mt-8 space-y-4">
-                {process.map((step, index) => (
-                  <div key={step} className="flex items-center gap-4">
-                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-accent text-sm font-bold text-white">
-                      {index + 1}
-                    </span>
-                    <span className="text-gray-100">{step}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="py-20 sm:py-24">
-        <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-          <div className="rounded-3xl bg-primary p-8 text-center text-white sm:p-12">
-            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-accent">
-              Start with your product
-            </p>
-            <h2 className="mt-3 text-3xl font-bold sm:text-4xl">
-              Need a South African Regulatory Partner?
-            </h2>
-            <p className="mx-auto mt-5 max-w-2xl text-lg leading-8 text-gray-200">
-              Send us your product datasheet and available test reports. Our
-              compliance team will assess the South African regulatory
-              requirements and advise on the next steps.
-            </p>
-            <div className="mt-8 flex flex-col justify-center gap-4 sm:flex-row">
-              <Button size="lg" asChild>
-                <Link href="/contact">
-                  Request Local Representation
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
-              </Button>
-              <Button
-                size="lg"
-                variant="outline"
-                asChild
-                className="border-white/30 bg-transparent text-white hover:bg-white/10 hover:text-white"
-              >
-                <Link href="/south-africa-market-access">
-                  South Africa Market Access
-                </Link>
-              </Button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="border-t border-gray-200 py-12">
-        <div className="mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
-          <p className="text-sm leading-6 text-gray-500">
-            BILACERT is positioned as an independent regulatory consultancy and
-            representative. This page does not imply accreditation by,
-            affiliation with, or endorsement by ICASA or NRCS.
-          </p>
-        </div>
-      </section>
-    </div>
-  );
-}
-````
-
-## File: apps/client/app/south-africa-market-access/page.tsx
-````typescript
-import {
-  ArrowRight,
-  CheckCircle2,
-  ClipboardCheck,
-  FileSearch,
-  Globe2,
-  ShieldCheck,
-  TestTube2,
-} from "lucide-react";
-import type { Metadata } from "next";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-
-export const metadata: Metadata = {
-  title: "South Africa Product Market Access & Compliance | BILACERT",
-  description:
-    "BILACERT provides end-to-end South African regulatory market-access support for international manufacturers, including product assessment, test-report review, ICASA Type Approval, NRCS LOA and local representation.",
-  alternates: {
-    canonical: "https://bilacert.co.za/south-africa-market-access",
-  },
-  openGraph: {
-    title: "South Africa Product Market Access & Compliance | BILACERT",
-    description:
-      "Bring your products to the South African market with one compliance partner.",
-    url: "https://bilacert.co.za/south-africa-market-access",
-    type: "website",
-  },
-};
-
-const journey = [
-  {
-    number: "01",
-    title: "Product Regulatory Assessment",
-    description:
-      "We assess the product and determine whether ICASA, NRCS or other South African regulatory requirements apply.",
-    icon: ClipboardCheck,
-  },
-  {
-    number: "02",
-    title: "Standards & Test Report Review",
-    description:
-      "Existing IEC, EN, CB, EMC and RF reports are reviewed against South African requirements.",
-    icon: FileSearch,
-  },
-  {
-    number: "03",
-    title: "Testing Gap Analysis",
-    description:
-      "If additional testing is required, BILACERT identifies the applicable standards and can coordinate testing with suitable laboratories.",
-    icon: TestTube2,
-  },
-  {
-    number: "04",
-    title: "ICASA Type Approval",
-    description:
-      "For applicable telecommunications and radio-frequency equipment.",
-    icon: ShieldCheck,
-  },
-  {
-    number: "05",
-    title: "NRCS Letter of Authority",
-    description: "For applicable regulated electrical and electronic products.",
-    icon: CheckCircle2,
-  },
-  {
-    number: "06",
-    title: "South African Local Representation",
-    description:
-      "BILACERT can provide local regulatory representation for international manufacturers and compliance partners.",
-    icon: Globe2,
-  },
-  {
-    number: "07",
-    title: "Ongoing Compliance Support",
-    description:
-      "Regulatory correspondence, certificate management, levy support and future product applications.",
-    icon: CheckCircle2,
-  },
-];
-
-const regulatoryAreas = [
-  {
-    title: "ICASA",
-    items: "Type Approval • Licensing • Licence Exemptions",
-  },
-  {
-    title: "NRCS",
-    items: "LOA Applications • Electrotechnical Compliance • Levy Support",
-  },
-  {
-    title: "Technical Compliance",
-    items: "IEC • EN • SANS • EMC • RF • Safety",
-  },
-];
-
-export default function SouthAfricaMarketAccessPage() {
-  return (
-    <div className="min-h-screen bg-white">
-      <section className="relative overflow-hidden bg-primary text-white">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(212,175,55,0.22),transparent_42%)]" />
-        <div className="relative mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8 lg:py-28">
-          <div className="max-w-4xl">
-            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-accent/40 bg-white/5 px-4 py-2 text-sm font-medium text-accent">
-              <Globe2 className="h-4 w-4" />
-              South Africa product market access
-            </div>
-            <h1 className="text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
-              Bring Your Products to the South African Market
-            </h1>
-            <p className="mt-6 max-w-3xl text-lg leading-8 text-gray-200 sm:text-xl">
-              BILACERT provides an end-to-end regulatory market-access service
-              for international manufacturers entering South Africa. From
-              determining the applicable regulatory requirements and reviewing
-              IEC/EN test reports to ICASA Type Approval, NRCS LOA and local
-              representation, we provide one point of contact for your South
-              African compliance journey.
-            </p>
-            <div className="mt-10 flex flex-col gap-4 sm:flex-row">
-              <Button size="lg" asChild>
-                <Link href="/contact">
-                  Submit Product for Assessment
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
-              </Button>
-              <Button
-                size="lg"
-                variant="outline"
-                asChild
-                className="border-white/30 bg-transparent text-white hover:bg-white/10 hover:text-white"
-              >
-                <Link href="/south-africa-local-representative">
-                  Local Representation
-                </Link>
-              </Button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="py-20 sm:py-24">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="mx-auto max-w-3xl text-center">
-            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-accent">
-              End-to-end support
-            </p>
-            <h2 className="mt-3 text-3xl font-bold tracking-tight text-primary sm:text-4xl">
-              One Partner. Your South African Compliance Journey.
-            </h2>
-            <p className="mt-5 text-lg leading-8 text-gray-600">
-              BILACERT helps manufacturers move from product information and
-              technical review through applicable applications, approvals and
-              ongoing compliance support.
-            </p>
-          </div>
-
-          <div className="mt-14 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {journey.map((step) => {
-              const Icon = step.icon;
-              return (
-                <article
-                  key={step.number}
-                  className="relative rounded-2xl border border-gray-200 bg-white p-7 shadow-sm transition-shadow hover:shadow-md"
-                >
-                  <div className="flex items-start justify-between gap-4">
-                    <span className="text-3xl font-bold text-accent/50">
-                      {step.number}
-                    </span>
-                    <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-accent/10 text-accent">
-                      <Icon className="h-5 w-5" />
-                    </div>
-                  </div>
-                  <h3 className="mt-5 text-xl font-semibold text-primary">
-                    {step.title}
-                  </h3>
-                  <p className="mt-3 leading-7 text-gray-600">
-                    {step.description}
-                  </p>
-                </article>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      <section className="bg-secondary-gray py-20 sm:py-24">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid gap-12 lg:grid-cols-[1fr_1.15fr] lg:items-center">
-            <div>
-              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-accent">
-                Trust & expertise
-              </p>
-              <h2 className="mt-3 text-3xl font-bold tracking-tight text-primary sm:text-4xl">
-                South African Compliance Expertise. International Reach.
-              </h2>
-              <p className="mt-5 text-lg leading-8 text-gray-600">
-                BILACERT works with manufacturers, importers and testing
-                laboratories to navigate South African product regulatory
-                requirements.
-              </p>
-              <p className="mt-4 leading-7 text-gray-600">
-                Our experience covers telecommunications equipment, wireless
-                devices, ICT equipment, electrical products, power supplies,
-                energy products and other regulated technologies.
-              </p>
-            </div>
-
-            <div className="grid gap-4 sm:grid-cols-3">
-              {regulatoryAreas.map((area) => (
-                <article
-                  key={area.title}
-                  className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-gray-200"
-                >
-                  <h3 className="text-xl font-bold text-primary">
-                    {area.title}
-                  </h3>
-                  <p className="mt-3 text-sm leading-6 text-gray-600">
-                    {area.items}
-                  </p>
-                </article>
-              ))}
-            </div>
-          </div>
-
-          <div className="mt-10 rounded-2xl border border-accent/20 bg-white p-6 text-center sm:p-8">
-            <p className="font-medium text-primary">
-              BILACERT operates as an independent regulatory consultancy and
-              representative.
-            </p>
-            <p className="mt-2 text-sm leading-6 text-gray-600">
-              This positioning does not imply accreditation by, affiliation
-              with, or endorsement by ICASA or NRCS.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <section className="py-20 sm:py-24">
-        <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-          <div className="rounded-3xl border border-gray-200 bg-white p-8 text-center shadow-lg sm:p-12">
-            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-accent">
-              Product assessment
-            </p>
-            <h2 className="mt-3 text-3xl font-bold text-primary sm:text-4xl">
-              Not Sure What Your Product Requires?
-            </h2>
-            <p className="mx-auto mt-5 max-w-2xl text-lg leading-8 text-gray-600">
-              Send us your product information and our team will review it and
-              advise on the applicable South African regulatory pathway.
-            </p>
-
-            <div className="mx-auto mt-8 grid max-w-2xl gap-3 text-left sm:grid-cols-2">
-              {[
-                "Product datasheet",
-                "User manual",
-                "Existing test reports",
-                "Product photographs",
-              ].map((item) => (
-                <div
-                  key={item}
-                  className="flex items-center gap-3 rounded-xl bg-secondary-gray px-4 py-3"
-                >
-                  <CheckCircle2 className="h-5 w-5 shrink-0 text-accent" />
-                  <span className="font-medium text-primary">{item}</span>
-                </div>
-              ))}
-            </div>
-
-            <div className="mt-9">
-              <Button size="lg" asChild>
-                <Link href="/contact">
-                  Submit Product for Assessment
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
-              </Button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="border-t border-gray-200 py-16">
-        <div className="mx-auto max-w-4xl px-4 text-center sm:px-6 lg:px-8">
-          <h2 className="text-2xl font-bold text-primary sm:text-3xl">
-            Are you a test laboratory, certification company or regulatory
-            consultancy?
-          </h2>
-          <p className="mt-4 text-lg leading-8 text-gray-600">
-            Discover BILACERT&apos;s South African Local Representation &
-            Regulatory Partnership services.
-          </p>
-          <div className="mt-7">
-            <Button variant="outline" asChild>
-              <Link href="/south-africa-local-representative">
-                Explore Local Representation
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Link>
-            </Button>
-          </div>
-        </div>
-      </section>
-    </div>
-  );
 }
 ````
 
@@ -20009,6 +18700,101 @@ export function WhatIsSection({
 }
 ````
 
+## File: apps/client/lib/seo.ts
+````typescript
+import type { Metadata } from "next";
+import { businessInfo } from "./business";
+
+interface SEOConfig {
+  title: string;
+  description: string;
+  keywords?: string[];
+  url?: string;
+  image?: string;
+  type?: "website" | "article";
+  publishedTime?: string;
+  modifiedTime?: string;
+  author?: string;
+}
+
+export function generateMetadata({
+  title,
+  description,
+  keywords = [],
+  url,
+  image = "/logo.jpg",
+  type = "website",
+  publishedTime,
+  modifiedTime,
+  author = businessInfo.defaultBlogAuthor,
+}: SEOConfig): Metadata {
+  const baseUrl = businessInfo.domain;
+  const fullUrl = url ? `${baseUrl}${url}` : baseUrl;
+  const fullImageUrl = image.startsWith("http") ? image : `${baseUrl}${image}`;
+
+  return {
+    title,
+    description,
+    keywords: [
+      ...keywords,
+      "ICASA",
+      "NRCS",
+      "compliance",
+      "South Africa",
+      "regulatory approval",
+      businessInfo.name,
+    ],
+    authors: [{ name: author }],
+    creator: author,
+    publisher: businessInfo.name,
+    metadataBase: new URL(baseUrl),
+    alternates: {
+      canonical: fullUrl,
+    },
+    openGraph: {
+      title,
+      description,
+      url: fullUrl,
+      siteName: businessInfo.name,
+      images: [
+        {
+          url: fullImageUrl,
+          width: 1200,
+          height: 630,
+          alt: title,
+        },
+      ],
+      locale: "en_ZA",
+      type,
+      ...(publishedTime && { publishedTime }),
+      ...(modifiedTime && { modifiedTime }),
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [fullImageUrl],
+      creator: businessInfo.social.twitterCreator,
+    },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        "max-video-preview": -1,
+        "max-image-preview": "large",
+        "max-snippet": -1,
+      },
+    },
+    verification: {
+      google: "your-google-verification-code",
+      // Add other verification codes as needed
+    },
+  };
+}
+````
+
 ## File: apps/client/proxy.ts
 ````typescript
 import { getEnv } from "@bilacert/contracts/env";
@@ -20160,6 +18946,66 @@ export type ActionResult<TData = undefined> =
       error: string;
       fieldErrors?: Record<string, string[]>;
     };
+````
+
+## File: packages/contracts/src/task.ts
+````typescript
+import { z } from "zod";
+import { taskTodoSchema } from "./taskTodo";
+
+export const taskStatusSchema = z.enum([
+  "pending",
+  "in_progress",
+  "completed",
+  "cancelled",
+]);
+
+export type TaskStatus = z.infer<typeof taskStatusSchema>;
+
+export const taskPrioritySchema = z.enum(["low", "normal", "high", "urgent"]);
+
+export type TaskPriority = z.infer<typeof taskPrioritySchema>;
+
+export const taskSchema = z.object({
+  id: z.string(),
+  title: z.string().min(1, "Title is required"),
+  description: z.string().nullable(),
+  status: taskStatusSchema,
+  priority: taskPrioritySchema,
+  category: z.string().nullable(),
+  assignedTo: z.string().nullable(),
+  dueAt: z.string().nullable(),
+  serviceId: z.string().nullable(),
+  submissionId: z.string().nullable(),
+  serviceTitle: z.string().nullable().optional(),
+  assigneeName: z.string().nullable().optional(),
+  submissionFullName: z.string().nullable().optional(),
+  createdAt: z.string().nullable(),
+  updatedAt: z.string().nullable(),
+  completedAt: z.string().nullable(),
+  todos: z.array(taskTodoSchema).default([]),
+});
+
+export type TaskType = z.infer<typeof taskSchema>;
+
+export const taskInputSchema = taskSchema.omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+  completedAt: true,
+  serviceTitle: true,
+  assigneeName: true,
+  submissionFullName: true,
+  todos: true,
+});
+
+export type TaskInputType = z.infer<typeof taskInputSchema>;
+
+export const taskUpdateInputSchema = taskInputSchema.partial().extend({
+  completedAt: z.string().nullable().optional(),
+});
+
+export type TaskUpdateInputType = z.infer<typeof taskUpdateInputSchema>;
 ````
 
 ## File: packages/shared/tsconfig.json
@@ -20947,40 +19793,6 @@ grant select, insert on table public."emailAuditEvents" to service_role;
 commit;
 ````
 
-## File: packages/supabase/src/Queries/formSubmissions.ts
-````typescript
-import { createSupabaseServerClient } from "../server";
-
-export async function getFormSubmissionById(id: string) {
-  const supabase = await createSupabaseServerClient();
-  const { data, error } = await supabase
-    .from("form_submissions")
-    .select("*")
-    .eq("id", id)
-    .single();
-
-  if (error) throw new Error(error.message);
-  return data;
-}
-````
-
-## File: packages/supabase/src/Queries/users.ts
-````typescript
-import { createSupabaseServerClient } from "../server";
-
-export async function getUserRole(userId: string) {
-  const supabase = await createSupabaseServerClient();
-  const { data, error } = await supabase
-    .from("users")
-    .select("role")
-    .eq("id", userId)
-    .single();
-
-  if (error) return null;
-  return data?.role || null;
-}
-````
-
 ## File: run-commit.ps1
 ````powershell
 Set-Location 'F:\projects\bilacert'
@@ -21013,328 +19825,6 @@ Write-Output '--- VERCEL LS (client) ---'
 try { vercel ls } catch { Write-Output 'vercel ls failed (ensure CLI is installed and you are authenticated)' }
 
 Write-Output 'Done.'
-````
-
-## File: apps/admin/app/admin/blogs/BlogEditor.tsx
-````typescript
-"use client";
-import DOMPurify from "isomorphic-dompurify";
-import dynamic from "next/dynamic";
-import Image from "next/image";
-import { useEffect, useState } from "react";
-import "react-quill-new/dist/quill.snow.css";
-import { Card, CardHeader } from "@/components/ui/card";
-
-const ReactQuill = dynamic(() => import("react-quill-new"), {
-  ssr: false,
-  loading: () => (
-    <div className="h-64 flex items-center justify-center bg-slate-50 rounded-lg">
-      Loading Editor...
-    </div>
-  ),
-});
-
-const modules = {
-  toolbar: [
-    [{ header: [1, 2, 3, false] }],
-    ["bold", "italic", "underline", "strike"],
-    [{ list: "ordered" }, { list: "bullet" }],
-    ["link", "image", "video"],
-    ["clean"],
-  ],
-};
-
-const bilacertArticlePreviewStyles = `
-  .bilacert-article {
-    color: #1f2937;
-    font-size: 1.0625rem;
-    line-height: 1.9;
-    max-width: 100%;
-    overflow-wrap: normal;
-    position: relative;
-    word-break: normal;
-    z-index: 0;
-  }
-
-  .bilacert-article * {
-    max-width: 100%;
-  }
-
-  .bilacert-article p {
-    margin-bottom: 1.5rem;
-    overflow-wrap: normal;
-    text-wrap: pretty;
-    white-space: normal;
-    word-break: normal;
-  }
-
-  .bilacert-article h1,
-  .bilacert-article h2,
-  .bilacert-article h3,
-  .bilacert-article h4 {
-    color: #0a2b4c;
-    font-weight: 800;
-    letter-spacing: -0.03em;
-    line-height: 1.2;
-    text-wrap: balance;
-  }
-
-  .bilacert-article h1 {
-    font-size: 2.5rem;
-    margin: 0 0 1.5rem;
-  }
-
-  .bilacert-article h2 {
-    font-size: 2rem;
-    margin: 3rem 0 1rem;
-  }
-
-  .bilacert-article h3 {
-    font-size: 1.5rem;
-    margin: 2rem 0 0.75rem;
-  }
-
-  .bilacert-article strong {
-    color: #334155;
-    font-weight: 800;
-  }
-
-  .bilacert-article a {
-    color: #1a4a6b;
-    font-weight: 700;
-    text-decoration: underline;
-    text-decoration-color: #f2994a;
-    text-underline-offset: 0.2em;
-  }
-
-  .bilacert-article ul,
-  .bilacert-article ol {
-    margin: 1.5rem 0 1.5rem 1.5rem;
-    padding-left: 1rem;
-  }
-
-  .bilacert-article ul {
-    list-style: disc;
-  }
-
-  .bilacert-article ol {
-    list-style: decimal;
-  }
-
-  .bilacert-article li {
-    margin-bottom: 0.75rem;
-    padding-left: 0.25rem;
-  }
-
-  .bilacert-article blockquote {
-    border-left: 4px solid #f2994a;
-    color: #475569;
-    font-size: 1.125rem;
-    font-style: italic;
-    margin: 2rem 0;
-    padding: 1rem 0 1rem 1.5rem;
-  }
-
-  .bilacert-article img,
-  .bilacert-article iframe,
-  .bilacert-article video {
-    border-radius: 1rem;
-    display: block;
-    height: auto;
-    margin: 2rem auto;
-    max-width: 100%;
-  }
-
-  .bilacert-article pre {
-    background: #0a2b4c;
-    border-radius: 1rem;
-    color: white;
-    margin: 2rem 0;
-    overflow-x: auto;
-    padding: 1.25rem;
-    white-space: pre-wrap;
-  }
-
-  .bilacert-article code {
-    overflow-wrap: break-word;
-    white-space: pre-wrap;
-  }
-
-  .bilacert-article table {
-    display: block;
-    margin: 2rem 0;
-    max-width: 100%;
-    overflow-x: auto;
-    width: 100%;
-  }
-
-  .bilacert-article .ql-align-center {
-    text-align: center;
-  }
-
-  .bilacert-article .ql-align-right {
-    text-align: right;
-  }
-
-  .bilacert-article .ql-align-justify {
-    text-align: justify;
-  }
-
-  .bilacert-article .ql-size-small {
-    font-size: 0.875em;
-  }
-
-  .bilacert-article .ql-size-large {
-    font-size: 1.25em;
-  }
-
-  .bilacert-article .ql-size-huge {
-    font-size: 1.5em;
-  }
-
-  @media (min-width: 768px) {
-    .bilacert-article {
-      font-size: 1.125rem;
-    }
-  }
-`;
-
-interface BlogEditorProps {
-  value: string;
-  onChange: (value: string) => void;
-  onImageSelect?: (url: string) => void;
-  title: string;
-  featuredImage: string | null | undefined;
-}
-
-export default function BlogEditor({
-  value,
-  onChange,
-  onImageSelect: _onImageSelect,
-  title,
-  featuredImage,
-}: BlogEditorProps) {
-  const [view, setView] = useState<"edit" | "preview">("edit");
-  const [sanitized, setSanitized] = useState("");
-
-  useEffect(() => {
-    setSanitized(DOMPurify.sanitize(value));
-  }, [value]);
-
-  useEffect(() => {
-    document
-      .querySelectorAll<HTMLButtonElement>(
-        ".bilacert-blog-editor .ql-toolbar button",
-      )
-      .forEach((button) => {
-        button.type = "button";
-      });
-  }, []);
-
-  return (
-    <Card className="bilacert-blog-editor relative z-0 mx-auto w-full max-w-5xl overflow-hidden p-4 md:p-8">
-      <CardHeader className="flex flex-col gap-3 border-b border-slate-100 bg-white py-2 sm:flex-row sm:items-center sm:justify-between">
-        <div className="flex flex-wrap gap-1 rounded-xl bg-slate-100 p-1">
-          <button
-            type="button"
-            onClick={() => setView("edit")}
-            className={`px-6 py-2 text-sm font-semibold rounded-lg transition-all ${
-              view === "edit"
-                ? "bg-white shadow-sm text-indigo-600"
-                : "text-slate-500 hover:text-slate-700"
-            }`}
-          >
-            Edit Content
-          </button>
-          <button
-            type="button"
-            onClick={() => setView("preview")}
-            className={`px-6 py-2 text-sm font-semibold rounded-lg transition-all ${
-              view === "preview"
-                ? "bg-white shadow-sm text-indigo-600"
-                : "text-slate-500 hover:text-slate-700"
-            }`}
-          >
-            Live Preview
-          </button>
-        </div>
-      </CardHeader>
-
-      <div className="relative z-0 w-full overflow-hidden">
-        {view === "edit" ? (
-          <div className="animate-in fade-in duration-300 overflow-hidden rounded-2xl border border-slate-200 shadow-sm">
-            <style>{`
-              .bilacert-blog-editor .ql-container {
-                font-size: 16px;
-                border-bottom-left-radius: 12px;
-                border-bottom-right-radius: 12px;
-              }
-              .bilacert-blog-editor .ql-toolbar {
-                border-top-left-radius: 12px;
-                border-top-right-radius: 12px;
-                border-color: #f1f5f9 !important;
-                background: #f8fafc;
-                border-bottom: 1px solid #f1f5f9;
-              }
-              .bilacert-blog-editor .ql-editor {
-                min-height: 400px;
-                max-width: 100%;
-                overflow-wrap: break-word;
-              }
-            `}</style>
-            <ReactQuill
-              theme="snow"
-              value={value}
-              onChange={onChange}
-              modules={modules}
-              className="border-none"
-            />
-          </div>
-        ) : (
-          <div className="relative z-0 animate-in slide-in-from-bottom-2 overflow-hidden rounded-2xl bg-white p-4 duration-300">
-            <style>{bilacertArticlePreviewStyles}</style>
-            {featuredImage && (
-              <div className="mb-8 overflow-hidden">
-                <h2 className="text-lg font-bold mb-4 text-slate-800">
-                  Featured Image
-                </h2>
-                <div className="relative aspect-video w-full max-w-2xl mx-auto overflow-hidden rounded-lg shadow-lg border border-slate-200">
-                  <Image
-                    src={featuredImage}
-                    alt="Featured Image Preview"
-                    fill
-                    className="object-cover"
-                  />
-                </div>
-              </div>
-            )}
-            <div className="mb-10 border-b border-slate-100 pb-8">
-              <h1 className="text-2xl font-black text-slate-900 mb-4 tracking-tight leading-tight">
-                {title || "Untitled Post"}
-              </h1>
-              <div className="flex flex-wrap items-center gap-3 text-slate-400 text-sm">
-                <span className="bg-slate-100 px-2 py-1 rounded">Preview</span>
-                <span>•</span>
-                <span>{new Date().toLocaleDateString()}</span>
-                <span>•</span>
-                <span>5 min read</span>
-              </div>
-            </div>
-
-            <article
-              className="bilacert-article"
-              dangerouslySetInnerHTML={{
-                __html:
-                  sanitized ||
-                  '<p class="text-slate-400 italic">No content to display yet...</p>',
-              }}
-            />
-          </div>
-        )}
-      </div>
-    </Card>
-  );
-}
 ````
 
 ## File: apps/admin/app/admin/blogs/DeleteBlogDialog.tsx
@@ -21695,6 +20185,653 @@ export default function EmailComposer({
 }
 ````
 
+## File: apps/admin/app/admin/emails/[messageId]/page.tsx
+````typescript
+import {
+  ArrowLeft,
+  CalendarClock,
+  Mail,
+  MailOpen,
+  Paperclip,
+  Reply,
+  UserRound,
+} from "lucide-react";
+import type { Viewport } from "next";
+import Link from "next/link";
+import { redirect } from "next/navigation";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import { getAdminAccess } from "@/lib/adminAccess";
+import {
+  getZohoMailAccount,
+  getZohoMailConfigurationStatus,
+  getZohoMailMessage,
+} from "@/lib/zohoMail";
+import EmailContent from "../_components/EmailContent";
+import {
+  EmailAccessState,
+  EmailConnectionState,
+  EmailSetupState,
+} from "../_components/EmailState";
+import { updateEmailReadStateAction } from "../actions";
+
+export const metadata = {
+  title: "Email Message | Bilacert Admin Pro",
+  description: "View an email message in Bilacert Admin.",
+  robots: {
+    index: false,
+  },
+};
+
+export const dynamic = "force-dynamic";
+
+type EmailMessagePageProps = {
+  params: Promise<{ messageId: string }>;
+  searchParams: Promise<{
+    folderId?: string;
+    actionError?: string;
+    updated?: string;
+  }>;
+};
+
+function formatMessageDate(value: string | null) {
+  if (!value) return "Unknown date";
+
+  return new Intl.DateTimeFormat("en-ZA", {
+    dateStyle: "full",
+    timeStyle: "short",
+    timeZone: "Africa/Johannesburg",
+  }).format(new Date(value));
+}
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#1f2937" },
+  ],
+};
+export default async function EmailMessagePage({
+  params,
+  searchParams,
+}: EmailMessagePageProps) {
+  const access = await getAdminAccess();
+
+  if (!access.allowed) {
+    if (access.reason === "unauthenticated") redirect("/admin/login");
+    return <EmailAccessState message={access.message} />;
+  }
+
+  const configuration = getZohoMailConfigurationStatus();
+  if (!configuration.configured) {
+    return (
+      <EmailSetupState missingVariables={configuration.missingVariables} />
+    );
+  }
+
+  const [{ messageId }, query] = await Promise.all([params, searchParams]);
+  const folderId = query.folderId;
+
+  if (!/^\d+$/.test(messageId) || !folderId || !/^\d+$/.test(folderId)) {
+    return (
+      <EmailConnectionState message="The message link is incomplete or invalid. Return to the mailbox and open the message again." />
+    );
+  }
+
+  let detail: Awaited<ReturnType<typeof getZohoMailMessage>>;
+
+  try {
+    const account = await getZohoMailAccount();
+    detail = await getZohoMailMessage(account.accountId, folderId, messageId);
+  } catch (error) {
+    return (
+      <EmailConnectionState
+        message={
+          error instanceof Error
+            ? error.message
+            : "Zoho Mail could not load this message."
+        }
+      />
+    );
+  }
+
+  const { message, content } = detail;
+  const replySubject = message.subject.toLowerCase().startsWith("re:")
+    ? message.subject
+    : `Re: ${message.subject}`;
+  const replyHref = `/admin/emails/compose?to=${encodeURIComponent(message.fromAddress)}&subject=${encodeURIComponent(replySubject)}`;
+  const updatedState =
+    query.updated === "read" || query.updated === "unread"
+      ? query.updated
+      : undefined;
+
+  return (
+    <div className="mx-auto max-w-5xl space-y-6">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <Button asChild variant="ghost" className="w-fit -ml-3">
+          <Link href={`/admin/emails?folderId=${encodeURIComponent(folderId)}`}>
+            <ArrowLeft className="h-4 w-4" />
+            Back to mailbox
+          </Link>
+        </Button>
+        <div className="flex flex-wrap gap-2">
+          <form action={updateEmailReadStateAction}>
+            <input type="hidden" name="messageId" value={message.messageId} />
+            <input type="hidden" name="folderId" value={message.folderId} />
+            <input
+              type="hidden"
+              name="readState"
+              value={message.isRead ? "unread" : "read"}
+            />
+            <Button type="submit" variant="outline">
+              {message.isRead ? (
+                <Mail className="h-4 w-4" />
+              ) : (
+                <MailOpen className="h-4 w-4" />
+              )}
+              Mark {message.isRead ? "unread" : "read"}
+            </Button>
+          </form>
+          <Button asChild>
+            <Link href={replyHref}>
+              <Reply className="h-4 w-4" />
+              Reply
+            </Link>
+          </Button>
+        </div>
+      </div>
+
+      {query.actionError && (
+        <Alert variant="destructive">
+          <AlertTitle>Message update failed</AlertTitle>
+          <AlertDescription>
+            Zoho could not update this message. Please try again.
+          </AlertDescription>
+        </Alert>
+      )}
+
+      {updatedState && (
+        <Alert className="border-emerald-200 bg-emerald-50 text-emerald-900">
+          <AlertTitle>Message updated</AlertTitle>
+          <AlertDescription>
+            The message is now marked as {updatedState}.
+          </AlertDescription>
+        </Alert>
+      )}
+
+      <Card className="border border-border/70 shadow-xl shadow-black/5">
+        <CardHeader className="space-y-5">
+          <div className="flex flex-wrap items-center gap-2">
+            <Badge variant={message.isRead ? "outline" : "default"}>
+              {message.isRead ? "Read" : "Unread"}
+            </Badge>
+            {message.hasAttachment && (
+              <Badge variant="secondary">
+                <Paperclip className="mr-1 h-3 w-3" />
+                Attachment
+              </Badge>
+            )}
+          </div>
+          <div>
+            <CardTitle className="text-2xl leading-tight md:text-3xl">
+              {message.subject}
+            </CardTitle>
+            <CardDescription className="mt-4 space-y-2">
+              <span className="flex items-center gap-2">
+                <UserRound className="h-4 w-4" />
+                From: {message.sender || message.fromAddress} &lt;
+                {message.fromAddress}&gt;
+              </span>
+              <span className="flex items-center gap-2">
+                <Mail className="h-4 w-4" />
+                To: {message.toAddress || "Not provided"}
+              </span>
+              {message.ccAddress && (
+                <span className="flex items-center gap-2">
+                  <Mail className="h-4 w-4" />
+                  Cc: {message.ccAddress}
+                </span>
+              )}
+              <span className="flex items-center gap-2">
+                <CalendarClock className="h-4 w-4" />
+                {formatMessageDate(message.receivedAt)}
+              </span>
+            </CardDescription>
+          </div>
+        </CardHeader>
+        <Separator />
+        <CardContent className="pt-6">
+          <EmailContent content={content} />
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+````
+
+## File: apps/admin/app/admin/emails/page.tsx
+````typescript
+import {
+  Archive,
+  CheckCircle2,
+  ChevronLeft,
+  ChevronRight,
+  FileText,
+  Inbox,
+  Mail,
+  MailOpen,
+  Paperclip,
+  PenLine,
+  Send,
+  Trash2,
+} from "lucide-react";
+import type { Viewport } from "next";
+import Link from "next/link";
+import { redirect } from "next/navigation";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { getAdminAccess } from "@/lib/adminAccess";
+import {
+  getZohoMailAccount,
+  getZohoMailConfigurationStatus,
+  listZohoMailFolders,
+  listZohoMailMessages,
+  type ZohoMailFolder,
+} from "@/lib/zohoMail";
+import {
+  EmailAccessState,
+  EmailConnectionState,
+  EmailSetupState,
+} from "./_components/EmailState";
+
+export const dynamic = "force-dynamic";
+
+export const metadata = {
+  title: "Email | Bilacert Admin",
+  description: "Manage the Bilacert Zoho Mail inbox.",
+};
+
+const PAGE_SIZE = 25;
+
+type EmailsPageProps = {
+  searchParams: Promise<{
+    folderId?: string;
+    page?: string;
+    status?: string;
+    sent?: string;
+    draftSaved?: string;
+    actionError?: string;
+  }>;
+};
+
+function parsePage(value?: string) {
+  const page = Number(value);
+  return Number.isInteger(page) && page > 0 ? Math.min(page, 10_000) : 1;
+}
+
+function mailboxHref(folderId: string, status: "all" | "unread", page = 1) {
+  const query = new URLSearchParams({ folderId });
+  if (status === "unread") query.set("status", status);
+  if (page > 1) query.set("page", String(page));
+  return `/admin/emails?${query.toString()}`;
+}
+
+function formatMessageDate(value: string | null) {
+  if (!value) return "Unknown date";
+
+  return new Intl.DateTimeFormat("en-ZA", {
+    dateStyle: "medium",
+    timeStyle: "short",
+    timeZone: "Africa/Johannesburg",
+  }).format(new Date(value));
+}
+
+function FolderIcon({ folder }: { folder: ZohoMailFolder }) {
+  const type = folder.folderType.toLowerCase();
+
+  if (type.includes("inbox")) return <Inbox className="h-4 w-4" />;
+  if (type.includes("sent")) return <Send className="h-4 w-4" />;
+  if (type.includes("draft")) return <FileText className="h-4 w-4" />;
+  if (type.includes("trash")) return <Trash2 className="h-4 w-4" />;
+  if (type.includes("archive")) return <Archive className="h-4 w-4" />;
+  return <Mail className="h-4 w-4" />;
+}
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#1f2937" },
+  ],
+};
+export default async function EmailsPage({ searchParams }: EmailsPageProps) {
+  const access = await getAdminAccess();
+
+  if (!access.allowed) {
+    if (access.reason === "unauthenticated") redirect("/admin/login");
+    return <EmailAccessState message={access.message} />;
+  }
+
+  const configuration = getZohoMailConfigurationStatus();
+  if (!configuration.configured) {
+    return (
+      <EmailSetupState missingVariables={configuration.missingVariables} />
+    );
+  }
+
+  const query = await searchParams;
+  const page = parsePage(query.page);
+  const status = query.status === "unread" ? "unread" : "all";
+
+  let mailbox:
+    | {
+        accountAddress: string;
+        folders: ZohoMailFolder[];
+        selectedFolder: ZohoMailFolder;
+        messages: Awaited<ReturnType<typeof listZohoMailMessages>>;
+      }
+    | undefined;
+
+  try {
+    const account = await getZohoMailAccount();
+    const folders = await listZohoMailFolders(account.accountId);
+    const selectedFolder =
+      folders.find((folder) => folder.folderId === query.folderId) ??
+      folders.find((folder) => folder.folderType.toLowerCase() === "inbox") ??
+      folders[0];
+
+    if (!selectedFolder) {
+      throw new Error("Zoho returned no folders for this mailbox.");
+    }
+
+    const messages = await listZohoMailMessages(account.accountId, {
+      folderId: selectedFolder.folderId,
+      page,
+      pageSize: PAGE_SIZE,
+      status,
+    });
+
+    mailbox = {
+      accountAddress: account.fromAddress,
+      folders,
+      selectedFolder,
+      messages,
+    };
+  } catch (error) {
+    return (
+      <EmailConnectionState
+        message={
+          error instanceof Error
+            ? error.message
+            : "Zoho Mail could not load the mailbox."
+        }
+      />
+    );
+  }
+
+  const unreadCount = mailbox.messages.filter(
+    (message) => !message.isRead,
+  ).length;
+  const hasNextPage = mailbox.messages.length === PAGE_SIZE;
+
+  return (
+    <div className="space-y-6">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <div className="flex flex-wrap items-center gap-3">
+            <h1 className="text-3xl font-bold tracking-tight">Email</h1>
+            <Badge variant="secondary">{mailbox.accountAddress}</Badge>
+          </div>
+          <p className="mt-1 text-muted-foreground">
+            Read, compose, and manage mail through Zoho.
+          </p>
+        </div>
+        <Button asChild>
+          <Link href="/admin/emails/compose">
+            <PenLine className="h-4 w-4" />
+            Compose
+          </Link>
+        </Button>
+      </div>
+
+      {query.sent === "1" && (
+        <Alert className="border-emerald-200 bg-emerald-50 text-emerald-900">
+          <CheckCircle2 className="h-4 w-4" />
+          <AlertTitle>Email sent</AlertTitle>
+          <AlertDescription>
+            Zoho accepted the message for delivery.
+          </AlertDescription>
+        </Alert>
+      )}
+
+      {query.draftSaved === "1" && (
+        <Alert className="border-emerald-200 bg-emerald-50 text-emerald-900">
+          <CheckCircle2 className="h-4 w-4" />
+          <AlertTitle>Draft saved</AlertTitle>
+          <AlertDescription>
+            The message is available in the Zoho Drafts folder.
+          </AlertDescription>
+        </Alert>
+      )}
+
+      {query.actionError && (
+        <Alert variant="destructive">
+          <AlertTitle>Email action failed</AlertTitle>
+          <AlertDescription>
+            The requested message update could not be completed. Please try
+            again.
+          </AlertDescription>
+        </Alert>
+      )}
+
+      <div className="grid min-w-0 gap-6 xl:grid-cols-[240px_minmax(0,1fr)]">
+        <Card className="h-fit border border-border/70">
+          <CardHeader>
+            <CardTitle className="text-base">Folders</CardTitle>
+            <CardDescription>
+              {mailbox.folders.length} available
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-1">
+            {mailbox.folders.map((folder) => {
+              const isSelected =
+                folder.folderId === mailbox.selectedFolder.folderId;
+              return (
+                <Link
+                  key={folder.folderId}
+                  href={mailboxHref(folder.folderId, status)}
+                  className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors ${
+                    isSelected
+                      ? "bg-primary text-primary-foreground"
+                      : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                  }`}
+                >
+                  <FolderIcon folder={folder} />
+                  <span className="truncate">{folder.folderName}</span>
+                </Link>
+              );
+            })}
+          </CardContent>
+        </Card>
+
+        <Card className="min-w-0 border border-border/70 shadow-xl shadow-black/5">
+          <CardHeader className="gap-4 border-b sm:flex-row sm:items-center sm:justify-between sm:space-y-0">
+            <div>
+              <CardTitle>{mailbox.selectedFolder.folderName}</CardTitle>
+              <CardDescription>
+                {mailbox.messages.length} messages on this page · {unreadCount}{" "}
+                unread
+              </CardDescription>
+            </div>
+            <div className="flex gap-2">
+              <Button
+                asChild
+                size="sm"
+                variant={status === "all" ? "default" : "outline"}
+              >
+                <Link
+                  href={mailboxHref(mailbox.selectedFolder.folderId, "all")}
+                >
+                  <MailOpen className="h-4 w-4" />
+                  All
+                </Link>
+              </Button>
+              <Button
+                asChild
+                size="sm"
+                variant={status === "unread" ? "default" : "outline"}
+              >
+                <Link
+                  href={mailboxHref(mailbox.selectedFolder.folderId, "unread")}
+                >
+                  <Mail className="h-4 w-4" />
+                  Unread
+                </Link>
+              </Button>
+            </div>
+          </CardHeader>
+
+          <CardContent className="p-0">
+            {mailbox.messages.length === 0 ? (
+              <div className="flex min-h-72 flex-col items-center justify-center px-6 text-center">
+                <MailOpen className="mb-4 h-10 w-10 text-muted-foreground/50" />
+                <h2 className="font-semibold">No messages found</h2>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  This folder has no messages matching the current filter.
+                </p>
+              </div>
+            ) : (
+              <div className="divide-y">
+                {mailbox.messages.map((message) => (
+                  <Link
+                    key={message.messageId}
+                    href={`/admin/emails/${encodeURIComponent(message.messageId)}?folderId=${encodeURIComponent(message.folderId)}`}
+                    className="grid gap-3 px-5 py-4 transition-colors hover:bg-muted/50 md:grid-cols-[minmax(150px,0.8fr)_minmax(0,2fr)_auto] md:items-center"
+                  >
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-2">
+                        {!message.isRead && (
+                          <>
+                            <span className="h-2 w-2 shrink-0 rounded-full bg-accent" />
+                            <span className="sr-only">Unread</span>
+                          </>
+                        )}
+                        <span
+                          className={`truncate text-sm ${
+                            message.isRead ? "font-medium" : "font-bold"
+                          }`}
+                        >
+                          {message.sender ||
+                            message.fromAddress ||
+                            "Unknown sender"}
+                        </span>
+                      </div>
+                      <p className="mt-1 truncate text-xs text-muted-foreground">
+                        {message.fromAddress}
+                      </p>
+                    </div>
+
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-2">
+                        <p
+                          className={`truncate text-sm ${
+                            message.isRead ? "font-medium" : "font-bold"
+                          }`}
+                        >
+                          {message.subject}
+                        </p>
+                        {message.hasAttachment && (
+                          <Paperclip className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
+                        )}
+                      </div>
+                      <p className="mt-1 truncate text-sm text-muted-foreground">
+                        {message.summary || "No preview available"}
+                      </p>
+                    </div>
+
+                    <time className="whitespace-nowrap text-xs text-muted-foreground">
+                      {formatMessageDate(message.receivedAt)}
+                    </time>
+                  </Link>
+                ))}
+              </div>
+            )}
+          </CardContent>
+
+          <CardFooter className="justify-between border-t pt-6">
+            <span className="text-sm text-muted-foreground">Page {page}</span>
+            <div className="flex gap-2">
+              {page > 1 ? (
+                <Button asChild size="sm" variant="outline">
+                  <Link
+                    href={mailboxHref(
+                      mailbox.selectedFolder.folderId,
+                      status,
+                      page - 1,
+                    )}
+                  >
+                    <ChevronLeft className="h-4 w-4" />
+                    Previous
+                  </Link>
+                </Button>
+              ) : (
+                <Button size="sm" variant="outline" disabled>
+                  <ChevronLeft className="h-4 w-4" />
+                  Previous
+                </Button>
+              )}
+              {hasNextPage ? (
+                <Button asChild size="sm" variant="outline">
+                  <Link
+                    href={mailboxHref(
+                      mailbox.selectedFolder.folderId,
+                      status,
+                      page + 1,
+                    )}
+                  >
+                    Next
+                    <ChevronRight className="h-4 w-4" />
+                  </Link>
+                </Button>
+              ) : (
+                <Button size="sm" variant="outline" disabled>
+                  Next
+                  <ChevronRight className="h-4 w-4" />
+                </Button>
+              )}
+            </div>
+          </CardFooter>
+        </Card>
+      </div>
+    </div>
+  );
+}
+````
+
 ## File: apps/admin/app/admin/formSubmissions/actions.ts
 ````typescript
 "use server";
@@ -21955,148 +21092,512 @@ export async function deleteService(serviceId: string): Promise<ActionResult> {
 }
 ````
 
-## File: apps/admin/components/admin/Sidebar.tsx
+## File: apps/admin/app/admin/tasks/actions.ts
+````typescript
+"use server";
+
+import type { ActionResult } from "@bilacert/contracts/actionResult";
+import {
+  type TaskStatus,
+  taskInputSchema,
+  taskUpdateInputSchema,
+} from "@bilacert/contracts/task";
+import type { TaskTodoType } from "@bilacert/contracts/taskTodo";
+import {
+  taskTodoInputSchema,
+  taskTodoUpdateInputSchema,
+} from "@bilacert/contracts/taskTodo";
+import {
+  createTask,
+  createTaskTodo,
+  deleteTask,
+  deleteTaskTodo,
+  updateTask,
+  updateTaskTodo,
+} from "@bilacert/supabase/Mutations/tasks";
+import { revalidatePath } from "next/cache";
+
+function errorMessage(error: unknown): string {
+  return error instanceof Error ? error.message : String(error);
+}
+
+export async function createTaskAction(data: unknown): Promise<ActionResult> {
+  const parsed = taskInputSchema.safeParse(data);
+  if (!parsed.success) {
+    return { ok: false, error: parsed.error.message };
+  }
+
+  try {
+    await createTask(parsed.data);
+  } catch (error) {
+    return { ok: false, error: `Database error: ${errorMessage(error)}` };
+  }
+
+  revalidatePath("/admin/tasks");
+  return { ok: true, message: "Task created successfully" };
+}
+
+export async function updateTaskAction(
+  id: string,
+  data: unknown,
+): Promise<ActionResult> {
+  const parsed = taskUpdateInputSchema.safeParse(data);
+  if (!parsed.success) {
+    return { ok: false, error: parsed.error.message };
+  }
+
+  const updateData = parsed.data;
+  if (updateData.status === "completed") {
+    updateData.completedAt = new Date().toISOString();
+  } else if (updateData.status) {
+    updateData.completedAt = null;
+  }
+
+  try {
+    await updateTask(id, updateData);
+  } catch (error) {
+    return { ok: false, error: `Database error: ${errorMessage(error)}` };
+  }
+
+  revalidatePath("/admin/tasks");
+  return { ok: true, message: "Task updated successfully" };
+}
+
+export async function setTaskStatusAction(
+  id: string,
+  status: TaskStatus,
+): Promise<ActionResult> {
+  return updateTaskAction(id, { status });
+}
+
+export async function deleteTaskAction(id: string): Promise<ActionResult> {
+  try {
+    await deleteTask(id);
+  } catch (error) {
+    return { ok: false, error: `Database error: ${errorMessage(error)}` };
+  }
+
+  revalidatePath("/admin/tasks");
+  return { ok: true, message: "Task deleted successfully" };
+}
+
+// --- TASK TODO ACTIONS ---
+
+export async function createTaskTodoAction(
+  taskId: string,
+  data: unknown,
+): Promise<ActionResult<TaskTodoType>> {
+  const parsed = taskTodoInputSchema.safeParse(data);
+  if (!parsed.success) {
+    return { ok: false, error: parsed.error.message };
+  }
+
+  try {
+    const data = await createTaskTodo(taskId, parsed.data);
+    revalidatePath("/admin/tasks");
+    return { ok: true, message: "Checklist item created", data };
+  } catch (error) {
+    return { ok: false, error: `Database error: ${errorMessage(error)}` };
+  }
+}
+
+export async function updateTaskTodoAction(
+  id: string,
+  data: unknown,
+): Promise<ActionResult<TaskTodoType>> {
+  const parsed = taskTodoUpdateInputSchema.safeParse(data);
+  if (!parsed.success) {
+    return { ok: false, error: parsed.error.message };
+  }
+
+  try {
+    const data = await updateTaskTodo(id, parsed.data);
+    revalidatePath("/admin/tasks");
+    return { ok: true, message: "Checklist item updated", data };
+  } catch (error) {
+    return { ok: false, error: `Database error: ${errorMessage(error)}` };
+  }
+}
+
+export async function deleteTaskTodoAction(id: string): Promise<ActionResult> {
+  try {
+    await deleteTaskTodo(id);
+  } catch (error) {
+    return { ok: false, error: `Database error: ${errorMessage(error)}` };
+  }
+
+  revalidatePath("/admin/tasks");
+  return { ok: true, message: "Checklist item removed" };
+}
+````
+
+## File: apps/admin/components/ui/chart.tsx
 ````typescript
 "use client";
 
-import { createSupabaseBrowserClient } from "@bilacert/supabase/client";
-import {
-  BarChart,
-  Briefcase,
-  FileSpreadsheet,
-  FileText,
-  LayoutDashboard,
-  LogOut,
-  Mail,
-  MessageSquare,
-  Settings,
-  Users,
-} from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarFooter,
-  SidebarHeader,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  useSidebar,
-} from "@/components/ui/sidebar";
-import { useToast } from "@/hooks/use-toast";
+import { cn } from "@bilacert/shared/cn";
+import * as React from "react";
+import * as RechartsPrimitive from "recharts";
 
-const supabase = createSupabaseBrowserClient();
+// Format: { THEME_NAME: CSS_SELECTOR }
+const THEMES = { light: "", dark: ".dark" } as const;
 
-const navItems = [
-  { href: "/admin/dashboard", icon: LayoutDashboard, label: "Dashboard" },
-  { href: "/admin/analysis", icon: BarChart, label: "Analysis" },
-  { href: "/admin/services", icon: Briefcase, label: "Services" },
-  { href: "/admin/blogs", icon: FileText, label: "Blogs" },
-  { href: "/admin/emails", icon: Mail, label: "Email" },
-  { href: "/admin/testimonials", icon: MessageSquare, label: "Testimonials" },
-  { href: "/admin/contacts", icon: Users, label: "Contacts" },
-  {
-    href: "/admin/formSubmissions",
-    icon: FileSpreadsheet,
-    label: "Submissions",
-  },
-];
+export type ChartConfig = {
+  [k in string]: {
+    label?: React.ReactNode;
+    icon?: React.ComponentType;
+  } & (
+    | { color?: string; theme?: never }
+    | { color?: never; theme: Record<keyof typeof THEMES, string> }
+  );
+};
 
-export default function AdminSidebar() {
-  const pathname = usePathname();
-  const router = useRouter();
-  const { toast } = useToast();
-  const { setOpenMobile } = useSidebar();
+type ChartContextProps = {
+  config: ChartConfig;
+};
 
-  const handleLogout = async () => {
-    try {
-      const { error } = await supabase.auth.signOut();
-      if (error) throw error;
-      setOpenMobile(false);
-      router.push("/admin/login");
-    } catch (error) {
-      toast({
-        variant: "destructive",
-        title: "Logout Failed",
-        description:
-          error instanceof Error ? error.message : "Unable to log out.",
-      });
-    }
-  };
+const ChartContext = React.createContext<ChartContextProps | null>(null);
+
+function useChart() {
+  const context = React.useContext(ChartContext);
+
+  if (!context) {
+    throw new Error("useChart must be used within a <ChartContainer />");
+  }
+
+  return context;
+}
+
+const ChartContainer = React.forwardRef<
+  HTMLDivElement,
+  React.ComponentProps<"div"> & {
+    config: ChartConfig;
+    children: React.ComponentProps<
+      typeof RechartsPrimitive.ResponsiveContainer
+    >["children"];
+  }
+>(({ id, className, children, config, ...props }, ref) => {
+  const uniqueId = React.useId();
+  const chartId = `chart-${id || uniqueId.replace(/:/g, "")}`;
 
   return (
-    <Sidebar variant="inset" collapsible="icon">
-      <SidebarHeader className="group-data-[collapsible=icon]:items-center group-data-[collapsible=icon]:px-2">
-        <Link
-          href="/admin/dashboard"
-          className="flex items-center gap-2 group-data-[collapsible=icon]:justify-center"
-          onClick={() => setOpenMobile(false)}
-        >
-          <Image
-            src="/logo.jpg"
-            alt="Bilacert logo"
-            width={32}
-            height={32}
-            className="h-8 w-8 shrink-0 rounded-lg object-cover"
-            priority
-          />
-          <span className="text-lg font-semibold text-sidebar-foreground group-data-[collapsible=icon]:hidden">
-            Bilacert Admin
-          </span>
-        </Link>
-      </SidebarHeader>
-      <SidebarContent className="p-2">
-        <SidebarMenu>
-          {navItems.map((item) => (
-            <SidebarMenuItem key={item.href}>
-              <SidebarMenuButton
-                asChild
-                isActive={pathname.startsWith(item.href)}
-                className="w-full justify-start"
-                tooltip={item.label}
-                onClick={() => setOpenMobile(false)}
-              >
-                <Link href={item.href}>
-                  <item.icon className="h-5 w-5" />
-                  <span>{item.label}</span>
-                </Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          ))}
-        </SidebarMenu>
-      </SidebarContent>
-      <SidebarFooter>
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton
-              asChild
-              className="w-full justify-start"
-              tooltip="Settings"
-              onClick={() => setOpenMobile(false)}
-            >
-              <Link href="#">
-                <Settings className="h-5 w-5" />
-                <span>Settings</span>
-              </Link>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-          <SidebarMenuItem>
-            <SidebarMenuButton
-              onClick={handleLogout}
-              className="w-full justify-start"
-              tooltip="Log out"
-            >
-              <LogOut className="h-5 w-5" />
-              <span>Log Out</span>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </SidebarMenu>
-      </SidebarFooter>
-    </Sidebar>
+    <ChartContext.Provider value={{ config }}>
+      <div
+        data-chart={chartId}
+        ref={ref}
+        className={cn(
+          "flex aspect-video justify-center text-xs [&_.recharts-cartesian-axis-tick_text]:fill-muted-foreground [&_.recharts-cartesian-grid_line[stroke='#ccc']]:stroke-border/50 [&_.recharts-curve.recharts-tooltip-cursor]:stroke-border [&_.recharts-dot[stroke='#fff']]:stroke-transparent [&_.recharts-layer]:outline-none [&_.recharts-polar-grid_[stroke='#ccc']]:stroke-border [&_.recharts-radial-bar-background-sector]:fill-muted [&_.recharts-rectangle.recharts-tooltip-cursor]:fill-muted [&_.recharts-reference-line_[stroke='#ccc']]:stroke-border [&_.recharts-sector[stroke='#fff']]:stroke-transparent [&_.recharts-sector]:outline-none [&_.recharts-surface]:outline-none",
+          className,
+        )}
+        {...props}
+      >
+        <ChartStyle id={chartId} config={config} />
+        <RechartsPrimitive.ResponsiveContainer>
+          {children}
+        </RechartsPrimitive.ResponsiveContainer>
+      </div>
+    </ChartContext.Provider>
   );
+});
+ChartContainer.displayName = "Chart";
+
+const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
+  const colorConfig = Object.entries(config).filter(
+    ([, config]) => config.theme || config.color,
+  );
+
+  if (!colorConfig.length) {
+    return null;
+  }
+
+  return (
+    <style
+      dangerouslySetInnerHTML={{
+        __html: Object.entries(THEMES)
+          .map(
+            ([theme, prefix]) => `
+${prefix} [data-chart=${id}] {
+${colorConfig
+  .map(([key, itemConfig]) => {
+    const color =
+      itemConfig.theme?.[theme as keyof typeof itemConfig.theme] ||
+      itemConfig.color;
+    return color ? `  --color-${key}: ${color};` : null;
+  })
+  .join("\n")}
 }
+`,
+          )
+          .join("\n"),
+      }}
+    />
+  );
+};
+
+const ChartTooltip = RechartsPrimitive.Tooltip;
+
+const ChartTooltipContent = React.forwardRef<
+  HTMLDivElement,
+  React.ComponentProps<typeof RechartsPrimitive.Tooltip> &
+    React.ComponentProps<"div"> & {
+      hideLabel?: boolean;
+      hideIndicator?: boolean;
+      indicator?: "line" | "dot" | "dashed";
+      nameKey?: string;
+      labelKey?: string;
+    }
+>(
+  (
+    {
+      active,
+      payload,
+      className,
+      indicator = "dot",
+      hideLabel = false,
+      hideIndicator = false,
+      label,
+      labelFormatter,
+      labelClassName,
+      formatter,
+      color,
+      nameKey,
+      labelKey,
+    },
+    ref,
+  ) => {
+    const { config } = useChart();
+
+    const tooltipLabel = React.useMemo(() => {
+      if (hideLabel || !payload?.length) {
+        return null;
+      }
+
+      const [item] = payload;
+      if (!item) return null;
+      const key = `${labelKey || item.dataKey || item.name || "value"}`;
+      const itemConfig = getPayloadConfigFromPayload(config, item, key);
+      const value =
+        !labelKey && typeof label === "string"
+          ? config[label as keyof typeof config]?.label || label
+          : itemConfig?.label;
+
+      if (labelFormatter) {
+        return (
+          <div className={cn("font-medium", labelClassName)}>
+            {labelFormatter(value, payload)}
+          </div>
+        );
+      }
+
+      if (!value) {
+        return null;
+      }
+
+      return <div className={cn("font-medium", labelClassName)}>{value}</div>;
+    }, [
+      label,
+      labelFormatter,
+      payload,
+      hideLabel,
+      labelClassName,
+      config,
+      labelKey,
+    ]);
+
+    if (!active || !payload?.length) {
+      return null;
+    }
+
+    const nestLabel = payload.length === 1 && indicator !== "dot";
+
+    return (
+      <div
+        ref={ref}
+        className={cn(
+          "grid min-w-[8rem] items-start gap-1.5 rounded-lg border border-border/50 bg-background px-2.5 py-1.5 text-xs shadow-xl",
+          className,
+        )}
+      >
+        {!nestLabel ? tooltipLabel : null}
+        <div className="grid gap-1.5">
+          {payload.map((item, index) => {
+            const key = `${nameKey || item.name || item.dataKey || "value"}`;
+            const itemConfig = getPayloadConfigFromPayload(config, item, key);
+            const indicatorColor = color || item.payload.fill || item.color;
+
+            return (
+              <div
+                key={item.dataKey}
+                className={cn(
+                  "flex w-full flex-wrap items-stretch gap-2 [&>svg]:h-2.5 [&>svg]:w-2.5 [&>svg]:text-muted-foreground",
+                  indicator === "dot" && "items-center",
+                )}
+              >
+                {formatter && item?.value !== undefined && item.name ? (
+                  formatter(item.value, item.name, item, index, item.payload)
+                ) : (
+                  <>
+                    {itemConfig?.icon ? (
+                      <itemConfig.icon />
+                    ) : (
+                      !hideIndicator && (
+                        <div
+                          className={cn(
+                            "shrink-0 rounded-[2px] border-(--color-border) bg-(--color-bg)",
+                            {
+                              "h-2.5 w-2.5": indicator === "dot",
+                              "w-1": indicator === "line",
+                              "w-0 border-[1.5px] border-dashed bg-transparent":
+                                indicator === "dashed",
+                              "my-0.5": nestLabel && indicator === "dashed",
+                            },
+                          )}
+                          style={
+                            {
+                              "--color-bg": indicatorColor,
+                              "--color-border": indicatorColor,
+                            } as React.CSSProperties
+                          }
+                        />
+                      )
+                    )}
+                    <div
+                      className={cn(
+                        "flex flex-1 justify-between leading-none",
+                        nestLabel ? "items-end" : "items-center",
+                      )}
+                    >
+                      <div className="grid gap-1.5">
+                        {nestLabel ? tooltipLabel : null}
+                        <span className="text-muted-foreground">
+                          {itemConfig?.label || item.name}
+                        </span>
+                      </div>
+                      {item.value && (
+                        <span className="font-mono font-medium tabular-nums text-foreground">
+                          {item.value.toLocaleString()}
+                        </span>
+                      )}
+                    </div>
+                  </>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    );
+  },
+);
+ChartTooltipContent.displayName = "ChartTooltip";
+
+const ChartLegend = RechartsPrimitive.Legend;
+
+const ChartLegendContent = React.forwardRef<
+  HTMLDivElement,
+  React.ComponentProps<"div"> &
+    Pick<RechartsPrimitive.LegendProps, "payload" | "verticalAlign"> & {
+      hideIcon?: boolean;
+      nameKey?: string;
+    }
+>(
+  (
+    { className, hideIcon = false, payload, verticalAlign = "bottom", nameKey },
+    ref,
+  ) => {
+    const { config } = useChart();
+
+    if (!payload?.length) {
+      return null;
+    }
+
+    return (
+      <div
+        ref={ref}
+        className={cn(
+          "flex items-center justify-center gap-4",
+          verticalAlign === "top" ? "pb-3" : "pt-3",
+          className,
+        )}
+      >
+        {payload.map((item) => {
+          const key = `${nameKey || item.dataKey || "value"}`;
+          const itemConfig = getPayloadConfigFromPayload(config, item, key);
+
+          return (
+            <div
+              key={item.value}
+              className={cn(
+                "flex items-center gap-1.5 [&>svg]:h-3 [&>svg]:w-3 [&>svg]:text-muted-foreground",
+              )}
+            >
+              {itemConfig?.icon && !hideIcon ? (
+                <itemConfig.icon />
+              ) : (
+                <div
+                  className="h-2 w-2 shrink-0 rounded-[2px]"
+                  style={{
+                    backgroundColor: item.color,
+                  }}
+                />
+              )}
+              {itemConfig?.label}
+            </div>
+          );
+        })}
+      </div>
+    );
+  },
+);
+ChartLegendContent.displayName = "ChartLegend";
+
+// Helper to extract item config from a payload.
+function getPayloadConfigFromPayload(
+  config: ChartConfig,
+  payload: unknown,
+  key: string,
+) {
+  if (typeof payload !== "object" || payload === null) {
+    return undefined;
+  }
+
+  const payloadPayload =
+    "payload" in payload &&
+    typeof payload.payload === "object" &&
+    payload.payload !== null
+      ? payload.payload
+      : undefined;
+
+  let configLabelKey: string = key;
+
+  if (
+    key in payload &&
+    typeof payload[key as keyof typeof payload] === "string"
+  ) {
+    configLabelKey = payload[key as keyof typeof payload] as string;
+  } else if (
+    payloadPayload &&
+    key in payloadPayload &&
+    typeof payloadPayload[key as keyof typeof payloadPayload] === "string"
+  ) {
+    configLabelKey = payloadPayload[
+      key as keyof typeof payloadPayload
+    ] as string;
+  }
+
+  return configLabelKey in config
+    ? config[configLabelKey]
+    : config[key as keyof typeof config];
+}
+
+export {
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+  ChartLegend,
+  ChartLegendContent,
+  ChartStyle,
+};
 ````
 
 ## File: apps/admin/components/ui/sidebar.tsx
@@ -23293,6 +22794,649 @@ export async function POST(request: NextRequest) {
 }
 ````
 
+## File: apps/client/app/blog/[slug]/page.tsx
+````typescript
+import { format } from "date-fns";
+import { Calendar, Clock, Folder, User } from "lucide-react";
+import type { Metadata, Viewport } from "next";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import { FaFacebook, FaLinkedin, FaTwitter } from "react-icons/fa";
+import { RelatedPosts } from "@/components/blog/RelatedPosts";
+import { StickyShare } from "@/components/blog/StickyShare";
+import { ViewTracker } from "@/components/blog/view";
+import HeroSection from "@/components/HeroSection";
+import {
+  getCachedBlogBySlug,
+  getCachedBlogPostsByCategory,
+  getCachedPublishedBlogSlugs,
+} from "../../_lib/cached-public-data";
+
+export async function generateStaticParams() {
+  const slugs = await getCachedPublishedBlogSlugs();
+  return slugs.map((item) => ({ slug: item.slug }));
+}
+
+interface Props {
+  params: Promise<{
+    slug: string;
+  }>;
+}
+
+function normalizeArticleHtml(html: string | null | undefined) {
+  if (!html)
+    return '<p class="text-slate-400 italic">No content to display yet...</p>';
+
+  return html
+    .replace(/<br\s*\/?>(\s*)/gi, " ")
+    .replace(/&nbsp;/gi, " ")
+    .replace(/([A-Za-z])[-‐‑‒–—]\s+([A-Za-z])/g, "$1$2")
+    .replace(/\s{2,}/g, " ")
+    .trim();
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug } = await params;
+  const post = await getCachedBlogBySlug(slug);
+
+  if (!post) {
+    return {
+      title: "Post Not Found - Bilacert",
+    };
+  }
+
+  return {
+    title: post.seoTitle || `${post.title} - Bilacert`,
+    description: post.seoDescription || post.excerpt,
+    keywords: post.seoKeywords || [
+      post.title.toLowerCase(),
+      ...(post.category?.split(", ").map((c: string) => c.toLowerCase()) || []),
+      "blog",
+      "compliance",
+      "South Africa",
+    ],
+    openGraph: {
+      title: post.seoTitle || post.title,
+      description: post.seoDescription || post.excerpt,
+      url: `https://bilacert.co.za/blog/${slug}`,
+      type: "article",
+      images: post.featuredImage ? [{ url: post.featuredImage }] : [],
+    },
+    alternates: {
+      canonical: `https://bilacert.co.za/blog/${slug}`,
+    },
+  };
+}
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#1f2937" },
+  ],
+};
+export default async function BlogPostPage({ params }: Props) {
+  const { slug } = await params;
+  const post = await getCachedBlogBySlug(slug);
+
+  if (!post) {
+    notFound();
+  }
+
+  const relatedPosts = post.category
+    ? await getCachedBlogPostsByCategory(post.category, 3)
+    : [];
+  const publishedDate = post.createdAt
+    ? format(new Date(post.createdAt), "PP")
+    : "Published insight";
+  const authorName = post.authorName || "Bilacert Team";
+  const heroHighlights = [
+    {
+      title: authorName,
+      description: "Compliance insight author",
+      icon: <User className="h-6 w-6 text-white" />,
+    },
+    {
+      title: publishedDate,
+      description: "Published date",
+      icon: <Calendar className="h-6 w-6 text-white" />,
+    },
+    {
+      title: post.readTime || "Quick read",
+      description: "Estimated reading time",
+      icon: <Clock className="h-6 w-6 text-white" />,
+    },
+  ];
+
+  return (
+    <div className="min-h-screen bg-white">
+      <ViewTracker slug={slug} />
+      <StickyShare />
+
+      <HeroSection
+        imageSrc={post.featuredImage || "/herosetion/Blog.jpg"}
+        imageAlt={post.title}
+        eyebrow={post.category || "Bilacert Insight"}
+        title={post.title}
+        description={
+          post.excerpt || "Expert compliance guidance from Bilacert."
+        }
+        actions={[
+          { label: "Get Free Consultation", href: "/contact" },
+          { label: "View All Articles", href: "/blog", variant: "secondary" },
+        ]}
+        highlights={heroHighlights}
+      />
+
+      <section className="py-14">
+        <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+          <article
+            className="bilacert-article"
+            dangerouslySetInnerHTML={{
+              __html: normalizeArticleHtml(post.content),
+            }}
+          />
+
+          {post.category && (
+            <div className="mt-10 rounded-xl bg-white p-6 shadow-sm shadow-black/5">
+              <div className="flex items-center gap-2 text-gray-600">
+                <Folder className="h-5 w-5" />
+                <span>{post.category}</span>
+              </div>
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-8 md:py-12 bg-secondary-gray">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="bg-white rounded-xl shadow-sm p-5 md:p-8 text-center">
+            <h3 className="text-xl md:text-2xl font-bold text-primary mb-4">
+              Found this helpful?
+            </h3>
+
+            <div className="grid grid-cols-1 gap-3 md:flex md:justify-center md:space-x-4 md:gap-0 mb-8">
+              <button
+                type="button"
+                className="flex items-center justify-center space-x-2 bg-blue-400 text-white px-4 py-2.5 rounded-lg hover:bg-blue-500 w-full md:w-auto"
+              >
+                <FaTwitter className="h-5 w-5" />
+                <span>Twitter</span>
+              </button>
+              <button
+                type="button"
+                className="flex items-center justify-center space-x-2 bg-blue-600 text-white px-4 py-2.5 rounded-lg hover:bg-blue-700 w-full md:w-auto"
+              >
+                <FaLinkedin className="h-5 w-5" />
+                <span>LinkedIn</span>
+              </button>
+              <button
+                type="button"
+                className="flex items-center justify-center space-x-2 bg-blue-800 text-white px-4 py-2.5 rounded-lg hover:bg-blue-900 w-full md:w-auto"
+              >
+                <FaFacebook className="h-5 w-5" />
+                <span>Facebook</span>
+              </button>
+            </div>
+
+            <div className="border-t pt-8">
+              <Link
+                href="/contact"
+                className="bg-primary text-white px-6 py-3 rounded-lg font-semibold inline-block w-full md:w-auto text-center"
+              >
+                Get Free Consultation
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {relatedPosts.length > 0 && <RelatedPosts posts={relatedPosts} />}
+    </div>
+  );
+}
+````
+
+## File: apps/client/app/blog/page.tsx
+````typescript
+import { ArrowRight, BookOpen, Calendar, Clock, User } from "lucide-react";
+import type { Metadata, Viewport } from "next";
+import Image from "next/image";
+import Link from "next/link";
+import BlogCard from "@/components/cards/BlogCard";
+import HeroSection from "@/components/HeroSection";
+import { Badge } from "@/components/ui/badge";
+import { getCachedPublishedBlogs } from "../_lib/cached-public-data";
+
+export const metadata: Metadata = {
+  title: "Blog",
+  description:
+    "Stay updated with the latest ICASA and NRCS compliance news, guides, and insights. Expert articles on type approvals, licensing, and regulatory changes in South Africa.",
+  keywords: [
+    "ICASA compliance blog",
+    "NRCS LOA news",
+    "compliance articles South Africa",
+    "type approval guides",
+    "licensing updates",
+    "regulatory compliance news",
+    "ICASA NRCS insights",
+  ],
+  openGraph: {
+    title: "Blog - ICASA & NRCS Compliance Insights",
+    description:
+      "Stay updated with the latest ICASA and NRCS compliance news, guides, and insights. Expert articles on type approvals, licensing, and regulatory changes in South Africa.",
+    url: "https://bilacert.co.za/blog",
+    type: "website",
+  },
+  alternates: {
+    canonical: "https://bilacert.co.za/blog",
+  },
+};
+
+export const revalidate = 0;
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#1f2937" },
+  ],
+};
+export default async function BlogPage() {
+  const categories = [
+    "All",
+    "ICASA Approvals",
+    "NRCS Compliance",
+    "Licensing",
+    "Telecom Licensing",
+    "Business Strategy",
+    "Marine Compliance",
+  ];
+
+  const blogPosts = await getCachedPublishedBlogs();
+
+  if (blogPosts.length === 0) {
+    return (
+      <div className="min-h-screen flex items-center justify-center py-20 bg-secondary-gray">
+        <div className="text-center px-4">
+          <h2 className="text-2xl font-bold text-primary mb-2">
+            No blog posts found
+          </h2>
+          <p className="text-gray-600">Check back later for more updates.</p>
+        </div>
+      </div>
+    );
+  }
+
+  const featuredPost = blogPosts[0];
+  const regularPosts = blogPosts.slice(1);
+  const heroHighlights = [
+    {
+      title: `${blogPosts.length} Published Insights`,
+      description: "Guides and updates for regulated businesses.",
+      icon: <BookOpen className="h-6 w-6 text-white" />,
+    },
+    {
+      title: "Regulatory Updates",
+      description: "ICASA, NRCS, licensing, and approval guidance.",
+      icon: <Calendar className="h-6 w-6 text-white" />,
+    },
+    {
+      title: "Practical Reading",
+      description: "Actionable advice from compliance specialists.",
+      icon: <Clock className="h-6 w-6 text-white" />,
+    },
+  ];
+
+  return (
+    <div className="min-h-screen bg-white">
+      <HeroSection
+        imageSrc="/herosetion/Blog.jpg"
+        imageAlt="Compliance Insights & Updates"
+        eyebrow="Insights Hub"
+        title="Compliance Insights & Updates"
+        description="Stay informed with the latest compliance news, regulatory updates, and expert guidance to keep your business ahead of the curve."
+        actions={[
+          { label: "Read Latest Articles", href: "#latest-articles" },
+          { label: "Ask an Expert", href: "/contact", variant: "secondary" },
+        ]}
+        highlights={heroHighlights}
+      />
+
+      {/* Featured Post */}
+      {featuredPost && (
+        <section className="py-12 md:py-20 bg-secondary-gray">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100 group">
+              <div className="grid grid-cols-1 lg:grid-cols-2">
+                <div className="relative h-64 sm:h-80 md:h-96 lg:h-full min-h-[300px] overflow-hidden">
+                  <Image
+                    src={
+                      featuredPost.featuredImage ||
+                      `https://picsum.photos/seed/${featuredPost.id}/600/400`
+                    }
+                    alt={featuredPost.title}
+                    fill
+                    sizes="(max-width: 1024px) 100vw, 50vw"
+                    className="object-cover transition-transform duration-700 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent lg:hidden" />
+                  <div className="absolute top-6 left-6">
+                    <Badge className="bg-accent text-white px-4 py-1.5 border-none shadow-lg">
+                      Featured Article
+                    </Badge>
+                  </div>
+                </div>
+                <div className="p-8 md:p-12 lg:p-16 flex flex-col justify-center">
+                  <div className="flex items-center gap-4 mb-6 text-sm text-gray-500">
+                    <span className="flex items-center gap-1.5">
+                      <Calendar className="h-4 w-4 text-accent" />
+                      {new Date(featuredPost.createdAt).toLocaleDateString(
+                        "en-ZA",
+                        {
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
+                        },
+                      )}
+                    </span>
+                    {featuredPost.readTime && (
+                      <>
+                        <span className="w-1.5 h-1.5 rounded-full bg-gray-300" />
+                        <span className="flex items-center gap-1.5">
+                          <Clock className="h-4 w-4 text-accent" />
+                          {featuredPost.readTime}
+                        </span>
+                      </>
+                    )}
+                  </div>
+
+                  <Link
+                    href={`/blog/${featuredPost.slug}`}
+                    className="block group"
+                  >
+                    <h2 className="text-2xl md:text-4xl font-extrabold text-primary mb-6 leading-tight group-hover:text-accent transition-colors duration-200">
+                      {featuredPost.title}
+                    </h2>
+                  </Link>
+
+                  <p className="text-base md:text-lg text-gray-600 mb-8 leading-relaxed line-clamp-4">
+                    {featuredPost.excerpt}
+                  </p>
+
+                  <div className="flex flex-wrap items-center justify-between gap-6 mt-auto">
+                    <div className="flex items-center gap-3">
+                      <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                        <User className="h-5 w-5" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-bold text-primary">
+                          {featuredPost.authorName || "Bilacert Team"}
+                        </p>
+                        <p className="text-xs text-gray-500">
+                          Compliance Expert
+                        </p>
+                      </div>
+                    </div>
+
+                    <Link
+                      href={`/blog/${featuredPost.slug}`}
+                      className="inline-flex items-center bg-accent text-white px-8 py-3 rounded-full font-bold hover:bg-accent-light transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-1"
+                    >
+                      Read Full Article
+                      <ArrowRight className="h-5 w-5 ml-2" />
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Blog Posts Grid */}
+      <section id="latest-articles" className="py-16 md:py-24 scroll-mt-24">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+            <div className="max-w-2xl">
+              <h2 className="text-3xl md:text-4xl font-extrabold text-primary mb-4">
+                Latest Articles
+              </h2>
+              <p className="text-lg text-gray-600">
+                Expert insights and practical guidance to help you navigate
+                South African compliance requirements with ease.
+              </p>
+            </div>
+
+            <div className="flex flex-wrap gap-2">
+              {categories.slice(0, 5).map((category) => (
+                <button
+                  key={category}
+                  type="button"
+                  className="px-4 py-2 rounded-full text-xs md:text-sm font-medium border border-gray-200 text-gray-600 hover:border-accent hover:text-accent transition-all whitespace-nowrap"
+                >
+                  {category}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Posts Grid */}
+          {regularPosts.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 lg:gap-10">
+              {regularPosts.map((post) => (
+                <BlogCard key={post.id} post={post} />
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-20 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-200">
+              <p className="text-gray-500">More articles coming soon.</p>
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* Newsletter Signup */}
+      <section className="py-20 md:py-28 bg-primary relative overflow-hidden">
+        {/* Background Pattern/Overlay */}
+        <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/3 w-96 h-96 bg-accent/10 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/3 w-96 h-96 bg-accent/10 rounded-full blur-3xl" />
+
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+          <Badge className="bg-accent/20 text-accent-light border-accent/30 mb-6 px-4 py-1 border shadow-sm">
+            Newsletter
+          </Badge>
+          <h2 className="text-3xl md:text-4xl font-extrabold mb-6 text-white leading-tight">
+            Stay Ahead of Regulatory Changes
+          </h2>
+          <p className="text-lg md:text-xl mb-10 text-gray-300 max-w-2xl mx-auto">
+            Subscribe to our newsletter for the latest compliance insights,
+            regulatory updates, and expert guidance delivered straight to your
+            inbox.
+          </p>
+          <form className="max-w-md mx-auto flex flex-col sm:flex-row gap-4">
+            <input
+              type="email"
+              placeholder="Enter your email address"
+              className="flex-1 px-6 py-4 rounded-full bg-white/10 border border-white/20 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all"
+              required
+            />
+            <button
+              type="submit"
+              className="bg-accent text-white px-8 py-4 rounded-full font-bold hover:bg-accent-light transition-all duration-300 shadow-lg hover:shadow-accent/20"
+            >
+              Subscribe Now
+            </button>
+          </form>
+          <p className="mt-6 text-sm text-gray-400">
+            Join 500+ businesses receiving our weekly compliance updates.
+          </p>
+        </div>
+      </section>
+    </div>
+  );
+}
+````
+
+## File: apps/client/app/contact/page.tsx
+````typescript
+import { Clock, Mail, Phone } from "lucide-react";
+import type { Metadata, Viewport } from "next";
+import HeroSection from "@/components/HeroSection";
+import { businessInfo } from "@/lib/business";
+import ContactMessageForm from "./ContactMessageForm";
+
+export const metadata: Metadata = {
+  title: "Contact Us",
+  description: `Get in touch with ${businessInfo.name} for expert ICASA and NRCS compliance guidance. Call ${businessInfo.phone} or email ${businessInfo.email} for a free consultation.`,
+  keywords: [
+    "contact Bilacert",
+    "ICASA compliance consultation",
+    "NRCS LOA consultation",
+    "compliance expert South Africa",
+    "regulatory approval consultation",
+    "free compliance consultation",
+  ],
+  openGraph: {
+    title: `Contact ${businessInfo.name} - Get Expert Compliance Guidance`,
+    description: `Get in touch with ${businessInfo.name} for expert ICASA and NRCS compliance guidance. Call ${businessInfo.phone} or email ${businessInfo.email} for a free consultation.`,
+    url: `${businessInfo.domain}/contact`,
+    type: "website",
+  },
+  alternates: {
+    canonical: `${businessInfo.domain}/contact`,
+  },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#1f2937" },
+  ],
+};
+export default function ContactPage() {
+  const heroHighlights = [
+    {
+      title: businessInfo.phone,
+      description: "Speak to a compliance specialist.",
+      icon: <Phone className="h-6 w-6 text-white" />,
+    },
+    {
+      title: businessInfo.email,
+      description: "Send your compliance questions.",
+      icon: <Mail className="h-6 w-6 text-white" />,
+    },
+    {
+      title: "Mon-Fri 08:00 - 16:30",
+      description: "Business hours for direct support.",
+      icon: <Clock className="h-6 w-6 text-white" />,
+    },
+  ];
+
+  return (
+    <div className="min-h-screen">
+      <HeroSection
+        imageSrc="/herosetion/Contact-Us.jpg"
+        imageAlt="Get in touch"
+        eyebrow="Contact Bilacert"
+        title="Get Expert Compliance Guidance"
+        description="Ready to simplify your compliance journey? Contact our experts for a free consultation and discover how we can help your business navigate ICASA and NRCS requirements."
+        actions={[
+          { label: "Call Now", href: businessInfo.telHref },
+          {
+            label: "WhatsApp Us",
+            href: businessInfo.whatsappHref,
+            variant: "secondary",
+            external: true,
+          },
+        ]}
+        highlights={heroHighlights}
+      />
+
+      <section className="py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-16">
+            <div className="text-center">
+              <div className="bg-accent/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Phone className="h-8 w-8 text-accent" />
+              </div>
+              <h3 className="text-xl font-semibold text-primary mb-2">Phone</h3>
+              <p className="text-gray-600 mb-2">{businessInfo.phone}</p>
+              <p className="text-sm text-gray-500">Mon-Fri 08:00 - 16:30</p>
+            </div>
+
+            <div className="text-center">
+              <div className="bg-accent/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Mail className="h-8 w-8 text-accent" />
+              </div>
+              <h3 className="text-xl font-semibold text-primary mb-2">Email</h3>
+              <p className="text-gray-600 mb-2">{businessInfo.email}</p>
+              <p className="text-sm text-gray-500">
+                We&apos;ll respond within 24 hours
+              </p>
+            </div>
+
+            <div className="text-center">
+              <div className="bg-accent/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Clock className="h-8 w-8 text-accent" />
+              </div>
+              <h3 className="text-xl font-semibold text-primary mb-2">
+                Business Hours
+              </h3>
+              <p className="text-gray-600 mb-2">Monday - Friday</p>
+              <p className="text-sm text-gray-500">08:00 - 16:30</p>
+            </div>
+          </div>
+
+          <div className="max-w-2xl mx-auto">
+            <ContactMessageForm />
+          </div>
+        </div>
+      </section>
+
+      <section className="py-20 bg-secondary-gray">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-3xl font-bold text-primary mb-6">
+            Need Immediate Assistance?
+          </h2>
+          <p className="text-xl text-gray-600 mb-8">
+            For urgent compliance matters, call us directly at{" "}
+            {businessInfo.phone} or reach out via WhatsApp for instant support.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <a
+              href={businessInfo.telHref}
+              className="bg-accent text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-accent-light transition-colors duration-200"
+            >
+              Call Now
+            </a>
+            <a
+              href={businessInfo.whatsappHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-green-500 text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-green-600 transition-colors duration-200"
+            >
+              WhatsApp Us
+            </a>
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+}
+````
+
 ## File: apps/client/app/services/[serviceId]/form/ServiceApplicationForm.tsx
 ````typescript
 "use client";
@@ -23528,6 +23672,760 @@ export default function ServiceApplicationForm({
           </button>
         </form>
       </div>
+    </div>
+  );
+}
+````
+
+## File: apps/client/app/services/page.tsx
+````typescript
+import { CheckCircle, Clock, Users } from "lucide-react";
+import type { Metadata, Viewport } from "next";
+import Link from "next/link";
+import ServiceCard from "@/components/cards/ServiceCard";
+import HeroSection from "@/components/HeroSection";
+import { Button } from "@/components/ui/button";
+import { getCachedServices } from "../_lib/cached-public-data";
+
+export const metadata: Metadata = {
+  title: "Our Services - Bilacert",
+  description:
+    "Comprehensive licensing and certification services for South African businesses. ICASA type approvals, NRCS LOA, radio dealer licensing, and more.",
+  keywords: [
+    "ICASA licensing",
+    "NRCS certification",
+    "radio licensing",
+    "VHF licensing",
+    "ECS ECNS licensing",
+    "license exemptions",
+    "compliance services South Africa",
+  ],
+  openGraph: {
+    title: "Services - Bilacert",
+    description:
+      "Comprehensive licensing and certification services for South African businesses.",
+    url: "https://bilacert.co.za/services",
+    type: "website",
+  },
+  alternates: {
+    canonical: "https://bilacert.co.za/services",
+  },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#1f2937" },
+  ],
+};
+export default async function ServicesPage() {
+  const services = await getCachedServices();
+
+  const whyChooseUs = [
+    {
+      title: "Expert Guidance",
+      description:
+        "Deep industry knowledge and regulatory expertise to guide you through complex compliance requirements.",
+      icon: <Users className="h-6 w-6" />,
+    },
+    {
+      title: "Efficient Process",
+      description:
+        "Streamlined applications and proactive problem-solving to minimize delays and maximize success rates.",
+      icon: <Clock className="h-6 w-6" />,
+    },
+    {
+      title: "Client-Centric Approach",
+      description:
+        "Personalized support and clear communication throughout your compliance journey.",
+      icon: <CheckCircle className="h-6 w-6" />,
+    },
+  ];
+
+  const heroHighlights = [
+    {
+      title: "Expert Compliance Guidance",
+      description: "ICASA, NRCS, licensing, and approval support.",
+      icon: <Users className="h-6 w-6 text-white" />,
+    },
+    {
+      title: "Streamlined Application Process",
+      description: "Clear steps, fewer delays, and proactive support.",
+      icon: <Clock className="h-6 w-6 text-white" />,
+    },
+    {
+      title: `${services.length} Active Services`,
+      description: "Purpose-built services for regulated businesses.",
+      icon: <CheckCircle className="h-6 w-6 text-white" />,
+    },
+  ];
+
+  return (
+    <div className="min-h-screen">
+      <HeroSection
+        imageSrc="/images/services/services-hero.svg"
+        imageAlt="Bilacert compliance services"
+        imageUnoptimized
+        eyebrow="Services built for South African compliance"
+        title="Compliance Services for Your Business"
+        description="Licensing, certification, and regulatory approval support for businesses that need clear guidance and reliable compliance outcomes."
+        actions={[
+          { label: "Get Free Consultation", href: "/contact" },
+          {
+            label: "Explore Services",
+            href: "#services-grid",
+            variant: "secondary",
+          },
+        ]}
+        highlights={heroHighlights}
+      />
+
+      {/* Services Grid */}
+      <section id="services-grid" className="py-20 scroll-mt-24">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch">
+            {services.map((service) => (
+              <ServiceCard key={service.id} service={service} />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Why Choose Us */}
+      <section className="py-20 bg-secondary-gray">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl lg:text-4xl font-bold text-primary mb-4">
+              Why Choose Bilacert?
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              We make compliance simple, efficient, and stress-free for
+              businesses of all sizes
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {whyChooseUs.map((item, index) => (
+              <div key={index} className="text-center">
+                <div className="bg-accent/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <div className="text-accent">{item.icon}</div>
+                </div>
+                <h3 className="text-xl font-semibold text-primary mb-4">
+                  {item.title}
+                </h3>
+                <p className="text-gray-600">{item.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-20">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-3xl lg:text-4xl font-bold text-primary mb-6">
+            Don't see what you need?
+          </h2>
+          <p className="text-xl text-gray-600 mb-8">
+            Contact us today to discuss your specific licensing and
+            certification needs.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Button size="lg" asChild>
+              <Link href="/contact">Get in Touch</Link>
+            </Button>
+            <Button size="lg" variant="outline" asChild>
+              <a href="tel:0754304433">Call 075 430 4433</a>
+            </Button>
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+}
+````
+
+## File: apps/client/app/south-africa-local-representative/page.tsx
+````typescript
+import {
+  ArrowRight,
+  CheckCircle2,
+  FileCheck2,
+  Globe2,
+  Handshake,
+  MessageSquareText,
+  ShieldCheck,
+  TestTube2,
+} from "lucide-react";
+import type { Metadata, Viewport } from "next";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+
+export const metadata: Metadata = {
+  title: "South Africa Local Representative for ICASA & NRCS | BILACERT",
+  description:
+    "BILACERT provides South African local regulatory representation for international manufacturers, testing laboratories, certification bodies and compliance partners.",
+  alternates: {
+    canonical: "https://bilacert.co.za/south-africa-local-representative",
+  },
+  openGraph: {
+    title: "South Africa Local Representative for ICASA & NRCS | BILACERT",
+    description:
+      "Your regulatory representative in South Africa for ICASA and NRCS processes.",
+    url: "https://bilacert.co.za/south-africa-local-representative",
+    type: "website",
+  },
+};
+
+const capabilities = [
+  {
+    title: "ICASA Local Representation",
+    description:
+      "BILACERT acts as the South African applicant or representative for applicable Type Approval matters.",
+    icon: ShieldCheck,
+  },
+  {
+    title: "NRCS Regulatory Support",
+    description:
+      "Support with LOA applications, technical-document review and communication with NRCS.",
+    icon: FileCheck2,
+  },
+  {
+    title: "Representation for Test Laboratories",
+    description:
+      "International laboratories can partner with BILACERT to support their clients entering South Africa.",
+    icon: TestTube2,
+  },
+  {
+    title: "Certificate & Compliance Management",
+    description:
+      "Maintain regulatory records and support future product applications and compliance activities.",
+    icon: CheckCircle2,
+  },
+  {
+    title: "Testing Coordination",
+    description:
+      "Identify missing South African compliance requirements and coordinate the required testing.",
+    icon: Globe2,
+  },
+  {
+    title: "Regulatory Communication",
+    description:
+      "BILACERT handles communication with the relevant South African authorities as part of the regulatory process.",
+    icon: MessageSquareText,
+  },
+];
+
+const process = [
+  "Send Product Information",
+  "Compliance Review",
+  "Testing Gap Analysis",
+  "Application",
+  "Approval",
+  "Ongoing Representation",
+];
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#1f2937" },
+  ],
+};
+export default function SouthAfricaLocalRepresentativePage() {
+  return (
+    <div className="min-h-screen bg-white">
+      <section className="relative overflow-hidden bg-primary text-white">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(212,175,55,0.22),transparent_42%)]" />
+        <div className="relative mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8 lg:py-28">
+          <div className="max-w-4xl">
+            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-accent/40 bg-white/5 px-4 py-2 text-sm font-medium text-accent">
+              <Handshake className="h-4 w-4" />
+              South African regulatory representation
+            </div>
+            <h1 className="text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
+              Your Regulatory Representative in South Africa
+            </h1>
+            <p className="mt-6 max-w-3xl text-lg leading-8 text-gray-200 sm:text-xl">
+              Expand into the South African market with a trusted local
+              compliance partner. BILACERT represents international
+              manufacturers, test laboratories and certification partners for
+              ICASA and NRCS regulatory processes.
+            </p>
+            <div className="mt-10 flex flex-col gap-4 sm:flex-row">
+              <Button size="lg" asChild>
+                <Link href="/contact">
+                  Request Local Representation
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
+              </Button>
+              <Button
+                size="lg"
+                variant="outline"
+                asChild
+                className="border-white/30 bg-transparent text-white hover:bg-white/10 hover:text-white"
+              >
+                <Link href="/south-africa-market-access">
+                  Explore Market Access
+                </Link>
+              </Button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="py-20 sm:py-24">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-3xl text-center">
+            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-accent">
+              One local partner
+            </p>
+            <h2 className="mt-3 text-3xl font-bold tracking-tight text-primary sm:text-4xl">
+              Navigate South African regulation with confidence
+            </h2>
+            <p className="mt-5 text-lg leading-8 text-gray-600">
+              International companies do not need to navigate South African
+              regulatory processes alone. BILACERT provides local compliance
+              support from technical document review through regulatory
+              submission, approval and ongoing support.
+            </p>
+          </div>
+
+          <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {capabilities.map((item) => {
+              const Icon = item.icon;
+              return (
+                <article
+                  key={item.title}
+                  className="rounded-2xl border border-gray-200 bg-white p-7 shadow-sm transition-shadow hover:shadow-md"
+                >
+                  <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-accent/10 text-accent">
+                    <Icon className="h-6 w-6" />
+                  </div>
+                  <h3 className="text-xl font-semibold text-primary">
+                    {item.title}
+                  </h3>
+                  <p className="mt-3 leading-7 text-gray-600">
+                    {item.description}
+                  </p>
+                </article>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-secondary-gray py-20 sm:py-24">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
+            <div>
+              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-accent">
+                For international laboratories
+              </p>
+              <h2 className="mt-3 text-3xl font-bold tracking-tight text-primary sm:text-4xl">
+                Are You an International Testing Laboratory?
+              </h2>
+              <p className="mt-5 text-lg leading-8 text-gray-600">
+                Partner with BILACERT to provide your clients with a complete
+                South African market-access solution. Your laboratory handles
+                testing.
+                <span className="font-semibold text-primary">
+                  {" "}
+                  BILACERT handles South Africa.
+                </span>
+              </p>
+              <p className="mt-4 leading-7 text-gray-600">
+                When your clients require ICASA Type Approval, NRCS LOA or South
+                African regulatory guidance, BILACERT can act as your local
+                compliance partner.
+              </p>
+            </div>
+
+            <div className="rounded-2xl bg-primary p-8 text-white shadow-xl sm:p-10">
+              <h3 className="text-2xl font-bold">A clear regulatory pathway</h3>
+              <div className="mt-8 space-y-4">
+                {process.map((step, index) => (
+                  <div key={step} className="flex items-center gap-4">
+                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-accent text-sm font-bold text-white">
+                      {index + 1}
+                    </span>
+                    <span className="text-gray-100">{step}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="py-20 sm:py-24">
+        <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+          <div className="rounded-3xl bg-primary p-8 text-center text-white sm:p-12">
+            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-accent">
+              Start with your product
+            </p>
+            <h2 className="mt-3 text-3xl font-bold sm:text-4xl">
+              Need a South African Regulatory Partner?
+            </h2>
+            <p className="mx-auto mt-5 max-w-2xl text-lg leading-8 text-gray-200">
+              Send us your product datasheet and available test reports. Our
+              compliance team will assess the South African regulatory
+              requirements and advise on the next steps.
+            </p>
+            <div className="mt-8 flex flex-col justify-center gap-4 sm:flex-row">
+              <Button size="lg" asChild>
+                <Link href="/contact">
+                  Request Local Representation
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
+              </Button>
+              <Button
+                size="lg"
+                variant="outline"
+                asChild
+                className="border-white/30 bg-transparent text-white hover:bg-white/10 hover:text-white"
+              >
+                <Link href="/south-africa-market-access">
+                  South Africa Market Access
+                </Link>
+              </Button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="border-t border-gray-200 py-12">
+        <div className="mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
+          <p className="text-sm leading-6 text-gray-500">
+            BILACERT is positioned as an independent regulatory consultancy and
+            representative. This page does not imply accreditation by,
+            affiliation with, or endorsement by ICASA or NRCS.
+          </p>
+        </div>
+      </section>
+    </div>
+  );
+}
+````
+
+## File: apps/client/app/south-africa-market-access/page.tsx
+````typescript
+import {
+  ArrowRight,
+  CheckCircle2,
+  ClipboardCheck,
+  FileSearch,
+  Globe2,
+  ShieldCheck,
+  TestTube2,
+} from "lucide-react";
+import type { Metadata, Viewport } from "next";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+
+export const metadata: Metadata = {
+  title: "South Africa Product Market Access & Compliance | BILACERT",
+  description:
+    "BILACERT provides end-to-end South African regulatory market-access support for international manufacturers, including product assessment, test-report review, ICASA Type Approval, NRCS LOA and local representation.",
+  alternates: {
+    canonical: "https://bilacert.co.za/south-africa-market-access",
+  },
+  openGraph: {
+    title: "South Africa Product Market Access & Compliance | BILACERT",
+    description:
+      "Bring your products to the South African market with one compliance partner.",
+    url: "https://bilacert.co.za/south-africa-market-access",
+    type: "website",
+  },
+};
+
+const journey = [
+  {
+    number: "01",
+    title: "Product Regulatory Assessment",
+    description:
+      "We assess the product and determine whether ICASA, NRCS or other South African regulatory requirements apply.",
+    icon: ClipboardCheck,
+  },
+  {
+    number: "02",
+    title: "Standards & Test Report Review",
+    description:
+      "Existing IEC, EN, CB, EMC and RF reports are reviewed against South African requirements.",
+    icon: FileSearch,
+  },
+  {
+    number: "03",
+    title: "Testing Gap Analysis",
+    description:
+      "If additional testing is required, BILACERT identifies the applicable standards and can coordinate testing with suitable laboratories.",
+    icon: TestTube2,
+  },
+  {
+    number: "04",
+    title: "ICASA Type Approval",
+    description:
+      "For applicable telecommunications and radio-frequency equipment.",
+    icon: ShieldCheck,
+  },
+  {
+    number: "05",
+    title: "NRCS Letter of Authority",
+    description: "For applicable regulated electrical and electronic products.",
+    icon: CheckCircle2,
+  },
+  {
+    number: "06",
+    title: "South African Local Representation",
+    description:
+      "BILACERT can provide local regulatory representation for international manufacturers and compliance partners.",
+    icon: Globe2,
+  },
+  {
+    number: "07",
+    title: "Ongoing Compliance Support",
+    description:
+      "Regulatory correspondence, certificate management, levy support and future product applications.",
+    icon: CheckCircle2,
+  },
+];
+
+const regulatoryAreas = [
+  {
+    title: "ICASA",
+    items: "Type Approval • Licensing • Licence Exemptions",
+  },
+  {
+    title: "NRCS",
+    items: "LOA Applications • Electrotechnical Compliance • Levy Support",
+  },
+  {
+    title: "Technical Compliance",
+    items: "IEC • EN • SANS • EMC • RF • Safety",
+  },
+];
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#1f2937" },
+  ],
+};
+export default function SouthAfricaMarketAccessPage() {
+  return (
+    <div className="min-h-screen bg-white">
+      <section className="relative overflow-hidden bg-primary text-white">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(212,175,55,0.22),transparent_42%)]" />
+        <div className="relative mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8 lg:py-28">
+          <div className="max-w-4xl">
+            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-accent/40 bg-white/5 px-4 py-2 text-sm font-medium text-accent">
+              <Globe2 className="h-4 w-4" />
+              South Africa product market access
+            </div>
+            <h1 className="text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
+              Bring Your Products to the South African Market
+            </h1>
+            <p className="mt-6 max-w-3xl text-lg leading-8 text-gray-200 sm:text-xl">
+              BILACERT provides an end-to-end regulatory market-access service
+              for international manufacturers entering South Africa. From
+              determining the applicable regulatory requirements and reviewing
+              IEC/EN test reports to ICASA Type Approval, NRCS LOA and local
+              representation, we provide one point of contact for your South
+              African compliance journey.
+            </p>
+            <div className="mt-10 flex flex-col gap-4 sm:flex-row">
+              <Button size="lg" asChild>
+                <Link href="/contact">
+                  Submit Product for Assessment
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
+              </Button>
+              <Button
+                size="lg"
+                variant="outline"
+                asChild
+                className="border-white/30 bg-transparent text-white hover:bg-white/10 hover:text-white"
+              >
+                <Link href="/south-africa-local-representative">
+                  Local Representation
+                </Link>
+              </Button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="py-20 sm:py-24">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-3xl text-center">
+            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-accent">
+              End-to-end support
+            </p>
+            <h2 className="mt-3 text-3xl font-bold tracking-tight text-primary sm:text-4xl">
+              One Partner. Your South African Compliance Journey.
+            </h2>
+            <p className="mt-5 text-lg leading-8 text-gray-600">
+              BILACERT helps manufacturers move from product information and
+              technical review through applicable applications, approvals and
+              ongoing compliance support.
+            </p>
+          </div>
+
+          <div className="mt-14 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {journey.map((step) => {
+              const Icon = step.icon;
+              return (
+                <article
+                  key={step.number}
+                  className="relative rounded-2xl border border-gray-200 bg-white p-7 shadow-sm transition-shadow hover:shadow-md"
+                >
+                  <div className="flex items-start justify-between gap-4">
+                    <span className="text-3xl font-bold text-accent/50">
+                      {step.number}
+                    </span>
+                    <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-accent/10 text-accent">
+                      <Icon className="h-5 w-5" />
+                    </div>
+                  </div>
+                  <h3 className="mt-5 text-xl font-semibold text-primary">
+                    {step.title}
+                  </h3>
+                  <p className="mt-3 leading-7 text-gray-600">
+                    {step.description}
+                  </p>
+                </article>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-secondary-gray py-20 sm:py-24">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="grid gap-12 lg:grid-cols-[1fr_1.15fr] lg:items-center">
+            <div>
+              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-accent">
+                Trust & expertise
+              </p>
+              <h2 className="mt-3 text-3xl font-bold tracking-tight text-primary sm:text-4xl">
+                South African Compliance Expertise. International Reach.
+              </h2>
+              <p className="mt-5 text-lg leading-8 text-gray-600">
+                BILACERT works with manufacturers, importers and testing
+                laboratories to navigate South African product regulatory
+                requirements.
+              </p>
+              <p className="mt-4 leading-7 text-gray-600">
+                Our experience covers telecommunications equipment, wireless
+                devices, ICT equipment, electrical products, power supplies,
+                energy products and other regulated technologies.
+              </p>
+            </div>
+
+            <div className="grid gap-4 sm:grid-cols-3">
+              {regulatoryAreas.map((area) => (
+                <article
+                  key={area.title}
+                  className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-gray-200"
+                >
+                  <h3 className="text-xl font-bold text-primary">
+                    {area.title}
+                  </h3>
+                  <p className="mt-3 text-sm leading-6 text-gray-600">
+                    {area.items}
+                  </p>
+                </article>
+              ))}
+            </div>
+          </div>
+
+          <div className="mt-10 rounded-2xl border border-accent/20 bg-white p-6 text-center sm:p-8">
+            <p className="font-medium text-primary">
+              BILACERT operates as an independent regulatory consultancy and
+              representative.
+            </p>
+            <p className="mt-2 text-sm leading-6 text-gray-600">
+              This positioning does not imply accreditation by, affiliation
+              with, or endorsement by ICASA or NRCS.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section className="py-20 sm:py-24">
+        <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+          <div className="rounded-3xl border border-gray-200 bg-white p-8 text-center shadow-lg sm:p-12">
+            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-accent">
+              Product assessment
+            </p>
+            <h2 className="mt-3 text-3xl font-bold text-primary sm:text-4xl">
+              Not Sure What Your Product Requires?
+            </h2>
+            <p className="mx-auto mt-5 max-w-2xl text-lg leading-8 text-gray-600">
+              Send us your product information and our team will review it and
+              advise on the applicable South African regulatory pathway.
+            </p>
+
+            <div className="mx-auto mt-8 grid max-w-2xl gap-3 text-left sm:grid-cols-2">
+              {[
+                "Product datasheet",
+                "User manual",
+                "Existing test reports",
+                "Product photographs",
+              ].map((item) => (
+                <div
+                  key={item}
+                  className="flex items-center gap-3 rounded-xl bg-secondary-gray px-4 py-3"
+                >
+                  <CheckCircle2 className="h-5 w-5 shrink-0 text-accent" />
+                  <span className="font-medium text-primary">{item}</span>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-9">
+              <Button size="lg" asChild>
+                <Link href="/contact">
+                  Submit Product for Assessment
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
+              </Button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="border-t border-gray-200 py-16">
+        <div className="mx-auto max-w-4xl px-4 text-center sm:px-6 lg:px-8">
+          <h2 className="text-2xl font-bold text-primary sm:text-3xl">
+            Are you a test laboratory, certification company or regulatory
+            consultancy?
+          </h2>
+          <p className="mt-4 text-lg leading-8 text-gray-600">
+            Discover BILACERT&apos;s South African Local Representation &
+            Regulatory Partnership services.
+          </p>
+          <div className="mt-7">
+            <Button variant="outline" asChild>
+              <Link href="/south-africa-local-representative">
+                Explore Local Representation
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+            </Button>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }
@@ -23867,35 +24765,2143 @@ export interface BlogRowType {
 }
 ````
 
-## File: packages/contracts/src/env.ts
+## File: packages/supabase/sql/README.md
+````markdown
+# Bilacert Supabase SQL
+
+This directory is a schema snapshot reconstructed from the live Bilacert Supabase project:
+
+- Project ref: `zpgxnohxizcmuwbosapx`
+- Repository: `malalang/bilacert`
+- Snapshot date: 2026-08-18
+
+## Files
+
+| File | Purpose |
+| --- | --- |
+| `000_extensions.sql` | Verified database extensions and private schema |
+| `001_tables.sql` | Public table definitions |
+| `002_constraints.sql` | Primary keys, unique keys, checks and foreign keys |
+| `003_indexes.sql` | Explicit indexes from `pg_indexes` |
+| `004_functions.sql` | Public/private functions used by the schema |
+| `005_triggers.sql` | Database triggers |
+| `006_rls.sql` | RLS enabled/forced state |
+| `007_policies.sql` | Public-schema RLS policies |
+| `008_storage.sql` | Storage buckets and storage object policies |
+| `009_views.sql` | Public view snapshot |
+| `010_seed.sql` | Intentionally empty schema-only seed file |
+| `011_tasks.sql` | Task management dashboard table (idempotent additions) |
+| `012_task_todos.sql` | Task checklist items table (idempotent additions) |
+
+## Important
+
+This is a **schema clone**, not a production data dump. No user records, submissions, contacts, email contents, credentials, OAuth tokens, or other production data are committed here.
+
+The SQL intentionally preserves the live RLS state. In particular, `form_submissions` and `services` currently have RLS disabled. Before exposing either table through the browser/client API, define and test appropriate policies.
+
+The live project also contains a `public.increment_views(text)` function whose current production body references `views_count`, while the table column is `viewsCount`. That mismatch is preserved in `004_functions.sql` as part of the clone; it should be fixed separately as an application/database bug rather than silently changing the production snapshot.
+
+## Recreating locally
+
+For a clean Supabase database, apply the files in numeric order after the normal Supabase-managed schemas (`auth`, `storage`, etc.) have been initialized. The storage file expects Supabase Storage to be available.
+
+For future changes, prefer normal Supabase migrations under `supabase/migrations` and keep this directory synchronized as a readable SQL source snapshot.
+````
+
+## File: packages/supabase/src/cache.ts
 ````typescript
-import { z } from "zod";
+import type { RevalidationRequest } from "@bilacert/contracts/revalidation";
 
-export const envSchema = z.object({
-  NEXT_PUBLIC_SUPABASE_URL: z.string().url("Supabase URL is required"),
-  NEXT_PUBLIC_SUPABASE_ANON_KEY: z
-    .string()
-    .min(1, "Supabase anon key is required"),
-  SUPABASE_URL: z.string().url().optional(),
-  SUPABASE_SECRET_KEY: z.string().min(1).optional(),
-  SUPABASE_SERVICE_ROLE_KEY: z.string().min(1).optional(),
-  REVALIDATION_SECRET: z.string().min(1).optional(),
-  CLIENT_REVALIDATION_URL: z.string().optional(),
-  NEXT_PUBLIC_CLIENT_URL: z.string().optional(),
-  BILACERT_CLIENT_URL: z.string().optional(),
-  PEXELS_API_KEY: z.string().optional(),
-});
+export const CACHE_TAGS = {
+  blogs: "blogs",
+  blog: (slug: string) => `blog:${slug}`,
+  services: "services",
+  service: (slug: string) => `service:${slug}`,
+  testimonials: "testimonials",
+  contacts: "contacts",
+  formSubmissions: "form-submissions",
+} as const;
 
-export type Env = z.infer<typeof envSchema>;
+export const CACHE_PATHS = {
+  home: "/",
+  blog: "/blog",
+  blogPost: (slug: string) => `/blog/${slug}`,
+  services: "/services",
+  service: (slug: string) => `/services/${slug}`,
+} as const;
 
-export function validateEnv(raw: Record<string, string | undefined>) {
-  return envSchema.safeParse(raw);
+export interface MutationResult<T> {
+  data: T;
+  revalidate: RevalidationRequest;
 }
 
-export function getEnv(): Env {
-  const result = envSchema.safeParse(process.env);
-  return result.success ? result.data : (process.env as unknown as Env);
+export function mutationResult<T>(
+  data: T,
+  revalidate: RevalidationRequest,
+): MutationResult<T> {
+  return { data, revalidate };
 }
+````
+
+## File: packages/supabase/src/Mutations/tasks.ts
+````typescript
+"use server";
+
+import type {
+  TaskInputType,
+  TaskStatus,
+  TaskUpdateInputType,
+} from "@bilacert/contracts/task";
+import type {
+  TaskTodoInputType,
+  TaskTodoType,
+  TaskTodoUpdateInputType,
+} from "@bilacert/contracts/taskTodo";
+import { requireAdminUser } from "../auth";
+
+interface TaskDbRow {
+  id: string;
+  title: string;
+  description: string | null;
+  status: TaskStatus;
+  priority: string;
+  category: string | null;
+  assignedTo: string | null;
+  dueAt: string | null;
+  serviceId: string | null;
+  submissionId: string | null;
+  createdAt: string | null;
+  updatedAt: string | null;
+  completedAt: string | null;
+}
+
+type MutationTaskClient = {
+  from: (table: string) => {
+    insert: (values: Record<string, unknown>) => {
+      select: () => {
+        single: () => Promise<{
+          data: TaskDbRow | null;
+          error: { message: string } | null;
+        }>;
+      };
+    };
+    update: (values: Record<string, unknown>) => {
+      eq: (
+        column: string,
+        value: string,
+      ) => {
+        select: () => {
+          single: () => Promise<{
+            data: TaskDbRow | null;
+            error: { message: string } | null;
+          }>;
+        };
+      };
+    };
+    delete: () => {
+      eq: (
+        column: string,
+        value: string,
+      ) => Promise<{
+        data: unknown;
+        error: { message: string } | null;
+      }>;
+    };
+  };
+};
+
+function toDbWrite(
+  data: Partial<TaskInputType> & { completedAt?: string | null },
+) {
+  const write: Record<string, unknown> = {};
+  if (data.title !== undefined) write.title = data.title;
+  if (data.description !== undefined) write.description = data.description;
+  if (data.status !== undefined) write.status = data.status;
+  if (data.priority !== undefined) write.priority = data.priority;
+  if (data.category !== undefined) write.category = data.category;
+  if (data.assignedTo !== undefined) write.assignedTo = data.assignedTo;
+  if (data.dueAt !== undefined) write.dueAt = data.dueAt;
+  if (data.serviceId !== undefined) write.serviceId = data.serviceId;
+  if (data.submissionId !== undefined) write.submissionId = data.submissionId;
+  if (data.completedAt !== undefined) write.completedAt = data.completedAt;
+  return write;
+}
+
+export async function createTask(data: TaskInputType) {
+  const supabase = (await requireAdminUser()) as unknown as MutationTaskClient;
+  const { data: task, error } = await supabase
+    .from("tasks")
+    .insert(toDbWrite(data))
+    .select()
+    .single();
+
+  if (error) throw new Error(error.message);
+  return task;
+}
+
+export async function updateTask(id: string, data: TaskUpdateInputType) {
+  const supabase = (await requireAdminUser()) as unknown as MutationTaskClient;
+  const { data: task, error } = await supabase
+    .from("tasks")
+    .update({ ...toDbWrite(data), updatedAt: new Date().toISOString() })
+    .eq("id", id)
+    .select()
+    .single();
+
+  if (error) throw new Error(error.message);
+  return task;
+}
+
+export async function deleteTask(id: string) {
+  const supabase = (await requireAdminUser()) as unknown as MutationTaskClient;
+  const { error } = await supabase.from("tasks").delete().eq("id", id);
+
+  if (error) throw new Error(error.message);
+}
+
+// --- TASK TODO MUTATIONS ---
+// The applied remote `task_todos` table uses camelCase column names.
+
+interface TaskTodoMutationClient {
+  from: (table: string) => {
+    insert: (values: Record<string, unknown>) => {
+      select: () => {
+        single: () => Promise<{
+          data: TaskTodoType | null;
+          error: { message: string } | null;
+        }>;
+      };
+    };
+    update: (values: Record<string, unknown>) => {
+      eq: (
+        column: string,
+        value: string,
+      ) => {
+        select: () => {
+          single: () => Promise<{
+            data: TaskTodoType | null;
+            error: { message: string } | null;
+          }>;
+        };
+      };
+    };
+    delete: () => {
+      eq: (
+        column: string,
+        value: string,
+      ) => Promise<{ error: { message: string } | null }>;
+    };
+  };
+}
+
+export async function createTaskTodo(taskId: string, data: TaskTodoInputType) {
+  const supabase =
+    (await requireAdminUser()) as unknown as TaskTodoMutationClient;
+  const { data: todo, error } = await supabase
+    .from("task_todos")
+    .insert({
+      taskId,
+      title: data.title,
+      done: data.done,
+    })
+    .select()
+    .single();
+
+  if (error) throw new Error(error.message);
+  if (!todo) throw new Error("Checklist item not found");
+  return todo;
+}
+
+export async function updateTaskTodo(
+  id: string,
+  data: TaskTodoUpdateInputType,
+) {
+  const supabase =
+    (await requireAdminUser()) as unknown as TaskTodoMutationClient;
+  const write: Record<string, unknown> = {
+    updatedAt: new Date().toISOString(),
+  };
+  if (data.title !== undefined) write.title = data.title;
+  if (data.done !== undefined) write.done = data.done;
+
+  const { data: todo, error } = await supabase
+    .from("task_todos")
+    .update(write)
+    .eq("id", id)
+    .select()
+    .single();
+
+  if (error) throw new Error(error.message);
+  if (!todo) throw new Error("Checklist item not found");
+  return todo;
+}
+
+export async function deleteTaskTodo(id: string) {
+  const supabase =
+    (await requireAdminUser()) as unknown as TaskTodoMutationClient;
+  const { error } = await supabase.from("task_todos").delete().eq("id", id);
+
+  if (error) throw new Error(error.message);
+}
+````
+
+## File: packages/supabase/src/Queries/tasks.ts
+````typescript
+import type { TaskType } from "@bilacert/contracts/task";
+import type { TaskTodoType } from "@bilacert/contracts/taskTodo";
+import { createSupabaseServerClient } from "../server";
+
+export interface TaskOption {
+  id: string;
+  label: string;
+}
+
+interface TaskDbRow {
+  id: string;
+  title: string;
+  description: string | null;
+  status: string;
+  priority: string;
+  category: string | null;
+  assignedTo: string | null;
+  dueAt: string | null;
+  serviceId: string | null;
+  submissionId: string | null;
+  createdAt: string | null;
+  updatedAt: string | null;
+  completedAt: string | null;
+  services: { title: string } | null;
+  users: {
+    firstName: string | null;
+    lastName: string | null;
+    email: string | null;
+  } | null;
+  form_submissions: { fullName: string | null } | null;
+}
+
+interface TaskTodoDbRow {
+  id: string;
+  taskId: string;
+  title: string;
+  done: boolean;
+  createdAt: string | null;
+  updatedAt: string | null;
+}
+
+type TaskQueryClient = {
+  from: (table: string) => {
+    select: (query: string) => {
+      order: (
+        column: string,
+        options: { ascending: boolean },
+      ) => Promise<{
+        data: TaskDbRow[] | null;
+        error: { message: string } | null;
+      }>;
+    };
+  };
+};
+
+type SelectOrderClient<T> = {
+  from: (table: string) => {
+    select: (query: string) => {
+      order: (
+        column: string,
+        options: { ascending: boolean },
+      ) => Promise<{ data: T[] | null; error: { message: string } | null }>;
+    };
+  };
+};
+
+type SelectEqOrderClient<T> = {
+  from: (table: string) => {
+    select: (query: string) => {
+      eq: (
+        column: string,
+        value: boolean,
+      ) => {
+        order: (
+          column: string,
+          options: { ascending: boolean },
+        ) => Promise<{ data: T[] | null; error: { message: string } | null }>;
+      };
+    };
+  };
+};
+
+type SelectOrderLimitClient<T> = {
+  from: (table: string) => {
+    select: (query: string) => {
+      order: (
+        column: string,
+        options: { ascending: boolean },
+      ) => {
+        limit: (count: number) => Promise<{
+          data: T[] | null;
+          error: { message: string } | null;
+        }>;
+      };
+    };
+  };
+};
+
+interface AssignableUserDbRow {
+  id: string;
+  firstName: string | null;
+  lastName: string | null;
+  email: string | null;
+}
+
+interface SubmissionOptionDbRow {
+  id: string;
+  fullName: string | null;
+  email: string | null;
+}
+
+function mapTaskRow(row: TaskDbRow): Omit<TaskType, "todos"> {
+  return {
+    id: row.id,
+    title: row.title,
+    description: row.description,
+    status: row.status as TaskType["status"],
+    priority: row.priority as TaskType["priority"],
+    category: row.category,
+    assignedTo: row.assignedTo,
+    dueAt: row.dueAt,
+    serviceId: row.serviceId,
+    submissionId: row.submissionId,
+    serviceTitle: row.services?.title ?? null,
+    assigneeName: row.users
+      ? [row.users.firstName, row.users.lastName].filter(Boolean).join(" ") ||
+        row.users.email
+      : null,
+    submissionFullName: row.form_submissions?.fullName ?? null,
+    createdAt: row.createdAt,
+    updatedAt: row.updatedAt,
+    completedAt: row.completedAt,
+  };
+}
+
+function mapTaskTodoRow(row: TaskTodoDbRow): TaskTodoType {
+  return {
+    id: row.id,
+    taskId: row.taskId,
+    title: row.title,
+    done: row.done,
+    createdAt: row.createdAt,
+    updatedAt: row.updatedAt,
+  };
+}
+
+export async function getTaskTodos(): Promise<TaskTodoType[]> {
+  const supabase =
+    (await createSupabaseServerClient()) as unknown as SelectOrderClient<TaskTodoDbRow>;
+  const { data, error } = await supabase
+    .from("task_todos")
+    .select("id, taskId, title, done, createdAt, updatedAt")
+    .order("createdAt", { ascending: true });
+
+  if (error) throw new Error(error.message);
+  return (data ?? []).map(mapTaskTodoRow);
+}
+
+export async function getTasks(): Promise<TaskType[]> {
+  const supabase =
+    (await createSupabaseServerClient()) as unknown as TaskQueryClient;
+  const { data, error } = await supabase
+    .from("tasks")
+    .select(
+      "*, services(title), users(firstName, lastName, email), form_submissions(fullName)",
+    )
+    .order("createdAt", { ascending: false });
+
+  if (error) throw new Error(error.message);
+
+  const todosByTask = new Map<string, TaskTodoType[]>();
+  try {
+    const todos = await getTaskTodos();
+    for (const todo of todos) {
+      const list = todosByTask.get(todo.taskId) ?? [];
+      list.push(todo);
+      todosByTask.set(todo.taskId, list);
+    }
+  } catch {
+    // task_todos table not applied yet — tasks still load with empty checklists.
+  }
+
+  return (data ?? []).map((row) => ({
+    ...mapTaskRow(row),
+    todos: todosByTask.get(row.id) ?? [],
+  }));
+}
+
+export async function getAssignableUsers(): Promise<TaskOption[]> {
+  const supabase =
+    (await createSupabaseServerClient()) as unknown as SelectEqOrderClient<AssignableUserDbRow>;
+  const { data, error } = await supabase
+    .from("users")
+    .select("id, firstName, lastName, email")
+    .eq("isActive", true)
+    .order("firstName", { ascending: true });
+
+  if (error) {
+    console.error("Error fetching assignable users:", error);
+    return [];
+  }
+  return (data ?? []).map((user) => ({
+    id: user.id,
+    label:
+      [user.firstName, user.lastName].filter(Boolean).join(" ") ||
+      user.email ||
+      user.id,
+  }));
+}
+
+export async function getSubmissionOptions(): Promise<TaskOption[]> {
+  const supabase =
+    (await createSupabaseServerClient()) as unknown as SelectOrderLimitClient<SubmissionOptionDbRow>;
+  const { data, error } = await supabase
+    .from("form_submissions")
+    .select("id, fullName, email")
+    .order("createdAt", { ascending: false })
+    .limit(100);
+
+  if (error) {
+    console.error("Error fetching submission options:", error);
+    return [];
+  }
+  return (data ?? []).map((submission) => ({
+    id: submission.id,
+    label: submission.fullName || submission.email || submission.id,
+  }));
+}
+````
+
+## File: packages/supabase/src/supabaseType.ts
+````typescript
+export type Json =
+  | string
+  | number
+  | boolean
+  | null
+  | { [key: string]: Json | undefined }
+  | Json[]
+
+export type Database = {
+  // Allows to automatically instantiate createClient with right options
+  // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
+  __InternalSupabase: {
+    PostgrestVersion: "14.5"
+  }
+  graphql_public: {
+    Tables: {
+      [_ in never]: never
+    }
+    Views: {
+      [_ in never]: never
+    }
+    Functions: {
+      graphql: {
+        Args: {
+          extensions?: Json
+          operationName?: string
+          query?: string
+          variables?: Json
+        }
+        Returns: Json
+      }
+    }
+    Enums: {
+      [_ in never]: never
+    }
+    CompositeTypes: {
+      [_ in never]: never
+    }
+  }
+  public: {
+    Tables: {
+      blog_posts: {
+        Row: {
+          authorId: string | null
+          authorName: string | null
+          category: string | null
+          content: string
+          createdAt: string | null
+          excerpt: string | null
+          featured: boolean | null
+          featuredImage: string | null
+          id: string
+          published: boolean | null
+          publishedAt: string | null
+          readTime: string | null
+          seoDescription: string | null
+          seoKeywords: string | null
+          seoTitle: string | null
+          slug: string
+          tags: string | null
+          thumbnail: string | null
+          title: string
+          updatedAt: string | null
+          viewsCount: number | null
+        }
+        Insert: {
+          authorId?: string | null
+          authorName?: string | null
+          category?: string | null
+          content: string
+          createdAt?: string | null
+          excerpt?: string | null
+          featured?: boolean | null
+          featuredImage?: string | null
+          id: string
+          published?: boolean | null
+          publishedAt?: string | null
+          readTime?: string | null
+          seoDescription?: string | null
+          seoKeywords?: string | null
+          seoTitle?: string | null
+          slug: string
+          tags?: string | null
+          thumbnail?: string | null
+          title: string
+          updatedAt?: string | null
+          viewsCount?: number | null
+        }
+        Update: {
+          authorId?: string | null
+          authorName?: string | null
+          category?: string | null
+          content?: string
+          createdAt?: string | null
+          excerpt?: string | null
+          featured?: boolean | null
+          featuredImage?: string | null
+          id?: string
+          published?: boolean | null
+          publishedAt?: string | null
+          readTime?: string | null
+          seoDescription?: string | null
+          seoKeywords?: string | null
+          seoTitle?: string | null
+          slug?: string
+          tags?: string | null
+          thumbnail?: string | null
+          title?: string
+          updatedAt?: string | null
+          viewsCount?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "blog_posts_author_id_fkey"
+            columns: ["authorId"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      contacts: {
+        Row: {
+          email: string
+          id: string
+          message: string | null
+          name: string | null
+          phone: string | null
+          service: string | null
+          submittedAt: string
+        }
+        Insert: {
+          email: string
+          id?: string
+          message?: string | null
+          name?: string | null
+          phone?: string | null
+          service?: string | null
+          submittedAt?: string
+        }
+        Update: {
+          email?: string
+          id?: string
+          message?: string | null
+          name?: string | null
+          phone?: string | null
+          service?: string | null
+          submittedAt?: string
+        }
+        Relationships: []
+      }
+      emailAccounts: {
+        Row: {
+          accountName: string | null
+          apiBaseUrl: string
+          createdAt: string
+          createdBy: string | null
+          displayName: string | null
+          id: string
+          isEnabled: boolean
+          lastSuccessfulSyncAt: string | null
+          lastSyncedAt: string | null
+          mailboxStatus: string | null
+          primaryEmailAddress: string
+          providerData: Json
+          status: string
+          timeZone: string | null
+          updatedAt: string
+          updatedBy: string | null
+          zohoAccountId: string
+          zohoUserId: string | null
+        }
+        Insert: {
+          accountName?: string | null
+          apiBaseUrl?: string
+          createdAt?: string
+          createdBy?: string | null
+          displayName?: string | null
+          id?: string
+          isEnabled?: boolean
+          lastSuccessfulSyncAt?: string | null
+          lastSyncedAt?: string | null
+          mailboxStatus?: string | null
+          primaryEmailAddress: string
+          providerData?: Json
+          status?: string
+          timeZone?: string | null
+          updatedAt?: string
+          updatedBy?: string | null
+          zohoAccountId: string
+          zohoUserId?: string | null
+        }
+        Update: {
+          accountName?: string | null
+          apiBaseUrl?: string
+          createdAt?: string
+          createdBy?: string | null
+          displayName?: string | null
+          id?: string
+          isEnabled?: boolean
+          lastSuccessfulSyncAt?: string | null
+          lastSyncedAt?: string | null
+          mailboxStatus?: string | null
+          primaryEmailAddress?: string
+          providerData?: Json
+          status?: string
+          timeZone?: string | null
+          updatedAt?: string
+          updatedBy?: string | null
+          zohoAccountId?: string
+          zohoUserId?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "emailAccounts_createdBy_fkey"
+            columns: ["createdBy"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "emailAccounts_updatedBy_fkey"
+            columns: ["updatedBy"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      emailAttachments: {
+        Row: {
+          checksumSha256: string | null
+          contentId: string | null
+          createdAt: string
+          disposition: string | null
+          downloadedAt: string | null
+          fileName: string
+          id: string
+          isInline: boolean
+          messageId: string
+          mimeType: string | null
+          providerData: Json
+          sizeInBytes: number
+          storageBucket: string | null
+          storagePath: string | null
+          updatedAt: string
+          zohoAttachmentId: string
+        }
+        Insert: {
+          checksumSha256?: string | null
+          contentId?: string | null
+          createdAt?: string
+          disposition?: string | null
+          downloadedAt?: string | null
+          fileName: string
+          id?: string
+          isInline?: boolean
+          messageId: string
+          mimeType?: string | null
+          providerData?: Json
+          sizeInBytes?: number
+          storageBucket?: string | null
+          storagePath?: string | null
+          updatedAt?: string
+          zohoAttachmentId: string
+        }
+        Update: {
+          checksumSha256?: string | null
+          contentId?: string | null
+          createdAt?: string
+          disposition?: string | null
+          downloadedAt?: string | null
+          fileName?: string
+          id?: string
+          isInline?: boolean
+          messageId?: string
+          mimeType?: string | null
+          providerData?: Json
+          sizeInBytes?: number
+          storageBucket?: string | null
+          storagePath?: string | null
+          updatedAt?: string
+          zohoAttachmentId?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "emailAttachments_messageId_fkey"
+            columns: ["messageId"]
+            isOneToOne: false
+            referencedRelation: "emailMessages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      emailAuditEvents: {
+        Row: {
+          accountId: string
+          action: string
+          actorId: string | null
+          createdAt: string
+          entityId: string | null
+          entityType: string
+          id: string
+          ipAddress: unknown
+          metadata: Json
+          requestId: string | null
+        }
+        Insert: {
+          accountId: string
+          action: string
+          actorId?: string | null
+          createdAt?: string
+          entityId?: string | null
+          entityType: string
+          id?: string
+          ipAddress?: unknown
+          metadata?: Json
+          requestId?: string | null
+        }
+        Update: {
+          accountId?: string
+          action?: string
+          actorId?: string | null
+          createdAt?: string
+          entityId?: string | null
+          entityType?: string
+          id?: string
+          ipAddress?: unknown
+          metadata?: Json
+          requestId?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "emailAuditEvents_accountId_fkey"
+            columns: ["accountId"]
+            isOneToOne: false
+            referencedRelation: "emailAccounts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "emailAuditEvents_actorId_fkey"
+            columns: ["actorId"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      emailDrafts: {
+        Row: {
+          accountId: string
+          askReceipt: boolean
+          bccRecipients: Json
+          ccRecipients: Json
+          createdAt: string
+          createdBy: string | null
+          forwardOfMessageId: string | null
+          fromAddress: string
+          htmlContent: string | null
+          id: string
+          inReplyTo: string | null
+          lastAutosavedAt: string
+          lastError: string | null
+          mailFormat: string
+          providerData: Json
+          referencesHeader: string | null
+          replyToMessageId: string | null
+          scheduledAt: string | null
+          status: string
+          subject: string
+          textContent: string | null
+          toRecipients: Json
+          updatedAt: string
+          zohoMessageId: string | null
+        }
+        Insert: {
+          accountId: string
+          askReceipt?: boolean
+          bccRecipients?: Json
+          ccRecipients?: Json
+          createdAt?: string
+          createdBy?: string | null
+          forwardOfMessageId?: string | null
+          fromAddress: string
+          htmlContent?: string | null
+          id?: string
+          inReplyTo?: string | null
+          lastAutosavedAt?: string
+          lastError?: string | null
+          mailFormat?: string
+          providerData?: Json
+          referencesHeader?: string | null
+          replyToMessageId?: string | null
+          scheduledAt?: string | null
+          status?: string
+          subject?: string
+          textContent?: string | null
+          toRecipients?: Json
+          updatedAt?: string
+          zohoMessageId?: string | null
+        }
+        Update: {
+          accountId?: string
+          askReceipt?: boolean
+          bccRecipients?: Json
+          ccRecipients?: Json
+          createdAt?: string
+          createdBy?: string | null
+          forwardOfMessageId?: string | null
+          fromAddress?: string
+          htmlContent?: string | null
+          id?: string
+          inReplyTo?: string | null
+          lastAutosavedAt?: string
+          lastError?: string | null
+          mailFormat?: string
+          providerData?: Json
+          referencesHeader?: string | null
+          replyToMessageId?: string | null
+          scheduledAt?: string | null
+          status?: string
+          subject?: string
+          textContent?: string | null
+          toRecipients?: Json
+          updatedAt?: string
+          zohoMessageId?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "emailDrafts_accountId_fkey"
+            columns: ["accountId"]
+            isOneToOne: false
+            referencedRelation: "emailAccounts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "emailDrafts_createdBy_fkey"
+            columns: ["createdBy"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "emailDrafts_forwardOfMessageId_fkey"
+            columns: ["forwardOfMessageId"]
+            isOneToOne: false
+            referencedRelation: "emailMessages"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "emailDrafts_replyToMessageId_fkey"
+            columns: ["replyToMessageId"]
+            isOneToOne: false
+            referencedRelation: "emailMessages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      emailFolders: {
+        Row: {
+          accountId: string
+          createdAt: string
+          folderType: string
+          id: string
+          imapAccess: boolean | null
+          isActive: boolean
+          isArchived: boolean
+          lastSyncedAt: string | null
+          messageCount: number
+          name: string
+          path: string
+          previousZohoFolderId: string | null
+          providerData: Json
+          unreadCount: number
+          updatedAt: string
+          zohoFolderId: string
+        }
+        Insert: {
+          accountId: string
+          createdAt?: string
+          folderType: string
+          id?: string
+          imapAccess?: boolean | null
+          isActive?: boolean
+          isArchived?: boolean
+          lastSyncedAt?: string | null
+          messageCount?: number
+          name: string
+          path: string
+          previousZohoFolderId?: string | null
+          providerData?: Json
+          unreadCount?: number
+          updatedAt?: string
+          zohoFolderId: string
+        }
+        Update: {
+          accountId?: string
+          createdAt?: string
+          folderType?: string
+          id?: string
+          imapAccess?: boolean | null
+          isActive?: boolean
+          isArchived?: boolean
+          lastSyncedAt?: string | null
+          messageCount?: number
+          name?: string
+          path?: string
+          previousZohoFolderId?: string | null
+          providerData?: Json
+          unreadCount?: number
+          updatedAt?: string
+          zohoFolderId?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "emailFolders_accountId_fkey"
+            columns: ["accountId"]
+            isOneToOne: false
+            referencedRelation: "emailAccounts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      emailIdentities: {
+        Row: {
+          accountId: string
+          createdAt: string
+          displayName: string | null
+          emailAddress: string
+          id: string
+          isAlias: boolean
+          isConfirmed: boolean
+          isDefault: boolean
+          isEnabled: boolean
+          isPrimary: boolean
+          providerData: Json
+          updatedAt: string
+          zohoSendMailId: string | null
+        }
+        Insert: {
+          accountId: string
+          createdAt?: string
+          displayName?: string | null
+          emailAddress: string
+          id?: string
+          isAlias?: boolean
+          isConfirmed?: boolean
+          isDefault?: boolean
+          isEnabled?: boolean
+          isPrimary?: boolean
+          providerData?: Json
+          updatedAt?: string
+          zohoSendMailId?: string | null
+        }
+        Update: {
+          accountId?: string
+          createdAt?: string
+          displayName?: string | null
+          emailAddress?: string
+          id?: string
+          isAlias?: boolean
+          isConfirmed?: boolean
+          isDefault?: boolean
+          isEnabled?: boolean
+          isPrimary?: boolean
+          providerData?: Json
+          updatedAt?: string
+          zohoSendMailId?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "emailIdentities_accountId_fkey"
+            columns: ["accountId"]
+            isOneToOne: false
+            referencedRelation: "emailAccounts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      emailLabels: {
+        Row: {
+          accountId: string
+          color: string | null
+          createdAt: string
+          displayName: string
+          id: string
+          isActive: boolean
+          providerData: Json
+          sequence: number | null
+          updatedAt: string
+          zohoLabelId: string
+        }
+        Insert: {
+          accountId: string
+          color?: string | null
+          createdAt?: string
+          displayName: string
+          id?: string
+          isActive?: boolean
+          providerData?: Json
+          sequence?: number | null
+          updatedAt?: string
+          zohoLabelId: string
+        }
+        Update: {
+          accountId?: string
+          color?: string | null
+          createdAt?: string
+          displayName?: string
+          id?: string
+          isActive?: boolean
+          providerData?: Json
+          sequence?: number | null
+          updatedAt?: string
+          zohoLabelId?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "emailLabels_accountId_fkey"
+            columns: ["accountId"]
+            isOneToOne: false
+            referencedRelation: "emailAccounts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      emailMessageLabels: {
+        Row: {
+          createdAt: string
+          labelId: string
+          messageId: string
+        }
+        Insert: {
+          createdAt?: string
+          labelId: string
+          messageId: string
+        }
+        Update: {
+          createdAt?: string
+          labelId?: string
+          messageId?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "emailMessageLabels_labelId_fkey"
+            columns: ["labelId"]
+            isOneToOne: false
+            referencedRelation: "emailLabels"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "emailMessageLabels_messageId_fkey"
+            columns: ["messageId"]
+            isOneToOne: false
+            referencedRelation: "emailMessages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      emailMessages: {
+        Row: {
+          accountId: string
+          attachmentCount: number
+          contentSyncedAt: string | null
+          createdAt: string
+          direction: string
+          flagType: string
+          folderId: string | null
+          fromAddress: string | null
+          hasAttachments: boolean
+          hasInlineContent: boolean
+          htmlContent: string | null
+          id: string
+          inReplyTo: string | null
+          internetMessageId: string | null
+          isArchived: boolean
+          isDeleted: boolean
+          isRead: boolean
+          isResponded: boolean
+          isSpam: boolean
+          isTrashed: boolean
+          lastSyncedAt: string | null
+          mailFormat: string | null
+          priority: number | null
+          providerData: Json
+          providerDeletedAt: string | null
+          receivedAt: string | null
+          referencesHeader: string | null
+          replyToAddress: string | null
+          searchVector: unknown
+          senderName: string | null
+          sentAt: string | null
+          sizeInBytes: number | null
+          snippet: string | null
+          subject: string
+          textContent: string | null
+          threadId: string | null
+          updatedAt: string
+          zohoMessageId: string
+        }
+        Insert: {
+          accountId: string
+          attachmentCount?: number
+          contentSyncedAt?: string | null
+          createdAt?: string
+          direction?: string
+          flagType?: string
+          folderId?: string | null
+          fromAddress?: string | null
+          hasAttachments?: boolean
+          hasInlineContent?: boolean
+          htmlContent?: string | null
+          id?: string
+          inReplyTo?: string | null
+          internetMessageId?: string | null
+          isArchived?: boolean
+          isDeleted?: boolean
+          isRead?: boolean
+          isResponded?: boolean
+          isSpam?: boolean
+          isTrashed?: boolean
+          lastSyncedAt?: string | null
+          mailFormat?: string | null
+          priority?: number | null
+          providerData?: Json
+          providerDeletedAt?: string | null
+          receivedAt?: string | null
+          referencesHeader?: string | null
+          replyToAddress?: string | null
+          searchVector?: unknown
+          senderName?: string | null
+          sentAt?: string | null
+          sizeInBytes?: number | null
+          snippet?: string | null
+          subject?: string
+          textContent?: string | null
+          threadId?: string | null
+          updatedAt?: string
+          zohoMessageId: string
+        }
+        Update: {
+          accountId?: string
+          attachmentCount?: number
+          contentSyncedAt?: string | null
+          createdAt?: string
+          direction?: string
+          flagType?: string
+          folderId?: string | null
+          fromAddress?: string | null
+          hasAttachments?: boolean
+          hasInlineContent?: boolean
+          htmlContent?: string | null
+          id?: string
+          inReplyTo?: string | null
+          internetMessageId?: string | null
+          isArchived?: boolean
+          isDeleted?: boolean
+          isRead?: boolean
+          isResponded?: boolean
+          isSpam?: boolean
+          isTrashed?: boolean
+          lastSyncedAt?: string | null
+          mailFormat?: string | null
+          priority?: number | null
+          providerData?: Json
+          providerDeletedAt?: string | null
+          receivedAt?: string | null
+          referencesHeader?: string | null
+          replyToAddress?: string | null
+          searchVector?: unknown
+          senderName?: string | null
+          sentAt?: string | null
+          sizeInBytes?: number | null
+          snippet?: string | null
+          subject?: string
+          textContent?: string | null
+          threadId?: string | null
+          updatedAt?: string
+          zohoMessageId?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "emailMessages_accountId_fkey"
+            columns: ["accountId"]
+            isOneToOne: false
+            referencedRelation: "emailAccounts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "emailMessages_folderId_fkey"
+            columns: ["folderId"]
+            isOneToOne: false
+            referencedRelation: "emailFolders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "emailMessages_threadId_fkey"
+            columns: ["threadId"]
+            isOneToOne: false
+            referencedRelation: "emailThreads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      emailOperations: {
+        Row: {
+          accountId: string
+          actorId: string | null
+          attempts: number
+          completedAt: string | null
+          createdAt: string
+          id: string
+          idempotencyKey: string
+          lastError: string | null
+          lockedAt: string | null
+          lockedBy: string | null
+          maxAttempts: number
+          operationType: string
+          payload: Json
+          scheduledAt: string
+          startedAt: string | null
+          status: string
+          targetType: string | null
+          targetZohoId: string | null
+          updatedAt: string
+          zohoResponse: Json
+        }
+        Insert: {
+          accountId: string
+          actorId?: string | null
+          attempts?: number
+          completedAt?: string | null
+          createdAt?: string
+          id?: string
+          idempotencyKey?: string
+          lastError?: string | null
+          lockedAt?: string | null
+          lockedBy?: string | null
+          maxAttempts?: number
+          operationType: string
+          payload?: Json
+          scheduledAt?: string
+          startedAt?: string | null
+          status?: string
+          targetType?: string | null
+          targetZohoId?: string | null
+          updatedAt?: string
+          zohoResponse?: Json
+        }
+        Update: {
+          accountId?: string
+          actorId?: string | null
+          attempts?: number
+          completedAt?: string | null
+          createdAt?: string
+          id?: string
+          idempotencyKey?: string
+          lastError?: string | null
+          lockedAt?: string | null
+          lockedBy?: string | null
+          maxAttempts?: number
+          operationType?: string
+          payload?: Json
+          scheduledAt?: string
+          startedAt?: string | null
+          status?: string
+          targetType?: string | null
+          targetZohoId?: string | null
+          updatedAt?: string
+          zohoResponse?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "emailOperations_accountId_fkey"
+            columns: ["accountId"]
+            isOneToOne: false
+            referencedRelation: "emailAccounts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "emailOperations_actorId_fkey"
+            columns: ["actorId"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      emailRecipients: {
+        Row: {
+          createdAt: string
+          displayName: string | null
+          emailAddress: string
+          id: string
+          messageId: string
+          recipientType: string
+          sortOrder: number
+        }
+        Insert: {
+          createdAt?: string
+          displayName?: string | null
+          emailAddress: string
+          id?: string
+          messageId: string
+          recipientType: string
+          sortOrder?: number
+        }
+        Update: {
+          createdAt?: string
+          displayName?: string | null
+          emailAddress?: string
+          id?: string
+          messageId?: string
+          recipientType?: string
+          sortOrder?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "emailRecipients_messageId_fkey"
+            columns: ["messageId"]
+            isOneToOne: false
+            referencedRelation: "emailMessages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      emailSyncRuns: {
+        Row: {
+          accountId: string
+          createdAt: string
+          createdCount: number
+          deletedCount: number
+          errorCount: number
+          errorDetails: Json
+          errorMessage: string | null
+          fetchedCount: number
+          finishedAt: string | null
+          id: string
+          metadata: Json
+          startedAt: string
+          status: string
+          syncStateId: string | null
+          syncType: string
+          updatedCount: number
+        }
+        Insert: {
+          accountId: string
+          createdAt?: string
+          createdCount?: number
+          deletedCount?: number
+          errorCount?: number
+          errorDetails?: Json
+          errorMessage?: string | null
+          fetchedCount?: number
+          finishedAt?: string | null
+          id?: string
+          metadata?: Json
+          startedAt?: string
+          status?: string
+          syncStateId?: string | null
+          syncType: string
+          updatedCount?: number
+        }
+        Update: {
+          accountId?: string
+          createdAt?: string
+          createdCount?: number
+          deletedCount?: number
+          errorCount?: number
+          errorDetails?: Json
+          errorMessage?: string | null
+          fetchedCount?: number
+          finishedAt?: string | null
+          id?: string
+          metadata?: Json
+          startedAt?: string
+          status?: string
+          syncStateId?: string | null
+          syncType?: string
+          updatedCount?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "emailSyncRuns_accountId_fkey"
+            columns: ["accountId"]
+            isOneToOne: false
+            referencedRelation: "emailAccounts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "emailSyncRuns_syncStateId_fkey"
+            columns: ["syncStateId"]
+            isOneToOne: false
+            referencedRelation: "emailSyncStates"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      emailSyncStates: {
+        Row: {
+          accountId: string
+          checkpoint: Json
+          createdAt: string
+          folderId: string | null
+          id: string
+          lastAttemptAt: string | null
+          lastError: string | null
+          lastReceivedAt: string | null
+          lastSuccessAt: string | null
+          lockedAt: string | null
+          lockedBy: string | null
+          nextStart: number
+          nextSyncAt: string | null
+          pageSize: number
+          resourceType: string
+          scopeKey: string
+          status: string
+          updatedAt: string
+        }
+        Insert: {
+          accountId: string
+          checkpoint?: Json
+          createdAt?: string
+          folderId?: string | null
+          id?: string
+          lastAttemptAt?: string | null
+          lastError?: string | null
+          lastReceivedAt?: string | null
+          lastSuccessAt?: string | null
+          lockedAt?: string | null
+          lockedBy?: string | null
+          nextStart?: number
+          nextSyncAt?: string | null
+          pageSize?: number
+          resourceType: string
+          scopeKey: string
+          status?: string
+          updatedAt?: string
+        }
+        Update: {
+          accountId?: string
+          checkpoint?: Json
+          createdAt?: string
+          folderId?: string | null
+          id?: string
+          lastAttemptAt?: string | null
+          lastError?: string | null
+          lastReceivedAt?: string | null
+          lastSuccessAt?: string | null
+          lockedAt?: string | null
+          lockedBy?: string | null
+          nextStart?: number
+          nextSyncAt?: string | null
+          pageSize?: number
+          resourceType?: string
+          scopeKey?: string
+          status?: string
+          updatedAt?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "emailSyncStates_accountId_fkey"
+            columns: ["accountId"]
+            isOneToOne: false
+            referencedRelation: "emailAccounts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "emailSyncStates_folderId_fkey"
+            columns: ["folderId"]
+            isOneToOne: false
+            referencedRelation: "emailFolders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      emailThreads: {
+        Row: {
+          accountId: string
+          createdAt: string
+          firstMessageAt: string | null
+          hasAttachments: boolean
+          id: string
+          lastMessageAt: string | null
+          lastSyncedAt: string | null
+          messageCount: number
+          participants: Json
+          providerData: Json
+          snippet: string | null
+          subject: string
+          unreadCount: number
+          updatedAt: string
+          zohoThreadId: string
+        }
+        Insert: {
+          accountId: string
+          createdAt?: string
+          firstMessageAt?: string | null
+          hasAttachments?: boolean
+          id?: string
+          lastMessageAt?: string | null
+          lastSyncedAt?: string | null
+          messageCount?: number
+          participants?: Json
+          providerData?: Json
+          snippet?: string | null
+          subject?: string
+          unreadCount?: number
+          updatedAt?: string
+          zohoThreadId: string
+        }
+        Update: {
+          accountId?: string
+          createdAt?: string
+          firstMessageAt?: string | null
+          hasAttachments?: boolean
+          id?: string
+          lastMessageAt?: string | null
+          lastSyncedAt?: string | null
+          messageCount?: number
+          participants?: Json
+          providerData?: Json
+          snippet?: string | null
+          subject?: string
+          unreadCount?: number
+          updatedAt?: string
+          zohoThreadId?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "emailThreads_accountId_fkey"
+            columns: ["accountId"]
+            isOneToOne: false
+            referencedRelation: "emailAccounts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      form_submissions: {
+        Row: {
+          assignedTo: string | null
+          company: string | null
+          completedAt: string | null
+          createdAt: string | null
+          details: Json | null
+          email: string
+          formType: string
+          fullName: string
+          id: string
+          industry: string | null
+          internalNotes: string | null
+          phone: string | null
+          serviceId: string | null
+          serviceName: string | null
+          status: string
+          updatedAt: string | null
+        }
+        Insert: {
+          assignedTo?: string | null
+          company?: string | null
+          completedAt?: string | null
+          createdAt?: string | null
+          details?: Json | null
+          email: string
+          formType: string
+          fullName: string
+          id?: string
+          industry?: string | null
+          internalNotes?: string | null
+          phone?: string | null
+          serviceId?: string | null
+          serviceName?: string | null
+          status?: string
+          updatedAt?: string | null
+        }
+        Update: {
+          assignedTo?: string | null
+          company?: string | null
+          completedAt?: string | null
+          createdAt?: string | null
+          details?: Json | null
+          email?: string
+          formType?: string
+          fullName?: string
+          id?: string
+          industry?: string | null
+          internalNotes?: string | null
+          phone?: string | null
+          serviceId?: string | null
+          serviceName?: string | null
+          status?: string
+          updatedAt?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "form_submissions_assigned_to_fkey"
+            columns: ["assignedTo"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      services: {
+        Row: {
+          category: string | null
+          content: string | null
+          createdAt: string | null
+          description: string | null
+          featured: boolean | null
+          features: string[] | null
+          href: string
+          icon: string | null
+          id: string
+          image: string | null
+          includes: string[] | null
+          orderIndex: number | null
+          pricing: number | null
+          pricingPlans: Json | null
+          processingTime: string | null
+          processSteps: Json | null
+          published: boolean | null
+          requirements: string[] | null
+          seoDescription: string | null
+          seoKeywords: string | null
+          seoTitle: string | null
+          shortDescription: string | null
+          slug: string
+          successStory: Json | null
+          thumbnail: string | null
+          title: string
+          updatedAt: string | null
+        }
+        Insert: {
+          category?: string | null
+          content?: string | null
+          createdAt?: string | null
+          description?: string | null
+          featured?: boolean | null
+          features?: string[] | null
+          href: string
+          icon?: string | null
+          id?: string
+          image?: string | null
+          includes?: string[] | null
+          orderIndex?: number | null
+          pricing?: number | null
+          pricingPlans?: Json | null
+          processingTime?: string | null
+          processSteps?: Json | null
+          published?: boolean | null
+          requirements?: string[] | null
+          seoDescription?: string | null
+          seoKeywords?: string | null
+          seoTitle?: string | null
+          shortDescription?: string | null
+          slug: string
+          successStory?: Json | null
+          thumbnail?: string | null
+          title: string
+          updatedAt?: string | null
+        }
+        Update: {
+          category?: string | null
+          content?: string | null
+          createdAt?: string | null
+          description?: string | null
+          featured?: boolean | null
+          features?: string[] | null
+          href?: string
+          icon?: string | null
+          id?: string
+          image?: string | null
+          includes?: string[] | null
+          orderIndex?: number | null
+          pricing?: number | null
+          pricingPlans?: Json | null
+          processingTime?: string | null
+          processSteps?: Json | null
+          published?: boolean | null
+          requirements?: string[] | null
+          seoDescription?: string | null
+          seoKeywords?: string | null
+          seoTitle?: string | null
+          shortDescription?: string | null
+          slug?: string
+          successStory?: Json | null
+          thumbnail?: string | null
+          title?: string
+          updatedAt?: string | null
+        }
+        Relationships: []
+      }
+      task_todos: {
+        Row: {
+          createdAt: string
+          done: boolean
+          id: string
+          taskId: string
+          title: string
+          updatedAt: string
+        }
+        Insert: {
+          createdAt?: string
+          done?: boolean
+          id?: string
+          taskId: string
+          title: string
+          updatedAt?: string
+        }
+        Update: {
+          createdAt?: string
+          done?: boolean
+          id?: string
+          taskId?: string
+          title?: string
+          updatedAt?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "task_todos_taskId_fkey"
+            columns: ["taskId"]
+            isOneToOne: false
+            referencedRelation: "tasks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tasks: {
+        Row: {
+          assignedTo: string | null
+          category: string | null
+          completedAt: string | null
+          createdAt: string
+          description: string | null
+          dueAt: string | null
+          id: string
+          priority: string
+          serviceId: string | null
+          status: string
+          submissionId: string | null
+          title: string
+          updatedAt: string
+        }
+        Insert: {
+          assignedTo?: string | null
+          category?: string | null
+          completedAt?: string | null
+          createdAt?: string
+          description?: string | null
+          dueAt?: string | null
+          id?: string
+          priority?: string
+          serviceId?: string | null
+          status?: string
+          submissionId?: string | null
+          title: string
+          updatedAt?: string
+        }
+        Update: {
+          assignedTo?: string | null
+          category?: string | null
+          completedAt?: string | null
+          createdAt?: string
+          description?: string | null
+          dueAt?: string | null
+          id?: string
+          priority?: string
+          serviceId?: string | null
+          status?: string
+          submissionId?: string | null
+          title?: string
+          updatedAt?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tasks_assignedTo_fkey"
+            columns: ["assignedTo"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tasks_serviceId_fkey"
+            columns: ["serviceId"]
+            isOneToOne: false
+            referencedRelation: "services"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tasks_submissionId_fkey"
+            columns: ["submissionId"]
+            isOneToOne: false
+            referencedRelation: "form_submissions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      testimonials: {
+        Row: {
+          createdAt: string | null
+          id: string
+          postUrl: string
+        }
+        Insert: {
+          createdAt?: string | null
+          id?: string
+          postUrl: string
+        }
+        Update: {
+          createdAt?: string | null
+          id?: string
+          postUrl?: string
+        }
+        Relationships: []
+      }
+      users: {
+        Row: {
+          bio: string | null
+          company: string | null
+          createdAt: string | null
+          createdBy: string | null
+          email: string
+          firstName: string | null
+          id: string
+          isActive: boolean | null
+          lastName: string | null
+          phone: string | null
+          profileImage: string | null
+          role: string
+          updatedAt: string | null
+          updatedBy: string | null
+        }
+        Insert: {
+          bio?: string | null
+          company?: string | null
+          createdAt?: string | null
+          createdBy?: string | null
+          email: string
+          firstName?: string | null
+          id: string
+          isActive?: boolean | null
+          lastName?: string | null
+          phone?: string | null
+          profileImage?: string | null
+          role?: string
+          updatedAt?: string | null
+          updatedBy?: string | null
+        }
+        Update: {
+          bio?: string | null
+          company?: string | null
+          createdAt?: string | null
+          createdBy?: string | null
+          email?: string
+          firstName?: string | null
+          id?: string
+          isActive?: boolean | null
+          lastName?: string | null
+          phone?: string | null
+          profileImage?: string | null
+          role?: string
+          updatedAt?: string | null
+          updatedBy?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "users_created_by_fkey"
+            columns: ["createdBy"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "users_updated_by_fkey"
+            columns: ["updatedBy"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+    }
+    Views: {
+      [_ in never]: never
+    }
+    Functions: {
+      increment_views: { Args: { post_slug: string }; Returns: undefined }
+    }
+    Enums: {
+      [_ in never]: never
+    }
+    CompositeTypes: {
+      [_ in never]: never
+    }
+  }
+}
+
+type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">
+
+type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, "public">]
+
+export type Tables<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+        DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
+    : never) = never,
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+      DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
+      Row: infer R
+    }
+    ? R
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema["Tables"] &
+        DefaultSchema["Views"])
+    ? (DefaultSchema["Tables"] &
+        DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends {
+        Row: infer R
+      }
+      ? R
+      : never
+    : never
+
+export type TablesInsert<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof DefaultSchema["Tables"]
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    : never) = never,
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+      Insert: infer I
+    }
+    ? I
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
+    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+        Insert: infer I
+      }
+      ? I
+      : never
+    : never
+
+export type TablesUpdate<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof DefaultSchema["Tables"]
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    : never) = never,
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+      Update: infer U
+    }
+    ? U
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
+    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+        Update: infer U
+      }
+      ? U
+      : never
+    : never
+
+export type Enums<
+  DefaultSchemaEnumNameOrOptions extends
+    | keyof DefaultSchema["Enums"]
+    | { schema: keyof DatabaseWithoutInternals },
+  EnumName extends (DefaultSchemaEnumNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
+    : never) = never,
+> = DefaultSchemaEnumNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
+  : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
+    ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
+    : never
+
+export type CompositeTypes<
+  PublicCompositeTypeNameOrOptions extends
+    | keyof DefaultSchema["CompositeTypes"]
+    | { schema: keyof DatabaseWithoutInternals },
+  CompositeTypeName extends (PublicCompositeTypeNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
+    : never) = never,
+> = PublicCompositeTypeNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
+  : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
+    ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
+    : never
+
+export const Constants = {
+  graphql_public: {
+    Enums: {},
+  },
+  public: {
+    Enums: {},
+  },
+} as const
 ````
 
 ## File: turbo.json
@@ -23931,441 +26937,89 @@ export function getEnv(): Env {
 }
 ````
 
-## File: apps/admin/app/admin/analysis/charts.tsx
+## File: apps/admin/app/admin/blogs/actions.ts
 ````typescript
-"use client";
+"use server";
 
+import type { ActionResult } from "@bilacert/contracts/actionResult";
+import { blogSchema } from "@bilacert/contracts/blog";
 import {
-  Bar,
-  BarChart,
-  CartesianGrid,
-  Cell,
-  Legend,
-  Line,
-  LineChart,
-  Pie,
-  PieChart,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from "recharts";
+  createBlog as createBlogMutation,
+  deleteBlog as deleteBlogMutation,
+  updateBlog as updateBlogMutation,
+} from "@bilacert/supabase/Mutations/blogs";
+import { getBlogSlugById } from "@bilacert/supabase/Queries/blogs";
+import { revalidatePath } from "next/cache";
+import { v4 as uuidv4 } from "uuid";
+import { triggerRevalidation } from "@/lib/revalidation";
 
-const COLORS = [
-  "#1f77b4",
-  "#ff7f0e",
-  "#2ca02c",
-  "#d62728",
-  "#9467bd",
-  "#8c564b",
-  "#e377c2",
-  "#7f7f7f",
-  "#bcbd22",
-  "#17becf",
-];
+export async function upsertBlog(
+  values: unknown,
+): Promise<ActionResult<{ id: string }>> {
+  const parsedValues = blogSchema.safeParse(values);
 
-const truncateLabel = (value: string, maxLength = 24) => {
-  if (!value) return "";
-  return value.length > maxLength ? `${value.slice(0, maxLength)}...` : value;
-};
-
-const formatSeriesName = (key: string) =>
-  key
-    .replace(/-/g, "_")
-    .split("_")
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(" ");
-
-const CustomTooltip = ({ active, payload, label }: any) => {
-  if (active && payload && payload.length) {
-    const data = payload[0].payload;
-    return (
-      <div className="rounded-lg border border-slate-200 bg-white/80 p-3 text-slate-700 shadow-lg backdrop-blur-sm">
-        <p className="font-bold">{label || data.name || data.author}</p>
-        {payload.map((p: any, i: number) => (
-          <p
-            key={`${p.name}-${i}`}
-            style={{ color: p.color }}
-          >{`${p.name}: ${p.value}`}</p>
-        ))}
-      </div>
-    );
-  }
-  return null;
-};
-
-export const DetailedSubmissionsChart = ({
-  data = [],
-  serviceKeys = [],
-  statusKeys = [],
-}: {
-  data?: any[];
-  serviceKeys?: string[];
-  statusKeys?: string[];
-}) => {
-  const allKeys = ["total", ...serviceKeys, ...statusKeys];
-  return (
-    <ResponsiveContainer width="100%" height={400}>
-      <LineChart data={data}>
-        <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
-        <XAxis dataKey="date" stroke="#888" fontSize={12} />
-        <YAxis stroke="#888" fontSize={12} />
-        <Tooltip content={<CustomTooltip />} />
-        <Legend />
-        {allKeys.map((key, index) => (
-          <Line
-            key={key}
-            type="monotone"
-            dataKey={key}
-            name={formatSeriesName(key)}
-            stroke={COLORS[index % COLORS.length]}
-            strokeWidth={2}
-            dot={false}
-          />
-        ))}
-      </LineChart>
-    </ResponsiveContainer>
-  );
-};
-
-export const FilteredLineChart = ({
-  data = [],
-  keys = [],
-  height = 400,
-  showLegend = true,
-  seriesNameFormatter = formatSeriesName,
-}: {
-  data?: { date: string; [key: string]: number | string }[];
-  keys?: string[];
-  height?: number;
-  showLegend?: boolean;
-  seriesNameFormatter?: (key: string) => string;
-}) => (
-  <ResponsiveContainer width="100%" height={height}>
-    <LineChart data={data}>
-      <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
-      <XAxis dataKey="date" stroke="#888" fontSize={12} />
-      <YAxis stroke="#888" fontSize={12} />
-      <Tooltip content={<CustomTooltip />} />
-      {showLegend && <Legend />}
-      {keys.map((key, index) => (
-        <Line
-          key={key}
-          type="monotone"
-          dataKey={key}
-          name={seriesNameFormatter(key)}
-          stroke={COLORS[index % COLORS.length]}
-          strokeWidth={2}
-          dot={false}
-        />
-      ))}
-    </LineChart>
-  </ResponsiveContainer>
-);
-
-export const SubmissionsLineChart = ({
-  data = [],
-}: {
-  data?: { date: string; count: number }[];
-}) => (
-  <ResponsiveContainer width="100%" height={300}>
-    <LineChart data={data}>
-      <defs>
-        <linearGradient id="colorSubmissions" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="5%" stopColor="#8884d8" stopOpacity={0.8} />
-          <stop offset="95%" stopColor="#8884d8" stopOpacity={0} />
-        </linearGradient>
-      </defs>
-      <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
-      <XAxis dataKey="date" stroke="#888" fontSize={12} />
-      <YAxis stroke="#888" fontSize={12} />
-      <Tooltip content={<CustomTooltip />} />
-      <Line
-        type="monotone"
-        dataKey="count"
-        name="Submissions"
-        stroke="#8884d8"
-        strokeWidth={2}
-        fillOpacity={1}
-        fill="url(#colorSubmissions)"
-        dot={{ r: 4, fill: "#8884d8" }}
-      />
-    </LineChart>
-  </ResponsiveContainer>
-);
-
-export const SubmissionsBarChart = ({
-  data = [],
-}: {
-  data?: { serviceName: string; count: number }[];
-}) => (
-  <ResponsiveContainer width="100%" height={300}>
-    <BarChart data={data}>
-      <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
-      <XAxis dataKey="serviceName" stroke="#888" fontSize={12} />
-      <YAxis stroke="#888" fontSize={12} />
-      <Tooltip content={<CustomTooltip />} />
-      <Bar
-        dataKey="count"
-        name="Submissions"
-        fill="#82ca9d"
-        radius={[4, 4, 0, 0]}
-      >
-        {data.map((_entry, index) => (
-          <Cell
-            key={`cell-${_entry.serviceName}`}
-            fill={COLORS[index % COLORS.length]}
-          />
-        ))}
-      </Bar>
-    </BarChart>
-  </ResponsiveContainer>
-);
-
-export const ContentBarChart = ({
-  data = [],
-}: {
-  data?: { contentType: string; count: number }[];
-}) => (
-  <ResponsiveContainer width="100%" height={300}>
-    <BarChart data={data} layout="vertical">
-      <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
-      <XAxis type="number" stroke="#888" fontSize={12} />
-      <YAxis
-        dataKey="contentType"
-        type="category"
-        width={120}
-        stroke="#888"
-        fontSize={12}
-      />
-      <Tooltip content={<CustomTooltip />} />
-      <Bar dataKey="count" name="Count" fill="#ffc658" radius={[0, 4, 4, 0]}>
-        {data.map((_entry, index) => (
-          <Cell
-            key={`cell-${_entry.contentType}`}
-            fill={COLORS[index % COLORS.length]}
-          />
-        ))}
-      </Bar>
-    </BarChart>
-  </ResponsiveContainer>
-);
-
-export const BlogViewsChart = ({
-  data = [],
-}: {
-  data?: { title: string; views: number }[];
-}) => (
-  <ResponsiveContainer width="100%" height={400}>
-    <BarChart data={data} layout="vertical">
-      <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
-      <XAxis type="number" stroke="#888" fontSize={12} />
-      <YAxis
-        dataKey="title"
-        type="category"
-        width={110}
-        stroke="#888"
-        fontSize={10}
-        interval={0}
-        tickFormatter={(value) => truncateLabel(String(value), 18)}
-      />
-      <Tooltip content={<CustomTooltip />} />
-      <Bar dataKey="views" name="Views" fill="#ff8042" radius={[0, 4, 4, 0]}>
-        {data.map((_entry, index) => (
-          <Cell
-            key={`cell-${_entry.title}`}
-            fill={COLORS[index % COLORS.length]}
-          />
-        ))}
-      </Bar>
-    </BarChart>
-  </ResponsiveContainer>
-);
-
-export const TurnaroundTimeChart = ({
-  data = [],
-}: {
-  data?: { serviceName: string; averageDays: number }[];
-}) => (
-  <ResponsiveContainer width="100%" height={300}>
-    <BarChart data={data} layout="vertical">
-      <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
-      <XAxis type="number" stroke="#888" fontSize={12} />
-      <YAxis
-        dataKey="serviceName"
-        type="category"
-        width={150}
-        stroke="#888"
-        fontSize={12}
-      />
-      <Tooltip content={<CustomTooltip />} />
-      <Bar
-        dataKey="averageDays"
-        name="Avg. Days"
-        fill="#a234b6"
-        radius={[0, 4, 4, 0]}
-      >
-        {data.map((_entry, index) => (
-          <Cell
-            key={`cell-${_entry.serviceName}`}
-            fill={COLORS[index % COLORS.length]}
-          />
-        ))}
-      </Bar>
-    </BarChart>
-  </ResponsiveContainer>
-);
-
-export const SubmissionStatusPieChart = ({
-  data = [],
-}: {
-  data?: { status: string; count: number }[];
-}) => (
-  <ResponsiveContainer width="100%" height={300}>
-    <PieChart>
-      <Pie
-        data={data}
-        dataKey="count"
-        nameKey="status"
-        cx="50%"
-        cy="50%"
-        outerRadius={100}
-        label
-      >
-        {data.map((_entry, index) => (
-          <Cell
-            key={`cell-${_entry.status}`}
-            fill={COLORS[index % COLORS.length]}
-          />
-        ))}
-      </Pie>
-      <Tooltip content={<CustomTooltip />} />
-      <Legend />
-    </PieChart>
-  </ResponsiveContainer>
-);
-
-export const SubmissionsByServicePieChart = ({
-  data = [],
-}: {
-  data?: { serviceName: string; count: number }[];
-}) => (
-  <ResponsiveContainer width="100%" height={300}>
-    <PieChart>
-      <Pie
-        data={data}
-        dataKey="count"
-        nameKey="serviceName"
-        cx="50%"
-        cy="50%"
-        outerRadius={100}
-        label
-      >
-        {data.map((_entry, index) => (
-          <Cell
-            key={`cell-${_entry.serviceName}`}
-            fill={COLORS[index % COLORS.length]}
-          />
-        ))}
-      </Pie>
-      <Tooltip content={<CustomTooltip />} />
-      <Legend />
-    </PieChart>
-  </ResponsiveContainer>
-);
-
-export const BlogViewsLineChart = ({
-  data = [],
-  keys = ["views"],
-}: {
-  data?: { date: string; [key: string]: number | string }[];
-  keys?: string[];
-}) => <FilteredLineChart data={data} keys={keys} height={300} />;
-
-export const CombinedActivityChart = ({
-  data = [],
-  keys = [],
-}: {
-  data?: { date: string; [key: string]: number | string }[];
-  keys?: string[];
-}) => <FilteredLineChart data={data} keys={keys} height={400} />;
-````
-
-## File: apps/admin/app/admin/blogs/[id]/page.tsx
-````typescript
-import type { BlogRowType as BlogType } from "@bilacert/contracts/blog";
-import { createSupabaseServerClient } from "@bilacert/supabase/server";
-import type { Metadata } from "next";
-import { notFound } from "next/navigation";
-import BlogDetails from "../BlogDetails";
-
-async function getBlog(identifier: string): Promise<BlogType | null> {
-  const supabase = await createSupabaseServerClient();
-  const { data, error } = await supabase
-    .from("blog_posts")
-    .select("*")
-    .or(`id.eq.${identifier},slug.eq.${identifier}`)
-    .limit(1)
-    .maybeSingle();
-
-  if (error || !data) {
-    return null;
+  if (!parsedValues.success) {
+    return { ok: false, error: parsedValues.error.message };
   }
 
-  return {
-    id: data.id,
-    title: data.title,
-    slug: data.slug,
-    excerpt: data.excerpt,
-    content: data.content,
-    category: data.category,
-    tags: data.tags,
-    readTime: data.readTime,
-    seoTitle: data.seoTitle,
-    seoDescription: data.seoDescription,
-    seoKeywords: data.seoKeywords,
-    featuredImage: data.featuredImage,
-    thumbnail: data.thumbnail,
-    published: data.published,
-    publishedAt: data.publishedAt,
-    featured: data.featured,
-    authorId: data.authorId,
-    authorName: data.authorName,
-    viewsCount: data.viewsCount,
-    createdAt: data.createdAt,
-    updatedAt: data.updatedAt,
-  } as BlogType;
-}
+  const { id, ...rest } = parsedValues.data;
+  const isUpdate = Boolean(id);
+  const now = new Date().toISOString();
 
-export async function generateMetadata({
-  params,
-}: {
-  params: { id: string };
-}): Promise<Metadata> {
-  const blog = await getBlog(params.id);
-  if (!blog) {
-    return {
-      title: "Blog Post Not Found",
-    };
-  }
-  return {
-    title: `${blog.title} | Bilacert Admin Pro`,
+  const blogData = {
+    id: id || uuidv4(),
+    title: rest.title,
+    slug: rest.slug,
+    authorName: rest.authorName,
+    readTime: rest.readTime,
+    category: rest.category,
+    tags: rest.tags,
+    excerpt: rest.excerpt,
+    content: rest.content,
+    published: rest.published,
+    publishedAt: rest.published ? now : null,
+    featuredImage: rest.featuredImage,
+    thumbnail: rest.thumbnail,
+    featured: rest.featured,
+    seoTitle: rest.seoTitle,
+    seoDescription: rest.seoDescription,
+    seoKeywords: rest.seoKeywords,
+    updatedAt: now,
   };
+
+  try {
+    const result = isUpdate
+      ? await updateBlogMutation(blogData.id, blogData)
+      : await createBlogMutation(blogData);
+
+    await triggerRevalidation(result.revalidate);
+
+    revalidatePath("/admin/blogs");
+    revalidatePath(`/admin/blogs/${result.data.id}`);
+    revalidatePath(`/admin/blogs/${result.data.slug}`);
+    revalidatePath(`/admin/blogs/${result.data.id}/edit`);
+    revalidatePath(`/admin/blogs/${result.data.slug}/edit`);
+
+    return { ok: true, data: { id: result.data.id } };
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Unknown error";
+    return { ok: false, error: `Database error: ${message}` };
+  }
 }
 
-export default async function BlogDetailsPage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
-  const { id } = await params;
-  const blog = await getBlog(id);
-
-  if (!blog) {
-    notFound();
+export async function deleteBlog(blogId: string): Promise<ActionResult> {
+  try {
+    const existingSlug = await getBlogSlugById(blogId);
+    const result = await deleteBlogMutation(blogId, existingSlug);
+    await triggerRevalidation(result.revalidate);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Unknown error";
+    return { ok: false, error: `Database error: ${message}` };
   }
 
-  return <BlogDetails blog={blog} />;
+  revalidatePath("/admin/blogs");
+
+  return { ok: true };
 }
 ````
 
@@ -24857,13 +27511,29 @@ export default function BlogDetails({ blog }: BlogDetailsProps) {
 }
 ````
 
-## File: apps/admin/app/admin/contacts/[id]/edit/page.tsx
+## File: apps/admin/app/admin/blogs/BlogsClient.tsx
 ````typescript
-import type { ContactType } from "@bilacert/contracts/contact";
-import { createSupabaseServerClient } from "@bilacert/supabase/server";
-import { ArrowLeft } from "lucide-react";
+"use client";
+
+import type { BlogRowType as BlogType } from "@bilacert/contracts/blog";
+import { format, isValid, parseISO } from "date-fns";
+import {
+  Calendar,
+  Eye,
+  FileText,
+  Filter,
+  MoreHorizontal,
+  Newspaper,
+  PlusCircle,
+  Search,
+  Sparkles,
+} from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { useRouter } from "next/navigation";
+import { useMemo, useState } from "react";
+import AnalysesHeader from "@/components/admin/AnalysesHeader";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -24872,161 +27542,447 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import ContactForm from "../../ContactForm";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useBlogs } from "@/lib/hooks/useBlogs";
+import DeleteBlogDialog from "./DeleteBlogDialog";
 
-export const metadata = {
-  title: "Edit Contact | Bilacert Admin Pro",
-  description: "Edit an existing contact.",
+const safeFormatDate = (
+  date: string | Date | undefined,
+  dateFormat = "PP",
+  fallback = "Invalid date",
+) => {
+  if (!date) return fallback;
+  const d = typeof date === "string" ? parseISO(date) : date;
+  return isValid(d) ? format(d, dateFormat) : fallback;
 };
 
-async function getContact(id: string): Promise<ContactType | null> {
-  const supabase = await createSupabaseServerClient();
-  const { data, error } = await supabase
-    .from("contacts")
-    .select("*")
-    .eq("id", id)
-    .single();
-
-  if (error || !data) {
-    return null;
-  }
-
-  return {
-    id: data.id,
-    name: data.name,
-    email: data.email,
-    phone: data.phone,
-    service: data.service,
-    message: data.message,
-    submittedAt: data.submittedAt,
-  } as ContactType;
-}
-
-export default async function EditContactPage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
-  const { id } = await params;
-  const contact = await getContact(id);
-
-  if (!contact) {
-    notFound();
-  }
+function BlogsAnalysis({ blogs }: { blogs: BlogType[] }) {
+  const publishedBlogs = blogs.filter((blog) => blog.published);
+  const featuredBlogs = blogs.filter((blog) => blog.featured);
+  const totalViews = blogs.reduce(
+    (sum, blog) => sum + (blog.viewsCount ?? 0),
+    0,
+  );
+  const topBlogs = [...blogs]
+    .sort((a, b) => (b.viewsCount ?? 0) - (a.viewsCount ?? 0))
+    .slice(0, 5);
+  const categoryCounts = blogs.reduce<Map<string, number>>((counts, blog) => {
+    const category = blog.category || "Uncategorized";
+    counts.set(category, (counts.get(category) ?? 0) + 1);
+    return counts;
+  }, new Map());
+  const topCategories = [...categoryCounts.entries()]
+    .sort(([, a], [, b]) => b - a)
+    .slice(0, 5);
 
   return (
-    <div className="space-y-6">
-      <Button variant="outline" asChild>
-        <Link href="/admin/contacts">
-          <ArrowLeft className="mr-2 h-4 w-4" />
-          Back to Contacts
-        </Link>
-      </Button>
-      <Card>
-        <CardHeader>
-          <CardTitle>Edit Contact</CardTitle>
-          <CardDescription>
-            Update the details for "{contact.name}".
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <ContactForm contact={contact} />
-        </CardContent>
-      </Card>
+    <div className="space-y-4">
+      <AnalysesHeader
+        items={[
+          {
+            title: "Total Blogs",
+            value: blogs.length,
+            description: `${publishedBlogs.length.toLocaleString()} published`,
+            icon: <Newspaper className="h-4 w-4 text-muted-foreground" />,
+          },
+          {
+            title: "Published Blogs",
+            value: publishedBlogs.length,
+            description: "Visible publicly",
+            icon: <FileText className="h-4 w-4 text-muted-foreground" />,
+          },
+          {
+            title: "Blog Views",
+            value: totalViews,
+            description: "Across all posts",
+            icon: <Eye className="h-4 w-4 text-muted-foreground" />,
+          },
+          {
+            title: "Featured Blogs",
+            value: featuredBlogs.length,
+            description: "Promoted content",
+            icon: <Sparkles className="h-4 w-4 text-muted-foreground" />,
+          },
+        ]}
+      />
+
+      <div className="grid gap-4 lg:grid-cols-[2fr_1fr]">
+        <Card className="border-0 shadow-xl shadow-black/5">
+          <CardHeader>
+            <CardTitle className="text-lg font-semibold">
+              Blog Performance
+            </CardTitle>
+            <CardDescription>
+              Top posts ranked by recorded public views.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            {topBlogs.length > 0 ? (
+              <div className="space-y-3">
+                {topBlogs.map((blog) => (
+                  <div
+                    key={blog.id}
+                    className="flex flex-col gap-3 rounded-xl border bg-background p-4 shadow-sm shadow-black/5 md:flex-row md:items-center md:justify-between"
+                  >
+                    <div className="min-w-0">
+                      <Link
+                        href={`/admin/blogs/${blog.id}`}
+                        className="font-semibold text-primary hover:text-primary/80"
+                      >
+                        {blog.title}
+                      </Link>
+                      <div className="mt-2 flex flex-wrap gap-2">
+                        {blog.category && (
+                          <Badge variant="secondary">{blog.category}</Badge>
+                        )}
+                        <Badge variant={blog.published ? "default" : "outline"}>
+                          {blog.published ? "Published" : "Draft"}
+                        </Badge>
+                        {blog.featured && (
+                          <Badge variant="outline">Featured</Badge>
+                        )}
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2 text-sm font-semibold text-muted-foreground">
+                      <Eye className="h-4 w-4" />
+                      {(blog.viewsCount ?? 0).toLocaleString()} views
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-sm text-muted-foreground">
+                No blog performance data yet.
+              </p>
+            )}
+          </CardContent>
+        </Card>
+
+        <Card className="border-0 shadow-xl shadow-black/5">
+          <CardHeader>
+            <CardTitle className="text-lg font-semibold">
+              Category Coverage
+            </CardTitle>
+            <CardDescription>Most-used blog categories.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            {topCategories.length > 0 ? (
+              <div className="space-y-3">
+                {topCategories.map(([category, count]) => (
+                  <div
+                    key={category}
+                    className="flex items-center justify-between rounded-xl bg-muted/40 px-4 py-3 text-sm"
+                  >
+                    <span className="font-medium">{category}</span>
+                    <Badge variant="secondary">{count}</Badge>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-sm text-muted-foreground">
+                No categories assigned yet.
+              </p>
+            )}
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }
-````
 
-## File: apps/admin/app/admin/contacts/[id]/page.tsx
-````typescript
-import type { ContactType } from "@bilacert/contracts/contact";
-import { createSupabaseServerClient } from "@bilacert/supabase/server";
-import type { Metadata } from "next";
-import { notFound } from "next/navigation";
-import { cache } from "react";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { getContactEmailComposeHref } from "@/lib/emailNavigation";
-import ContactDetails from "../ContactDetails";
+const BlogCard = ({
+  blog,
+  onEdit,
+  onDelete,
+}: {
+  blog: BlogType;
+  onEdit: (blog: BlogType) => void;
+  onDelete: (blog: BlogType) => void;
+}) => {
+  const router = useRouter();
+  return (
+    <div
+      key={blog.id}
+      className="group relative flex flex-col overflow-hidden rounded-xl bg-white shadow-sm shadow-black/5 transition-all duration-300 hover:-translate-y-2 hover:shadow-xl hover:shadow-black/10"
+    >
+      <Link
+        href={`/admin/blogs/${blog.id}`}
+        className="absolute inset-0 z-10"
+        aria-label={`View ${blog.title}`}
+      >
+        <span className="sr-only">View Details</span>
+      </Link>
+      <div className="absolute top-4 right-4 z-20">
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8 rounded-full bg-background/60 backdrop-blur-sm hover:bg-background"
+              onClick={(e) => e.preventDefault()}
+            >
+              <span className="sr-only">Open menu</span>
+              <MoreHorizontal className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+            <DropdownMenuItem
+              onClick={(e) => {
+                e.preventDefault();
+                router.push(`/admin/blogs/${blog.id}`);
+              }}
+            >
+              View
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={(e) => {
+                e.preventDefault();
+                onEdit(blog);
+              }}
+            >
+              Edit
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              className="text-destructive focus:bg-destructive/10 focus:text-destructive"
+              onClick={(e) => {
+                e.preventDefault();
+                onDelete(blog);
+              }}
+            >
+              Delete
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
 
-type ContactDetailsPageProps = {
-  params: Promise<{ id: string }>;
-  searchParams: Promise<{ emailStatus?: string }>;
+      <div className="relative h-48 w-full">
+        <Image
+          src={
+            blog.featuredImage ||
+            `https://picsum.photos/seed/${blog.id}/600/400`
+          }
+          alt={blog.title}
+          fill
+          className="object-cover transition-transform duration-300 group-hover:scale-105"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+        <div className="absolute bottom-4 left-4">
+          {blog.category && <Badge variant="secondary">{blog.category}</Badge>}
+        </div>
+      </div>
+
+      <div className="flex flex-col flex-grow p-6">
+        <h3 className="mb-2 text-xl font-semibold text-primary line-clamp-2">
+          {blog.title}
+        </h3>
+        <p className="mb-4 text-sm text-muted-foreground line-clamp-3 flex-grow">
+          {blog.excerpt}
+        </p>
+        <div className="mt-auto flex items-center justify-between gap-3 text-xs text-muted-foreground">
+          <Badge variant={blog.published ? "default" : "outline"}>
+            {blog.published ? "Published" : "Draft"}
+          </Badge>
+          <div className="flex flex-wrap items-center justify-end gap-x-3 gap-y-1">
+            <div className="flex items-center gap-1.5">
+              <Eye className="h-4 w-4" />
+              <span>{(blog.viewsCount ?? 0).toLocaleString()} views</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <Calendar className="h-4 w-4" />
+              <span>{safeFormatDate(blog.createdAt, "PP")}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 };
 
-const getContact = cache(async (id: string): Promise<ContactType | null> => {
-  const supabase = await createSupabaseServerClient();
-  const { data, error } = await supabase
-    .from("contacts")
-    .select("*")
-    .eq("id", id)
-    .single();
+export default function BlogsClient() {
+  const { data: blogs, loading, error, refresh } = useBlogs();
+  const router = useRouter();
+  const [searchQuery, setSearchQuery] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState("all");
+  const [statusTab, setStatusTab] = useState("all");
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [selectedBlog, setSelectedBlog] = useState<BlogType | null>(null);
 
-  if (error || !data) {
-    return null;
-  }
+  const categories = useMemo(() => {
+    const cats = new Set<string>();
+    blogs.forEach((blog) => {
+      if (blog.category) cats.add(blog.category);
+    });
+    return Array.from(cats).sort();
+  }, [blogs]);
 
-  return {
-    id: data.id,
-    name: data.name,
-    email: data.email,
-    phone: data.phone,
-    service: data.service,
-    message: data.message,
-    submittedAt: data.submittedAt,
-  } as ContactType;
-});
+  const filteredBlogs = useMemo(() => {
+    return blogs.filter((blog) => {
+      const matchesSearch =
+        blog.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (blog.excerpt?.toLowerCase().includes(searchQuery.toLowerCase()) ??
+          false);
+      const matchesCategory =
+        categoryFilter === "all" || blog.category === categoryFilter;
+      const matchesStatus =
+        statusTab === "all" ||
+        (statusTab === "published" && blog.published) ||
+        (statusTab === "draft" && !blog.published);
+      return matchesSearch && matchesCategory && matchesStatus;
+    });
+  }, [blogs, searchQuery, categoryFilter, statusTab]);
 
-export async function generateMetadata({
-  params,
-}: Pick<ContactDetailsPageProps, "params">): Promise<Metadata> {
-  const { id } = await params;
-  const contact = await getContact(id);
-  if (!contact) {
-    return {
-      title: "Contact Not Found",
-    };
-  }
-  return {
-    title: `${contact.name || contact.email} | Bilacert Admin Pro`,
+  const handleEdit = (blog: BlogType) => {
+    router.push(`/admin/blogs/${blog.id}/edit`);
   };
-}
 
-export default async function ContactDetailsPage({
-  params,
-  searchParams,
-}: ContactDetailsPageProps) {
-  const [{ id }, query] = await Promise.all([params, searchParams]);
-  const contact = await getContact(id);
+  const handleDelete = (blog: BlogType) => {
+    setSelectedBlog(blog);
+    setIsDeleteDialogOpen(true);
+  };
 
-  if (!contact) {
-    notFound();
+  const onDeleted = () => {
+    setIsDeleteDialogOpen(false);
+    setSelectedBlog(null);
+    refresh();
+  };
+
+  if (error) {
+    return (
+      <div className="text-destructive p-4 border border-destructive/20 rounded-lg bg-destructive/10">
+        Error loading blogs: {error.message}
+      </div>
+    );
   }
-
-  const emailStatus =
-    query.emailStatus === "sent" || query.emailStatus === "draft"
-      ? query.emailStatus
-      : null;
-  const displayName = contact.name?.trim() || contact.email;
 
   return (
     <div className="space-y-6">
-      {emailStatus && (
-        <Alert className="border-emerald-200 bg-emerald-50 text-emerald-900">
-          <AlertTitle>
-            {emailStatus === "sent" ? "Email sent" : "Draft saved"}
-          </AlertTitle>
-          <AlertDescription>
-            {emailStatus === "sent"
-              ? `Your email to ${displayName} was sent through Zoho Mail.`
-              : `Your email to ${displayName} was saved in Zoho Drafts.`}
-          </AlertDescription>
-        </Alert>
+      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">Blogs</h1>
+          <p className="text-muted-foreground">
+            Manage your blog posts and content.
+          </p>
+        </div>
+        <Button asChild>
+          <Link href="/admin/blogs/new">
+            <PlusCircle className="mr-2 h-4 w-4" />
+            Add Post
+          </Link>
+        </Button>
+      </div>
+
+      <BlogsAnalysis blogs={blogs} />
+
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-b pb-4">
+        <Tabs
+          defaultValue="all"
+          className="w-full sm:w-auto"
+          onValueChange={setStatusTab}
+        >
+          <TabsList>
+            <TabsTrigger value="all">All</TabsTrigger>
+            <TabsTrigger value="published">Published</TabsTrigger>
+            <TabsTrigger value="draft">Drafts</TabsTrigger>
+          </TabsList>
+        </Tabs>
+        <div className="flex items-center gap-2">
+          <div className="relative w-full sm:w-64">
+            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Search blogs..."
+              className="pl-8"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
+          <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+            <SelectTrigger className="w-[180px]">
+              <Filter className="mr-2 h-4 w-4 text-muted-foreground" />
+              <SelectValue placeholder="Category" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Categories</SelectItem>
+              {categories.map((cat) => (
+                <SelectItem key={cat} value={cat}>
+                  {cat}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
+
+      {loading ? (
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <div
+              key={i}
+              className="h-[400px] w-full animate-pulse rounded-xl bg-muted"
+            ></div>
+          ))}
+        </div>
+      ) : filteredBlogs.length === 0 ? (
+        <div className="flex flex-col items-center justify-center rounded-xl border-2 border-dashed py-24 text-center">
+          <div className="rounded-full bg-muted p-6 mb-4">
+            <Search className="h-10 w-10 text-muted-foreground" />
+          </div>
+          <h3 className="text-xl font-semibold">No blogs found</h3>
+          <p className="text-muted-foreground max-w-xs mx-auto mt-2">
+            No blogs match the current filters.
+          </p>
+          {(searchQuery || categoryFilter !== "all" || statusTab !== "all") && (
+            <Button
+              variant="outline"
+              className="mt-6"
+              onClick={() => {
+                setSearchQuery("");
+                setCategoryFilter("all");
+                setStatusTab("all");
+              }}
+            >
+              Clear all filters
+            </Button>
+          )}
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+          {filteredBlogs.map((blog) => (
+            <BlogCard
+              key={blog.id}
+              blog={blog}
+              onEdit={handleEdit}
+              onDelete={handleDelete}
+            />
+          ))}
+        </div>
       )}
-      <ContactDetails
-        contact={contact}
-        emailComposeHref={getContactEmailComposeHref(contact)}
-      />
+
+      {isDeleteDialogOpen && (
+        <DeleteBlogDialog
+          isOpen={isDeleteDialogOpen}
+          onClose={() => setIsDeleteDialogOpen(false)}
+          onDeleted={onDeleted}
+          blog={selectedBlog}
+        />
+      )}
     </div>
   );
 }
@@ -26037,113 +28993,6 @@ export async function updateEmailReadStateAction(formData: FormData) {
     failed
       ? `${messagePath}&actionError=update-failed`
       : `${messagePath}&updated=${parsed.data.readState}`,
-  );
-}
-````
-
-## File: apps/admin/app/admin/emails/compose/page.tsx
-````typescript
-import { ArrowLeft } from "lucide-react";
-import Link from "next/link";
-import { redirect } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { getAdminAccess } from "@/lib/adminAccess";
-import { getSafeEmailReturnPath } from "@/lib/emailNavigation";
-import {
-  getZohoMailAccount,
-  getZohoMailConfigurationStatus,
-} from "@/lib/zohoMail";
-import EmailComposer from "../_components/EmailComposer";
-import {
-  EmailAccessState,
-  EmailConnectionState,
-  EmailSetupState,
-} from "../_components/EmailState";
-
-export const dynamic = "force-dynamic";
-
-export const metadata = {
-  title: "Compose Email | Bilacert Admin",
-  description: "Compose a Bilacert email through Zoho Mail.",
-};
-
-type ComposeEmailPageProps = {
-  searchParams: Promise<{
-    to?: string;
-    subject?: string;
-    content?: string;
-    returnTo?: string;
-  }>;
-};
-
-function safeInitialValue(value: string | undefined, maxLength: number) {
-  return value?.slice(0, maxLength) ?? "";
-}
-
-export default async function ComposeEmailPage({
-  searchParams,
-}: ComposeEmailPageProps) {
-  const access = await getAdminAccess();
-
-  if (!access.allowed) {
-    if (access.reason === "unauthenticated") redirect("/admin/login");
-    return <EmailAccessState message={access.message} />;
-  }
-
-  const configuration = getZohoMailConfigurationStatus();
-  if (!configuration.configured) {
-    return (
-      <EmailSetupState missingVariables={configuration.missingVariables} />
-    );
-  }
-
-  let fromAddress: string;
-  try {
-    const account = await getZohoMailAccount();
-    fromAddress = account.fromAddress;
-  } catch (error) {
-    return (
-      <EmailConnectionState
-        message={
-          error instanceof Error
-            ? error.message
-            : "Zoho Mail could not load the sender account."
-        }
-      />
-    );
-  }
-
-  const query = await searchParams;
-  const returnTo = getSafeEmailReturnPath(query.returnTo);
-  const returnLabel = returnTo?.startsWith("/admin/contacts/")
-    ? "Back to contact"
-    : returnTo
-      ? "Back to submission"
-      : "Back to email";
-
-  return (
-    <div className="mx-auto max-w-4xl space-y-6">
-      <div>
-        <Button asChild variant="ghost" className="mb-3 -ml-3">
-          <Link href={returnTo ?? "/admin/emails"}>
-            <ArrowLeft className="h-4 w-4" />
-            {returnLabel}
-          </Link>
-        </Button>
-        <h1 className="text-3xl font-bold tracking-tight">Compose email</h1>
-        <p className="mt-1 text-muted-foreground">
-          Messages are sent securely through the connected Zoho mailbox.
-        </p>
-      </div>
-
-      <EmailComposer
-        fromAddress={fromAddress}
-        initialToAddress={safeInitialValue(query.to, 4_000)}
-        initialSubject={safeInitialValue(query.subject, 998)}
-        initialContent={safeInitialValue(query.content, 200_000)}
-        returnTo={returnTo ?? undefined}
-      />
-    </div>
   );
 }
 ````
@@ -27786,77 +30635,61 @@ export default function ServiceForm({ service }: ServiceFormProps) {
 }
 ````
 
-## File: apps/admin/app/admin/testimonials/[id]/edit/page.tsx
+## File: apps/admin/app/admin/tasks/page.tsx
 ````typescript
-import type { TestimonialRowType } from "@bilacert/contracts/testimonial";
-import { createSupabaseServerClient } from "@bilacert/supabase/server";
-import { ArrowLeft } from "lucide-react";
-import Link from "next/link";
-import { notFound } from "next/navigation";
-import { Button } from "@/components/ui/button";
+import type { ServiceRowType } from "@bilacert/contracts/service";
+import type { TaskType } from "@bilacert/contracts/task";
+import { getPublishedServices } from "@bilacert/supabase/Queries/services";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import TestimonialForm from "../../TestimonialForm";
-
-async function getTestimonial(id: string): Promise<TestimonialRowType | null> {
-  const supabase = await createSupabaseServerClient();
-  const { data, error } = await supabase
-    .from("testimonials")
-    .select("*")
-    .eq("id", id)
-    .single();
-
-  if (error || !data) {
-    return null;
-  }
-
-  return {
-    id: data.id,
-    postUrl: data.postUrl,
-    createdAt: data.createdAt,
-  } as TestimonialRowType;
-}
+  getAssignableUsers,
+  getSubmissionOptions,
+  getTasks,
+  type TaskOption,
+} from "@bilacert/supabase/Queries/tasks";
+import type { Viewport } from "next";
+import TasksClient from "./TasksClient";
 
 export const metadata = {
-  title: "Edit Testimonial | Bilacert Admin Pro",
-  description: "Edit an existing testimonial.",
+  title: "Task Management | Bilacert Admin Pro",
+  description: "Plan, assign and track internal work.",
 };
 
-export default async function EditTestimonialPage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
-  const { id } = await params;
-  const testimonial = await getTestimonial(id);
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#1f2937" },
+  ],
+};
+export default async function AdminTasksPage() {
+  let tasks: TaskType[] = [];
+  let services: ServiceRowType[] = [];
+  let users: TaskOption[] = [];
+  let submissions: TaskOption[] = [];
+  let loadError: string | null = null;
 
-  if (!testimonial) {
-    notFound();
+  try {
+    [tasks, services, users, submissions] = await Promise.all([
+      getTasks(),
+      getPublishedServices(),
+      getAssignableUsers(),
+      getSubmissionOptions(),
+    ]);
+  } catch (error) {
+    loadError = error instanceof Error ? error.message : String(error);
   }
 
   return (
-    <div className="space-y-6">
-      <Button variant="outline" asChild>
-        <Link href="/admin/testimonials">
-          <ArrowLeft className="mr-2 h-4 w-4" />
-          Back to Testimonials
-        </Link>
-      </Button>
-      <Card>
-        <CardHeader>
-          <CardTitle>Edit Testimonial</CardTitle>
-          <CardDescription>Update the Facebook post URL.</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <TestimonialForm testimonial={testimonial} />
-        </CardContent>
-      </Card>
-    </div>
+    <TasksClient
+      initialTasks={tasks}
+      services={services}
+      users={users}
+      submissions={submissions}
+      loadError={loadError}
+    />
   );
 }
 ````
@@ -28145,6 +30978,152 @@ export default function TestimonialForm({ testimonial }: TestimonialFormProps) {
 }
 ````
 
+## File: apps/admin/components/admin/Sidebar.tsx
+````typescript
+"use client";
+
+import { createSupabaseBrowserClient } from "@bilacert/supabase/client";
+import {
+  BarChart,
+  Briefcase,
+  ClipboardList,
+  FileSpreadsheet,
+  FileText,
+  LayoutDashboard,
+  LogOut,
+  Mail,
+  MessageSquare,
+  Settings,
+  Users,
+} from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  useSidebar,
+} from "@/components/ui/sidebar";
+import { useToast } from "@/hooks/use-toast";
+
+const supabase = createSupabaseBrowserClient();
+
+const navItems = [
+  { href: "/admin/dashboard", icon: LayoutDashboard, label: "Dashboard" },
+  { href: "/admin/analysis", icon: BarChart, label: "Analysis" },
+  { href: "/admin/tasks", icon: ClipboardList, label: "Tasks" },
+  { href: "/admin/services", icon: Briefcase, label: "Services" },
+  { href: "/admin/blogs", icon: FileText, label: "Blogs" },
+  { href: "/admin/emails", icon: Mail, label: "Email" },
+  { href: "/admin/testimonials", icon: MessageSquare, label: "Testimonials" },
+  { href: "/admin/contacts", icon: Users, label: "Contacts" },
+  {
+    href: "/admin/formSubmissions",
+    icon: FileSpreadsheet,
+    label: "Submissions",
+  },
+];
+
+export default function AdminSidebar() {
+  const pathname = usePathname();
+  const router = useRouter();
+  const { toast } = useToast();
+  const { setOpenMobile } = useSidebar();
+
+  const handleLogout = async () => {
+    try {
+      const { error } = await supabase.auth.signOut();
+      if (error) throw error;
+      setOpenMobile(false);
+      router.push("/admin/login");
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Logout Failed",
+        description:
+          error instanceof Error ? error.message : "Unable to log out.",
+      });
+    }
+  };
+
+  return (
+    <Sidebar variant="inset" collapsible="icon">
+      <SidebarHeader className="group-data-[collapsible=icon]:items-center group-data-[collapsible=icon]:px-2">
+        <Link
+          href="/admin/dashboard"
+          className="flex items-center gap-2 group-data-[collapsible=icon]:justify-center"
+          onClick={() => setOpenMobile(false)}
+        >
+          <Image
+            src="/logo.jpg"
+            alt="Bilacert logo"
+            width={32}
+            height={32}
+            className="h-8 w-8 shrink-0 rounded-lg object-cover"
+            priority
+          />
+          <span className="text-lg font-semibold text-sidebar-foreground group-data-[collapsible=icon]:hidden">
+            Bilacert Admin
+          </span>
+        </Link>
+      </SidebarHeader>
+      <SidebarContent className="p-2">
+        <SidebarMenu>
+          {navItems.map((item) => (
+            <SidebarMenuItem key={item.href}>
+              <SidebarMenuButton
+                asChild
+                isActive={pathname.startsWith(item.href)}
+                className="w-full justify-start"
+                tooltip={item.label}
+                onClick={() => setOpenMobile(false)}
+              >
+                <Link href={item.href}>
+                  <item.icon className="h-5 w-5" />
+                  <span>{item.label}</span>
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          ))}
+        </SidebarMenu>
+      </SidebarContent>
+      <SidebarFooter>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton
+              asChild
+              className="w-full justify-start"
+              tooltip="Settings"
+              onClick={() => setOpenMobile(false)}
+            >
+              <Link href="#">
+                <Settings className="h-5 w-5" />
+                <span>Settings</span>
+              </Link>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+          <SidebarMenuItem>
+            <SidebarMenuButton
+              onClick={handleLogout}
+              className="w-full justify-start"
+              tooltip="Log out"
+            >
+              <LogOut className="h-5 w-5" />
+              <span>Log Out</span>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarFooter>
+    </Sidebar>
+  );
+}
+````
+
 ## File: apps/admin/lib/hooks/useTestimonials.ts
 ````typescript
 "use client";
@@ -28236,252 +31215,6 @@ export function useTestimonials() {
     "@tailwindcss/postcss": "catalog:",
     "babel-plugin-react-compiler": "catalog:"
   }
-}
-````
-
-## File: apps/client/app/services/[serviceId]/page.tsx
-````typescript
-import type {
-  PricingPlanType,
-  ProcessStepType,
-  SuccessStoryType as TSuccessStory,
-} from "@bilacert/contracts/service";
-import {
-  CheckCircle2,
-  ClipboardList,
-  FileCheck2,
-  ListChecks,
-} from "lucide-react";
-import type { Metadata } from "next";
-import { notFound } from "next/navigation";
-import type { ReactNode } from "react";
-import { CTASection } from "@/components/service/CTASection";
-import { PricingPlans } from "@/components/service/PricingPlans";
-import { ProcessSteps } from "@/components/service/ProcessSteps";
-import { ServiceHero } from "@/components/service/ServiceHero";
-import { SuccessStory } from "@/components/service/SuccessStory";
-import { WhatIsSection } from "@/components/service/WhatIsSection";
-import { WhyChooseUs } from "@/components/service/WhyChooseUs";
-import {
-  getCachedServiceBySlug,
-  getCachedServiceSlugs,
-} from "../../_lib/cached-public-data";
-
-interface Props {
-  params: Promise<{ serviceId: string }>;
-}
-
-interface DetailListCardProps {
-  title: string;
-  description: string;
-  items: string[];
-  icon: ReactNode;
-}
-
-function DetailListCard({
-  title,
-  description,
-  items,
-  icon,
-}: DetailListCardProps) {
-  if (items.length === 0) return null;
-
-  return (
-    <div className="rounded-2xl bg-white p-8 shadow-sm shadow-black/5">
-      <div className="mb-6 flex h-12 w-12 items-center justify-center rounded-2xl bg-accent/10 text-accent">
-        {icon}
-      </div>
-      <h3 className="mb-2 text-2xl font-bold text-primary">{title}</h3>
-      <p className="mb-6 text-sm leading-relaxed text-gray-600">
-        {description}
-      </p>
-      <ul className="space-y-3">
-        {items.map((item) => (
-          <li
-            key={item}
-            className="flex items-start gap-3 text-sm text-gray-700"
-          >
-            <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-accent" />
-            <span>{item}</span>
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-}
-
-function ServiceDetailFields({
-  includes,
-  features,
-  requirements,
-}: {
-  includes: string[];
-  features: string[];
-  requirements: string[];
-}) {
-  const hasFields =
-    includes.length > 0 || features.length > 0 || requirements.length > 0;
-
-  if (!hasFields) return null;
-
-  return (
-    <section className="bg-secondary-gray py-20">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="mb-12 max-w-3xl">
-          <h2 className="mb-4 text-3xl font-bold text-primary lg:text-4xl">
-            What you get
-          </h2>
-          <p className="text-lg leading-relaxed text-gray-600">
-            A clear breakdown of what is included, what makes this service
-            valuable, and what you may need before starting.
-          </p>
-        </div>
-        <div className="grid gap-8 lg:grid-cols-3">
-          <DetailListCard
-            title="Includes"
-            description="Core deliverables and support covered by this service."
-            items={includes}
-            icon={<ClipboardList className="h-6 w-6" />}
-          />
-          <DetailListCard
-            title="Features"
-            description="Key benefits and service capabilities available to you."
-            items={features}
-            icon={<ListChecks className="h-6 w-6" />}
-          />
-          <DetailListCard
-            title="Requirements"
-            description="Information or documents usually needed to proceed."
-            items={requirements}
-            icon={<FileCheck2 className="h-6 w-6" />}
-          />
-        </div>
-      </div>
-    </section>
-  );
-}
-
-export async function generateStaticParams() {
-  const slugs = await getCachedServiceSlugs();
-  return slugs.map((item) => ({ serviceId: item.slug }));
-}
-
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { serviceId } = await params;
-  const service = await getCachedServiceBySlug(serviceId);
-
-  if (!service) {
-    return {
-      title: "Service Not Found - Bilacert",
-    };
-  }
-
-  return {
-    title: service.seoTitle || `${service.title} - Bilacert`,
-    description: service.seoDescription || service.description,
-    keywords: service.seoKeywords || [
-      service.title.toLowerCase(),
-      ...(service.category?.split(", ").map((c: string) => c.toLowerCase()) ||
-        []),
-      "licensing",
-      "certification",
-      "ICASA",
-      "South Africa",
-    ],
-    openGraph: {
-      title: service.seoTitle || service.title,
-      description: service.seoDescription || service.shortDescription,
-      url: `https://bilacert.co.za/services/${serviceId}`,
-      type: "website",
-      images: service.image ? [{ url: service.image }] : [],
-    },
-    alternates: {
-      canonical: `https://bilacert.co.za/services/${serviceId}`,
-    },
-  };
-}
-
-export default async function ServiceDetailPage({ params }: Props) {
-  const { serviceId } = await params;
-  const service = await getCachedServiceBySlug(serviceId);
-
-  if (!service) {
-    notFound();
-  }
-
-  const formPath = `/services/${serviceId}/form`;
-  const includes = service.includes || [];
-  const features = service.features || [];
-  const requirements = service.requirements || [];
-
-  return (
-    <div className="min-h-screen">
-      <ServiceHero
-        title={service.title}
-        subtitle={service.shortDescription || ""}
-        iconName={service.icon || ""}
-        imageSrc={service.image || ""}
-        processingTime={service.processingTime || ""}
-        formPath={formPath}
-        phone="075 430 4433"
-      />
-
-      {service.content && (
-        <WhatIsSection
-          title={`What is this ${service.title}?`}
-          firstParagraph={service.content}
-          secondParagraph=""
-          checkpoints={[]}
-        />
-      )}
-
-      <ServiceDetailFields
-        includes={includes}
-        features={features}
-        requirements={requirements}
-      />
-
-      <WhyChooseUs />
-
-      {service.processSteps && (
-        <ProcessSteps
-          title="Our Process"
-          subtitle="A streamlined approach to get you certified."
-          steps={(service.processSteps as unknown as ProcessStepType[]).map(
-            (step) => ({ ...step, step: step.step.toString() }),
-          )}
-        />
-      )}
-
-      {service.pricingPlans && (
-        <PricingPlans
-          title="Pricing Plans"
-          subtitle="Choose the best plan for your needs."
-          plans={(service.pricingPlans as unknown as PricingPlanType[]).map(
-            (plan) => ({
-              ...plan,
-              title: plan.title || plan.name || "Pricing Plan",
-              popular: plan.popular,
-              description: plan.description || "",
-              features: Array.isArray(plan.features) ? plan.features : [],
-            }),
-          )}
-          formPath={formPath}
-        />
-      )}
-
-      {service.successStory && (
-        <SuccessStory {...(service.successStory as TSuccessStory)} />
-      )}
-
-      <CTASection
-        heading="Ready to get started?"
-        description="Contact us today for a free consultation."
-        primaryCTA={{ label: "Contact Us", href: "/contact" }}
-        secondaryCTA={{ label: "Learn More", href: "/about" }}
-      />
-    </div>
-  );
 }
 ````
 
@@ -29021,29 +31754,102 @@ yarn-error.log*
 next-env.d.ts
 ````
 
-## File: apps/admin/app/admin/blogs/BlogsClient.tsx
+## File: apps/admin/app/admin/blogs/[id]/page.tsx
 ````typescript
-"use client";
-
 import type { BlogRowType as BlogType } from "@bilacert/contracts/blog";
-import { format, isValid, parseISO } from "date-fns";
-import {
-  Calendar,
-  Eye,
-  FileText,
-  Filter,
-  MoreHorizontal,
-  Newspaper,
-  PlusCircle,
-  Search,
-  Sparkles,
-} from "lucide-react";
-import Image from "next/image";
+import { createSupabaseServerClient } from "@bilacert/supabase/server";
+import type { Metadata, Viewport } from "next";
+import { notFound } from "next/navigation";
+import BlogDetails from "../BlogDetails";
+
+async function getBlog(identifier: string): Promise<BlogType | null> {
+  const supabase = await createSupabaseServerClient();
+  const { data, error } = await supabase
+    .from("blog_posts")
+    .select("*")
+    .or(`id.eq.${identifier},slug.eq.${identifier}`)
+    .limit(1)
+    .maybeSingle();
+
+  if (error || !data) {
+    return null;
+  }
+
+  return {
+    id: data.id,
+    title: data.title,
+    slug: data.slug,
+    excerpt: data.excerpt,
+    content: data.content,
+    category: data.category,
+    tags: data.tags,
+    readTime: data.readTime,
+    seoTitle: data.seoTitle,
+    seoDescription: data.seoDescription,
+    seoKeywords: data.seoKeywords,
+    featuredImage: data.featuredImage,
+    thumbnail: data.thumbnail,
+    published: data.published,
+    publishedAt: data.publishedAt,
+    featured: data.featured,
+    authorId: data.authorId,
+    authorName: data.authorName,
+    viewsCount: data.viewsCount,
+    createdAt: data.createdAt,
+    updatedAt: data.updatedAt,
+  } as BlogType;
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: { id: string };
+}): Promise<Metadata> {
+  const blog = await getBlog(params.id);
+  if (!blog) {
+    return {
+      title: "Blog Post Not Found",
+    };
+  }
+  return {
+    title: `${blog.title} | Bilacert Admin Pro`,
+  };
+}
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#1f2937" },
+  ],
+};
+export default async function BlogDetailsPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
+  const blog = await getBlog(id);
+
+  if (!blog) {
+    notFound();
+  }
+
+  return <BlogDetails blog={blog} />;
+}
+````
+
+## File: apps/admin/app/admin/contacts/[id]/edit/page.tsx
+````typescript
+import type { ContactType } from "@bilacert/contracts/contact";
+import { createSupabaseServerClient } from "@bilacert/supabase/server";
+import { ArrowLeft } from "lucide-react";
+import type { Viewport } from "next";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useMemo, useState } from "react";
-import AnalysesHeader from "@/components/admin/AnalysesHeader";
-import { Badge } from "@/components/ui/badge";
+import { notFound } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -29052,447 +31858,181 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useBlogs } from "@/lib/hooks/useBlogs";
-import DeleteBlogDialog from "./DeleteBlogDialog";
+import ContactForm from "../../ContactForm";
 
-const safeFormatDate = (
-  date: string | Date | undefined,
-  dateFormat = "PP",
-  fallback = "Invalid date",
-) => {
-  if (!date) return fallback;
-  const d = typeof date === "string" ? parseISO(date) : date;
-  return isValid(d) ? format(d, dateFormat) : fallback;
+export const metadata = {
+  title: "Edit Contact | Bilacert Admin Pro",
+  description: "Edit an existing contact.",
 };
 
-function BlogsAnalysis({ blogs }: { blogs: BlogType[] }) {
-  const publishedBlogs = blogs.filter((blog) => blog.published);
-  const featuredBlogs = blogs.filter((blog) => blog.featured);
-  const totalViews = blogs.reduce(
-    (sum, blog) => sum + (blog.viewsCount ?? 0),
-    0,
-  );
-  const topBlogs = [...blogs]
-    .sort((a, b) => (b.viewsCount ?? 0) - (a.viewsCount ?? 0))
-    .slice(0, 5);
-  const categoryCounts = blogs.reduce<Map<string, number>>((counts, blog) => {
-    const category = blog.category || "Uncategorized";
-    counts.set(category, (counts.get(category) ?? 0) + 1);
-    return counts;
-  }, new Map());
-  const topCategories = [...categoryCounts.entries()]
-    .sort(([, a], [, b]) => b - a)
-    .slice(0, 5);
+async function getContact(id: string): Promise<ContactType | null> {
+  const supabase = await createSupabaseServerClient();
+  const { data, error } = await supabase
+    .from("contacts")
+    .select("*")
+    .eq("id", id)
+    .single();
 
-  return (
-    <div className="space-y-4">
-      <AnalysesHeader
-        items={[
-          {
-            title: "Total Blogs",
-            value: blogs.length,
-            description: `${publishedBlogs.length.toLocaleString()} published`,
-            icon: <Newspaper className="h-4 w-4 text-muted-foreground" />,
-          },
-          {
-            title: "Published Blogs",
-            value: publishedBlogs.length,
-            description: "Visible publicly",
-            icon: <FileText className="h-4 w-4 text-muted-foreground" />,
-          },
-          {
-            title: "Blog Views",
-            value: totalViews,
-            description: "Across all posts",
-            icon: <Eye className="h-4 w-4 text-muted-foreground" />,
-          },
-          {
-            title: "Featured Blogs",
-            value: featuredBlogs.length,
-            description: "Promoted content",
-            icon: <Sparkles className="h-4 w-4 text-muted-foreground" />,
-          },
-        ]}
-      />
+  if (error || !data) {
+    return null;
+  }
 
-      <div className="grid gap-4 lg:grid-cols-[2fr_1fr]">
-        <Card className="border-0 shadow-xl shadow-black/5">
-          <CardHeader>
-            <CardTitle className="text-lg font-semibold">
-              Blog Performance
-            </CardTitle>
-            <CardDescription>
-              Top posts ranked by recorded public views.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            {topBlogs.length > 0 ? (
-              <div className="space-y-3">
-                {topBlogs.map((blog) => (
-                  <div
-                    key={blog.id}
-                    className="flex flex-col gap-3 rounded-xl border bg-background p-4 shadow-sm shadow-black/5 md:flex-row md:items-center md:justify-between"
-                  >
-                    <div className="min-w-0">
-                      <Link
-                        href={`/admin/blogs/${blog.id}`}
-                        className="font-semibold text-primary hover:text-primary/80"
-                      >
-                        {blog.title}
-                      </Link>
-                      <div className="mt-2 flex flex-wrap gap-2">
-                        {blog.category && (
-                          <Badge variant="secondary">{blog.category}</Badge>
-                        )}
-                        <Badge variant={blog.published ? "default" : "outline"}>
-                          {blog.published ? "Published" : "Draft"}
-                        </Badge>
-                        {blog.featured && (
-                          <Badge variant="outline">Featured</Badge>
-                        )}
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-2 text-sm font-semibold text-muted-foreground">
-                      <Eye className="h-4 w-4" />
-                      {(blog.viewsCount ?? 0).toLocaleString()} views
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <p className="text-sm text-muted-foreground">
-                No blog performance data yet.
-              </p>
-            )}
-          </CardContent>
-        </Card>
-
-        <Card className="border-0 shadow-xl shadow-black/5">
-          <CardHeader>
-            <CardTitle className="text-lg font-semibold">
-              Category Coverage
-            </CardTitle>
-            <CardDescription>Most-used blog categories.</CardDescription>
-          </CardHeader>
-          <CardContent>
-            {topCategories.length > 0 ? (
-              <div className="space-y-3">
-                {topCategories.map(([category, count]) => (
-                  <div
-                    key={category}
-                    className="flex items-center justify-between rounded-xl bg-muted/40 px-4 py-3 text-sm"
-                  >
-                    <span className="font-medium">{category}</span>
-                    <Badge variant="secondary">{count}</Badge>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <p className="text-sm text-muted-foreground">
-                No categories assigned yet.
-              </p>
-            )}
-          </CardContent>
-        </Card>
-      </div>
-    </div>
-  );
+  return {
+    id: data.id,
+    name: data.name,
+    email: data.email,
+    phone: data.phone,
+    service: data.service,
+    message: data.message,
+    submittedAt: data.submittedAt,
+  } as ContactType;
 }
 
-const BlogCard = ({
-  blog,
-  onEdit,
-  onDelete,
-}: {
-  blog: BlogType;
-  onEdit: (blog: BlogType) => void;
-  onDelete: (blog: BlogType) => void;
-}) => {
-  const router = useRouter();
-  return (
-    <div
-      key={blog.id}
-      className="group relative flex flex-col overflow-hidden rounded-xl bg-white shadow-sm shadow-black/5 transition-all duration-300 hover:-translate-y-2 hover:shadow-xl hover:shadow-black/10"
-    >
-      <Link
-        href={`/admin/blogs/${blog.id}`}
-        className="absolute inset-0 z-10"
-        aria-label={`View ${blog.title}`}
-      >
-        <span className="sr-only">View Details</span>
-      </Link>
-      <div className="absolute top-4 right-4 z-20">
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-8 w-8 rounded-full bg-background/60 backdrop-blur-sm hover:bg-background"
-              onClick={(e) => e.preventDefault()}
-            >
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={(e) => {
-                e.preventDefault();
-                router.push(`/admin/blogs/${blog.id}`);
-              }}
-            >
-              View
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              onClick={(e) => {
-                e.preventDefault();
-                onEdit(blog);
-              }}
-            >
-              Edit
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem
-              className="text-destructive focus:bg-destructive/10 focus:text-destructive"
-              onClick={(e) => {
-                e.preventDefault();
-                onDelete(blog);
-              }}
-            >
-              Delete
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
-
-      <div className="relative h-48 w-full">
-        <Image
-          src={
-            blog.featuredImage ||
-            `https://picsum.photos/seed/${blog.id}/600/400`
-          }
-          alt={blog.title}
-          fill
-          className="object-cover transition-transform duration-300 group-hover:scale-105"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
-        <div className="absolute bottom-4 left-4">
-          {blog.category && <Badge variant="secondary">{blog.category}</Badge>}
-        </div>
-      </div>
-
-      <div className="flex flex-col flex-grow p-6">
-        <h3 className="mb-2 text-xl font-semibold text-primary line-clamp-2">
-          {blog.title}
-        </h3>
-        <p className="mb-4 text-sm text-muted-foreground line-clamp-3 flex-grow">
-          {blog.excerpt}
-        </p>
-        <div className="mt-auto flex items-center justify-between gap-3 text-xs text-muted-foreground">
-          <Badge variant={blog.published ? "default" : "outline"}>
-            {blog.published ? "Published" : "Draft"}
-          </Badge>
-          <div className="flex flex-wrap items-center justify-end gap-x-3 gap-y-1">
-            <div className="flex items-center gap-1.5">
-              <Eye className="h-4 w-4" />
-              <span>{(blog.viewsCount ?? 0).toLocaleString()} views</span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <Calendar className="h-4 w-4" />
-              <span>{safeFormatDate(blog.createdAt, "PP")}</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#1f2937" },
+  ],
 };
+export default async function EditContactPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
+  const contact = await getContact(id);
 
-export default function BlogsClient() {
-  const { data: blogs, loading, error, refresh } = useBlogs();
-  const router = useRouter();
-  const [searchQuery, setSearchQuery] = useState("");
-  const [categoryFilter, setCategoryFilter] = useState("all");
-  const [statusTab, setStatusTab] = useState("all");
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const [selectedBlog, setSelectedBlog] = useState<BlogType | null>(null);
-
-  const categories = useMemo(() => {
-    const cats = new Set<string>();
-    blogs.forEach((blog) => {
-      if (blog.category) cats.add(blog.category);
-    });
-    return Array.from(cats).sort();
-  }, [blogs]);
-
-  const filteredBlogs = useMemo(() => {
-    return blogs.filter((blog) => {
-      const matchesSearch =
-        blog.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        (blog.excerpt?.toLowerCase().includes(searchQuery.toLowerCase()) ??
-          false);
-      const matchesCategory =
-        categoryFilter === "all" || blog.category === categoryFilter;
-      const matchesStatus =
-        statusTab === "all" ||
-        (statusTab === "published" && blog.published) ||
-        (statusTab === "draft" && !blog.published);
-      return matchesSearch && matchesCategory && matchesStatus;
-    });
-  }, [blogs, searchQuery, categoryFilter, statusTab]);
-
-  const handleEdit = (blog: BlogType) => {
-    router.push(`/admin/blogs/${blog.id}/edit`);
-  };
-
-  const handleDelete = (blog: BlogType) => {
-    setSelectedBlog(blog);
-    setIsDeleteDialogOpen(true);
-  };
-
-  const onDeleted = () => {
-    setIsDeleteDialogOpen(false);
-    setSelectedBlog(null);
-    refresh();
-  };
-
-  if (error) {
-    return (
-      <div className="text-destructive p-4 border border-destructive/20 rounded-lg bg-destructive/10">
-        Error loading blogs: {error.message}
-      </div>
-    );
+  if (!contact) {
+    notFound();
   }
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Blogs</h1>
-          <p className="text-muted-foreground">
-            Manage your blog posts and content.
-          </p>
-        </div>
-        <Button asChild>
-          <Link href="/admin/blogs/new">
-            <PlusCircle className="mr-2 h-4 w-4" />
-            Add Post
-          </Link>
-        </Button>
-      </div>
+      <Button variant="outline" asChild>
+        <Link href="/admin/contacts">
+          <ArrowLeft className="mr-2 h-4 w-4" />
+          Back to Contacts
+        </Link>
+      </Button>
+      <Card>
+        <CardHeader>
+          <CardTitle>Edit Contact</CardTitle>
+          <CardDescription>
+            Update the details for "{contact.name}".
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <ContactForm contact={contact} />
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+````
 
-      <BlogsAnalysis blogs={blogs} />
+## File: apps/admin/app/admin/contacts/[id]/page.tsx
+````typescript
+import type { ContactType } from "@bilacert/contracts/contact";
+import { createSupabaseServerClient } from "@bilacert/supabase/server";
+import type { Metadata, Viewport } from "next";
+import { notFound } from "next/navigation";
+import { cache } from "react";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { getContactEmailComposeHref } from "@/lib/emailNavigation";
+import ContactDetails from "../ContactDetails";
 
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-b pb-4">
-        <Tabs
-          defaultValue="all"
-          className="w-full sm:w-auto"
-          onValueChange={setStatusTab}
-        >
-          <TabsList>
-            <TabsTrigger value="all">All</TabsTrigger>
-            <TabsTrigger value="published">Published</TabsTrigger>
-            <TabsTrigger value="draft">Drafts</TabsTrigger>
-          </TabsList>
-        </Tabs>
-        <div className="flex items-center gap-2">
-          <div className="relative w-full sm:w-64">
-            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder="Search blogs..."
-              className="pl-8"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-          </div>
-          <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-            <SelectTrigger className="w-[180px]">
-              <Filter className="mr-2 h-4 w-4 text-muted-foreground" />
-              <SelectValue placeholder="Category" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Categories</SelectItem>
-              {categories.map((cat) => (
-                <SelectItem key={cat} value={cat}>
-                  {cat}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-      </div>
+type ContactDetailsPageProps = {
+  params: Promise<{ id: string }>;
+  searchParams: Promise<{ emailStatus?: string }>;
+};
 
-      {loading ? (
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-          {Array.from({ length: 6 }).map((_, i) => (
-            <div
-              key={i}
-              className="h-[400px] w-full animate-pulse rounded-xl bg-muted"
-            ></div>
-          ))}
-        </div>
-      ) : filteredBlogs.length === 0 ? (
-        <div className="flex flex-col items-center justify-center rounded-xl border-2 border-dashed py-24 text-center">
-          <div className="rounded-full bg-muted p-6 mb-4">
-            <Search className="h-10 w-10 text-muted-foreground" />
-          </div>
-          <h3 className="text-xl font-semibold">No blogs found</h3>
-          <p className="text-muted-foreground max-w-xs mx-auto mt-2">
-            No blogs match the current filters.
-          </p>
-          {(searchQuery || categoryFilter !== "all" || statusTab !== "all") && (
-            <Button
-              variant="outline"
-              className="mt-6"
-              onClick={() => {
-                setSearchQuery("");
-                setCategoryFilter("all");
-                setStatusTab("all");
-              }}
-            >
-              Clear all filters
-            </Button>
-          )}
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-          {filteredBlogs.map((blog) => (
-            <BlogCard
-              key={blog.id}
-              blog={blog}
-              onEdit={handleEdit}
-              onDelete={handleDelete}
-            />
-          ))}
-        </div>
+const getContact = cache(async (id: string): Promise<ContactType | null> => {
+  const supabase = await createSupabaseServerClient();
+  const { data, error } = await supabase
+    .from("contacts")
+    .select("*")
+    .eq("id", id)
+    .single();
+
+  if (error || !data) {
+    return null;
+  }
+
+  return {
+    id: data.id,
+    name: data.name,
+    email: data.email,
+    phone: data.phone,
+    service: data.service,
+    message: data.message,
+    submittedAt: data.submittedAt,
+  } as ContactType;
+});
+
+export async function generateMetadata({
+  params,
+}: Pick<ContactDetailsPageProps, "params">): Promise<Metadata> {
+  const { id } = await params;
+  const contact = await getContact(id);
+  if (!contact) {
+    return {
+      title: "Contact Not Found",
+    };
+  }
+  return {
+    title: `${contact.name || contact.email} | Bilacert Admin Pro`,
+  };
+}
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#1f2937" },
+  ],
+};
+export default async function ContactDetailsPage({
+  params,
+  searchParams,
+}: ContactDetailsPageProps) {
+  const [{ id }, query] = await Promise.all([params, searchParams]);
+  const contact = await getContact(id);
+
+  if (!contact) {
+    notFound();
+  }
+
+  const emailStatus =
+    query.emailStatus === "sent" || query.emailStatus === "draft"
+      ? query.emailStatus
+      : null;
+  const displayName = contact.name?.trim() || contact.email;
+
+  return (
+    <div className="space-y-6">
+      {emailStatus && (
+        <Alert className="border-emerald-200 bg-emerald-50 text-emerald-900">
+          <AlertTitle>
+            {emailStatus === "sent" ? "Email sent" : "Draft saved"}
+          </AlertTitle>
+          <AlertDescription>
+            {emailStatus === "sent"
+              ? `Your email to ${displayName} was sent through Zoho Mail.`
+              : `Your email to ${displayName} was saved in Zoho Drafts.`}
+          </AlertDescription>
+        </Alert>
       )}
-
-      {isDeleteDialogOpen && (
-        <DeleteBlogDialog
-          isOpen={isDeleteDialogOpen}
-          onClose={() => setIsDeleteDialogOpen(false)}
-          onDeleted={onDeleted}
-          blog={selectedBlog}
-        />
-      )}
+      <ContactDetails
+        contact={contact}
+        emailComposeHref={getContactEmailComposeHref(contact)}
+      />
     </div>
   );
 }
@@ -29767,260 +32307,119 @@ export default function ContactsClient() {
 }
 ````
 
-## File: apps/admin/app/admin/services/[id]/edit/page.tsx
+## File: apps/admin/app/admin/emails/compose/page.tsx
 ````typescript
-import type { ServiceRowType } from "@bilacert/contracts/service";
-import { normalizeService } from "@bilacert/supabase/Queries/services";
-import { createSupabaseServerClient } from "@bilacert/supabase/server";
 import { ArrowLeft } from "lucide-react";
+import type { Viewport } from "next";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { redirect } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import { getAdminAccess } from "@/lib/adminAccess";
+import { getSafeEmailReturnPath } from "@/lib/emailNavigation";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import ServiceForm from "./ServiceForm";
+  getZohoMailAccount,
+  getZohoMailConfigurationStatus,
+} from "@/lib/zohoMail";
+import EmailComposer from "../_components/EmailComposer";
+import {
+  EmailAccessState,
+  EmailConnectionState,
+  EmailSetupState,
+} from "../_components/EmailState";
+
+export const dynamic = "force-dynamic";
 
 export const metadata = {
-  title: "Edit Service | Bilacert Admin Pro",
-  description: "Edit an existing regulatory service.",
+  title: "Compose Email | Bilacert Admin",
+  description: "Compose a Bilacert email through Zoho Mail.",
 };
 
-async function getService(id: string): Promise<ServiceRowType | null> {
-  const supabase = await createSupabaseServerClient();
-  const { data, error } = await supabase
-    .from("services")
-    .select("*")
-    .eq("id", id)
-    .single();
+type ComposeEmailPageProps = {
+  searchParams: Promise<{
+    to?: string;
+    subject?: string;
+    content?: string;
+    returnTo?: string;
+  }>;
+};
 
-  if (error) {
-    console.error("Error fetching service:", error);
-    return null;
-  }
-
-  return data ? normalizeService(data) : null;
+function safeInitialValue(value: string | undefined, maxLength: number) {
+  return value?.slice(0, maxLength) ?? "";
 }
 
-export default async function EditServicePage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
-  const slug = (await params).id;
-  const service = await getService(slug);
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#1f2937" },
+  ],
+};
+export default async function ComposeEmailPage({
+  searchParams,
+}: ComposeEmailPageProps) {
+  const access = await getAdminAccess();
 
-  if (!service) {
-    notFound();
+  if (!access.allowed) {
+    if (access.reason === "unauthenticated") redirect("/admin/login");
+    return <EmailAccessState message={access.message} />;
   }
 
+  const configuration = getZohoMailConfigurationStatus();
+  if (!configuration.configured) {
+    return (
+      <EmailSetupState missingVariables={configuration.missingVariables} />
+    );
+  }
+
+  let fromAddress: string;
+  try {
+    const account = await getZohoMailAccount();
+    fromAddress = account.fromAddress;
+  } catch (error) {
+    return (
+      <EmailConnectionState
+        message={
+          error instanceof Error
+            ? error.message
+            : "Zoho Mail could not load the sender account."
+        }
+      />
+    );
+  }
+
+  const query = await searchParams;
+  const returnTo = getSafeEmailReturnPath(query.returnTo);
+  const returnLabel = returnTo?.startsWith("/admin/contacts/")
+    ? "Back to contact"
+    : returnTo
+      ? "Back to submission"
+      : "Back to email";
+
   return (
-    <div className="mx-auto max-w-5xl space-y-6">
-      <div className="flex items-center gap-4">
-        <Button variant="outline" size="sm" asChild>
-          <Link href={`/admin/services/${service.id}`}>
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            Cancel Edit
+    <div className="mx-auto max-w-4xl space-y-6">
+      <div>
+        <Button asChild variant="ghost" className="mb-3 -ml-3">
+          <Link href={returnTo ?? "/admin/emails"}>
+            <ArrowLeft className="h-4 w-4" />
+            {returnLabel}
           </Link>
         </Button>
+        <h1 className="text-3xl font-bold tracking-tight">Compose email</h1>
+        <p className="mt-1 text-muted-foreground">
+          Messages are sent securely through the connected Zoho mailbox.
+        </p>
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Edit Service</CardTitle>
-          <CardDescription>
-            You are currently editing the details for:{" "}
-            <span className="font-semibold text-foreground">
-              {service.title}
-            </span>
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <ServiceForm service={service} />
-        </CardContent>
-      </Card>
-    </div>
-  );
-}
-````
-
-## File: apps/admin/app/admin/services/[id]/page.tsx
-````typescript
-import type { BlogRowType as BlogType } from "@bilacert/contracts/blog";
-import type { ServiceRowType } from "@bilacert/contracts/service";
-import { normalizeService } from "@bilacert/supabase/Queries/services";
-import { createSupabaseServerClient } from "@bilacert/supabase/server";
-import { Eye } from "lucide-react";
-import type { Metadata } from "next";
-import Link from "next/link";
-import { notFound } from "next/navigation";
-import { Badge } from "@/components/ui/badge";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import ServiceDetails from "./ServiceDetails";
-import ServiceSubmissionAnalysis from "./ServiceSubmissionAnalysis";
-
-async function getService(id: string): Promise<ServiceRowType | null> {
-  const supabase = await createSupabaseServerClient();
-  const { data, error } = await supabase
-    .from("services")
-    .select("*")
-    .eq("id", id)
-    .single();
-
-  if (error || !data) {
-    return null;
-  }
-
-  return normalizeService(data);
-}
-
-async function getBlogs(): Promise<BlogType[]> {
-  const supabase = await createSupabaseServerClient();
-  const { data, error } = await supabase
-    .from("blog_posts")
-    .select(
-      "id,title,slug,excerpt,content,category,tags,readTime,seoTitle,seoDescription,seoKeywords,featuredImage,thumbnail,published,publishedAt,featured,authorId,authorName,viewsCount,createdAt,updatedAt",
-    );
-
-  if (error || !data) {
-    return [];
-  }
-
-  return data as BlogType[];
-}
-
-function normalizeSearchValue(value: string | null | undefined) {
-  return value?.trim().toLowerCase() ?? "";
-}
-
-function getRelatedBlogs(service: ServiceRowType, blogs: BlogType[]) {
-  const serviceTerms = [service.title, service.slug, service.category]
-    .map(normalizeSearchValue)
-    .filter(Boolean);
-
-  return blogs.filter((blog) => {
-    const searchableBlogText = [
-      blog.title,
-      blog.category,
-      blog.tags,
-      blog.excerpt,
-      blog.content,
-    ]
-      .map(normalizeSearchValue)
-      .join(" ");
-
-    return serviceTerms.some((term) => searchableBlogText.includes(term));
-  });
-}
-
-function ServiceBlogPerformance({
-  service,
-  blogs,
-}: {
-  service: ServiceRowType;
-  blogs: BlogType[];
-}) {
-  const topBlogs = getRelatedBlogs(service, blogs)
-    .sort((a, b) => (b.viewsCount ?? 0) - (a.viewsCount ?? 0))
-    .slice(0, 5);
-
-  return (
-    <Card className="border-0 shadow-xl shadow-black/5">
-      <CardHeader>
-        <CardTitle className="text-lg font-semibold">
-          Service Blog Performance
-        </CardTitle>
-        <CardDescription>
-          Blog content connected to {service.title} by title, slug, or category
-          match.
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        {topBlogs.length > 0 ? (
-          <div className="space-y-3">
-            {topBlogs.map((blog) => (
-              <div
-                key={blog.id}
-                className="flex flex-col gap-3 rounded-xl border bg-background p-4 shadow-sm shadow-black/5 md:flex-row md:items-center md:justify-between"
-              >
-                <div className="min-w-0">
-                  <Link
-                    href={`/admin/blogs/${blog.id}`}
-                    className="font-semibold text-primary hover:text-primary/80"
-                  >
-                    {blog.title}
-                  </Link>
-                  <div className="mt-2 flex flex-wrap gap-2">
-                    {blog.category && (
-                      <Badge variant="secondary">{blog.category}</Badge>
-                    )}
-                    <Badge variant={blog.published ? "default" : "outline"}>
-                      {blog.published ? "Published" : "Draft"}
-                    </Badge>
-                    {blog.featured && <Badge variant="outline">Featured</Badge>}
-                  </div>
-                </div>
-                <div className="flex items-center gap-2 text-sm font-semibold text-muted-foreground">
-                  <Eye className="h-4 w-4" />
-                  {(blog.viewsCount ?? 0).toLocaleString()} views
-                </div>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <p className="text-sm text-muted-foreground">
-            No related blog posts were found for this service yet.
-          </p>
-        )}
-      </CardContent>
-    </Card>
-  );
-}
-
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}): Promise<Metadata> {
-  const { id } = await params;
-  const service = await getService(id);
-  if (!service) {
-    return {
-      title: "Service Not Found",
-    };
-  }
-  return {
-    title: `${service.title} | Bilacert Admin Pro`,
-  };
-}
-
-export default async function ServiceDetailsPage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
-  const { id } = await params;
-  const [service, blogs] = await Promise.all([getService(id), getBlogs()]);
-
-  if (!service) {
-    notFound();
-  }
-
-  return (
-    <div className="space-y-8">
-      <ServiceDetails service={service} />
-      <ServiceSubmissionAnalysis service={service} />
-      <ServiceBlogPerformance service={service} blogs={blogs} />
+      <EmailComposer
+        fromAddress={fromAddress}
+        initialToAddress={safeInitialValue(query.to, 4_000)}
+        initialSubject={safeInitialValue(query.subject, 998)}
+        initialContent={safeInitialValue(query.content, 200_000)}
+        returnTo={returnTo ?? undefined}
+      />
     </div>
   );
 }
@@ -30247,397 +32646,23 @@ export default function ServiceSubmissionAnalysis({
 }
 ````
 
-## File: apps/admin/app/admin/services/ServicesClient.tsx
+## File: apps/admin/app/admin/testimonials/[id]/edit/page.tsx
 ````typescript
-"use client";
-
-import type {
-  SubmissionStatus,
-  SubmissionType,
-} from "@bilacert/contracts/formSubmission";
-import type { ServiceRowType } from "@bilacert/contracts/service";
-import {
-  Archive,
-  BarChart3,
-  CheckCircle2,
-  Clock,
-  Inbox,
-  type LucideIcon,
-  MoreHorizontal,
-  Package,
-  Sparkles,
-  XCircle,
-} from "lucide-react";
+import type { TestimonialRowType } from "@bilacert/contracts/testimonial";
+import { createSupabaseServerClient } from "@bilacert/supabase/server";
+import { ArrowLeft } from "lucide-react";
+import type { Viewport } from "next";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import AdminPage from "@/components/admin/AdminPage";
-import AnalysesHeader from "@/components/admin/AnalysesHeader";
-import { Badge } from "@/components/ui/badge";
+import { notFound } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { useServices } from "@/lib/hooks/useServices";
-import { useSubmissions } from "@/lib/hooks/useSubmissions";
-import DeleteServiceDialog from "./DeleteServiceDialog";
-
-const SERVICE_IMAGE_FALLBACK = "/logo.jpg";
-
-const submissionStatuses: {
-  label: string;
-  value: SubmissionStatus;
-  Icon: LucideIcon;
-  className: string;
-}[] = [
-  {
-    label: "Pending",
-    value: "pending",
-    Icon: Clock,
-    className: "bg-yellow-100 text-yellow-800 shadow-yellow-500/10",
-  },
-  {
-    label: "Processing",
-    value: "in-progress",
-    Icon: Inbox,
-    className: "bg-blue-100 text-blue-800 shadow-blue-500/10",
-  },
-  {
-    label: "Completed",
-    value: "completed",
-    Icon: CheckCircle2,
-    className: "bg-emerald-100 text-emerald-800 shadow-emerald-500/10",
-  },
-  {
-    label: "Rejected",
-    value: "rejected",
-    Icon: XCircle,
-    className: "bg-red-100 text-red-800 shadow-red-500/10",
-  },
-  {
-    label: "Archived",
-    value: "archived",
-    Icon: Archive,
-    className: "bg-slate-100 text-slate-800 shadow-slate-500/10",
-  },
-];
-
-type ServiceSubmissionStatusCount = {
-  label: string;
-  value: SubmissionStatus;
-  Icon: LucideIcon;
-  className: string;
-  count: number;
-};
-
-function normalizeServiceKey(value: string | undefined) {
-  return value?.trim().toLowerCase();
-}
-
-function getServiceSubmissions(
-  service: ServiceRowType,
-  submissions: SubmissionType[],
-) {
-  const serviceKeys = [service.id, service.slug, service.title]
-    .map(normalizeServiceKey)
-    .filter(Boolean);
-
-  return submissions.filter((submission) => {
-    const submissionServiceKeys = [submission.serviceId, submission.serviceName]
-      .map(normalizeServiceKey)
-      .filter(Boolean);
-
-    return submissionServiceKeys.some((submissionServiceKey) =>
-      serviceKeys.includes(submissionServiceKey),
-    );
-  });
-}
-
-function getServiceSubmissionStatusCounts(
-  service: ServiceRowType,
-  submissions: SubmissionType[],
-): ServiceSubmissionStatusCount[] {
-  const serviceSubmissions = getServiceSubmissions(service, submissions);
-
-  return submissionStatuses.map((status) => ({
-    ...status,
-    count: serviceSubmissions.filter(
-      (submission) => submission.status === status.value,
-    ).length,
-  }));
-}
-
-function ServicesAnalysis({
-  services,
-  submissions,
-}: {
-  services: ServiceRowType[];
-  submissions: SubmissionType[];
-}) {
-  const publishedServices = services.filter((service) => service.published);
-  const featuredServices = services.filter((service) => service.featured);
-  const draftServices = services.length - publishedServices.length;
-  const statusTotals = submissionStatuses.map((status) => ({
-    ...status,
-    count: submissions.filter(
-      (submission) => submission.status === status.value,
-    ).length,
-  }));
-
-  return (
-    <div className="space-y-6">
-      <AnalysesHeader
-        items={[
-          {
-            title: "Total Services",
-            value: services.length,
-            description: `${publishedServices.length.toLocaleString()} published`,
-            icon: <Package className="h-4 w-4 text-muted-foreground" />,
-          },
-          {
-            title: "Featured Services",
-            value: featuredServices.length,
-            description: "Highlighted on public pages",
-            icon: <Sparkles className="h-4 w-4 text-muted-foreground" />,
-          },
-          {
-            title: "Service Submissions",
-            value: submissions.length,
-            description: "Across service and contact flows",
-            icon: <BarChart3 className="h-4 w-4 text-muted-foreground" />,
-          },
-          {
-            title: "Draft Services",
-            value: draftServices,
-            description: "Not visible publicly yet",
-            icon: <Clock className="h-4 w-4 text-muted-foreground" />,
-          },
-        ]}
-      />
-
-      <Card className="border-0 shadow-xl shadow-black/5">
-        <CardHeader>
-          <CardTitle className="text-lg font-semibold">
-            Service Submission Status
-          </CardTitle>
-          <CardDescription>
-            Submission health across all services.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="grid gap-3 md:grid-cols-5">
-            {statusTotals.map(({ label, value, count, Icon, className }) => (
-              <div
-                key={value}
-                className={`rounded-xl p-4 shadow-sm ${className}`}
-              >
-                <div className="flex items-center justify-between gap-3">
-                  <span className="flex items-center gap-2 text-sm font-semibold">
-                    <Icon className="h-4 w-4" />
-                    {label}
-                  </span>
-                  <span className="text-2xl font-bold tabular-nums">
-                    {count}
-                  </span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-    </div>
-  );
-}
-
-const ServiceCard = ({
-  service,
-  submissionStatusCounts,
-  onEdit,
-  onDelete,
-}: {
-  service: ServiceRowType;
-  submissionStatusCounts: ServiceSubmissionStatusCount[];
-  onEdit: (service: ServiceRowType) => void;
-  onDelete: (service: ServiceRowType) => void;
-}) => {
-  const router = useRouter();
-  const imageUrl =
-    service.thumbnail?.trim() ||
-    service.image?.trim() ||
-    SERVICE_IMAGE_FALLBACK;
-  const visibleSubmissionStatusCounts = submissionStatusCounts.filter(
-    ({ count }) => count > 0,
-  );
-
-  return (
-    <div key={service.id} className="group relative">
-      <Link
-        href={`/admin/services/${service.id}`}
-        className="absolute inset-0 z-10"
-        aria-label={`View ${service.title}`}
-      >
-        <span className="sr-only">View Details</span>
-      </Link>
-      <Card className="flex h-full flex-col overflow-hidden border-0 shadow-sm transition-all duration-300 hover:-translate-y-2 group-hover:shadow-xl group-hover:shadow-black/10">
-        <div className="relative h-48 w-full overflow-hidden bg-muted">
-          <img
-            src={imageUrl}
-            alt={service.title}
-            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
-        </div>
-        <CardHeader>
-          <div className="flex items-start justify-between gap-4">
-            <div className="min-w-0 space-y-1">
-              <CardTitle className="line-clamp-2 text-lg text-primary">
-                {service.title}
-              </CardTitle>
-              <CardDescription>{service.category}</CardDescription>
-            </div>
-            <div className="relative z-20 shrink-0">
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    className="h-8 w-8 rounded-full bg-background/70 p-0 backdrop-blur-sm hover:bg-background"
-                    onClick={(e) => e.preventDefault()}
-                  >
-                    <span className="sr-only">Open menu</span>
-                    <MoreHorizontal className="h-4 w-4" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                  <DropdownMenuItem
-                    onClick={(e) => {
-                      e.preventDefault();
-                      router.push(`/admin/services/${service.id}`);
-                    }}
-                  >
-                    View Details
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    onClick={(e) => {
-                      e.preventDefault();
-                      onEdit(service);
-                    }}
-                  >
-                    Edit
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem
-                    className="text-destructive focus:bg-destructive/10 focus:text-destructive"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      onDelete(service);
-                    }}
-                  >
-                    Delete
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
-          </div>
-        </CardHeader>
-        <CardContent className="flex-grow space-y-4">
-          <div className="flex flex-wrap gap-2">
-            <Badge variant={service.published ? "default" : "secondary"}>
-              {service.published ? "Published" : "Draft"}
-            </Badge>
-            {service.featured && <Badge variant="outline">Featured</Badge>}
-          </div>
-          <p className="line-clamp-3 text-sm text-muted-foreground">
-            {service.shortDescription}
-          </p>
-          <div className="rounded-xl bg-muted/40 p-3 shadow-sm shadow-black/5">
-            <p className="mb-2 text-xs font-bold uppercase tracking-wider text-muted-foreground">
-              Form Submissions
-            </p>
-            {visibleSubmissionStatusCounts.length > 0 ? (
-              <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-                {visibleSubmissionStatusCounts.map(
-                  ({ label, value, count, Icon, className }) => (
-                    <div
-                      key={value}
-                      className={`flex items-center justify-between gap-2 rounded-lg px-3 py-2 text-xs font-semibold shadow-sm ${className}`}
-                    >
-                      <span className="flex items-center gap-1.5">
-                        <Icon className="h-3.5 w-3.5" />
-                        {label}
-                      </span>
-                      <span className="tabular-nums">{count}</span>
-                    </div>
-                  ),
-                )}
-              </div>
-            ) : (
-              <p className="text-xs text-muted-foreground">
-                No submissions yet
-              </p>
-            )}
-          </div>
-        </CardContent>
-        <CardFooter>
-          <p className="text-lg font-semibold">
-            {service.pricing
-              ? `R ${service.pricing.toLocaleString()}`
-              : "Not Set"}
-          </p>
-        </CardFooter>
-      </Card>
-    </div>
-  );
-};
-
-export default function ServicesClient() {
-  const { data: submissions } = useSubmissions();
-
-  return (
-    <AdminPage<ServiceRowType>
-      useData={useServices}
-      title="Services"
-      newItemButtonText="Add Service"
-      newItemLink="/admin/services/new"
-      renderBeforeContent={(services) => (
-        <ServicesAnalysis services={services} submissions={submissions || []} />
-      )}
-      renderItem={(service, onEdit, onDelete) => (
-        <ServiceCard
-          service={service}
-          submissionStatusCounts={getServiceSubmissionStatusCounts(
-            service,
-            submissions || [],
-          )}
-          onEdit={onEdit}
-          onDelete={onDelete}
-        />
-      )}
-      DeleteDialog={DeleteServiceDialog as any}
-    />
-  );
-}
-````
-
-## File: apps/admin/app/admin/testimonials/[id]/page.tsx
-````typescript
-import type { TestimonialRowType } from "@bilacert/contracts/testimonial";
-import { createSupabaseServerClient } from "@bilacert/supabase/server";
-import type { Metadata } from "next";
-import { notFound } from "next/navigation";
-import TestimonialDetails from "../TestimonialDetails";
+import TestimonialForm from "../../TestimonialForm";
 
 async function getTestimonial(id: string): Promise<TestimonialRowType | null> {
   const supabase = await createSupabaseServerClient();
@@ -30658,23 +32683,22 @@ async function getTestimonial(id: string): Promise<TestimonialRowType | null> {
   } as TestimonialRowType;
 }
 
-export async function generateMetadata({
-  params,
-}: {
-  params: { id: string };
-}): Promise<Metadata> {
-  const testimonial = await getTestimonial(params.id);
-  if (!testimonial) {
-    return {
-      title: "Testimonial Not Found",
-    };
-  }
-  return {
-    title: `Testimonial from ${new Date(testimonial.createdAt).toLocaleDateString()} | Bilacert Admin Pro`,
-  };
-}
+export const metadata = {
+  title: "Edit Testimonial | Bilacert Admin Pro",
+  description: "Edit an existing testimonial.",
+};
 
-export default async function TestimonialDetailsPage({
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#1f2937" },
+  ],
+};
+export default async function EditTestimonialPage({
   params,
 }: {
   params: Promise<{ id: string }>;
@@ -30686,129 +32710,24 @@ export default async function TestimonialDetailsPage({
     notFound();
   }
 
-  return <TestimonialDetails testimonial={testimonial} />;
-}
-````
-
-## File: apps/admin/app/admin/testimonials/TestimonialsClient.tsx
-````typescript
-"use client";
-
-import type { TestimonialRowType } from "@bilacert/contracts/testimonial";
-import { format } from "date-fns";
-import { MoreHorizontal } from "lucide-react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import AdminPage from "@/components/admin/AdminPage";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { useTestimonials } from "@/lib/hooks/useTestimonials";
-import DeleteTestimonialDialog from "./DeleteTestimonialDialog";
-import TestimonialEmbed from "./TestimonialEmbed";
-
-const renderTestimonial = (
-  testimonial: TestimonialRowType,
-  onEdit: (testimonial: TestimonialRowType) => void,
-  onDelete: (testimonial: TestimonialRowType) => void,
-) => {
-  const router = useRouter();
-  const date = new Date(testimonial.createdAt);
-  const formattedDate = !Number.isNaN(date.getTime())
-    ? format(date, "PP")
-    : "Date not available";
   return (
-    <div key={testimonial.id} className="group relative">
-      <Link
-        href={`/admin/testimonials/${testimonial.id}`}
-        className="absolute inset-0 z-10"
-        aria-label={`View testimonial`}
-      >
-        <span className="sr-only">View Details</span>
-      </Link>
-      <Card className="flex flex-col h-full hover:shadow-lg hover:border-primary/50 transition-all">
-        <CardHeader className="flex-row items-center justify-between">
-          <div>
-            <CardTitle className="text-base">Testimonial</CardTitle>
-            <CardDescription className="text-xs">
-              Added on {formattedDate}
-            </CardDescription>
-          </div>
-          <div className="relative z-20">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="ghost"
-                  className="h-8 w-8 p-0"
-                  onClick={(e) => e.preventDefault()}
-                >
-                  <span className="sr-only">Open menu</span>
-                  <MoreHorizontal className="h-4 w-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                <DropdownMenuItem
-                  onClick={(e) => {
-                    e.preventDefault();
-                    router.push(`/admin/testimonials/${testimonial.id}`);
-                  }}
-                >
-                  View
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={(e) => {
-                    e.preventDefault();
-                    onEdit(testimonial);
-                  }}
-                >
-                  Edit
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem
-                  className="text-destructive focus:bg-destructive/10 focus:text-destructive"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    onDelete(testimonial);
-                  }}
-                >
-                  Delete
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
+    <div className="space-y-6">
+      <Button variant="outline" asChild>
+        <Link href="/admin/testimonials">
+          <ArrowLeft className="mr-2 h-4 w-4" />
+          Back to Testimonials
+        </Link>
+      </Button>
+      <Card>
+        <CardHeader>
+          <CardTitle>Edit Testimonial</CardTitle>
+          <CardDescription>Update the Facebook post URL.</CardDescription>
         </CardHeader>
-        <CardContent className="flex-grow p-0 overflow-hidden">
-          <TestimonialEmbed postUrl={testimonial.postUrl} />
+        <CardContent>
+          <TestimonialForm testimonial={testimonial} />
         </CardContent>
       </Card>
     </div>
-  );
-};
-
-export default function TestimonialsClient() {
-  return (
-    <AdminPage<TestimonialRowType>
-      useData={useTestimonials}
-      title="Testimonials"
-      newItemButtonText="Add Testimonial"
-      newItemLink="/admin/testimonials/new"
-      renderItem={renderTestimonial}
-      DeleteDialog={DeleteTestimonialDialog as any}
-    />
   );
 }
 ````
@@ -30865,6 +32784,262 @@ export async function submitContactForm(
 }
 ````
 
+## File: apps/client/app/services/[serviceId]/page.tsx
+````typescript
+import type {
+  PricingPlanType,
+  ProcessStepType,
+  SuccessStoryType as TSuccessStory,
+} from "@bilacert/contracts/service";
+import {
+  CheckCircle2,
+  ClipboardList,
+  FileCheck2,
+  ListChecks,
+} from "lucide-react";
+import type { Metadata, Viewport } from "next";
+import { notFound } from "next/navigation";
+import type { ReactNode } from "react";
+import { CTASection } from "@/components/service/CTASection";
+import { PricingPlans } from "@/components/service/PricingPlans";
+import { ProcessSteps } from "@/components/service/ProcessSteps";
+import { ServiceHero } from "@/components/service/ServiceHero";
+import { SuccessStory } from "@/components/service/SuccessStory";
+import { WhatIsSection } from "@/components/service/WhatIsSection";
+import { WhyChooseUs } from "@/components/service/WhyChooseUs";
+import {
+  getCachedServiceBySlug,
+  getCachedServiceSlugs,
+} from "../../_lib/cached-public-data";
+
+interface Props {
+  params: Promise<{ serviceId: string }>;
+}
+
+interface DetailListCardProps {
+  title: string;
+  description: string;
+  items: string[];
+  icon: ReactNode;
+}
+
+function DetailListCard({
+  title,
+  description,
+  items,
+  icon,
+}: DetailListCardProps) {
+  if (items.length === 0) return null;
+
+  return (
+    <div className="rounded-2xl bg-white p-8 shadow-sm shadow-black/5">
+      <div className="mb-6 flex h-12 w-12 items-center justify-center rounded-2xl bg-accent/10 text-accent">
+        {icon}
+      </div>
+      <h3 className="mb-2 text-2xl font-bold text-primary">{title}</h3>
+      <p className="mb-6 text-sm leading-relaxed text-gray-600">
+        {description}
+      </p>
+      <ul className="space-y-3">
+        {items.map((item) => (
+          <li
+            key={item}
+            className="flex items-start gap-3 text-sm text-gray-700"
+          >
+            <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-accent" />
+            <span>{item}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+function ServiceDetailFields({
+  includes,
+  features,
+  requirements,
+}: {
+  includes: string[];
+  features: string[];
+  requirements: string[];
+}) {
+  const hasFields =
+    includes.length > 0 || features.length > 0 || requirements.length > 0;
+
+  if (!hasFields) return null;
+
+  return (
+    <section className="bg-secondary-gray py-20">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="mb-12 max-w-3xl">
+          <h2 className="mb-4 text-3xl font-bold text-primary lg:text-4xl">
+            What you get
+          </h2>
+          <p className="text-lg leading-relaxed text-gray-600">
+            A clear breakdown of what is included, what makes this service
+            valuable, and what you may need before starting.
+          </p>
+        </div>
+        <div className="grid gap-8 lg:grid-cols-3">
+          <DetailListCard
+            title="Includes"
+            description="Core deliverables and support covered by this service."
+            items={includes}
+            icon={<ClipboardList className="h-6 w-6" />}
+          />
+          <DetailListCard
+            title="Features"
+            description="Key benefits and service capabilities available to you."
+            items={features}
+            icon={<ListChecks className="h-6 w-6" />}
+          />
+          <DetailListCard
+            title="Requirements"
+            description="Information or documents usually needed to proceed."
+            items={requirements}
+            icon={<FileCheck2 className="h-6 w-6" />}
+          />
+        </div>
+      </div>
+    </section>
+  );
+}
+
+export async function generateStaticParams() {
+  const slugs = await getCachedServiceSlugs();
+  return slugs.map((item) => ({ serviceId: item.slug }));
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { serviceId } = await params;
+  const service = await getCachedServiceBySlug(serviceId);
+
+  if (!service) {
+    return {
+      title: "Service Not Found - Bilacert",
+    };
+  }
+
+  return {
+    title: service.seoTitle || `${service.title} - Bilacert`,
+    description: service.seoDescription || service.description,
+    keywords: service.seoKeywords || [
+      service.title.toLowerCase(),
+      ...(service.category?.split(", ").map((c: string) => c.toLowerCase()) ||
+        []),
+      "licensing",
+      "certification",
+      "ICASA",
+      "South Africa",
+    ],
+    openGraph: {
+      title: service.seoTitle || service.title,
+      description: service.seoDescription || service.shortDescription,
+      url: `https://bilacert.co.za/services/${serviceId}`,
+      type: "website",
+      images: service.image ? [{ url: service.image }] : [],
+    },
+    alternates: {
+      canonical: `https://bilacert.co.za/services/${serviceId}`,
+    },
+  };
+}
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#1f2937" },
+  ],
+};
+export default async function ServiceDetailPage({ params }: Props) {
+  const { serviceId } = await params;
+  const service = await getCachedServiceBySlug(serviceId);
+
+  if (!service) {
+    notFound();
+  }
+
+  const formPath = `/services/${serviceId}/form`;
+  const includes = service.includes || [];
+  const features = service.features || [];
+  const requirements = service.requirements || [];
+
+  return (
+    <div className="min-h-screen">
+      <ServiceHero
+        title={service.title}
+        subtitle={service.shortDescription || ""}
+        iconName={service.icon || ""}
+        imageSrc={service.image || ""}
+        processingTime={service.processingTime || ""}
+        formPath={formPath}
+        phone="075 430 4433"
+      />
+
+      {service.content && (
+        <WhatIsSection
+          title={`What is this ${service.title}?`}
+          firstParagraph={service.content}
+          secondParagraph=""
+          checkpoints={[]}
+        />
+      )}
+
+      <ServiceDetailFields
+        includes={includes}
+        features={features}
+        requirements={requirements}
+      />
+
+      <WhyChooseUs />
+
+      {service.processSteps && (
+        <ProcessSteps
+          title="Our Process"
+          subtitle="A streamlined approach to get you certified."
+          steps={(service.processSteps as unknown as ProcessStepType[]).map(
+            (step) => ({ ...step, step: step.step.toString() }),
+          )}
+        />
+      )}
+
+      {service.pricingPlans && (
+        <PricingPlans
+          title="Pricing Plans"
+          subtitle="Choose the best plan for your needs."
+          plans={(service.pricingPlans as unknown as PricingPlanType[]).map(
+            (plan) => ({
+              ...plan,
+              title: plan.title || plan.name || "Pricing Plan",
+              popular: plan.popular,
+              description: plan.description || "",
+              features: Array.isArray(plan.features) ? plan.features : [],
+            }),
+          )}
+          formPath={formPath}
+        />
+      )}
+
+      {service.successStory && (
+        <SuccessStory {...(service.successStory as TSuccessStory)} />
+      )}
+
+      <CTASection
+        heading="Ready to get started?"
+        description="Contact us today for a free consultation."
+        primaryCTA={{ label: "Contact Us", href: "/contact" }}
+        secondaryCTA={{ label: "Learn More", href: "/about" }}
+      />
+    </div>
+  );
+}
+````
+
 ## File: apps/client/package.json
 ````json
 {
@@ -30918,106 +33093,43 @@ export async function submitContactForm(
 }
 ````
 
-## File: packages/contracts/package.json
-````json
-{
-  "name": "@bilacert/contracts",
-  "version": "0.0.0",
-  "private": true,
-  "exports": {
-    "./blog": "./src/blog.ts",
-    "./contact": "./src/contact.ts",
-    "./email": "./src/email.ts",
-    "./formSubmission": "./src/formSubmission.ts",
-    "./service": "./src/service.ts",
-    "./testimonial": "./src/testimonial.ts",
-    "./user": "./src/user.ts",
-    "./actionResult": "./src/actionResult.ts",
-    "./revalidation": "./src/revalidation.ts",
-    "./env": "./src/env.ts"
-  },
-  "scripts": {
-    "build": "tsc",
-    "typecheck": "tsc --noEmit"
-  },
-  "dependencies": {
-    "zod": "catalog:"
-  },
-  "devDependencies": {
-    "@bilacert/typescript-config": "workspace:*",
-    "@types/node": "catalog:",
-    "typescript": "catalog:"
-  }
-}
-````
-
-## File: packages/contracts/src/email.ts
+## File: packages/contracts/src/env.ts
 ````typescript
 import { z } from "zod";
 
-const EMAIL_LIST_MAX_LENGTH = 4_000;
+export const envSchema = z.object({
+  NEXT_PUBLIC_SUPABASE_URL: z.string().url("Supabase URL is required"),
+  NEXT_PUBLIC_SUPABASE_ANON_KEY: z
+    .string()
+    .min(1, "Supabase anon key is required"),
+  SUPABASE_URL: z.string().url().optional(),
+  SUPABASE_SECRET_KEY: z.string().min(1).optional(),
+  SUPABASE_SERVICE_ROLE_KEY: z.string().min(1).optional(),
+  REVALIDATION_SECRET: z.string().min(1).optional(),
+  CLIENT_REVALIDATION_URL: z.string().optional(),
+  NEXT_PUBLIC_CLIENT_URL: z.string().optional(),
+  BILACERT_CLIENT_URL: z.string().optional(),
+  PEXELS_API_KEY: z.string().optional(),
+});
 
-function isEmailList(value: string) {
-  const addresses = value
-    .split(/[;,]/)
-    .map((address) => address.trim())
-    .filter(Boolean);
+export type Env = z.infer<typeof envSchema>;
 
-  return (
-    addresses.length > 0 &&
-    addresses.every((address) => z.email().safeParse(address).success)
-  );
+export function getEnv(): Env {
+  const raw: Record<string, string | undefined> = {
+    NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
+    NEXT_PUBLIC_SUPABASE_ANON_KEY: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+    SUPABASE_URL: process.env.SUPABASE_URL,
+    SUPABASE_SECRET_KEY: process.env.SUPABASE_SECRET_KEY,
+    SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY,
+    REVALIDATION_SECRET: process.env.REVALIDATION_SECRET,
+    CLIENT_REVALIDATION_URL: process.env.CLIENT_REVALIDATION_URL,
+    NEXT_PUBLIC_CLIENT_URL: process.env.NEXT_PUBLIC_CLIENT_URL,
+    BILACERT_CLIENT_URL: process.env.BILACERT_CLIENT_URL,
+    PEXELS_API_KEY: process.env.PEXELS_API_KEY,
+  };
+  const result = envSchema.safeParse(raw);
+  return result.success ? result.data : (raw as unknown as Env);
 }
-
-const requiredEmailListSchema = z
-  .string()
-  .trim()
-  .min(1, "At least one recipient is required.")
-  .max(EMAIL_LIST_MAX_LENGTH, "The recipient list is too long.")
-  .refine(isEmailList, "Enter valid email addresses separated by commas.");
-
-const optionalEmailListSchema = z
-  .string()
-  .trim()
-  .max(EMAIL_LIST_MAX_LENGTH, "The recipient list is too long.")
-  .refine(
-    (value) => value.length === 0 || isEmailList(value),
-    "Enter valid email addresses separated by commas.",
-  );
-
-export const emailComposeSchema = z.object({
-  toAddress: requiredEmailListSchema,
-  ccAddress: optionalEmailListSchema,
-  bccAddress: optionalEmailListSchema,
-  subject: z
-    .string()
-    .trim()
-    .min(1, "Subject is required.")
-    .max(998, "Subject must be 998 characters or fewer."),
-  content: z
-    .string()
-    .trim()
-    .min(1, "Message content is required.")
-    .max(200_000, "Message content is too long."),
-  intent: z.enum(["send", "draft"]).default("send"),
-});
-
-export const emailMessageReadStateSchema = z.object({
-  messageId: z.string().regex(/^\d+$/, "The message ID is invalid."),
-  folderId: z.string().regex(/^\d+$/, "The folder ID is invalid."),
-  readState: z.enum(["read", "unread"]),
-});
-
-export type EmailComposeType = z.infer<typeof emailComposeSchema>;
-export type EmailMessageReadStateType = z.infer<
-  typeof emailMessageReadStateSchema
->;
-
-export type EmailComposeActionState = {
-  ok?: boolean;
-  error?: string;
-  fieldErrors?: Record<string, string[]>;
-};
 ````
 
 ## File: packages/supabase/src/Mutations/contacts.ts
@@ -31143,927 +33255,6 @@ export async function deleteService(id: string, existingSlug?: string | null) {
     mode: "immediate",
   });
 }
-````
-
-## File: apps/admin/app/admin/blogs/[id]/edit/page.tsx
-````typescript
-import type { BlogRowType as BlogType } from "@bilacert/contracts/blog";
-import { createSupabaseServerClient } from "@bilacert/supabase/server";
-import { ArrowLeft } from "lucide-react";
-import Link from "next/link";
-import { notFound } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import BlogForm from "../../BlogForm";
-
-export const metadata = {
-  title: "Edit Blog Post | Bilacert Admin Pro",
-  description: "Edit an existing blog post.",
-};
-
-async function getBlog(id: string): Promise<BlogType | null> {
-  const supabase = await createSupabaseServerClient();
-  const { data, error } = await supabase
-    .from("blog_posts")
-    .select("*")
-    .eq("id", id)
-    .maybeSingle();
-
-  if (error || !data) {
-    return null;
-  }
-
-  return {
-    id: data.id,
-    title: data.title,
-    slug: data.slug,
-    excerpt: data.excerpt,
-    content: data.content,
-    category: data.category,
-    tags: data.tags,
-    readTime: data.readTime,
-    seoTitle: data.seoTitle,
-    seoDescription: data.seoDescription,
-    seoKeywords: data.seoKeywords,
-    featuredImage: data.featuredImage,
-    thumbnail: data.thumbnail,
-    published: data.published,
-    publishedAt: data.publishedAt,
-    featured: data.featured,
-    authorId: data.authorId,
-    authorName: data.authorName,
-    viewsCount: data.viewsCount,
-    createdAt: data.createdAt,
-    updatedAt: data.updatedAt,
-  } as BlogType;
-}
-
-export default async function EditBlogPage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
-  const { id } = await params;
-  const blog = await getBlog(id);
-
-  if (!blog) {
-    notFound();
-  }
-
-  return (
-    <div className="mx-auto max-w-5xl">
-      <div className="mb-4 flex items-center gap-4">
-        <Button variant="outline" size="sm" asChild>
-          <Link href={`/admin/blogs/${blog.id}`}>
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            Cancel Edit
-          </Link>
-        </Button>
-      </div>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Edit Blog Post</CardTitle>
-          <CardDescription>
-            You are currently editing the details for:{" "}
-            <span className="font-semibold text-foreground">{blog.title}</span>
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <BlogForm blog={blog} blogId={id} />
-        </CardContent>
-      </Card>
-    </div>
-  );
-}
-````
-
-## File: apps/admin/app/admin/blogs/actions.ts
-````typescript
-"use server";
-
-import type { ActionResult } from "@bilacert/contracts/actionResult";
-import { blogSchema } from "@bilacert/contracts/blog";
-import {
-  createBlog as createBlogMutation,
-  deleteBlog as deleteBlogMutation,
-  updateBlog as updateBlogMutation,
-} from "@bilacert/supabase/Mutations/blogs";
-import { getBlogSlugById } from "@bilacert/supabase/Queries/blogs";
-import { revalidatePath } from "next/cache";
-import { v4 as uuidv4 } from "uuid";
-import { triggerRevalidation } from "@/lib/revalidation";
-
-export async function upsertBlog(
-  values: unknown,
-): Promise<ActionResult<{ id: string }>> {
-  const parsedValues = blogSchema.safeParse(values);
-
-  if (!parsedValues.success) {
-    return { ok: false, error: parsedValues.error.message };
-  }
-
-  const { id, ...rest } = parsedValues.data;
-  const isUpdate = Boolean(id);
-  const now = new Date().toISOString();
-
-  const blogData = {
-    id: id || uuidv4(),
-    title: rest.title,
-    slug: rest.slug,
-    authorName: rest.authorName,
-    readTime: rest.readTime,
-    category: rest.category,
-    tags: rest.tags,
-    excerpt: rest.excerpt,
-    content: rest.content,
-    published: rest.published,
-    publishedAt: rest.published ? now : null,
-    featuredImage: rest.featuredImage,
-    thumbnail: rest.thumbnail,
-    featured: rest.featured,
-    seoTitle: rest.seoTitle,
-    seoDescription: rest.seoDescription,
-    seoKeywords: rest.seoKeywords,
-    updatedAt: now,
-  };
-
-  try {
-    const result = isUpdate
-      ? await updateBlogMutation(blogData.id, blogData)
-      : await createBlogMutation(blogData);
-
-    await triggerRevalidation(result.revalidate);
-
-    revalidatePath("/admin/blogs");
-    revalidatePath(`/admin/blogs/${result.data.id}`);
-    revalidatePath(`/admin/blogs/${result.data.slug}`);
-    revalidatePath(`/admin/blogs/${result.data.id}/edit`);
-    revalidatePath(`/admin/blogs/${result.data.slug}/edit`);
-
-    return { ok: true, data: { id: result.data.id } };
-  } catch (error) {
-    const message = error instanceof Error ? error.message : "Unknown error";
-    return { ok: false, error: `Database error: ${message}` };
-  }
-}
-
-export async function deleteBlog(blogId: string): Promise<ActionResult> {
-  try {
-    const existingSlug = await getBlogSlugById(blogId);
-    const result = await deleteBlogMutation(blogId, existingSlug);
-    await triggerRevalidation(result.revalidate);
-  } catch (error) {
-    const message = error instanceof Error ? error.message : "Unknown error";
-    return { ok: false, error: `Database error: ${message}` };
-  }
-
-  revalidatePath("/admin/blogs");
-
-  return { ok: true };
-}
-````
-
-## File: apps/admin/app/admin/contacts/actions.ts
-````typescript
-"use server";
-
-import type { ActionResult } from "@bilacert/contracts/actionResult";
-import type { ContactType } from "@bilacert/contracts/contact";
-import { contactInputSchema } from "@bilacert/contracts/contact";
-import {
-  deleteContact as deleteContactMutation,
-  upsertContact as upsertContactMutation,
-} from "@bilacert/supabase/Mutations/contacts";
-import { createSupabaseServerClient } from "@bilacert/supabase/server";
-import { revalidatePath } from "next/cache";
-
-export async function getContacts() {
-  const supabase = await createSupabaseServerClient();
-  const { data, error } = await supabase
-    .from("contacts")
-    .select("*")
-    .order("name", { ascending: true });
-
-  if (error) {
-    throw new Error(error.message);
-  }
-
-  return data as ContactType[];
-}
-
-export async function upsertContact(
-  values: unknown,
-  contactId?: string,
-): Promise<ActionResult<ContactType>> {
-  const parsedValues = contactInputSchema.safeParse(values);
-
-  if (!parsedValues.success) {
-    return { ok: false, error: parsedValues.error.message };
-  }
-
-  let data: ContactType;
-  try {
-    const result = await upsertContactMutation(
-      contactId ? { ...parsedValues.data, id: contactId } : parsedValues.data,
-    );
-    data = result.data as ContactType;
-  } catch (error) {
-    const message = error instanceof Error ? error.message : "Unknown error";
-    return { ok: false, error: `Database error: ${message}` };
-  }
-
-  revalidatePath("/admin/contacts");
-  revalidatePath(`/admin/contacts/${data.id}`);
-
-  return {
-    ok: true,
-    data,
-    message: `Contact ${contactId ? "updated" : "created"} successfully!`,
-  };
-}
-
-export async function deleteContact(contactId: string): Promise<ActionResult> {
-  try {
-    await deleteContactMutation(contactId);
-  } catch (error) {
-    const message = error instanceof Error ? error.message : "Unknown error";
-    return { ok: false, error: `Database error: ${message}` };
-  }
-
-  revalidatePath("/admin/contacts");
-
-  return {
-    ok: true,
-    message: "Contact deleted successfully!",
-  };
-}
-````
-
-## File: apps/admin/lib/emailNavigation.ts
-````typescript
-import type { ContactType } from "@bilacert/contracts/contact";
-import type { SubmissionType } from "@bilacert/contracts/formSubmission";
-
-const emailReturnPathPattern =
-  /^\/admin\/(?:contacts|formSubmissions)\/[A-Za-z0-9_-]+$/;
-
-export function getContactEmailComposeHref(
-  contact: ContactType,
-): string | null {
-  const emailAddress = contact.email.trim();
-  if (!emailAddress) return null;
-
-  const name = contact.name?.trim() || "there";
-  const service = contact.service?.trim();
-  const content = [
-    `Hi ${name},`,
-    "",
-    service
-      ? `Thank you for contacting Bilacert regarding ${service}. We are following up on your enquiry.`
-      : "Thank you for contacting Bilacert. We are following up on your enquiry.",
-    "",
-    "Kind regards,",
-    "Bilacert Team",
-  ].join("\n");
-  const query = new URLSearchParams({
-    to: emailAddress,
-    subject: service ? `Bilacert enquiry: ${service}` : "Your Bilacert enquiry",
-    content,
-    returnTo: `/admin/contacts/${contact.id}`,
-  });
-
-  return `/admin/emails/compose?${query.toString()}`;
-}
-
-function getSubmissionTopic(submission: SubmissionType) {
-  const topic =
-    submission.serviceName?.trim() ||
-    submission.formType.replace(/[-_]+/g, " ").trim() ||
-    "Bilacert";
-
-  return topic.replace(/\b(nrcs|loa|icasa|ecns|ecs|vhf)\b/gi, (value) =>
-    value.toUpperCase(),
-  );
-}
-
-export function getSubmissionEmailComposeHref(
-  submission: SubmissionType,
-): string | null {
-  const emailAddress = submission.email.trim();
-  if (!emailAddress) return null;
-
-  const topic = getSubmissionTopic(submission);
-  const company = submission.company?.trim();
-  const content = [
-    `Hi ${submission.fullName},`,
-    "",
-    `We have received your submission for ${topic}.`,
-    ...(company ? ["", `Company: ${company}`] : []),
-    "",
-    "Kind regards,",
-    "Bilacert Team",
-  ].join("\n");
-  const query = new URLSearchParams({
-    to: emailAddress,
-    subject: `Bilacert submission: ${topic}`,
-    content,
-    returnTo: `/admin/formSubmissions/${submission.id}`,
-  });
-
-  return `/admin/emails/compose?${query.toString()}`;
-}
-
-export function getSafeEmailReturnPath(value: unknown): string | null {
-  if (typeof value !== "string") return null;
-
-  const path = value.trim();
-  return emailReturnPathPattern.test(path) ? path : null;
-}
-````
-
-## File: packages/contracts/src/contact.ts
-````typescript
-import { z } from "zod";
-
-export const contactSchema = z.object({
-  id: z.string(),
-  name: z.string().min(1, "Name is required"),
-  email: z.string().email("Please enter a valid email"),
-  phone: z.string().optional(),
-  service: z.string().optional(),
-  message: z.string().optional(),
-  submittedAt: z.string(),
-});
-
-export const contactInputSchema = contactSchema.pick({
-  name: true,
-  email: true,
-  phone: true,
-  service: true,
-  message: true,
-});
-
-export type ContactType = z.infer<typeof contactSchema>;
-export type ContactInput = z.infer<typeof contactInputSchema>;
-````
-
-## File: packages/supabase/src/Mutations/formSubmissions.ts
-````typescript
-"use server";
-
-import { requireAdminUser } from "../auth";
-import { CACHE_TAGS, mutationResult } from "../cache";
-import { createSupabaseServerClient } from "../server";
-import type { Database } from "../supabaseType";
-
-type SubmissionInsert =
-  Database["public"]["Tables"]["form_submissions"]["Insert"];
-type SubmissionUpdate =
-  Database["public"]["Tables"]["form_submissions"]["Update"];
-
-// Public-facing insert used by the client service-application forms.
-// Auth is intentionally omitted because this runs as an
-// unauthenticated public submission.
-export async function createFormSubmission(data: SubmissionInsert) {
-  const supabase = await createSupabaseServerClient();
-  const { data: submission, error } = await supabase
-    .from("form_submissions")
-    .insert([data])
-    .select("*")
-    .single();
-
-  if (error) throw new Error(error.message);
-
-  return mutationResult(submission, {
-    tags: [CACHE_TAGS.formSubmissions],
-    mode: "immediate",
-  });
-}
-
-export async function updateFormSubmission(id: string, data: SubmissionUpdate) {
-  const supabase = await requireAdminUser();
-  const { data: submission, error } = await supabase
-    .from("form_submissions")
-    .update(data)
-    .eq("id", id)
-    .select("*")
-    .single();
-
-  if (error) throw new Error(error.message);
-
-  return mutationResult(submission, {
-    tags: [CACHE_TAGS.formSubmissions],
-    mode: "immediate",
-  });
-}
-
-export async function deleteFormSubmission(id: string) {
-  const supabase = await requireAdminUser();
-  const { error } = await supabase
-    .from("form_submissions")
-    .delete()
-    .eq("id", id);
-
-  if (error) throw new Error(error.message);
-
-  return mutationResult(null, {
-    tags: [CACHE_TAGS.formSubmissions],
-    mode: "immediate",
-  });
-}
-````
-
-## File: packages/supabase/src/Queries/blogs.ts
-````typescript
-import type { BlogRowType as BlogType } from "@bilacert/contracts/blog";
-import {
-  createSupabaseAdminClient,
-  createSupabasePublicClient,
-} from "../server";
-import type { Database } from "../supabaseType";
-
-type BlogPostRow = Database["public"]["Tables"]["blog_posts"]["Row"];
-
-function normalizeBlogPost(row: BlogPostRow): BlogType {
-  return {
-    id: row.id,
-    title: row.title,
-    slug: row.slug,
-    excerpt: row.excerpt ?? undefined,
-    content: row.content,
-    category: row.category ?? undefined,
-    tags: row.tags ?? undefined,
-    readTime: row.readTime ?? undefined,
-    seoTitle: row.seoTitle ?? undefined,
-    seoDescription: row.seoDescription ?? undefined,
-    seoKeywords: row.seoKeywords ?? undefined,
-    featuredImage: row.featuredImage ?? undefined,
-    thumbnail: row.thumbnail ?? undefined,
-    published: row.published ?? false,
-    publishedAt: row.publishedAt ?? undefined,
-    featured: row.featured ?? false,
-    authorId: row.authorId ?? undefined,
-    authorName: row.authorName ?? undefined,
-    viewsCount: row.viewsCount ?? 0,
-    createdAt: row.createdAt ?? row.publishedAt ?? new Date(0).toISOString(),
-    updatedAt: row.updatedAt ?? undefined,
-  };
-}
-
-export async function getAllPublishedBlogSlugs() {
-  const supabase = createSupabasePublicClient();
-  const { data, error } = await supabase
-    .from("blog_posts")
-    .select("slug")
-    .eq("published", true);
-
-  if (error) {
-    throw new Error(error.message);
-  }
-
-  return data;
-}
-
-export async function getAllPublishedBlogPosts(): Promise<BlogType[]> {
-  const supabase = createSupabasePublicClient();
-  const { data, error } = await supabase
-    .from("blog_posts")
-    .select("*")
-    .eq("published", true)
-    .order("createdAt", { ascending: false });
-
-  if (error) {
-    throw new Error(error.message);
-  }
-
-  return data.map(normalizeBlogPost);
-}
-
-export async function getBlogPostBySlug(
-  slug: string,
-): Promise<BlogType | null> {
-  const supabase = createSupabasePublicClient();
-  const { data, error } = await supabase
-    .from("blog_posts")
-    .select("*")
-    .eq("slug", slug)
-    .single();
-
-  if (error) {
-    return null;
-  }
-
-  return normalizeBlogPost(data);
-}
-
-export async function getBlogPostsByCategory(
-  category: string,
-  limit: number = 3,
-): Promise<BlogType[]> {
-  const supabase = createSupabasePublicClient();
-  const { data, error } = await supabase
-    .from("blog_posts")
-    .select("*")
-    .eq("category", category)
-    .limit(limit);
-
-  if (error) {
-    return [];
-  }
-
-  return data.map(normalizeBlogPost);
-}
-
-export async function getBlogSlugById(id: string): Promise<string | null> {
-  const supabase = createSupabaseAdminClient();
-  const { data, error } = await supabase
-    .from("blog_posts")
-    .select("slug")
-    .eq("id", id)
-    .maybeSingle();
-
-  if (error) throw new Error(error.message);
-
-  return data?.slug ?? null;
-}
-````
-
-## File: packages/supabase/src/Queries/services.ts
-````typescript
-import type { ServiceRowType } from "@bilacert/contracts/service";
-import {
-  pricingPlanSchema,
-  processStepSchema,
-  successStorySchema,
-} from "@bilacert/contracts/service";
-import {
-  createSupabaseAdminClient,
-  createSupabasePublicClient,
-} from "../server";
-import type { Database } from "../supabaseType";
-
-type ServiceRow = Database["public"]["Tables"]["services"]["Row"];
-
-function toStringArray(value: unknown): string[] {
-  if (Array.isArray(value)) {
-    return value.filter((item): item is string => typeof item === "string");
-  }
-
-  if (typeof value === "string") {
-    return value
-      .split("\n")
-      .map((item) => item.trim())
-      .filter(Boolean);
-  }
-
-  return [];
-}
-
-export function normalizeService(row: ServiceRow): ServiceRowType {
-  return {
-    id: row.id,
-    title: row.title,
-    slug: row.slug,
-    href: row.href,
-    category: row.category ?? "",
-    description: row.description ?? "",
-    shortDescription: row.shortDescription ?? undefined,
-    icon: row.icon ?? undefined,
-    orderIndex: row.orderIndex ?? undefined,
-    content: row.content ?? undefined,
-    features: toStringArray(row.features),
-    requirements: toStringArray(row.requirements),
-    includes: toStringArray(row.includes),
-    published: row.published ?? false,
-    featured: row.featured ?? false,
-    processingTime: row.processingTime ?? undefined,
-    pricing: row.pricing ?? undefined,
-    image: row.image ?? undefined,
-    thumbnail: row.thumbnail ?? undefined,
-    seoTitle: row.seoTitle ?? undefined,
-    seoDescription: row.seoDescription ?? undefined,
-    seoKeywords: row.seoKeywords ?? undefined,
-    pricingPlans: pricingPlanSchema.array().catch([]).parse(row.pricingPlans),
-    processSteps: processStepSchema.array().catch([]).parse(row.processSteps),
-    successStory:
-      successStorySchema
-        .nullable()
-        .optional()
-        .catch(undefined)
-        .parse(row.successStory) ?? undefined,
-    createdAt: row.createdAt ?? new Date().toISOString(),
-    updatedAt: row.updatedAt ?? row.createdAt ?? new Date().toISOString(),
-  };
-}
-
-export async function getPublishedServices(): Promise<ServiceRowType[]> {
-  const supabase = createSupabasePublicClient();
-  const { data, error } = await supabase
-    .from("services")
-    .select("*")
-    .eq("published", true)
-    .order("orderIndex", { ascending: true });
-
-  if (error) {
-    console.error("Error fetching services:", error);
-    return [];
-  }
-
-  return (data || []).map(normalizeService);
-}
-
-export async function getFeaturedServices(): Promise<ServiceRowType[]> {
-  const supabase = createSupabasePublicClient();
-  const { data, error } = await supabase
-    .from("services")
-    .select("*")
-    .eq("published", true)
-    .eq("featured", true)
-    .order("orderIndex", { ascending: true })
-    .limit(4);
-
-  if (error) {
-    console.error("Error fetching featured services:", error);
-    return [];
-  }
-
-  return (data || []).map(normalizeService);
-}
-
-export async function getServiceBySlug(
-  slug: string,
-): Promise<ServiceRowType | null> {
-  const supabase = createSupabasePublicClient();
-  const { data, error } = await supabase
-    .from("services")
-    .select("*")
-    .eq("slug", slug)
-    .single();
-
-  if (error || !data) {
-    return null;
-  }
-
-  return normalizeService(data);
-}
-
-export async function getAllPublishedServiceSlugs(): Promise<
-  { slug: string }[]
-> {
-  const supabase = createSupabasePublicClient();
-  const { data, error } = await supabase
-    .from("services")
-    .select("slug")
-    .eq("published", true);
-
-  if (error) {
-    console.error("Error fetching service slugs:", error);
-    return [];
-  }
-
-  return data || [];
-}
-
-export async function getServiceSlugById(id: string): Promise<string | null> {
-  const supabase = createSupabaseAdminClient();
-  const { data, error } = await supabase
-    .from("services")
-    .select("slug")
-    .eq("id", id)
-    .maybeSingle();
-
-  if (error) throw new Error(error.message);
-
-  return data?.slug ?? null;
-}
-````
-
-## File: packages/supabase/src/Queries/testimonials.ts
-````typescript
-import type { TestimonialRowType } from "@bilacert/contracts/testimonial";
-import { createSupabasePublicClient } from "../server";
-import type { Database } from "../supabaseType";
-
-type TestimonialRow = Database["public"]["Tables"]["testimonials"]["Row"];
-
-function normalizeTestimonial(row: TestimonialRow): TestimonialRowType {
-  return {
-    id: row.id,
-    postUrl: row.postUrl,
-    createdAt: row.createdAt ?? new Date(0).toISOString(),
-  };
-}
-
-export async function getPublishedTestimonials(): Promise<
-  TestimonialRowType[]
-> {
-  const supabase = createSupabasePublicClient();
-  const { data, error } = await supabase
-    .from("testimonials")
-    .select("id, postUrl, createdAt")
-    .order("createdAt", { ascending: false });
-
-  if (error) {
-    throw new Error(error.message);
-  }
-
-  return (data ?? []).map(normalizeTestimonial);
-}
-````
-
-## File: packages/supabase/package.json
-````json
-{
-  "name": "@bilacert/supabase",
-  "version": "0.0.0",
-  "private": true,
-  "exports": {
-    "./client": "./src/client.ts",
-    "./server": "./src/server.ts",
-    "./cache": "./src/cache.ts",
-    "./session": "./src/session.ts",
-    "./supabaseType": "./src/supabaseType.ts",
-    "./auth": "./src/auth.ts",
-    "./Queries/*": "./src/Queries/*.ts",
-    "./Mutations/*": "./src/Mutations/*.ts"
-  },
-  "dependencies": {
-    "@bilacert/contracts": "workspace:*",
-    "@bilacert/shared": "workspace:*",
-    "@supabase/ssr": "catalog:",
-    "@supabase/supabase-js": "catalog:",
-    "typescript": "catalog:",
-    "zod": "catalog:"
-  },
-  "devDependencies": {
-    "@bilacert/typescript-config": "workspace:*"
-  },
-  "scripts": {
-    "typecheck": "tsc --noEmit",
-    "supabase:types": "supabase gen types typescript --local > src/supabaseType.ts"
-  }
-}
-````
-
-## File: packages/supabase/src/server.ts
-````typescript
-import { getEnv } from "@bilacert/contracts/env";
-import { createServerClient } from "@supabase/ssr";
-import { createClient } from "@supabase/supabase-js";
-import { cookies } from "next/headers";
-import type { Database } from "./supabaseType";
-
-export async function createSupabaseServerClient() {
-  const cookieStore = await cookies();
-
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-
-  if (!supabaseUrl || !supabaseAnonKey) {
-    throw new Error("Supabase URL and/or anonymous key not provided.");
-  }
-
-  return createServerClient<Database>(supabaseUrl, supabaseAnonKey, {
-    cookies: {
-      getAll() {
-        return cookieStore.getAll();
-      },
-      setAll(cookiesToSet) {
-        try {
-          cookiesToSet.forEach(({ name, value, options }) => {
-            cookieStore.set(name, value, options);
-          });
-        } catch {
-          // Server Components cannot write cookies. Server Actions and Route
-          // Handlers can, so refreshed sessions are persisted where supported.
-        }
-      },
-    },
-  });
-}
-
-export function createSupabasePublicClient() {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-
-  if (!supabaseUrl || !supabaseAnonKey) {
-    throw new Error("Supabase URL and/or anonymous key not provided.");
-  }
-
-  return createClient<Database>(supabaseUrl, supabaseAnonKey, {
-    auth: {
-      autoRefreshToken: false,
-      persistSession: false,
-    },
-  });
-}
-
-export function createSupabaseAdminClient() {
-  const env = getEnv();
-  const supabaseUrl = env.SUPABASE_URL ?? env.NEXT_PUBLIC_SUPABASE_URL;
-  const supabaseSecretKey =
-    env.SUPABASE_SECRET_KEY ?? env.SUPABASE_SERVICE_ROLE_KEY;
-
-  if (!supabaseUrl || !supabaseSecretKey) {
-    throw new Error(
-      "A server-only Supabase secret key is not configured. Set SUPABASE_SECRET_KEY or SUPABASE_SERVICE_ROLE_KEY.",
-    );
-  }
-
-  return createClient<Database>(supabaseUrl, supabaseSecretKey, {
-    auth: {
-      autoRefreshToken: false,
-      persistSession: false,
-    },
-  });
-}
-````
-
-## File: pnpm-workspace.yaml
-````yaml
-packages:
-  - 'apps/*'
-  - 'packages/*'
-
-catalog:
-  "next": "16.2.7"
-  "@next/mdx": "16.2.7"
-  "@next/third-parties": "^16.0.1"
-  "react": "19.2.4"
-  "react-dom": "19.2.4"
-  "typescript": "5.9.3"
-  "postcss": "^8.5.14"
-  "zod": "^4.4.3"
-  "lucide-react": "^1.17.0"
-  "tailwindcss": "^4.3.0"
-  "@supabase/supabase-js": "^2.107.0"
-  "@supabase/ssr": "^0.10.3"
-  "uuid": "^13.0.0"
-  "react-icons": "^5.5.0"
-  "@genkit-ai/google-genai": "^1.42.0"
-  "@genkit-ai/googleai": "1.28.0"
-  "@radix-ui/react-slot": "^1.2.3"
-  "@stream-io/audio-filters-web": "^0.7.3"
-  "@stream-io/video-react-sdk": "^1.36.1"
-  "@tailwindcss/postcss": "^4.1.14"
-  "@types/node": "^22.19.19"
-  "@types/react": "19.2.4"
-  "@types/react-dom": "19.2.3"
-  "@types/uuid": "^10.0.0"
-  "@vercel/analytics": "^1.5.0"
-  "@mdx-js/loader": "^3.1.1"
-  "@mdx-js/react": "^3.1.1"
-  "genkit": "^1.42.0"
-  "isomorphic-dompurify": "^2.15.0"
-  "jose": "^6.2.3"
-  "stream-chat": "^9.44.2"
-  "stream-chat-react": "^14.2.0"
-  "tailwind-merge": "^3.3.1"
-  "clsx": "^2.1.1"
-  "class-variance-authority": "^0.7.1"
-  "sonner": "^2.0.7"
-  "date-fns": "^4.1.0"
-  "react-hook-form": "^7.53.0"
-  "@hookform/resolvers": "^5.2.2"
-  "dotenv": "^17.2.3"
-  "embla-carousel-react": "^8.6.0"
-  "patch-package": "^8.0.0"
-  "react-day-picker": "^9.11.3"
-  "react-quill-new": "^3.8.3"
-  "recharts": "^2.15.4"
-  "@tanstack/react-table": "^8.19.3"
-  "autoprefixer": "^10.4.21"
-  "tailwindcss-animate": "^1.0.7"
-  "@radix-ui/react-dialog": "^1.1.15"
-  "@radix-ui/react-label": "^2.1.0"
-  "@radix-ui/react-toast": "^1.2.1"
-  "@radix-ui/react-tabs": "^1.1.13"
-  "@radix-ui/react-scroll-area": "^1.2.10"
-  "@radix-ui/react-select": "^2.1.6"
-  "@radix-ui/react-avatar": "^1.1.3"
-  "@radix-ui/react-separator": "^1.1.2"
-  "@radix-ui/react-dropdown-menu": "^2.1.6"
-  "@radix-ui/react-popover": "^1.1.6"
-  "@radix-ui/react-tooltip": "^1.1.8"
-  "@radix-ui/react-checkbox": "^1.1.4"
-  "@radix-ui/react-accordion": "^1.2.3"
-  "@radix-ui/react-progress": "^1.1.2"
-  "@radix-ui/react-switch": "^1.1.3"
-  "@radix-ui/react-collapsible": "^1.1.11"
-  "@radix-ui/react-menubar": "^1.1.6"
-  "@radix-ui/react-radio-group": "^1.2.3"
-  "@radix-ui/react-slider": "^1.3.6"
-  "@radix-ui/react-alert-dialog": "^1.1.6"
-  "@biomejs/biome": "2.2.0"
-  "babel-plugin-react-compiler": "1.0.0"
-  "turbo": "^2.9.14"
 ````
 
 ## File: apps/admin/app/admin/analysis/AnalysisClient.tsx
@@ -32872,6 +34063,1789 @@ export default function AnalysisClient() {
 }
 ````
 
+## File: apps/admin/app/admin/services/[id]/edit/page.tsx
+````typescript
+import type { ServiceRowType } from "@bilacert/contracts/service";
+import { normalizeService } from "@bilacert/supabase/Queries/services";
+import { createSupabaseServerClient } from "@bilacert/supabase/server";
+import { ArrowLeft } from "lucide-react";
+import type { Viewport } from "next";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import ServiceForm from "./ServiceForm";
+
+export const metadata = {
+  title: "Edit Service | Bilacert Admin Pro",
+  description: "Edit an existing regulatory service.",
+};
+
+async function getService(id: string): Promise<ServiceRowType | null> {
+  const supabase = await createSupabaseServerClient();
+  const { data, error } = await supabase
+    .from("services")
+    .select("*")
+    .eq("id", id)
+    .single();
+
+  if (error) {
+    console.error("Error fetching service:", error);
+    return null;
+  }
+
+  return data ? normalizeService(data) : null;
+}
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#1f2937" },
+  ],
+};
+export default async function EditServicePage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const slug = (await params).id;
+  const service = await getService(slug);
+
+  if (!service) {
+    notFound();
+  }
+
+  return (
+    <div className="mx-auto max-w-5xl space-y-6">
+      <div className="flex items-center gap-4">
+        <Button variant="outline" size="sm" asChild>
+          <Link href={`/admin/services/${service.id}`}>
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Cancel Edit
+          </Link>
+        </Button>
+      </div>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Edit Service</CardTitle>
+          <CardDescription>
+            You are currently editing the details for:{" "}
+            <span className="font-semibold text-foreground">
+              {service.title}
+            </span>
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <ServiceForm service={service} />
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+````
+
+## File: apps/admin/app/admin/services/[id]/page.tsx
+````typescript
+import type { BlogRowType as BlogType } from "@bilacert/contracts/blog";
+import type { ServiceRowType } from "@bilacert/contracts/service";
+import { normalizeService } from "@bilacert/supabase/Queries/services";
+import { createSupabaseServerClient } from "@bilacert/supabase/server";
+import { Eye } from "lucide-react";
+import type { Metadata, Viewport } from "next";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import { Badge } from "@/components/ui/badge";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import ServiceDetails from "./ServiceDetails";
+import ServiceSubmissionAnalysis from "./ServiceSubmissionAnalysis";
+
+async function getService(id: string): Promise<ServiceRowType | null> {
+  const supabase = await createSupabaseServerClient();
+  const { data, error } = await supabase
+    .from("services")
+    .select("*")
+    .eq("id", id)
+    .single();
+
+  if (error || !data) {
+    return null;
+  }
+
+  return normalizeService(data);
+}
+
+async function getBlogs(): Promise<BlogType[]> {
+  const supabase = await createSupabaseServerClient();
+  const { data, error } = await supabase
+    .from("blog_posts")
+    .select(
+      "id,title,slug,excerpt,content,category,tags,readTime,seoTitle,seoDescription,seoKeywords,featuredImage,thumbnail,published,publishedAt,featured,authorId,authorName,viewsCount,createdAt,updatedAt",
+    );
+
+  if (error || !data) {
+    return [];
+  }
+
+  return data as BlogType[];
+}
+
+function normalizeSearchValue(value: string | null | undefined) {
+  return value?.trim().toLowerCase() ?? "";
+}
+
+function getRelatedBlogs(service: ServiceRowType, blogs: BlogType[]) {
+  const serviceTerms = [service.title, service.slug, service.category]
+    .map(normalizeSearchValue)
+    .filter(Boolean);
+
+  return blogs.filter((blog) => {
+    const searchableBlogText = [
+      blog.title,
+      blog.category,
+      blog.tags,
+      blog.excerpt,
+      blog.content,
+    ]
+      .map(normalizeSearchValue)
+      .join(" ");
+
+    return serviceTerms.some((term) => searchableBlogText.includes(term));
+  });
+}
+
+function ServiceBlogPerformance({
+  service,
+  blogs,
+}: {
+  service: ServiceRowType;
+  blogs: BlogType[];
+}) {
+  const topBlogs = getRelatedBlogs(service, blogs)
+    .sort((a, b) => (b.viewsCount ?? 0) - (a.viewsCount ?? 0))
+    .slice(0, 5);
+
+  return (
+    <Card className="border-0 shadow-xl shadow-black/5">
+      <CardHeader>
+        <CardTitle className="text-lg font-semibold">
+          Service Blog Performance
+        </CardTitle>
+        <CardDescription>
+          Blog content connected to {service.title} by title, slug, or category
+          match.
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        {topBlogs.length > 0 ? (
+          <div className="space-y-3">
+            {topBlogs.map((blog) => (
+              <div
+                key={blog.id}
+                className="flex flex-col gap-3 rounded-xl border bg-background p-4 shadow-sm shadow-black/5 md:flex-row md:items-center md:justify-between"
+              >
+                <div className="min-w-0">
+                  <Link
+                    href={`/admin/blogs/${blog.id}`}
+                    className="font-semibold text-primary hover:text-primary/80"
+                  >
+                    {blog.title}
+                  </Link>
+                  <div className="mt-2 flex flex-wrap gap-2">
+                    {blog.category && (
+                      <Badge variant="secondary">{blog.category}</Badge>
+                    )}
+                    <Badge variant={blog.published ? "default" : "outline"}>
+                      {blog.published ? "Published" : "Draft"}
+                    </Badge>
+                    {blog.featured && <Badge variant="outline">Featured</Badge>}
+                  </div>
+                </div>
+                <div className="flex items-center gap-2 text-sm font-semibold text-muted-foreground">
+                  <Eye className="h-4 w-4" />
+                  {(blog.viewsCount ?? 0).toLocaleString()} views
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p className="text-sm text-muted-foreground">
+            No related blog posts were found for this service yet.
+          </p>
+        )}
+      </CardContent>
+    </Card>
+  );
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}): Promise<Metadata> {
+  const { id } = await params;
+  const service = await getService(id);
+  if (!service) {
+    return {
+      title: "Service Not Found",
+    };
+  }
+  return {
+    title: `${service.title} | Bilacert Admin Pro`,
+  };
+}
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#1f2937" },
+  ],
+};
+export default async function ServiceDetailsPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
+  const [service, blogs] = await Promise.all([getService(id), getBlogs()]);
+
+  if (!service) {
+    notFound();
+  }
+
+  return (
+    <div className="space-y-8">
+      <ServiceDetails service={service} />
+      <ServiceSubmissionAnalysis service={service} />
+      <ServiceBlogPerformance service={service} blogs={blogs} />
+    </div>
+  );
+}
+````
+
+## File: apps/admin/app/admin/services/ServicesClient.tsx
+````typescript
+"use client";
+
+import type {
+  SubmissionStatus,
+  SubmissionType,
+} from "@bilacert/contracts/formSubmission";
+import type { ServiceRowType } from "@bilacert/contracts/service";
+import {
+  Archive,
+  BarChart3,
+  CheckCircle2,
+  Clock,
+  Inbox,
+  type LucideIcon,
+  MoreHorizontal,
+  Package,
+  Sparkles,
+  XCircle,
+} from "lucide-react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import AdminPage from "@/components/admin/AdminPage";
+import AnalysesHeader from "@/components/admin/AnalysesHeader";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { useServices } from "@/lib/hooks/useServices";
+import { useSubmissions } from "@/lib/hooks/useSubmissions";
+import DeleteServiceDialog from "./DeleteServiceDialog";
+
+const SERVICE_IMAGE_FALLBACK = "/logo.jpg";
+
+const submissionStatuses: {
+  label: string;
+  value: SubmissionStatus;
+  Icon: LucideIcon;
+  className: string;
+}[] = [
+  {
+    label: "Pending",
+    value: "pending",
+    Icon: Clock,
+    className: "bg-yellow-100 text-yellow-800 shadow-yellow-500/10",
+  },
+  {
+    label: "Processing",
+    value: "in-progress",
+    Icon: Inbox,
+    className: "bg-blue-100 text-blue-800 shadow-blue-500/10",
+  },
+  {
+    label: "Completed",
+    value: "completed",
+    Icon: CheckCircle2,
+    className: "bg-emerald-100 text-emerald-800 shadow-emerald-500/10",
+  },
+  {
+    label: "Rejected",
+    value: "rejected",
+    Icon: XCircle,
+    className: "bg-red-100 text-red-800 shadow-red-500/10",
+  },
+  {
+    label: "Archived",
+    value: "archived",
+    Icon: Archive,
+    className: "bg-slate-100 text-slate-800 shadow-slate-500/10",
+  },
+];
+
+type ServiceSubmissionStatusCount = {
+  label: string;
+  value: SubmissionStatus;
+  Icon: LucideIcon;
+  className: string;
+  count: number;
+};
+
+function normalizeServiceKey(value: string | undefined) {
+  return value?.trim().toLowerCase();
+}
+
+function getServiceSubmissions(
+  service: ServiceRowType,
+  submissions: SubmissionType[],
+) {
+  const serviceKeys = [service.id, service.slug, service.title]
+    .map(normalizeServiceKey)
+    .filter(Boolean);
+
+  return submissions.filter((submission) => {
+    const submissionServiceKeys = [submission.serviceId, submission.serviceName]
+      .map(normalizeServiceKey)
+      .filter(Boolean);
+
+    return submissionServiceKeys.some((submissionServiceKey) =>
+      serviceKeys.includes(submissionServiceKey),
+    );
+  });
+}
+
+function getServiceSubmissionStatusCounts(
+  service: ServiceRowType,
+  submissions: SubmissionType[],
+): ServiceSubmissionStatusCount[] {
+  const serviceSubmissions = getServiceSubmissions(service, submissions);
+
+  return submissionStatuses.map((status) => ({
+    ...status,
+    count: serviceSubmissions.filter(
+      (submission) => submission.status === status.value,
+    ).length,
+  }));
+}
+
+function ServicesAnalysis({
+  services,
+  submissions,
+}: {
+  services: ServiceRowType[];
+  submissions: SubmissionType[];
+}) {
+  const publishedServices = services.filter((service) => service.published);
+  const featuredServices = services.filter((service) => service.featured);
+  const draftServices = services.length - publishedServices.length;
+  const statusTotals = submissionStatuses.map((status) => ({
+    ...status,
+    count: submissions.filter(
+      (submission) => submission.status === status.value,
+    ).length,
+  }));
+
+  return (
+    <div className="space-y-6">
+      <AnalysesHeader
+        items={[
+          {
+            title: "Total Services",
+            value: services.length,
+            description: `${publishedServices.length.toLocaleString()} published`,
+            icon: <Package className="h-4 w-4 text-muted-foreground" />,
+          },
+          {
+            title: "Featured Services",
+            value: featuredServices.length,
+            description: "Highlighted on public pages",
+            icon: <Sparkles className="h-4 w-4 text-muted-foreground" />,
+          },
+          {
+            title: "Service Submissions",
+            value: submissions.length,
+            description: "Across service and contact flows",
+            icon: <BarChart3 className="h-4 w-4 text-muted-foreground" />,
+          },
+          {
+            title: "Draft Services",
+            value: draftServices,
+            description: "Not visible publicly yet",
+            icon: <Clock className="h-4 w-4 text-muted-foreground" />,
+          },
+        ]}
+      />
+
+      <Card className="border-0 shadow-xl shadow-black/5">
+        <CardHeader>
+          <CardTitle className="text-lg font-semibold">
+            Service Submission Status
+          </CardTitle>
+          <CardDescription>
+            Submission health across all services.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="grid gap-3 md:grid-cols-5">
+            {statusTotals.map(({ label, value, count, Icon, className }) => (
+              <div
+                key={value}
+                className={`rounded-xl p-4 shadow-sm ${className}`}
+              >
+                <div className="flex items-center justify-between gap-3">
+                  <span className="flex items-center gap-2 text-sm font-semibold">
+                    <Icon className="h-4 w-4" />
+                    {label}
+                  </span>
+                  <span className="text-2xl font-bold tabular-nums">
+                    {count}
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+
+const ServiceCard = ({
+  service,
+  submissionStatusCounts,
+  onEdit,
+  onDelete,
+}: {
+  service: ServiceRowType;
+  submissionStatusCounts: ServiceSubmissionStatusCount[];
+  onEdit: (service: ServiceRowType) => void;
+  onDelete: (service: ServiceRowType) => void;
+}) => {
+  const router = useRouter();
+  const imageUrl =
+    service.thumbnail?.trim() ||
+    service.image?.trim() ||
+    SERVICE_IMAGE_FALLBACK;
+  const visibleSubmissionStatusCounts = submissionStatusCounts.filter(
+    ({ count }) => count > 0,
+  );
+
+  return (
+    <div key={service.id} className="group relative">
+      <Link
+        href={`/admin/services/${service.id}`}
+        className="absolute inset-0 z-10"
+        aria-label={`View ${service.title}`}
+      >
+        <span className="sr-only">View Details</span>
+      </Link>
+      <Card className="flex h-full flex-col overflow-hidden border-0 shadow-sm transition-all duration-300 hover:-translate-y-2 group-hover:shadow-xl group-hover:shadow-black/10">
+        <div className="relative h-48 w-full overflow-hidden bg-muted">
+          <img
+            src={imageUrl}
+            alt={service.title}
+            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
+        </div>
+        <CardHeader>
+          <div className="flex items-start justify-between gap-4">
+            <div className="min-w-0 space-y-1">
+              <CardTitle className="line-clamp-2 text-lg text-primary">
+                {service.title}
+              </CardTitle>
+              <CardDescription>{service.category}</CardDescription>
+            </div>
+            <div className="relative z-20 shrink-0">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    className="h-8 w-8 rounded-full bg-background/70 p-0 backdrop-blur-sm hover:bg-background"
+                    onClick={(e) => e.preventDefault()}
+                  >
+                    <span className="sr-only">Open menu</span>
+                    <MoreHorizontal className="h-4 w-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                  <DropdownMenuItem
+                    onClick={(e) => {
+                      e.preventDefault();
+                      router.push(`/admin/services/${service.id}`);
+                    }}
+                  >
+                    View Details
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={(e) => {
+                      e.preventDefault();
+                      onEdit(service);
+                    }}
+                  >
+                    Edit
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                    className="text-destructive focus:bg-destructive/10 focus:text-destructive"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      onDelete(service);
+                    }}
+                  >
+                    Delete
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent className="flex-grow space-y-4">
+          <div className="flex flex-wrap gap-2">
+            <Badge variant={service.published ? "default" : "secondary"}>
+              {service.published ? "Published" : "Draft"}
+            </Badge>
+            {service.featured && <Badge variant="outline">Featured</Badge>}
+          </div>
+          <p className="line-clamp-3 text-sm text-muted-foreground">
+            {service.shortDescription}
+          </p>
+          <div className="rounded-xl bg-muted/40 p-3 shadow-sm shadow-black/5">
+            <p className="mb-2 text-xs font-bold uppercase tracking-wider text-muted-foreground">
+              Form Submissions
+            </p>
+            {visibleSubmissionStatusCounts.length > 0 ? (
+              <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                {visibleSubmissionStatusCounts.map(
+                  ({ label, value, count, Icon, className }) => (
+                    <div
+                      key={value}
+                      className={`flex items-center justify-between gap-2 rounded-lg px-3 py-2 text-xs font-semibold shadow-sm ${className}`}
+                    >
+                      <span className="flex items-center gap-1.5">
+                        <Icon className="h-3.5 w-3.5" />
+                        {label}
+                      </span>
+                      <span className="tabular-nums">{count}</span>
+                    </div>
+                  ),
+                )}
+              </div>
+            ) : (
+              <p className="text-xs text-muted-foreground">
+                No submissions yet
+              </p>
+            )}
+          </div>
+        </CardContent>
+        <CardFooter>
+          <p className="text-lg font-semibold">
+            {service.pricing
+              ? `R ${service.pricing.toLocaleString()}`
+              : "Not Set"}
+          </p>
+        </CardFooter>
+      </Card>
+    </div>
+  );
+};
+
+interface ServiceDeleteDialogProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onDeleted: () => void;
+  item: ServiceRowType | null;
+}
+
+const ServiceDeleteDialog = (props: ServiceDeleteDialogProps) => (
+  <DeleteServiceDialog
+    isOpen={props.isOpen}
+    onClose={props.onClose}
+    service={props.item}
+    onDeleted={props.onDeleted}
+  />
+);
+
+export default function ServicesClient() {
+  const { data: submissions } = useSubmissions();
+
+  return (
+    <AdminPage<ServiceRowType>
+      useData={useServices}
+      title="Services"
+      newItemButtonText="Add Service"
+      newItemLink="/admin/services/new"
+      renderBeforeContent={(services) => (
+        <ServicesAnalysis services={services} submissions={submissions || []} />
+      )}
+      renderItem={(service, onEdit, onDelete) => (
+        <ServiceCard
+          service={service}
+          submissionStatusCounts={getServiceSubmissionStatusCounts(
+            service,
+            submissions || [],
+          )}
+          onEdit={onEdit}
+          onDelete={onDelete}
+        />
+      )}
+      DeleteDialog={ServiceDeleteDialog}
+    />
+  );
+}
+````
+
+## File: apps/admin/app/admin/testimonials/[id]/page.tsx
+````typescript
+import type { TestimonialRowType } from "@bilacert/contracts/testimonial";
+import { createSupabaseServerClient } from "@bilacert/supabase/server";
+import type { Metadata, Viewport } from "next";
+import { notFound } from "next/navigation";
+import TestimonialDetails from "../TestimonialDetails";
+
+async function getTestimonial(id: string): Promise<TestimonialRowType | null> {
+  const supabase = await createSupabaseServerClient();
+  const { data, error } = await supabase
+    .from("testimonials")
+    .select("*")
+    .eq("id", id)
+    .single();
+
+  if (error || !data) {
+    return null;
+  }
+
+  return {
+    id: data.id,
+    postUrl: data.postUrl,
+    createdAt: data.createdAt,
+  } as TestimonialRowType;
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: { id: string };
+}): Promise<Metadata> {
+  const testimonial = await getTestimonial(params.id);
+  if (!testimonial) {
+    return {
+      title: "Testimonial Not Found",
+    };
+  }
+  return {
+    title: `Testimonial from ${new Date(testimonial.createdAt).toLocaleDateString()} | Bilacert Admin Pro`,
+  };
+}
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#1f2937" },
+  ],
+};
+export default async function TestimonialDetailsPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
+  const testimonial = await getTestimonial(id);
+
+  if (!testimonial) {
+    notFound();
+  }
+
+  return <TestimonialDetails testimonial={testimonial} />;
+}
+````
+
+## File: apps/admin/app/admin/testimonials/TestimonialsClient.tsx
+````typescript
+"use client";
+
+import type { TestimonialRowType } from "@bilacert/contracts/testimonial";
+import { format } from "date-fns";
+import { MoreHorizontal } from "lucide-react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import AdminPage from "@/components/admin/AdminPage";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { useTestimonials } from "@/lib/hooks/useTestimonials";
+import DeleteTestimonialDialog from "./DeleteTestimonialDialog";
+import TestimonialEmbed from "./TestimonialEmbed";
+
+const renderTestimonial = (
+  testimonial: TestimonialRowType,
+  onEdit: (testimonial: TestimonialRowType) => void,
+  onDelete: (testimonial: TestimonialRowType) => void,
+) => {
+  const router = useRouter();
+  const date = new Date(testimonial.createdAt);
+  const formattedDate = !Number.isNaN(date.getTime())
+    ? format(date, "PP")
+    : "Date not available";
+  return (
+    <div key={testimonial.id} className="group relative">
+      <Link
+        href={`/admin/testimonials/${testimonial.id}`}
+        className="absolute inset-0 z-10"
+        aria-label={`View testimonial`}
+      >
+        <span className="sr-only">View Details</span>
+      </Link>
+      <Card className="flex flex-col h-full hover:shadow-lg hover:border-primary/50 transition-all">
+        <CardHeader className="flex-row items-center justify-between">
+          <div>
+            <CardTitle className="text-base">Testimonial</CardTitle>
+            <CardDescription className="text-xs">
+              Added on {formattedDate}
+            </CardDescription>
+          </div>
+          <div className="relative z-20">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  className="h-8 w-8 p-0"
+                  onClick={(e) => e.preventDefault()}
+                >
+                  <span className="sr-only">Open menu</span>
+                  <MoreHorizontal className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                <DropdownMenuItem
+                  onClick={(e) => {
+                    e.preventDefault();
+                    router.push(`/admin/testimonials/${testimonial.id}`);
+                  }}
+                >
+                  View
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={(e) => {
+                    e.preventDefault();
+                    onEdit(testimonial);
+                  }}
+                >
+                  Edit
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  className="text-destructive focus:bg-destructive/10 focus:text-destructive"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    onDelete(testimonial);
+                  }}
+                >
+                  Delete
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        </CardHeader>
+        <CardContent className="flex-grow p-0 overflow-hidden">
+          <TestimonialEmbed postUrl={testimonial.postUrl} />
+        </CardContent>
+      </Card>
+    </div>
+  );
+};
+
+export default function TestimonialsClient() {
+  return (
+    <AdminPage<TestimonialRowType>
+      useData={useTestimonials}
+      title="Testimonials"
+      newItemButtonText="Add Testimonial"
+      newItemLink="/admin/testimonials/new"
+      renderItem={renderTestimonial}
+      DeleteDialog={TestimonialDeleteDialog}
+    />
+  );
+}
+
+interface TestimonialDeleteDialogProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onDeleted: () => void;
+  item: TestimonialRowType | null;
+}
+
+const TestimonialDeleteDialog = (props: TestimonialDeleteDialogProps) => (
+  <DeleteTestimonialDialog
+    isOpen={props.isOpen}
+    onClose={props.onClose}
+    testimonial={props.item}
+  />
+);
+````
+
+## File: apps/admin/lib/emailNavigation.ts
+````typescript
+import type { ContactType } from "@bilacert/contracts/contact";
+import type { SubmissionType } from "@bilacert/contracts/formSubmission";
+
+const emailReturnPathPattern =
+  /^\/admin\/(?:contacts|formSubmissions)\/[A-Za-z0-9_-]+$/;
+
+export function getContactEmailComposeHref(
+  contact: ContactType,
+): string | null {
+  const emailAddress = contact.email.trim();
+  if (!emailAddress) return null;
+
+  const name = contact.name?.trim() || "there";
+  const service = contact.service?.trim();
+  const content = [
+    `Hi ${name},`,
+    "",
+    service
+      ? `Thank you for contacting Bilacert regarding ${service}. We are following up on your enquiry.`
+      : "Thank you for contacting Bilacert. We are following up on your enquiry.",
+    "",
+    "Kind regards,",
+    "Bilacert Team",
+  ].join("\n");
+  const query = new URLSearchParams({
+    to: emailAddress,
+    subject: service ? `Bilacert enquiry: ${service}` : "Your Bilacert enquiry",
+    content,
+    returnTo: `/admin/contacts/${contact.id}`,
+  });
+
+  return `/admin/emails/compose?${query.toString()}`;
+}
+
+function getSubmissionTopic(submission: SubmissionType) {
+  const topic =
+    submission.serviceName?.trim() ||
+    submission.formType.replace(/[-_]+/g, " ").trim() ||
+    "Bilacert";
+
+  return topic.replace(/\b(nrcs|loa|icasa|ecns|ecs|vhf)\b/gi, (value) =>
+    value.toUpperCase(),
+  );
+}
+
+export function getSubmissionEmailComposeHref(
+  submission: SubmissionType,
+): string | null {
+  const emailAddress = submission.email.trim();
+  if (!emailAddress) return null;
+
+  const topic = getSubmissionTopic(submission);
+  const company = submission.company?.trim();
+  const content = [
+    `Hi ${submission.fullName},`,
+    "",
+    `We have received your submission for ${topic}.`,
+    ...(company ? ["", `Company: ${company}`] : []),
+    "",
+    "Kind regards,",
+    "Bilacert Team",
+  ].join("\n");
+  const query = new URLSearchParams({
+    to: emailAddress,
+    subject: `Bilacert submission: ${topic}`,
+    content,
+    returnTo: `/admin/formSubmissions/${submission.id}`,
+  });
+
+  return `/admin/emails/compose?${query.toString()}`;
+}
+
+export function getSafeEmailReturnPath(value: unknown): string | null {
+  if (typeof value !== "string") return null;
+
+  const path = value.trim();
+  return emailReturnPathPattern.test(path) ? path : null;
+}
+````
+
+## File: packages/contracts/src/contact.ts
+````typescript
+import { z } from "zod";
+
+export const contactSchema = z.object({
+  id: z.string(),
+  name: z.string().min(1, "Name is required"),
+  email: z.string().email("Please enter a valid email"),
+  phone: z.string().optional(),
+  service: z.string().optional(),
+  message: z.string().optional(),
+  submittedAt: z.string(),
+});
+
+export const contactInputSchema = contactSchema.pick({
+  name: true,
+  email: true,
+  phone: true,
+  service: true,
+  message: true,
+});
+
+export type ContactType = z.infer<typeof contactSchema>;
+export type ContactInput = z.infer<typeof contactInputSchema>;
+````
+
+## File: packages/contracts/src/email.ts
+````typescript
+import { z } from "zod";
+
+const EMAIL_LIST_MAX_LENGTH = 4_000;
+
+function isEmailList(value: string) {
+  const addresses = value
+    .split(/[;,]/)
+    .map((address) => address.trim())
+    .filter(Boolean);
+
+  return (
+    addresses.length > 0 &&
+    addresses.every((address) => z.email().safeParse(address).success)
+  );
+}
+
+const requiredEmailListSchema = z
+  .string()
+  .trim()
+  .min(1, "At least one recipient is required.")
+  .max(EMAIL_LIST_MAX_LENGTH, "The recipient list is too long.")
+  .refine(isEmailList, "Enter valid email addresses separated by commas.");
+
+const optionalEmailListSchema = z
+  .string()
+  .trim()
+  .max(EMAIL_LIST_MAX_LENGTH, "The recipient list is too long.")
+  .refine(
+    (value) => value.length === 0 || isEmailList(value),
+    "Enter valid email addresses separated by commas.",
+  );
+
+export const emailComposeSchema = z.object({
+  toAddress: requiredEmailListSchema,
+  ccAddress: optionalEmailListSchema,
+  bccAddress: optionalEmailListSchema,
+  subject: z
+    .string()
+    .trim()
+    .min(1, "Subject is required.")
+    .max(998, "Subject must be 998 characters or fewer."),
+  content: z
+    .string()
+    .trim()
+    .min(1, "Message content is required.")
+    .max(200_000, "Message content is too long."),
+  intent: z.enum(["send", "draft"]).default("send"),
+});
+
+export const emailMessageReadStateSchema = z.object({
+  messageId: z.string().regex(/^\d+$/, "The message ID is invalid."),
+  folderId: z.string().regex(/^\d+$/, "The folder ID is invalid."),
+  readState: z.enum(["read", "unread"]),
+});
+
+export type EmailComposeActionState = {
+  ok?: boolean;
+  error?: string;
+  fieldErrors?: Record<string, string[]>;
+};
+````
+
+## File: packages/supabase/src/Mutations/formSubmissions.ts
+````typescript
+"use server";
+
+import { requireAdminUser } from "../auth";
+import { CACHE_TAGS, mutationResult } from "../cache";
+import { createSupabaseServerClient } from "../server";
+import type { Database } from "../supabaseType";
+
+type SubmissionInsert =
+  Database["public"]["Tables"]["form_submissions"]["Insert"];
+type SubmissionUpdate =
+  Database["public"]["Tables"]["form_submissions"]["Update"];
+
+// Public-facing insert used by the client service-application forms.
+// Auth is intentionally omitted because this runs as an
+// unauthenticated public submission.
+export async function createFormSubmission(data: SubmissionInsert) {
+  const supabase = await createSupabaseServerClient();
+  const { data: submission, error } = await supabase
+    .from("form_submissions")
+    .insert([data])
+    .select("*")
+    .single();
+
+  if (error) throw new Error(error.message);
+
+  return mutationResult(submission, {
+    tags: [CACHE_TAGS.formSubmissions],
+    mode: "immediate",
+  });
+}
+
+export async function updateFormSubmission(id: string, data: SubmissionUpdate) {
+  const supabase = await requireAdminUser();
+  const { data: submission, error } = await supabase
+    .from("form_submissions")
+    .update(data)
+    .eq("id", id)
+    .select("*")
+    .single();
+
+  if (error) throw new Error(error.message);
+
+  return mutationResult(submission, {
+    tags: [CACHE_TAGS.formSubmissions],
+    mode: "immediate",
+  });
+}
+
+export async function deleteFormSubmission(id: string) {
+  const supabase = await requireAdminUser();
+  const { error } = await supabase
+    .from("form_submissions")
+    .delete()
+    .eq("id", id);
+
+  if (error) throw new Error(error.message);
+
+  return mutationResult(null, {
+    tags: [CACHE_TAGS.formSubmissions],
+    mode: "immediate",
+  });
+}
+````
+
+## File: packages/supabase/src/Queries/blogs.ts
+````typescript
+import type { BlogRowType as BlogType } from "@bilacert/contracts/blog";
+import {
+  createSupabaseAdminClient,
+  createSupabasePublicClient,
+} from "../server";
+import type { Database } from "../supabaseType";
+
+type BlogPostRow = Database["public"]["Tables"]["blog_posts"]["Row"];
+
+function normalizeBlogPost(row: BlogPostRow): BlogType {
+  return {
+    id: row.id,
+    title: row.title,
+    slug: row.slug,
+    excerpt: row.excerpt ?? undefined,
+    content: row.content,
+    category: row.category ?? undefined,
+    tags: row.tags ?? undefined,
+    readTime: row.readTime ?? undefined,
+    seoTitle: row.seoTitle ?? undefined,
+    seoDescription: row.seoDescription ?? undefined,
+    seoKeywords: row.seoKeywords ?? undefined,
+    featuredImage: row.featuredImage ?? undefined,
+    thumbnail: row.thumbnail ?? undefined,
+    published: row.published ?? false,
+    publishedAt: row.publishedAt ?? undefined,
+    featured: row.featured ?? false,
+    authorId: row.authorId ?? undefined,
+    authorName: row.authorName ?? undefined,
+    viewsCount: row.viewsCount ?? 0,
+    createdAt: row.createdAt ?? row.publishedAt ?? new Date(0).toISOString(),
+    updatedAt: row.updatedAt ?? undefined,
+  };
+}
+
+export async function getAllPublishedBlogSlugs() {
+  const supabase = createSupabasePublicClient();
+  const { data, error } = await supabase
+    .from("blog_posts")
+    .select("slug")
+    .eq("published", true);
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return data;
+}
+
+export async function getAllPublishedBlogPosts(): Promise<BlogType[]> {
+  const supabase = createSupabasePublicClient();
+  const { data, error } = await supabase
+    .from("blog_posts")
+    .select("*")
+    .eq("published", true)
+    .order("createdAt", { ascending: false });
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return data.map(normalizeBlogPost);
+}
+
+export async function getBlogPostBySlug(
+  slug: string,
+): Promise<BlogType | null> {
+  const supabase = createSupabasePublicClient();
+  const { data, error } = await supabase
+    .from("blog_posts")
+    .select("*")
+    .eq("slug", slug)
+    .single();
+
+  if (error) {
+    return null;
+  }
+
+  return normalizeBlogPost(data);
+}
+
+export async function getBlogPostsByCategory(
+  category: string,
+  limit: number = 3,
+): Promise<BlogType[]> {
+  const supabase = createSupabasePublicClient();
+  const { data, error } = await supabase
+    .from("blog_posts")
+    .select("*")
+    .eq("category", category)
+    .limit(limit);
+
+  if (error) {
+    return [];
+  }
+
+  return data.map(normalizeBlogPost);
+}
+
+export async function getBlogSlugById(id: string): Promise<string | null> {
+  const supabase = createSupabaseAdminClient();
+  const { data, error } = await supabase
+    .from("blog_posts")
+    .select("slug")
+    .eq("id", id)
+    .maybeSingle();
+
+  if (error) throw new Error(error.message);
+
+  return data?.slug ?? null;
+}
+````
+
+## File: packages/supabase/src/Queries/services.ts
+````typescript
+import type { ServiceRowType } from "@bilacert/contracts/service";
+import {
+  pricingPlanSchema,
+  processStepSchema,
+  successStorySchema,
+} from "@bilacert/contracts/service";
+import {
+  createSupabaseAdminClient,
+  createSupabasePublicClient,
+} from "../server";
+import type { Database } from "../supabaseType";
+
+type ServiceRow = Database["public"]["Tables"]["services"]["Row"];
+
+function toStringArray(value: unknown): string[] {
+  if (Array.isArray(value)) {
+    return value.filter((item): item is string => typeof item === "string");
+  }
+
+  if (typeof value === "string") {
+    return value
+      .split("\n")
+      .map((item) => item.trim())
+      .filter(Boolean);
+  }
+
+  return [];
+}
+
+export function normalizeService(row: ServiceRow): ServiceRowType {
+  return {
+    id: row.id,
+    title: row.title,
+    slug: row.slug,
+    href: row.href,
+    category: row.category ?? "",
+    description: row.description ?? "",
+    shortDescription: row.shortDescription ?? undefined,
+    icon: row.icon ?? undefined,
+    orderIndex: row.orderIndex ?? undefined,
+    content: row.content ?? undefined,
+    features: toStringArray(row.features),
+    requirements: toStringArray(row.requirements),
+    includes: toStringArray(row.includes),
+    published: row.published ?? false,
+    featured: row.featured ?? false,
+    processingTime: row.processingTime ?? undefined,
+    pricing: row.pricing ?? undefined,
+    image: row.image ?? undefined,
+    thumbnail: row.thumbnail ?? undefined,
+    seoTitle: row.seoTitle ?? undefined,
+    seoDescription: row.seoDescription ?? undefined,
+    seoKeywords: row.seoKeywords ?? undefined,
+    pricingPlans: pricingPlanSchema.array().catch([]).parse(row.pricingPlans),
+    processSteps: processStepSchema.array().catch([]).parse(row.processSteps),
+    successStory:
+      successStorySchema
+        .nullable()
+        .optional()
+        .catch(undefined)
+        .parse(row.successStory) ?? undefined,
+    createdAt: row.createdAt ?? new Date().toISOString(),
+    updatedAt: row.updatedAt ?? row.createdAt ?? new Date().toISOString(),
+  };
+}
+
+export async function getPublishedServices(): Promise<ServiceRowType[]> {
+  const supabase = createSupabasePublicClient();
+  const { data, error } = await supabase
+    .from("services")
+    .select("*")
+    .eq("published", true)
+    .order("orderIndex", { ascending: true });
+
+  if (error) {
+    console.error("Error fetching services:", error);
+    return [];
+  }
+
+  return (data || []).map(normalizeService);
+}
+
+export async function getFeaturedServices(): Promise<ServiceRowType[]> {
+  const supabase = createSupabasePublicClient();
+  const { data, error } = await supabase
+    .from("services")
+    .select("*")
+    .eq("published", true)
+    .eq("featured", true)
+    .order("orderIndex", { ascending: true })
+    .limit(4);
+
+  if (error) {
+    console.error("Error fetching featured services:", error);
+    return [];
+  }
+
+  return (data || []).map(normalizeService);
+}
+
+export async function getServiceBySlug(
+  slug: string,
+): Promise<ServiceRowType | null> {
+  const supabase = createSupabasePublicClient();
+  const { data, error } = await supabase
+    .from("services")
+    .select("*")
+    .eq("slug", slug)
+    .single();
+
+  if (error || !data) {
+    return null;
+  }
+
+  return normalizeService(data);
+}
+
+export async function getAllPublishedServiceSlugs(): Promise<
+  { slug: string }[]
+> {
+  const supabase = createSupabasePublicClient();
+  const { data, error } = await supabase
+    .from("services")
+    .select("slug")
+    .eq("published", true);
+
+  if (error) {
+    console.error("Error fetching service slugs:", error);
+    return [];
+  }
+
+  return data || [];
+}
+
+export async function getServiceSlugById(id: string): Promise<string | null> {
+  const supabase = createSupabaseAdminClient();
+  const { data, error } = await supabase
+    .from("services")
+    .select("slug")
+    .eq("id", id)
+    .maybeSingle();
+
+  if (error) throw new Error(error.message);
+
+  return data?.slug ?? null;
+}
+````
+
+## File: packages/supabase/src/Queries/testimonials.ts
+````typescript
+import type { TestimonialRowType } from "@bilacert/contracts/testimonial";
+import { createSupabasePublicClient } from "../server";
+import type { Database } from "../supabaseType";
+
+type TestimonialRow = Database["public"]["Tables"]["testimonials"]["Row"];
+
+function normalizeTestimonial(row: TestimonialRow): TestimonialRowType {
+  return {
+    id: row.id,
+    postUrl: row.postUrl,
+    createdAt: row.createdAt ?? new Date(0).toISOString(),
+  };
+}
+
+export async function getPublishedTestimonials(): Promise<
+  TestimonialRowType[]
+> {
+  const supabase = createSupabasePublicClient();
+  const { data, error } = await supabase
+    .from("testimonials")
+    .select("id, postUrl, createdAt")
+    .order("createdAt", { ascending: false });
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return (data ?? []).map(normalizeTestimonial);
+}
+````
+
+## File: apps/admin/app/admin/blogs/[id]/edit/page.tsx
+````typescript
+import type { BlogRowType as BlogType } from "@bilacert/contracts/blog";
+import { createSupabaseServerClient } from "@bilacert/supabase/server";
+import { ArrowLeft } from "lucide-react";
+import type { Viewport } from "next";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import BlogForm from "../../BlogForm";
+
+export const metadata = {
+  title: "Edit Blog Post | Bilacert Admin Pro",
+  description: "Edit an existing blog post.",
+};
+
+async function getBlog(id: string): Promise<BlogType | null> {
+  const supabase = await createSupabaseServerClient();
+  const { data, error } = await supabase
+    .from("blog_posts")
+    .select("*")
+    .eq("id", id)
+    .maybeSingle();
+
+  if (error || !data) {
+    return null;
+  }
+
+  return {
+    id: data.id,
+    title: data.title,
+    slug: data.slug,
+    excerpt: data.excerpt,
+    content: data.content,
+    category: data.category,
+    tags: data.tags,
+    readTime: data.readTime,
+    seoTitle: data.seoTitle,
+    seoDescription: data.seoDescription,
+    seoKeywords: data.seoKeywords,
+    featuredImage: data.featuredImage,
+    thumbnail: data.thumbnail,
+    published: data.published,
+    publishedAt: data.publishedAt,
+    featured: data.featured,
+    authorId: data.authorId,
+    authorName: data.authorName,
+    viewsCount: data.viewsCount,
+    createdAt: data.createdAt,
+    updatedAt: data.updatedAt,
+  } as BlogType;
+}
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#1f2937" },
+  ],
+};
+export default async function EditBlogPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
+  const blog = await getBlog(id);
+
+  if (!blog) {
+    notFound();
+  }
+
+  return (
+    <div className="mx-auto max-w-5xl">
+      <div className="mb-4 flex items-center gap-4">
+        <Button variant="outline" size="sm" asChild>
+          <Link href={`/admin/blogs/${blog.id}`}>
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Cancel Edit
+          </Link>
+        </Button>
+      </div>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Edit Blog Post</CardTitle>
+          <CardDescription>
+            You are currently editing the details for:{" "}
+            <span className="font-semibold text-foreground">{blog.title}</span>
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <BlogForm blog={blog} blogId={id} />
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+````
+
+## File: apps/admin/app/admin/contacts/actions.ts
+````typescript
+"use server";
+
+import type { ActionResult } from "@bilacert/contracts/actionResult";
+import type { ContactType } from "@bilacert/contracts/contact";
+import { contactInputSchema } from "@bilacert/contracts/contact";
+import {
+  deleteContact as deleteContactMutation,
+  upsertContact as upsertContactMutation,
+} from "@bilacert/supabase/Mutations/contacts";
+import { revalidatePath } from "next/cache";
+
+export async function upsertContact(
+  values: unknown,
+  contactId?: string,
+): Promise<ActionResult<ContactType>> {
+  const parsedValues = contactInputSchema.safeParse(values);
+
+  if (!parsedValues.success) {
+    return { ok: false, error: parsedValues.error.message };
+  }
+
+  let data: ContactType;
+  try {
+    const result = await upsertContactMutation(
+      contactId ? { ...parsedValues.data, id: contactId } : parsedValues.data,
+    );
+    data = result.data as ContactType;
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Unknown error";
+    return { ok: false, error: `Database error: ${message}` };
+  }
+
+  revalidatePath("/admin/contacts");
+  revalidatePath(`/admin/contacts/${data.id}`);
+
+  return {
+    ok: true,
+    data,
+    message: `Contact ${contactId ? "updated" : "created"} successfully!`,
+  };
+}
+
+export async function deleteContact(contactId: string): Promise<ActionResult> {
+  try {
+    await deleteContactMutation(contactId);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Unknown error";
+    return { ok: false, error: `Database error: ${message}` };
+  }
+
+  revalidatePath("/admin/contacts");
+
+  return {
+    ok: true,
+    message: "Contact deleted successfully!",
+  };
+}
+````
+
+## File: packages/supabase/src/server.ts
+````typescript
+import { getEnv } from "@bilacert/contracts/env";
+import { createServerClient } from "@supabase/ssr";
+import { createClient } from "@supabase/supabase-js";
+import { cookies } from "next/headers";
+import type { Database } from "./supabaseType";
+
+export async function createSupabaseServerClient() {
+  const cookieStore = await cookies();
+
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+  if (!supabaseUrl || !supabaseAnonKey) {
+    throw new Error("Supabase URL and/or anonymous key not provided.");
+  }
+
+  return createServerClient<Database>(supabaseUrl, supabaseAnonKey, {
+    cookies: {
+      getAll() {
+        return cookieStore.getAll();
+      },
+      setAll(cookiesToSet) {
+        try {
+          cookiesToSet.forEach(({ name, value, options }) => {
+            cookieStore.set(name, value, options);
+          });
+        } catch {
+          // Server Components cannot write cookies. Server Actions and Route
+          // Handlers can, so refreshed sessions are persisted where supported.
+        }
+      },
+    },
+  });
+}
+
+export function createSupabasePublicClient() {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+  if (!supabaseUrl || !supabaseAnonKey) {
+    throw new Error("Supabase URL and/or anonymous key not provided.");
+  }
+
+  return createClient<Database>(supabaseUrl, supabaseAnonKey, {
+    auth: {
+      autoRefreshToken: false,
+      persistSession: false,
+    },
+  });
+}
+
+export function createSupabaseAdminClient() {
+  const env = getEnv();
+  const supabaseUrl = env.SUPABASE_URL ?? env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseSecretKey =
+    env.SUPABASE_SECRET_KEY ?? env.SUPABASE_SERVICE_ROLE_KEY;
+
+  if (!supabaseUrl || !supabaseSecretKey) {
+    throw new Error(
+      "A server-only Supabase secret key is not configured. Set SUPABASE_SECRET_KEY or SUPABASE_SERVICE_ROLE_KEY.",
+    );
+  }
+
+  return createClient<Database>(supabaseUrl, supabaseSecretKey, {
+    auth: {
+      autoRefreshToken: false,
+      persistSession: false,
+    },
+  });
+}
+````
+
+## File: packages/contracts/package.json
+````json
+{
+  "name": "@bilacert/contracts",
+  "version": "0.0.0",
+  "private": true,
+  "exports": {
+    "./blog": "./src/blog.ts",
+    "./contact": "./src/contact.ts",
+    "./email": "./src/email.ts",
+    "./formSubmission": "./src/formSubmission.ts",
+    "./service": "./src/service.ts",
+    "./task": "./src/task.ts",
+    "./taskTodo": "./src/taskTodo.ts",
+    "./testimonial": "./src/testimonial.ts",
+    "./actionResult": "./src/actionResult.ts",
+    "./revalidation": "./src/revalidation.ts",
+    "./env": "./src/env.ts"
+  },
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@bilacert/typescript-config": "workspace:*",
+    "@types/node": "catalog:",
+    "typescript": "catalog:"
+  }
+}
+````
+
+## File: pnpm-workspace.yaml
+````yaml
+packages:
+  - 'apps/*'
+  - 'packages/*'
+
+catalog:
+  "next": "16.2.7"
+  "@next/mdx": "16.2.7"
+  "@next/third-parties": "^16.0.1"
+  "react": "19.2.4"
+  "react-dom": "19.2.4"
+  "typescript": "5.9.3"
+  "postcss": "^8.5.14"
+  "zod": "^4.4.3"
+  "lucide-react": "^1.17.0"
+  "tailwindcss": "^4.3.0"
+  "@supabase/supabase-js": "^2.107.0"
+  "@supabase/ssr": "^0.10.3"
+  "supabase": "^2.118.0"
+  "uuid": "^13.0.0"
+  "react-icons": "^5.5.0"
+  "@genkit-ai/google-genai": "^1.42.0"
+  "@genkit-ai/googleai": "1.28.0"
+  "@radix-ui/react-slot": "^1.2.3"
+  "@stream-io/audio-filters-web": "^0.7.3"
+  "@stream-io/video-react-sdk": "^1.36.1"
+  "@tailwindcss/postcss": "^4.1.14"
+  "@types/node": "^22.19.19"
+  "@types/react": "19.2.4"
+  "@types/react-dom": "19.2.3"
+  "@types/uuid": "^10.0.0"
+  "@vercel/analytics": "^1.5.0"
+  "@mdx-js/loader": "^3.1.1"
+  "@mdx-js/react": "^3.1.1"
+  "genkit": "^1.42.0"
+  "isomorphic-dompurify": "^2.15.0"
+  "jose": "^6.2.3"
+  "stream-chat": "^9.44.2"
+  "stream-chat-react": "^14.2.0"
+  "tailwind-merge": "^3.3.1"
+  "clsx": "^2.1.1"
+  "class-variance-authority": "^0.7.1"
+  "sonner": "^2.0.7"
+  "date-fns": "^4.1.0"
+  "react-hook-form": "^7.53.0"
+  "@hookform/resolvers": "^5.2.2"
+  "dotenv": "^17.2.3"
+  "embla-carousel-react": "^8.6.0"
+  "patch-package": "^8.0.0"
+  "react-day-picker": "^9.11.3"
+  "react-quill-new": "^3.8.3"
+  "recharts": "^2.15.4"
+  "@tanstack/react-table": "^8.19.3"
+  "autoprefixer": "^10.4.21"
+  "tailwindcss-animate": "^1.0.7"
+  "@radix-ui/react-dialog": "^1.1.15"
+  "@radix-ui/react-label": "^2.1.0"
+  "@radix-ui/react-toast": "^1.2.1"
+  "@radix-ui/react-tabs": "^1.1.13"
+  "@radix-ui/react-scroll-area": "^1.2.10"
+  "@radix-ui/react-select": "^2.1.6"
+  "@radix-ui/react-avatar": "^1.1.3"
+  "@radix-ui/react-separator": "^1.1.2"
+  "@radix-ui/react-dropdown-menu": "^2.1.6"
+  "@radix-ui/react-popover": "^1.1.6"
+  "@radix-ui/react-tooltip": "^1.1.8"
+  "@radix-ui/react-checkbox": "^1.1.4"
+  "@radix-ui/react-accordion": "^1.2.3"
+  "@radix-ui/react-progress": "^1.1.2"
+  "@radix-ui/react-switch": "^1.1.3"
+  "@radix-ui/react-collapsible": "^1.1.11"
+  "@radix-ui/react-menubar": "^1.1.6"
+  "@radix-ui/react-radio-group": "^1.2.3"
+  "@radix-ui/react-slider": "^1.3.6"
+  "@radix-ui/react-alert-dialog": "^1.1.6"
+  "@biomejs/biome": "2.2.0"
+  "babel-plugin-react-compiler": "1.0.0"
+  "turbo": "^2.9.14"
+````
+
 ## File: apps/admin/app/admin/blogs/BlogForm.tsx
 ````typescript
 "use client";
@@ -33458,6 +36432,50 @@ export default function BlogForm({ blog, blogId }: BlogFormProps) {
       </form>
     </Form>
   );
+}
+````
+
+## File: packages/supabase/package.json
+````json
+{
+  "name": "@bilacert/supabase",
+  "version": "0.0.0",
+  "private": true,
+  "exports": {
+    ".": "./src/client.ts",
+    "./client": "./src/client.ts",
+    "./server": "./src/server.ts",
+    "./session": "./src/session.ts",
+    "./auth": "./src/auth.ts",
+    "./cache": "./src/cache.ts",
+    "./supabaseType": "./src/supabaseType.ts",
+    "./Mutations/blogs": "./src/Mutations/blogs.ts",
+    "./Mutations/contacts": "./src/Mutations/contacts.ts",
+    "./Mutations/formSubmissions": "./src/Mutations/formSubmissions.ts",
+    "./Mutations/services": "./src/Mutations/services.ts",
+    "./Mutations/tasks": "./src/Mutations/tasks.ts",
+    "./Mutations/testimonials": "./src/Mutations/testimonials.ts",
+    "./Queries/blogs": "./src/Queries/blogs.ts",
+    "./Queries/services": "./src/Queries/services.ts",
+    "./Queries/tasks": "./src/Queries/tasks.ts",
+    "./Queries/testimonials": "./src/Queries/testimonials.ts"
+  },
+  "dependencies": {
+    "@bilacert/contracts": "workspace:*",
+    "@bilacert/shared": "workspace:*",
+    "@supabase/ssr": "catalog:",
+    "@supabase/supabase-js": "catalog:",
+    "typescript": "catalog:",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@bilacert/typescript-config": "workspace:*",
+    "supabase": "catalog:"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "supabase:types": "supabase gen types typescript --local > src/supabaseType.ts"
+  }
 }
 ````
 
