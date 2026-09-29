@@ -30,7 +30,8 @@
     "zod": "catalog:"
   },
   "devDependencies": {
-    "@bilacert/typescript-config": "workspace:*"
+    "@bilacert/typescript-config": "workspace:*",
+    "supabase": "catalog:"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
