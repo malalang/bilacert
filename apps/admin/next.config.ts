@@ -3,6 +3,12 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   /* config options here */
   reactCompiler: true,
+  experimental: {
+    serverActions: {
+      // Admin image uploads travel to the server action as multipart FormData.
+      bodySizeLimit: "5mb",
+    },
+  },
   images: {
     remotePatterns: [
       {

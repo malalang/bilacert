@@ -1,13 +1,11 @@
 "use client";
 
-import { createSupabaseBrowserClient } from "@bilacert/supabase/client";
 import { Loader2, Upload, X } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
+import { uploadAdminImage } from "@/lib/imageUploadActions";
 import { Button } from "./button";
-
-const supabase = createSupabaseBrowserClient();
 
 interface ImageUploadProps {
   bucket: string;
@@ -38,21 +36,22 @@ export default function ImageUpload({
 
     setUploading(true);
     try {
-      const fileName = `${Date.now()}_${file.name.replace(/\s/g, "_")}`;
-      const filePath = fileName;
+      const formData = new FormData();
+      formData.append("bucket", bucket);
+      formData.append("file", file);
 
-      const { error } = await supabase.storage
-        .from(bucket)
-        .upload(filePath, file);
+      const result = await uploadAdminImage(formData);
 
-      if (error) throw error;
+      if (!result.ok) {
+        throw new Error(result.error);
+      }
 
-      const {
-        data: { publicUrl },
-      } = supabase.storage.from(bucket).getPublicUrl(filePath);
+      if (!result.data) {
+        throw new Error("The uploaded image URL could not be read.");
+      }
 
-      setImageUrl(publicUrl);
-      onUpload(publicUrl);
+      setImageUrl(result.data.url);
+      onUpload(result.data.url);
       toast({ title: "Image uploaded successfully" });
     } catch (error: unknown) {
       toast({
@@ -60,7 +59,6 @@ export default function ImageUpload({
         title: "Error uploading image",
         description: error instanceof Error ? error.message : String(error),
       });
-      throw error;
     } finally {
       setUploading(false);
     }
@@ -112,7 +110,9 @@ export default function ImageUpload({
                     <span className="font-semibold">Click to upload</span> or
                     drag and drop
                   </p>
-                  <p className="text-xs text-muted-foreground">PNG, JPG, GIF</p>
+                  <p className="text-xs text-muted-foreground">
+                    PNG, JPG, GIF up to 4MB
+                  </p>
                 </>
               )}
             </div>
@@ -122,7 +122,7 @@ export default function ImageUpload({
               className="hidden"
               onChange={handleFileChange}
               disabled={uploading}
-              accept="image/*"
+              accept="image/png,image/jpeg,image/gif"
             />
           </label>
         </div>
