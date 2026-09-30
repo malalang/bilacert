@@ -174,7 +174,7 @@ export default async function EmailMessagePage({
       )}
 
       {updatedState && (
-        <Alert className="border-emerald-200 bg-emerald-50 text-emerald-900">
+        <Alert className="border-primary/30 bg-primary/10 text-primary">
           <AlertTitle>Message updated</AlertTitle>
           <AlertDescription>
             The message is now marked as {updatedState}.

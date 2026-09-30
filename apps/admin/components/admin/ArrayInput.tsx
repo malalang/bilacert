@@ -70,7 +70,7 @@ export function ArrayInput({
                     type="button"
                     variant="ghost"
                     size="icon"
-                    className="shrink-0 text-muted-foreground hover:text-destructive"
+                    className="shrink-0 text-muted-foreground hover:text-destructive/80"
                     aria-label={`Remove ${label.toLowerCase()} ${index + 1}`}
                     onClick={() => remove(index)}
                   >

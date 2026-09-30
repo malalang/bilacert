@@ -137,7 +137,7 @@ const PexelsImagePicker: React.FC<PexelsImagePickerProps> = ({
   return (
     <div className="space-y-4 mb-6">
       <div className="flex items-center justify-between">
-        <span className="block text-sm font-medium text-gray-700">
+        <span className="block text-sm font-medium text-foreground">
           Select from Pexels
         </span>
         {/* Requirement: Prominent link to Pexels */}
@@ -145,14 +145,14 @@ const PexelsImagePicker: React.FC<PexelsImagePickerProps> = ({
           href="https://www.pexels.com"
           target="_blank"
           rel="noopener noreferrer"
-          className="text-[10px] text-gray-400 hover:text-emerald-600 flex items-center gap-1"
+          className="text-[10px] text-muted-foreground hover:text-primary/80 flex items-center gap-1"
         >
           Photos provided by Pexels
         </a>
       </div>
 
       {/* Preview Section */}
-      <div className="relative aspect-video w-full max-w-md rounded-lg overflow-hidden border-2 border-dashed border-gray-300 bg-gray-50 flex items-center justify-center group">
+      <div className="relative aspect-video w-full max-w-md rounded-lg overflow-hidden border-2 border-dashed border-border bg-muted flex items-center justify-center group">
         {selectedUrl ? (
           <>
             <Image
@@ -162,11 +162,11 @@ const PexelsImagePicker: React.FC<PexelsImagePickerProps> = ({
               className="object-cover"
               unoptimized={selectedUrl.includes("pexels.com")}
             />
-            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+            <div className="absolute inset-0 bg-overlay/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
               <button
                 type="button"
                 onClick={() => setShowSearch(!showSearch)}
-                className="bg-white text-gray-900 px-4 py-2 rounded-lg font-medium text-sm hover:bg-gray-100 flex items-center gap-2"
+                className="bg-background text-foreground px-4 py-2 rounded-lg font-medium text-sm hover:bg-muted flex items-center gap-2"
               >
                 <ImageIcon size={16} />
                 Change Image
@@ -177,7 +177,7 @@ const PexelsImagePicker: React.FC<PexelsImagePickerProps> = ({
           <button
             type="button"
             onClick={() => setShowSearch(true)}
-            className="flex flex-col items-center gap-2 text-gray-500 hover:text-emerald-600 transition-colors"
+            className="flex flex-col items-center gap-2 text-muted-foreground hover:text-primary/80 transition-colors"
           >
             <ImageIcon size={48} strokeWidth={1} />
             <span className="font-medium">
@@ -192,7 +192,7 @@ const PexelsImagePicker: React.FC<PexelsImagePickerProps> = ({
         <button
           type="button"
           onClick={() => setShowSearch(!showSearch)}
-          className="text-sm font-medium text-emerald-600 hover:text-emerald-700 flex items-center gap-1"
+          className="text-sm font-medium text-primary hover:text-primary/80 flex items-center gap-1"
         >
           {showSearch ? "Hide Pexels Search" : "Search Pexels for new image"}
         </button>
@@ -200,11 +200,11 @@ const PexelsImagePicker: React.FC<PexelsImagePickerProps> = ({
 
       {/* Search Section */}
       {showSearch && (
-        <div className="bg-gray-50 p-4 rounded-xl border border-gray-200 space-y-4 animate-in fade-in slide-in-from-top-2 duration-200">
+        <div className="bg-muted p-4 rounded-xl border border-border space-y-4 animate-in fade-in slide-in-from-top-2 duration-200">
           <div className="flex gap-2">
             <div className="relative flex-1">
               <Search
-                className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
                 size={18}
               />
               <input
@@ -213,14 +213,14 @@ const PexelsImagePicker: React.FC<PexelsImagePickerProps> = ({
                 onChange={(e) => setQuery(e.target.value)}
                 onKeyDown={handleKeyDown}
                 placeholder="Search Pexels (e.g. 'coding', 'business', 'tech')..."
-                className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all"
+                className="w-full pl-10 pr-4 py-2 rounded-lg border border-border focus:ring-2 focus:ring-ring focus:border-primary/30 outline-none transition-all"
               />
             </div>
             <button
               type="button"
               onClick={() => searchImages()}
               disabled={loading}
-              className="bg-emerald-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-emerald-700 disabled:opacity-50 flex items-center gap-2"
+              className="bg-primary text-primary-foreground px-6 py-2 rounded-lg font-medium hover:bg-primary/90 disabled:opacity-50 flex items-center gap-2"
             >
               {loading ? (
                 <Loader2 size={18} className="animate-spin" />
@@ -232,7 +232,7 @@ const PexelsImagePicker: React.FC<PexelsImagePickerProps> = ({
 
           {suggestions.length > 0 && (
             <div className="flex flex-wrap gap-2">
-              <span className="text-[10px] uppercase tracking-wider text-gray-400 font-bold w-full mb-1">
+              <span className="text-[10px] uppercase tracking-wider text-muted-foreground font-bold w-full mb-1">
                 Suggestions from tags:
               </span>
               {suggestions.map((tag) => (
@@ -242,8 +242,8 @@ const PexelsImagePicker: React.FC<PexelsImagePickerProps> = ({
                   onClick={() => handleSuggestionClick(tag)}
                   className={`text-xs px-3 py-1 rounded-full border transition-all ${
                     query.toLowerCase() === tag.toLowerCase()
-                      ? "bg-emerald-600 border-emerald-600 text-white"
-                      : "bg-white border-gray-200 text-gray-600 hover:border-emerald-500 hover:text-emerald-600"
+                      ? "bg-primary border-primary/30 text-primary-foreground"
+                      : "bg-card border-border text-muted-foreground hover:border-primary/30 hover:text-primary/80"
                   }`}
                 >
                   {tag}
@@ -252,13 +252,13 @@ const PexelsImagePicker: React.FC<PexelsImagePickerProps> = ({
             </div>
           )}
 
-          {error && <p className="text-sm text-red-600">{error}</p>}
+          {error && <p className="text-sm text-destructive">{error}</p>}
 
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
             {images.map((image) => (
               <div
                 key={image.id}
-                className="group relative bg-white rounded-lg border border-gray-200 overflow-hidden shadow-sm hover:border-emerald-500 transition-colors"
+                className="group relative bg-card rounded-lg border border-border overflow-hidden hover:border-primary/30 transition-colors"
               >
                 <div className="relative aspect-square">
                   <Image
@@ -274,19 +274,19 @@ const PexelsImagePicker: React.FC<PexelsImagePickerProps> = ({
                     <button
                       type="button"
                       onClick={() => handleSelect(image, "large")}
-                      className="text-[10px] w-full bg-emerald-50 text-emerald-700 py-1 rounded hover:bg-emerald-100 font-bold"
+                      className="text-[10px] w-full bg-primary/10 text-primary py-1 rounded hover:bg-primary/20 font-bold"
                     >
                       SELECT LARGE
                     </button>
                     <button
                       type="button"
                       onClick={() => handleSelect(image, "medium")}
-                      className="text-[10px] w-full bg-blue-50 text-blue-700 py-1 rounded hover:bg-blue-100 font-bold"
+                      className="text-[10px] w-full bg-info/10 text-info-foreground py-1 rounded hover:bg-info/20 font-bold"
                     >
                       SELECT MEDIUM
                     </button>
                   </div>
-                  <div className="flex items-center justify-between text-[10px] text-gray-500 border-t pt-2">
+                  <div className="flex items-center justify-between text-[10px] text-muted-foreground border-t pt-2">
                     {/* Requirement: Credit photographers with links */}
                     <span className="truncate max-w-[80px]">
                       By {image.photographer}
@@ -296,7 +296,7 @@ const PexelsImagePicker: React.FC<PexelsImagePickerProps> = ({
                         href={image.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="hover:text-emerald-600"
+                        className="hover:text-primary/80"
                         title="View photo on Pexels"
                       >
                         <ImageIcon size={12} />
@@ -305,7 +305,7 @@ const PexelsImagePicker: React.FC<PexelsImagePickerProps> = ({
                         href={image.photographer_url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="hover:text-emerald-600"
+                        className="hover:text-primary/80"
                         title={`View ${image.photographer}'s profile`}
                       >
                         <ExternalLink size={12} />
@@ -316,7 +316,7 @@ const PexelsImagePicker: React.FC<PexelsImagePickerProps> = ({
               </div>
             ))}
             {!loading && images.length === 0 && (
-              <div className="col-span-full py-8 text-center text-gray-500">
+              <div className="col-span-full py-8 text-center text-muted-foreground">
                 {query
                   ? `No images found for "${query}"`
                   : "No photos available."}
@@ -324,7 +324,7 @@ const PexelsImagePicker: React.FC<PexelsImagePickerProps> = ({
             )}
           </div>
 
-          <div className="pt-2 border-t border-gray-100 flex justify-center">
+          <div className="pt-2 border-t border-border flex justify-center">
             <a
               href="https://www.pexels.com"
               target="_blank"

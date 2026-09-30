@@ -80,7 +80,7 @@ export default async function ContactDetailsPage({
   return (
     <div className="space-y-6">
       {emailStatus && (
-        <Alert className="border-emerald-200 bg-emerald-50 text-emerald-900">
+        <Alert className="border-primary/30 bg-primary/10 text-primary">
           <AlertTitle>
             {emailStatus === "sent" ? "Email sent" : "Draft saved"}
           </AlertTitle>

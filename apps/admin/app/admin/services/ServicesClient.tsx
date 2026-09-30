@@ -55,31 +55,31 @@ const submissionStatuses: {
     label: "Pending",
     value: "pending",
     Icon: Clock,
-    className: "bg-yellow-100 text-yellow-800 shadow-yellow-500/10",
+    className: "bg-warning/10 text-warning-foreground",
   },
   {
     label: "Processing",
     value: "in-progress",
     Icon: Inbox,
-    className: "bg-blue-100 text-blue-800 shadow-blue-500/10",
+    className: "bg-info/10 text-info-foreground",
   },
   {
     label: "Completed",
     value: "completed",
     Icon: CheckCircle2,
-    className: "bg-emerald-100 text-emerald-800 shadow-emerald-500/10",
+    className: "bg-primary/10 text-primary",
   },
   {
     label: "Rejected",
     value: "rejected",
     Icon: XCircle,
-    className: "bg-red-100 text-red-800 shadow-red-500/10",
+    className: "bg-destructive/10 text-destructive",
   },
   {
     label: "Archived",
     value: "archived",
     Icon: Archive,
-    className: "bg-slate-100 text-slate-800 shadow-slate-500/10",
+    className: "bg-muted text-foreground",
   },
 ];
 

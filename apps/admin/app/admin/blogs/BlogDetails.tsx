@@ -182,7 +182,7 @@ const bilacertArticleDetailsStyles = `
 
 function normalizeArticleHtml(html: string | null | undefined) {
   if (!html)
-    return '<p class="text-slate-400 italic">No content to display yet...</p>';
+    return '<p class="text-muted-foreground italic">No content to display yet...</p>';
 
   return html
     .replace(/<br\s*\/?>(\s*)/gi, " ")

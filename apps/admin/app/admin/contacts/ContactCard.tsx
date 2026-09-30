@@ -79,7 +79,7 @@ function ContactCard({ contact, onDelete }: ContactCardProps) {
               <Link
                 href={contactHref}
                 prefetch={false}
-                className="line-clamp-2 hover:text-primary hover:underline"
+                className="line-clamp-2 hover:text-primary/80 hover:underline"
               >
                 {displayName}
               </Link>

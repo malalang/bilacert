@@ -9,7 +9,7 @@ import { Card, CardHeader } from "@/components/ui/card";
 const ReactQuill = dynamic(() => import("react-quill-new"), {
   ssr: false,
   loading: () => (
-    <div className="h-64 flex items-center justify-center bg-slate-50 rounded-lg">
+    <div className="h-64 flex items-center justify-center bg-muted rounded-lg">
       Loading Editor...
     </div>
   ),
@@ -214,15 +214,15 @@ export default function BlogEditor({
 
   return (
     <Card className="bilacert-blog-editor relative z-0 mx-auto w-full max-w-5xl overflow-hidden p-4 md:p-8">
-      <CardHeader className="flex flex-col gap-3 border-b border-slate-100 bg-white py-2 sm:flex-row sm:items-center sm:justify-between">
-        <div className="flex flex-wrap gap-1 rounded-xl bg-slate-100 p-1">
+      <CardHeader className="flex flex-col gap-3 border-b border-border bg-card py-2 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-wrap gap-1 rounded-xl bg-muted p-1">
           <button
             type="button"
             onClick={() => setView("edit")}
             className={`px-6 py-2 text-sm font-semibold rounded-lg transition-all ${
               view === "edit"
-                ? "bg-white shadow-sm text-indigo-600"
-                : "text-slate-500 hover:text-slate-700"
+                ? "bg-card shadow-sm text-info-foreground"
+                : "text-muted-foreground hover:text-foreground"
             }`}
           >
             Edit Content
@@ -232,8 +232,8 @@ export default function BlogEditor({
             onClick={() => setView("preview")}
             className={`px-6 py-2 text-sm font-semibold rounded-lg transition-all ${
               view === "preview"
-                ? "bg-white shadow-sm text-indigo-600"
-                : "text-slate-500 hover:text-slate-700"
+                ? "bg-card shadow-sm text-info-foreground"
+                : "text-muted-foreground hover:text-foreground"
             }`}
           >
             Live Preview
@@ -243,7 +243,7 @@ export default function BlogEditor({
 
       <div className="relative z-0 w-full overflow-hidden">
         {view === "edit" ? (
-          <div className="animate-in fade-in duration-300 overflow-hidden rounded-2xl border border-slate-200 shadow-sm">
+          <div className="animate-in fade-in duration-300 overflow-hidden rounded-2xl border border-border shadow-sm">
             <style>{`
               .bilacert-blog-editor .ql-container {
                 font-size: 16px;
@@ -272,14 +272,14 @@ export default function BlogEditor({
             />
           </div>
         ) : (
-          <div className="relative z-0 animate-in slide-in-from-bottom-2 overflow-hidden rounded-2xl bg-white p-4 duration-300">
+          <div className="relative z-0 animate-in slide-in-from-bottom-2 overflow-hidden rounded-2xl bg-card p-4 duration-300">
             <style>{bilacertArticlePreviewStyles}</style>
             {featuredImage && (
               <div className="mb-8 overflow-hidden">
-                <h2 className="text-lg font-bold mb-4 text-slate-800">
+                <h2 className="text-lg font-bold mb-4 text-foreground">
                   Featured Image
                 </h2>
-                <div className="relative aspect-video w-full max-w-2xl mx-auto overflow-hidden rounded-lg shadow-lg border border-slate-200">
+                <div className="relative aspect-video w-full max-w-2xl mx-auto overflow-hidden rounded-lg shadow-lg border border-border">
                   <Image
                     src={featuredImage}
                     alt="Featured Image Preview"
@@ -289,12 +289,12 @@ export default function BlogEditor({
                 </div>
               </div>
             )}
-            <div className="mb-10 border-b border-slate-100 pb-8">
-              <h1 className="text-2xl font-black text-slate-900 mb-4 tracking-tight leading-tight">
+            <div className="mb-10 border-b border-border pb-8">
+              <h1 className="text-2xl font-black text-foreground mb-4 tracking-tight leading-tight">
                 {title || "Untitled Post"}
               </h1>
-              <div className="flex flex-wrap items-center gap-3 text-slate-400 text-sm">
-                <span className="bg-slate-100 px-2 py-1 rounded">Preview</span>
+              <div className="flex flex-wrap items-center gap-3 text-muted-foreground text-sm">
+                <span className="bg-muted px-2 py-1 rounded">Preview</span>
                 <span>•</span>
                 <span>{new Date().toLocaleDateString()}</span>
                 <span>•</span>
@@ -307,7 +307,7 @@ export default function BlogEditor({
               dangerouslySetInnerHTML={{
                 __html:
                   sanitized ||
-                  '<p class="text-slate-400 italic">No content to display yet...</p>',
+                  '<p class="text-muted-foreground italic">No content to display yet...</p>',
               }}
             />
           </div>

@@ -27,6 +27,18 @@
   --color-border: hsl(var(--border));
   --color-input: hsl(var(--input));
   --color-ring: hsl(var(--ring));
+
+  /*
+   * Domain states the app was painting with raw palette colours because no token
+   * existed for them: warnings, informational notices, and the image scrim.
+   * Declaring them is what makes the component sweep mechanical - a status
+   * becomes a token swap instead of a code hunt on every rebrand.
+   */
+  --color-warning: hsl(var(--warning));
+  --color-warning-foreground: hsl(var(--warning-foreground));
+  --color-info: hsl(var(--info));
+  --color-info-foreground: hsl(var(--info-foreground));
+  --color-overlay: hsl(var(--overlay));
   --color-chart-1: hsl(var(--chart-1));
   --color-chart-2: hsl(var(--chart-2));
   --color-chart-3: hsl(var(--chart-3));
@@ -88,6 +100,12 @@
     --border: 210 20% 88%;
     --input: 210 20% 88%;
     --ring: 30 87% 62%;
+
+    --warning: 38 92% 50%;
+    --warning-foreground: 26 90% 20%;
+    --info: 221 83% 53%;
+    --info-foreground: 222 80% 25%;
+    --overlay: 210 20% 15%;
     --chart-1: 211 77% 17%;
     --chart-2: 30 87% 62%;
     --chart-3: 210 25% 70%;
@@ -132,6 +150,12 @@
     --border: 211 77% 20%;
     --input: 211 77% 20%;
     --ring: 30 87% 62%;
+
+    --warning: 38 92% 56%;
+    --warning-foreground: 38 96% 88%;
+    --info: 217 91% 62%;
+    --info-foreground: 213 96% 84%;
+    --overlay: 0 0% 0%;
     --chart-1: 210 29% 96%;
     --chart-2: 30 87% 62%;
     --chart-3: 211 77% 30%;
@@ -201,5 +225,24 @@
     overflow-x: auto;
     overflow-wrap: break-word;
     white-space: pre-wrap;
+  }
+}
+
+/*
+ * Reduced motion (blueprint check 17).
+ *
+ * Zero reduced-motion handling against 56 animate-*, 17 transition-all and
+ * the hover transform/shadow stacks on the collection cards (hover:-translate-y-2
+ * plus group-hover:shadow-xl on most of them). None of that motion carries
+ * information, so it collapses rather than being dropped.
+ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }

@@ -194,7 +194,7 @@ export default async function EmailsPage({ searchParams }: EmailsPageProps) {
       </div>
 
       {query.sent === "1" && (
-        <Alert className="border-emerald-200 bg-emerald-50 text-emerald-900">
+        <Alert className="border-primary/30 bg-primary/10 text-primary">
           <CheckCircle2 className="h-4 w-4" />
           <AlertTitle>Email sent</AlertTitle>
           <AlertDescription>
@@ -204,7 +204,7 @@ export default async function EmailsPage({ searchParams }: EmailsPageProps) {
       )}
 
       {query.draftSaved === "1" && (
-        <Alert className="border-emerald-200 bg-emerald-50 text-emerald-900">
+        <Alert className="border-primary/30 bg-primary/10 text-primary">
           <CheckCircle2 className="h-4 w-4" />
           <AlertTitle>Draft saved</AlertTitle>
           <AlertDescription>

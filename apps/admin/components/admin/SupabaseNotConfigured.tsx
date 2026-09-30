@@ -1,7 +1,7 @@
 export default function SupabaseNotConfigured() {
   return (
     <div className="flex h-screen w-full items-center justify-center bg-background p-8">
-      <div className="max-w-2xl rounded-lg border border-destructive bg-card p-8 text-center shadow-lg">
+      <div className="max-w-2xl rounded-lg border border-destructive bg-card p-8 text-center">
         <h1 className="text-2xl font-bold text-destructive">
           Supabase Not Configured
         </h1>

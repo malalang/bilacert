@@ -44,31 +44,31 @@ const submissionStatuses: {
     label: "Pending",
     value: "pending",
     Icon: Clock,
-    className: "bg-yellow-100 text-yellow-800 shadow-yellow-500/10",
+    className: "bg-warning/10 text-warning-foreground",
   },
   {
     label: "Processing",
     value: "in-progress",
     Icon: Inbox,
-    className: "bg-blue-100 text-blue-800 shadow-blue-500/10",
+    className: "bg-info/10 text-info-foreground",
   },
   {
     label: "Completed",
     value: "completed",
     Icon: CheckCircle2,
-    className: "bg-emerald-100 text-emerald-800 shadow-emerald-500/10",
+    className: "bg-primary/10 text-primary",
   },
   {
     label: "Rejected",
     value: "rejected",
     Icon: XCircle,
-    className: "bg-red-100 text-red-800 shadow-red-500/10",
+    className: "bg-destructive/10 text-destructive",
   },
   {
     label: "Archived",
     value: "archived",
     Icon: Archive,
-    className: "bg-slate-100 text-slate-800 shadow-slate-500/10",
+    className: "bg-muted text-foreground",
   },
 ];
 
@@ -335,23 +335,23 @@ export default function SubmissionsClient() {
             <LayoutGrid className="h-3.5 w-3.5" /> <span>All</span>
           </TabsTrigger>
           <TabsTrigger value="pending" className="gap-2">
-            <Clock className="h-3.5 w-3.5 text-yellow-600" />
+            <Clock className="h-3.5 w-3.5 text-warning-foreground" />
             <span>Pending</span>
           </TabsTrigger>
           <TabsTrigger value="in-progress" className="gap-2">
-            <Inbox className="h-3.5 w-3.5 text-blue-600" />
+            <Inbox className="h-3.5 w-3.5 text-info-foreground" />
             <span>Processing</span>
           </TabsTrigger>
           <TabsTrigger value="completed" className="gap-2">
-            <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" />
+            <CheckCircle2 className="h-3.5 w-3.5 text-primary" />
             <span className="hidden sm:inline">Completed</span>
           </TabsTrigger>
           <TabsTrigger value="rejected" className="gap-2">
-            <XCircle className="h-3.5 w-3.5 text-red-600" />
+            <XCircle className="h-3.5 w-3.5 text-destructive" />
             <span className="hidden sm:inline">Rejected</span>
           </TabsTrigger>
           <TabsTrigger value="archived" className="gap-2">
-            <Archive className="h-3.5 w-3.5 text-slate-600" />
+            <Archive className="h-3.5 w-3.5 text-muted-foreground" />
             <span className="hidden sm:inline">Archived</span>
           </TabsTrigger>
         </TabsList>

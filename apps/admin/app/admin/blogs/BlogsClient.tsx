@@ -204,7 +204,7 @@ const BlogCard = ({
   return (
     <div
       key={blog.id}
-      className="group relative flex flex-col overflow-hidden rounded-xl bg-white shadow-sm shadow-black/5 transition-all duration-300 hover:-translate-y-2 hover:shadow-xl hover:shadow-black/10"
+      className="group relative flex flex-col overflow-hidden rounded-xl bg-card shadow-sm shadow-black/5 transition-all duration-300 hover:-translate-y-2 hover:shadow-xl hover:shadow-black/10"
     >
       <Link
         href={`/admin/blogs/${blog.id}`}

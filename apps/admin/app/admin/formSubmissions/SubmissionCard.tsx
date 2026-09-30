@@ -39,15 +39,15 @@ interface SubmissionCardProps {
 
 const statusStyles: Record<SubmissionType["status"], string> = {
   pending:
-    "border-yellow-200 bg-yellow-100 text-yellow-800 dark:border-yellow-900 dark:bg-yellow-950/60 dark:text-yellow-200",
+    "border-warning/30 bg-warning/10 text-warning-foreground dark:border-warning/30 dark:bg-warning dark:text-warning-foreground",
   "in-progress":
-    "border-blue-200 bg-blue-100 text-blue-800 dark:border-blue-900 dark:bg-blue-950/60 dark:text-blue-200",
+    "border-info/30 bg-info/10 text-info-foreground dark:border-info/30 dark:bg-info dark:text-info-foreground",
   completed:
-    "border-emerald-200 bg-emerald-100 text-emerald-800 dark:border-emerald-900 dark:bg-emerald-950/60 dark:text-emerald-200",
+    "border-primary/30 bg-primary/10 text-primary dark:border-primary/30 dark:bg-primary dark:text-primary",
   rejected:
-    "border-red-200 bg-red-100 text-red-800 dark:border-red-900 dark:bg-red-950/60 dark:text-red-200",
+    "border-destructive/30 bg-destructive/10 text-destructive dark:border-destructive/30 dark:bg-destructive dark:text-destructive",
   archived:
-    "border-slate-200 bg-slate-100 text-slate-800 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-200",
+    "border-border bg-muted text-foreground dark:border-border dark:bg-foreground dark:text-muted-foreground",
 };
 
 const statusLabels: Record<SubmissionType["status"], string> = {

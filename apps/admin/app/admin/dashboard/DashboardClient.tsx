@@ -39,27 +39,27 @@ const statusStyles: Record<
   pending: {
     label: "Pending",
     Icon: Clock,
-    className: "bg-yellow-100 text-yellow-800 shadow-yellow-500/10",
+    className: "bg-warning/10 text-warning-foreground",
   },
   "in-progress": {
     label: "Processing",
     Icon: Inbox,
-    className: "bg-blue-100 text-blue-800 shadow-blue-500/10",
+    className: "bg-info/10 text-info-foreground",
   },
   completed: {
     label: "Completed",
     Icon: CheckCircle2,
-    className: "bg-emerald-100 text-emerald-800 shadow-emerald-500/10",
+    className: "bg-primary/10 text-primary",
   },
   rejected: {
     label: "Rejected",
     Icon: XCircle,
-    className: "bg-red-100 text-red-800 shadow-red-500/10",
+    className: "bg-destructive/10 text-destructive",
   },
   archived: {
     label: "Archived",
     Icon: Archive,
-    className: "bg-slate-100 text-slate-800 shadow-slate-500/10",
+    className: "bg-muted text-foreground",
   },
 };
 
@@ -76,7 +76,7 @@ function PendingSubmissionItem({ submission }: { submission: SubmissionType }) {
       className="block rounded-xl bg-background p-3 shadow-sm shadow-black/5 transition-all hover:-translate-y-0.5 hover:shadow-md hover:shadow-black/10"
     >
       <div className="flex items-start gap-3">
-        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-yellow-100 text-yellow-700">
+        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-warning/10 text-warning-foreground">
           <Clock className="h-5 w-5" />
         </div>
         <div className="min-w-0 flex-1">
@@ -86,7 +86,7 @@ function PendingSubmissionItem({ submission }: { submission: SubmissionType }) {
             </p>
             <Badge
               variant="outline"
-              className="bg-yellow-100 text-[10px] font-bold text-yellow-800"
+              className="bg-warning/10 text-[10px] font-bold text-warning-foreground"
             >
               Pending
             </Badge>
@@ -139,7 +139,7 @@ function BlogInsightCard({ blog }: { blog: BlogType }) {
   return (
     <Link
       href={`/admin/blogs/${blog.id}`}
-      className="group flex overflow-hidden rounded-xl bg-white shadow-sm shadow-black/5 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-black/10"
+      className="group flex overflow-hidden rounded-xl bg-card shadow-sm shadow-black/5 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-black/10"
     >
       <div className="relative h-28 w-32 shrink-0 overflow-hidden bg-muted">
         <Image

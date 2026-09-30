@@ -45,7 +45,7 @@ const CustomTooltip = ({ active, payload, label }: any) => {
   if (active && payload && payload.length) {
     const data = payload[0].payload;
     return (
-      <div className="rounded-lg border border-slate-200 bg-white/80 p-3 text-slate-700 shadow-lg backdrop-blur-sm">
+      <div className="rounded-lg border border-border bg-card/80 p-3 text-foreground backdrop-blur-sm">
         <p className="font-bold">{label || data.name || data.author}</p>
         {payload.map((p: any, i: number) => (
           <p

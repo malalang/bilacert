@@ -52,7 +52,7 @@ export default function ServiceDetails({ service }: ServiceDetailsProps) {
       <ul className="mt-2 space-y-2 text-sm text-card-foreground">
         {arrayData.map((item, index) => (
           <li key={index} className="flex items-start gap-2">
-            <CheckCircle className="mt-0.5 h-4 w-4 shrink-0 text-emerald-500" />
+            <CheckCircle className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
             <span>{item}</span>
           </li>
         ))}
@@ -83,7 +83,7 @@ export default function ServiceDetails({ service }: ServiceDetailsProps) {
               <ul className="space-y-2 text-sm text-muted-foreground">
                 {plan.features.map((feature, i) => (
                   <li key={i} className="flex items-start">
-                    <CheckCircle className="mr-2 mt-1 h-4 w-4 shrink-0 text-emerald-500" />
+                    <CheckCircle className="mr-2 mt-1 h-4 w-4 shrink-0 text-primary" />
                     <span>{feature}</span>
                   </li>
                 ))}
