@@ -45,9 +45,10 @@ async function getBlog(identifier: string): Promise<BlogType | null> {
 export async function generateMetadata({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }): Promise<Metadata> {
-  const blog = await getBlog(params.id);
+  const { id } = await params;
+  const blog = await getBlog(id);
   if (!blog) {
     return {
       title: "Blog Post Not Found",

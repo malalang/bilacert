@@ -26,9 +26,10 @@ async function getTestimonial(id: string): Promise<TestimonialRowType | null> {
 export async function generateMetadata({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }): Promise<Metadata> {
-  const testimonial = await getTestimonial(params.id);
+  const { id } = await params;
+  const testimonial = await getTestimonial(id);
   if (!testimonial) {
     return {
       title: "Testimonial Not Found",
