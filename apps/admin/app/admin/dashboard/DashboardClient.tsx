@@ -86,7 +86,7 @@ function PendingSubmissionItem({ submission }: { submission: SubmissionType }) {
             </p>
             <Badge
               variant="outline"
-              className="bg-warning/10 text-[10px] font-bold text-warning-foreground"
+              className="bg-warning/10 text-xs font-bold text-warning-foreground"
             >
               Pending
             </Badge>

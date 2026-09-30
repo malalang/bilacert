@@ -145,7 +145,7 @@ const PexelsImagePicker: React.FC<PexelsImagePickerProps> = ({
           href="https://www.pexels.com"
           target="_blank"
           rel="noopener noreferrer"
-          className="text-[10px] text-muted-foreground hover:text-primary/80 flex items-center gap-1"
+          className="text-xs text-muted-foreground hover:text-primary/80 flex items-center gap-1"
         >
           Photos provided by Pexels
         </a>
@@ -232,7 +232,7 @@ const PexelsImagePicker: React.FC<PexelsImagePickerProps> = ({
 
           {suggestions.length > 0 && (
             <div className="flex flex-wrap gap-2">
-              <span className="text-[10px] uppercase tracking-wider text-muted-foreground font-bold w-full mb-1">
+              <span className="text-xs uppercase tracking-wider text-muted-foreground font-bold w-full mb-1">
                 Suggestions from tags:
               </span>
               {suggestions.map((tag) => (
@@ -274,19 +274,19 @@ const PexelsImagePicker: React.FC<PexelsImagePickerProps> = ({
                     <button
                       type="button"
                       onClick={() => handleSelect(image, "large")}
-                      className="text-[10px] w-full bg-primary/10 text-primary py-1 rounded hover:bg-primary/20 font-bold"
+                      className="text-xs w-full bg-primary/10 text-primary py-1 rounded hover:bg-primary/20 font-bold"
                     >
                       SELECT LARGE
                     </button>
                     <button
                       type="button"
                       onClick={() => handleSelect(image, "medium")}
-                      className="text-[10px] w-full bg-info/10 text-info-foreground py-1 rounded hover:bg-info/20 font-bold"
+                      className="text-xs w-full bg-info/10 text-info-foreground py-1 rounded hover:bg-info/20 font-bold"
                     >
                       SELECT MEDIUM
                     </button>
                   </div>
-                  <div className="flex items-center justify-between text-[10px] text-muted-foreground border-t pt-2">
+                  <div className="flex items-center justify-between text-xs text-muted-foreground border-t pt-2">
                     {/* Requirement: Credit photographers with links */}
                     <span className="truncate max-w-[80px]">
                       By {image.photographer}

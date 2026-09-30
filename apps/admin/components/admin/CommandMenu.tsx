@@ -134,7 +134,7 @@ export function CommandMenu() {
       >
         <Search className="h-4 w-4 shrink-0" />
         <span className="hidden md:inline">Search or jump to...</span>
-        <kbd className="pointer-events-none hidden select-none items-center gap-0.5 rounded border border-input bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground md:inline-flex">
+        <kbd className="pointer-events-none hidden select-none items-center gap-0.5 rounded border border-input bg-muted px-1.5 font-mono text-xs font-medium text-muted-foreground md:inline-flex">
           {shortcutLabel}
         </kbd>
       </button>

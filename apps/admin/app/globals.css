@@ -4,9 +4,12 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --font-body: Inter, sans-serif;
-  --font-headline: Inter, sans-serif;
-  --font-code: monospace;
+  /* One sans family with a variable weight axis, as the type ladder requires.
+     The system stack is fast and consistent and costs no webfont request.
+     Held identical to Malalang, Letsheng-Holdings and sally-m so the four
+     admins render the same text. */
+  --font-sans:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 
   --color-background: hsl(var(--background));
   --color-foreground: hsl(var(--foreground));
@@ -173,7 +176,6 @@
 
   body {
     @apply bg-background text-foreground;
-    font-family: Arial, Helvetica, sans-serif;
   }
 
   /* Custom Scrollbar */
