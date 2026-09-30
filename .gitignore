@@ -38,6 +38,9 @@ yarn-error.log*
 # vercel
 .vercel
 
+# repomix / AI context (generated — never commit)
+context.md
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
