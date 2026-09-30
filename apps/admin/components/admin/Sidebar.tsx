@@ -1,22 +1,9 @@
 "use client";
 
-import { createSupabaseBrowserClient } from "@bilacert/supabase/client";
-import {
-  BarChart,
-  Briefcase,
-  ClipboardList,
-  FileSpreadsheet,
-  FileText,
-  LayoutDashboard,
-  LogOut,
-  Mail,
-  MessageSquare,
-  Settings,
-  Users,
-} from "lucide-react";
+import { Settings } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import {
   Sidebar,
   SidebarContent,
@@ -27,51 +14,24 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { useToast } from "@/hooks/use-toast";
+import { adminNavItems } from "@/lib/admin-nav";
 
-const supabase = createSupabaseBrowserClient();
-
-const navItems = [
-  { href: "/admin/dashboard", icon: LayoutDashboard, label: "Dashboard" },
-  { href: "/admin/analysis", icon: BarChart, label: "Analysis" },
-  { href: "/admin/tasks", icon: ClipboardList, label: "Tasks" },
-  { href: "/admin/services", icon: Briefcase, label: "Services" },
-  { href: "/admin/blogs", icon: FileText, label: "Blogs" },
-  { href: "/admin/emails", icon: Mail, label: "Email" },
-  { href: "/admin/testimonials", icon: MessageSquare, label: "Testimonials" },
-  { href: "/admin/contacts", icon: Users, label: "Contacts" },
-  {
-    href: "/admin/formSubmissions",
-    icon: FileSpreadsheet,
-    label: "Submissions",
-  },
-];
-
+/**
+ * The admin sidebar.
+ *
+ * The footer carries workspace state only. Sign-out is deliberately absent: the
+ * header user menu is the shell's single identity control, and a second one here
+ * would be the redundancy the header standard rules out - and it would vanish on
+ * mobile, taking the only reachable sign-out with it. See
+ * `docs/ARCHITECTURE/frontend-blueprint/02-admin-ui-grammar/05-admin-header-standard.md`.
+ */
 export default function AdminSidebar() {
   const pathname = usePathname();
-  const router = useRouter();
-  const { toast } = useToast();
   const { setOpenMobile } = useSidebar();
-
-  const handleLogout = async () => {
-    try {
-      const { error } = await supabase.auth.signOut();
-      if (error) throw error;
-      setOpenMobile(false);
-      router.push("/admin/login");
-    } catch (error) {
-      toast({
-        variant: "destructive",
-        title: "Logout Failed",
-        description:
-          error instanceof Error ? error.message : "Unable to log out.",
-      });
-    }
-  };
 
   return (
     <Sidebar variant="inset" collapsible="icon">
-      <SidebarHeader className="group-data-[collapsible=icon]:items-center group-data-[collapsible=icon]:px-2">
+      <SidebarHeader className="h-(--header-height) group-data-[collapsible=icon]:items-center group-data-[collapsible=icon]:px-2">
         <Link
           href="/admin/dashboard"
           className="flex items-center gap-2 group-data-[collapsible=icon]:justify-center"
@@ -92,7 +52,7 @@ export default function AdminSidebar() {
       </SidebarHeader>
       <SidebarContent className="p-2">
         <SidebarMenu>
-          {navItems.map((item) => (
+          {adminNavItems.map((item) => (
             <SidebarMenuItem key={item.href}>
               <SidebarMenuButton
                 asChild
@@ -123,16 +83,6 @@ export default function AdminSidebar() {
                 <Settings className="h-5 w-5" />
                 <span>Settings</span>
               </Link>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-          <SidebarMenuItem>
-            <SidebarMenuButton
-              onClick={handleLogout}
-              className="w-full justify-start"
-              tooltip="Log out"
-            >
-              <LogOut className="h-5 w-5" />
-              <span>Log Out</span>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>

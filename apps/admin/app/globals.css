@@ -102,6 +102,14 @@
     --sidebar-accent-foreground: 0 0% 98%;
     --sidebar-border: 211 77% 25%;
     --sidebar-ring: 30 87% 62%;
+
+    /*
+     * Admin chrome heights. One value each, read by the header bar, the sticky
+     * sub-nav offset, the sidebar Sheet, and the command overlay - so they can
+     * never disagree. See frontend-blueprint 02-admin-ui-grammar/05-admin-header-standard.md.
+     */
+    --header-height: 3.5rem; /* 56px */
+    --subnav-height: 2.5rem; /* 40px */
   }
 
   .dark {
