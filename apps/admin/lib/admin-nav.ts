@@ -5,10 +5,10 @@ import {
   FileSpreadsheet,
   FileText,
   LayoutDashboard,
+  type LucideIcon,
   Mail,
   MessageSquare,
   Users,
-  type LucideIcon,
 } from "lucide-react";
 
 export type AdminNavItem = {
@@ -22,20 +22,20 @@ export type AdminNavItem = {
  *
  * Single source of truth for the sidebar, the command overlay, and the breadcrumb
  * labels. Three surfaces read this list, so a route can only ever be called one
- * thing - `/admin/formSubmissions` is "Submissions" everywhere, never
+ * thing - `/formSubmissions` is "Submissions" everywhere, never
  * "FormSubmissions" in the breadcrumb and "Submissions" in the sidebar.
  */
 export const adminNavItems: AdminNavItem[] = [
-  { href: "/admin/dashboard", icon: LayoutDashboard, label: "Dashboard" },
-  { href: "/admin/analysis", icon: BarChart, label: "Analysis" },
-  { href: "/admin/tasks", icon: ClipboardList, label: "Tasks" },
-  { href: "/admin/services", icon: Briefcase, label: "Services" },
-  { href: "/admin/blogs", icon: FileText, label: "Blogs" },
-  { href: "/admin/emails", icon: Mail, label: "Email" },
-  { href: "/admin/testimonials", icon: MessageSquare, label: "Testimonials" },
-  { href: "/admin/contacts", icon: Users, label: "Contacts" },
+  { href: "/", icon: LayoutDashboard, label: "Dashboard" },
+  { href: "/analysis", icon: BarChart, label: "Analysis" },
+  { href: "/tasks", icon: ClipboardList, label: "Tasks" },
+  { href: "/services", icon: Briefcase, label: "Services" },
+  { href: "/blogs", icon: FileText, label: "Blogs" },
+  { href: "/emails", icon: Mail, label: "Email" },
+  { href: "/testimonials", icon: MessageSquare, label: "Testimonials" },
+  { href: "/contacts", icon: Users, label: "Contacts" },
   {
-    href: "/admin/formSubmissions",
+    href: "/formSubmissions",
     icon: FileSpreadsheet,
     label: "Submissions",
   },
@@ -43,9 +43,9 @@ export const adminNavItems: AdminNavItem[] = [
 
 /** Human labels for fixed nested routes that are not top-level nav entries. */
 const nestedLabels: Record<string, string> = {
-  "/admin/blogs/new": "New Blog Post",
-  "/admin/services/new": "New Service",
-  "/admin/tasks/new": "New Task",
+  "/blogs/new": "New Blog Post",
+  "/services/new": "New Service",
+  "/tasks/new": "New Task",
 };
 
 function humanize(segment: string) {

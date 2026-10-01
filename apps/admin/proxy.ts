@@ -31,22 +31,19 @@ export async function proxy(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  // If there is no user and the route is not /admin/login, redirect to /admin/login
-  if (!user && request.nextUrl.pathname !== "/admin/login") {
-    const redirectRes = NextResponse.redirect(
-      new URL("/admin/login", request.url),
-    );
+  // If there is no user and the route is not /login, redirect to /login
+  if (!user && request.nextUrl.pathname !== "/login") {
+    const redirectRes = NextResponse.redirect(new URL("/login", request.url));
     response.cookies.getAll().forEach((cookie) => {
       redirectRes.cookies.set(cookie.name, cookie.value);
     });
     return redirectRes;
   }
 
-  // If there is a user and the route is /admin/login, redirect to /admin/dashboard
-  if (user && request.nextUrl.pathname === "/admin/login") {
-    const redirectRes = NextResponse.redirect(
-      new URL("/admin/dashboard", request.url),
-    );
+  // If there is a user and the route is /login, redirect to the admin home.
+  // The dashboard is the admin home, so that is `/`.
+  if (user && request.nextUrl.pathname === "/login") {
+    const redirectRes = NextResponse.redirect(new URL("/", request.url));
     response.cookies.getAll().forEach((cookie) => {
       redirectRes.cookies.set(cookie.name, cookie.value);
     });

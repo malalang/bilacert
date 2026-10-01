@@ -1,0 +1,88 @@
+import type { ContactType } from "@bilacert/contracts/contact";
+import { createSupabaseServerClient } from "@bilacert/supabase/server";
+import { ArrowLeft } from "lucide-react";
+import type { Viewport } from "next";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import ContactForm from "../../ContactForm";
+
+export const metadata = {
+  title: "Edit Contact | Bilacert Admin Pro",
+  description: "Edit an existing contact.",
+};
+
+async function getContact(id: string): Promise<ContactType | null> {
+  const supabase = await createSupabaseServerClient();
+  const { data, error } = await supabase
+    .from("contacts")
+    .select("*")
+    .eq("id", id)
+    .single();
+
+  if (error || !data) {
+    return null;
+  }
+
+  return {
+    id: data.id,
+    name: data.name,
+    email: data.email,
+    phone: data.phone,
+    service: data.service,
+    message: data.message,
+    submittedAt: data.submittedAt,
+  } as ContactType;
+}
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#1f2937" },
+  ],
+};
+export default async function EditContactPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
+  const contact = await getContact(id);
+
+  if (!contact) {
+    notFound();
+  }
+
+  return (
+    <div className="space-y-6">
+      <Button variant="outline" asChild>
+        <Link href="/contacts">
+          <ArrowLeft className="mr-2 h-4 w-4" />
+          Back to Contacts
+        </Link>
+      </Button>
+      <Card>
+        <CardHeader>
+          <CardTitle>Edit Contact</CardTitle>
+          <CardDescription>
+            Update the details for "{contact.name}".
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <ContactForm contact={contact} />
+        </CardContent>
+      </Card>
+    </div>
+  );
+}

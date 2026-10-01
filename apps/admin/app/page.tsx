@@ -1,9 +1,11 @@
-import type { Viewport } from "next";
-import { redirect } from "next/navigation";
+import type { Metadata, Viewport } from "next";
+import { Suspense } from "react";
+import DashboardClient from "./dashboard/DashboardClient";
+import DashboardLoading from "./dashboard/loading";
 
-export const metadata = {
-  title: "Bilacert Admin Pro",
-  description: "Administrative dashboard for Bilacert.",
+export const metadata: Metadata = {
+  title: "Dashboard | Bilacert Admin Pro",
+  description: "Real-time overview of submissions and metrics.",
   robots: {
     index: false,
   },
@@ -19,6 +21,11 @@ export const viewport: Viewport = {
     { media: "(prefers-color-scheme: dark)", color: "#1f2937" },
   ],
 };
+
 export default function HomePage() {
-  redirect("/admin/login");
+  return (
+    <Suspense fallback={<DashboardLoading />}>
+      <DashboardClient />
+    </Suspense>
+  );
 }

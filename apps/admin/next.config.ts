@@ -9,6 +9,17 @@ const nextConfig: NextConfig = {
       bodySizeLimit: "5mb",
     },
   },
+  async redirects() {
+    return [
+      // The dashboard IS the admin home (`apps/admin/app/page.tsx`), so the old
+      // explicit segment is retired rather than kept as a second admin home.
+      { source: "/dashboard", destination: "/", permanent: true },
+      // Legacy deep links from before the admin route tree was flattened. `/admin`
+      // was a real path segment, so every old URL lands one segment too deep.
+      { source: "/admin", destination: "/", permanent: true },
+      { source: "/admin/:path*", destination: "/:path*", permanent: true },
+    ];
+  },
   images: {
     remotePatterns: [
       {

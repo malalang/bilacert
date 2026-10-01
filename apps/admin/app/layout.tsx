@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
+import AdminShell from "@/components/admin/AdminShell";
 import { Toaster } from "@/components/ui/toaster";
 
 export const metadata: Metadata = {
@@ -33,7 +34,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className="font-sans antialiased bg-background text-foreground">
-        {children}
+        <AdminShell>{children}</AdminShell>
         <Toaster />
       </body>
     </html>

@@ -2,7 +2,7 @@ import type { ContactType } from "@bilacert/contracts/contact";
 import type { SubmissionType } from "@bilacert/contracts/formSubmission";
 
 const emailReturnPathPattern =
-  /^\/admin\/(?:contacts|formSubmissions)\/[A-Za-z0-9_-]+$/;
+  /^\/(?:contacts|formSubmissions)\/[A-Za-z0-9_-]+$/;
 
 export function getContactEmailComposeHref(
   contact: ContactType,
@@ -26,10 +26,10 @@ export function getContactEmailComposeHref(
     to: emailAddress,
     subject: service ? `Bilacert enquiry: ${service}` : "Your Bilacert enquiry",
     content,
-    returnTo: `/admin/contacts/${contact.id}`,
+    returnTo: `/contacts/${contact.id}`,
   });
 
-  return `/admin/emails/compose?${query.toString()}`;
+  return `/emails/compose?${query.toString()}`;
 }
 
 function getSubmissionTopic(submission: SubmissionType) {
@@ -64,10 +64,10 @@ export function getSubmissionEmailComposeHref(
     to: emailAddress,
     subject: `Bilacert submission: ${topic}`,
     content,
-    returnTo: `/admin/formSubmissions/${submission.id}`,
+    returnTo: `/formSubmissions/${submission.id}`,
   });
 
-  return `/admin/emails/compose?${query.toString()}`;
+  return `/emails/compose?${query.toString()}`;
 }
 
 export function getSafeEmailReturnPath(value: unknown): string | null {

@@ -33,7 +33,7 @@ export default function AdminSidebar() {
     <Sidebar variant="inset" collapsible="icon">
       <SidebarHeader className="h-(--header-height) group-data-[collapsible=icon]:items-center group-data-[collapsible=icon]:px-2">
         <Link
-          href="/admin/dashboard"
+          href="/"
           className="flex items-center gap-2 group-data-[collapsible=icon]:justify-center"
           onClick={() => setOpenMobile(false)}
         >
@@ -56,7 +56,11 @@ export default function AdminSidebar() {
             <SidebarMenuItem key={item.href}>
               <SidebarMenuButton
                 asChild
-                isActive={pathname.startsWith(item.href)}
+                isActive={
+                  item.href === "/"
+                    ? pathname === "/"
+                    : pathname.startsWith(item.href)
+                }
                 className="w-full justify-start"
                 tooltip={item.label}
                 onClick={() => setOpenMobile(false)}

@@ -70,7 +70,7 @@ export default function AdminHeader() {
     try {
       const { error } = await supabase.auth.signOut();
       if (error) throw error;
-      router.push("/admin/login");
+      router.push("/login");
     } catch (error) {
       toast({
         variant: "destructive",
