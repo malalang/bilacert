@@ -253,7 +253,7 @@ export default async function EmailsPage({ searchParams }: EmailsPageProps) {
           </CardContent>
         </Card>
 
-        <Card className="min-w-0 border border-border/70 shadow-xl shadow-black/5">
+        <Card className="min-w-0 border border-border/70">
           <CardHeader className="gap-4 border-b sm:flex-row sm:items-center sm:justify-between sm:space-y-0">
             <div>
               <CardTitle>{mailbox.selectedFolder.folderName}</CardTitle>

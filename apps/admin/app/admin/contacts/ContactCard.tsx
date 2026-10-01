@@ -67,19 +67,19 @@ function ContactCard({ contact, onDelete }: ContactCardProps) {
   const submittedAt = getContactDate(contact.submittedAt);
 
   return (
-    <Card className="flex h-full flex-col overflow-hidden border border-border/70 shadow-sm transition-[border-color,box-shadow] duration-200 hover:border-primary/25 hover:shadow-md">
+    <Card className="flex h-full flex-col overflow-hidden transition-colors duration-200 hover:border-primary/25">
       <CardHeader className="space-y-4 p-5 pb-4">
         <div className="flex items-start gap-3">
-          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
             <UserRound className="h-5 w-5" aria-hidden="true" />
           </div>
 
           <div className="min-w-0 flex-1">
-            <CardTitle className="text-lg leading-tight">
+            <CardTitle className="truncate leading-tight">
               <Link
                 href={contactHref}
                 prefetch={false}
-                className="line-clamp-2 hover:text-primary/80 hover:underline"
+                className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-card"
               >
                 {displayName}
               </Link>
@@ -140,23 +140,11 @@ function ContactCard({ contact, onDelete }: ContactCardProps) {
           </p>
         </div>
 
-        <div className="mt-auto space-y-2.5 border-t pt-4 text-sm">
-          {emailComposeHref ? (
-            <Link
-              href={emailComposeHref}
-              prefetch={false}
-              className="flex min-w-0 items-center gap-2 text-primary hover:underline"
-              title="Compose email in Bilacert"
-            >
-              <Mail className="h-4 w-4 shrink-0" aria-hidden="true" />
-              <span className="truncate">{contact.email}</span>
-            </Link>
-          ) : (
-            <span className="flex items-center gap-2 text-muted-foreground">
-              <Mail className="h-4 w-4" aria-hidden="true" />
-              No email provided
-            </span>
-          )}
+        <div className="mt-auto space-y-2.5 text-sm">
+          <span className="flex min-w-0 items-center gap-2 text-muted-foreground">
+            <Mail className="h-4 w-4 shrink-0" aria-hidden="true" />
+            <span className="truncate">{contact.email}</span>
+          </span>
 
           {phone ? (
             <a
@@ -183,26 +171,21 @@ function ContactCard({ contact, onDelete }: ContactCardProps) {
         </div>
       </CardContent>
 
-      <CardFooter className="grid grid-cols-2 gap-2 border-t bg-muted/10 p-4">
-        <Button variant="outline" className="h-11" asChild>
+      <CardFooter className="mt-auto justify-end border-t">
+        <Button size="sm" className="h-9" asChild>
           <Link href={contactHref} prefetch={false}>
             <Eye className="h-4 w-4" aria-hidden="true" />
             Details
           </Link>
         </Button>
         {emailComposeHref ? (
-          <Button className="h-11" asChild>
+          <Button size="sm" className="h-9" variant="outline" asChild>
             <Link href={emailComposeHref} prefetch={false}>
               <Mail className="h-4 w-4" aria-hidden="true" />
               Email
             </Link>
           </Button>
-        ) : (
-          <Button className="h-11" disabled>
-            <Mail className="h-4 w-4" aria-hidden="true" />
-            No email
-          </Button>
-        )}
+        ) : null}
       </CardFooter>
     </Card>
   );

@@ -130,7 +130,7 @@ function SubmissionCard({ submission, onDelete }: SubmissionCardProps) {
   const phone = submission.phone?.trim();
 
   return (
-    <Card className="group overflow-hidden border border-border/70 shadow-sm transition-[border-color,box-shadow] duration-200 hover:border-primary/25 hover:shadow-md">
+    <Card className="group overflow-hidden border border-border/70 transition-[border-color,box-shadow] duration-200 hover:border-primary/25 hover:">
       <Accordion type="single" collapsible>
         <AccordionItem value={submission.id} className="border-none">
           <div className="grid gap-3 p-4 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center sm:gap-4 sm:p-5">

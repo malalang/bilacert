@@ -216,8 +216,8 @@ export default function BlogForm({ blog, blogId }: BlogFormProps) {
   return (
     <Form {...form}>
       <form onSubmit={handleSubmit(onSubmit, onInvalid)} className="space-y-8">
-        <div className="grid gap-4 md:grid-cols-[1fr_250px] lg:grid-cols-3 lg:gap-8">
-          <div className="grid auto-rows-max items-start gap-4 lg:col-span-2 lg:gap-8">
+        <div className="grid gap-4 md:grid-cols-[1fr_250px] lg:grid-cols-3 gap-4">
+          <div className="grid auto-rows-max items-start gap-4 lg:col-span-2 gap-4">
             <Tabs
               value={activeTab}
               onValueChange={(value) => setActiveTab(value as BlogEditorTab)}
@@ -460,7 +460,7 @@ export default function BlogForm({ blog, blogId }: BlogFormProps) {
             </Tabs>
           </div>
 
-          <div className="grid auto-rows-max items-start gap-4 lg:gap-8">
+          <div className="grid auto-rows-max items-start gap-4 gap-4">
             <Card>
               <CardHeader>
                 <CardTitle>Publishing</CardTitle>

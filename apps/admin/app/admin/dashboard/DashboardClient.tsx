@@ -271,7 +271,7 @@ export default function DashboardClient() {
         ]}
       />
 
-      <Card className="border-0 shadow-xl shadow-black/5">
+      <Card >
         <CardHeader>
           <CardTitle className="text-lg font-semibold">
             Submission Status Totals
@@ -308,7 +308,7 @@ export default function DashboardClient() {
       </Card>
 
       <div className="grid gap-8 xl:grid-cols-[1.15fr_0.85fr]">
-        <Card className="border-0 shadow-xl shadow-black/5">
+        <Card >
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-lg font-medium">
               Submissions by Service
@@ -370,7 +370,7 @@ export default function DashboardClient() {
           </CardContent>
         </Card>
 
-        <Card className="border-0 shadow-xl shadow-black/5">
+        <Card >
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <div>
               <CardTitle className="text-lg font-medium">
@@ -402,7 +402,7 @@ export default function DashboardClient() {
       </div>
 
       <div className="grid gap-8 xl:grid-cols-[1.15fr_0.85fr]">
-        <Card className="border-0 shadow-xl shadow-black/5">
+        <Card >
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <div>
               <CardTitle className="text-lg font-medium">
@@ -429,7 +429,7 @@ export default function DashboardClient() {
           </CardContent>
         </Card>
 
-        <Card className="border-0 shadow-xl shadow-black/5">
+        <Card >
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <div>
               <CardTitle className="text-lg font-medium">

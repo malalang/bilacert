@@ -8,7 +8,7 @@ export default function AnalysisLoading() {
         <Skeleton className="h-24" />
         <Skeleton className="h-24" />
       </div>
-      <div className="grid gap-8 md:grid-cols-2">
+      <div className="grid gap-4 md:grid-cols-2">
         <Skeleton className="h-96" />
         <Skeleton className="h-96" />
       </div>

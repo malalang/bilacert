@@ -107,7 +107,7 @@ export default function ContactDetails({
           </div>
         </div>
 
-        <Card className="border border-border/70 shadow-sm">
+        <Card className="border border-border/70">
           <CardHeader className="space-y-3">
             <CardTitle className="text-2xl">{displayName}</CardTitle>
             <CardDescription>

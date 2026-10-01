@@ -221,7 +221,7 @@ function MetricCard({
   Icon: typeof Eye;
 }) {
   return (
-    <Card className="border-0 shadow-md shadow-black/5">
+    <Card >
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <CardTitle className="text-sm font-medium">{title}</CardTitle>
         <Icon className="h-4 w-4 text-muted-foreground" />
@@ -291,7 +291,7 @@ export default function BlogDetails({ blog }: BlogDetailsProps) {
           </div>
         </div>
 
-        <Card className="overflow-hidden shadow-xl shadow-black/5">
+        <Card className="overflow-hidden">
           <CardHeader className="bg-muted/30">
             <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
               <div className="space-y-3">
@@ -355,9 +355,9 @@ export default function BlogDetails({ blog }: BlogDetailsProps) {
         </div>
 
         {(blog.featuredImage || blog.thumbnail) && (
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             {blog.featuredImage && (
-              <Card className="overflow-hidden border-0 shadow-xl shadow-black/5">
+              <Card className="overflow-hidden">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2 text-lg">
                     <ImageIcon className="h-5 w-5" />
@@ -377,7 +377,7 @@ export default function BlogDetails({ blog }: BlogDetailsProps) {
               </Card>
             )}
             {blog.thumbnail && (
-              <Card className="overflow-hidden border-0 shadow-xl shadow-black/5">
+              <Card className="overflow-hidden">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2 text-lg">
                     <ImageIcon className="h-5 w-5" />
@@ -399,7 +399,7 @@ export default function BlogDetails({ blog }: BlogDetailsProps) {
           </div>
         )}
 
-        <Card className="overflow-hidden shadow-xl shadow-black/5">
+        <Card className="overflow-hidden">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-lg">
               <FileText className="h-5 w-5" />
@@ -410,7 +410,7 @@ export default function BlogDetails({ blog }: BlogDetailsProps) {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="grid gap-6 md:grid-cols-2">
+            <div className="grid gap-4 md:grid-cols-2">
               <div className="space-y-5 rounded-2xl bg-muted/20 p-5 shadow-sm shadow-black/5">
                 <InfoItem label="Slug" value={blog.slug} />
                 <InfoItem label="Category" value={blog.category} />
@@ -443,7 +443,7 @@ export default function BlogDetails({ blog }: BlogDetailsProps) {
           </CardContent>
         </Card>
 
-        <Card className="overflow-hidden shadow-xl shadow-black/5">
+        <Card className="overflow-hidden">
           <CardHeader>
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <div>

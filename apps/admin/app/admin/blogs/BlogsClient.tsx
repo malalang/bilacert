@@ -24,6 +24,7 @@ import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -108,7 +109,7 @@ function BlogsAnalysis({ blogs }: { blogs: BlogType[] }) {
       />
 
       <div className="grid gap-4 lg:grid-cols-[2fr_1fr]">
-        <Card className="border-0 shadow-xl shadow-black/5">
+        <Card >
           <CardHeader>
             <CardTitle className="text-lg font-semibold">
               Blog Performance
@@ -159,7 +160,7 @@ function BlogsAnalysis({ blogs }: { blogs: BlogType[] }) {
           </CardContent>
         </Card>
 
-        <Card className="border-0 shadow-xl shadow-black/5">
+        <Card >
           <CardHeader>
             <CardTitle className="text-lg font-semibold">
               Category Coverage
@@ -202,27 +203,65 @@ const BlogCard = ({
 }) => {
   const router = useRouter();
   return (
-    <div
+    <Card
       key={blog.id}
-      className="group relative flex flex-col overflow-hidden rounded-xl bg-card shadow-sm shadow-black/5 transition-all duration-300 hover:-translate-y-2 hover:shadow-xl hover:shadow-black/10"
+      className="group flex flex-col overflow-hidden"
     >
-      <Link
-        href={`/admin/blogs/${blog.id}`}
-        className="absolute inset-0 z-10"
-        aria-label={`View ${blog.title}`}
-      >
-        <span className="sr-only">View Details</span>
-      </Link>
-      <div className="absolute top-4 right-4 z-20">
+      <CardHeader className="p-0">
+        <div className="relative h-48 w-full">
+          <Image
+            src={
+              blog.featuredImage ||
+              `https://picsum.photos/seed/${blog.id}/600/400`
+            }
+            alt={blog.title}
+            fill
+            sizes="(max-width: 1024px) 100vw, 33vw"
+            className="object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+          <div className="absolute right-4 top-4 flex flex-wrap justify-end gap-2">
+            {blog.featured ? <Badge variant="outline">Featured</Badge> : null}
+            <Badge variant={blog.published ? "default" : "secondary"}>
+              {blog.published ? "Published" : "Draft"}
+            </Badge>
+          </div>
+        </div>
+      </CardHeader>
+
+      <CardContent className="flex flex-1 flex-col">
+        <CardTitle className="mb-1">
+          <Link
+            href={`/admin/blogs/${blog.id}`}
+            className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-card"
+          >
+            {blog.title}
+          </Link>
+        </CardTitle>
+        <CardDescription className="line-clamp-3">
+          {blog.excerpt}
+        </CardDescription>
+      </CardContent>
+
+      <CardFooter className="mt-auto justify-between gap-3 border-t text-xs text-muted-foreground">
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+          {blog.category ? (
+            <span className="font-medium">{blog.category}</span>
+          ) : null}
+          <div className="flex items-center gap-1.5">
+            <Eye className="h-4 w-4" aria-hidden="true" />
+            <span>{(blog.viewsCount ?? 0).toLocaleString()} views</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <Calendar className="h-4 w-4" aria-hidden="true" />
+            <span>{safeFormatDate(blog.createdAt, "PP")}</span>
+          </div>
+        </div>
+
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-8 w-8 rounded-full bg-background/60 backdrop-blur-sm hover:bg-background"
-              onClick={(e) => e.preventDefault()}
-            >
-              <span className="sr-only">Open menu</span>
+            <Button variant="ghost" size="icon" className="h-8 w-8 shrink-0">
+              <span className="sr-only">Actions for {blog.title}</span>
               <MoreHorizontal className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
@@ -256,48 +295,8 @@ const BlogCard = ({
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
-      </div>
-
-      <div className="relative h-48 w-full">
-        <Image
-          src={
-            blog.featuredImage ||
-            `https://picsum.photos/seed/${blog.id}/600/400`
-          }
-          alt={blog.title}
-          fill
-          className="object-cover transition-transform duration-300 group-hover:scale-105"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
-        <div className="absolute bottom-4 left-4">
-          {blog.category && <Badge variant="secondary">{blog.category}</Badge>}
-        </div>
-      </div>
-
-      <div className="flex flex-col flex-grow p-6">
-        <h3 className="mb-2 text-xl font-semibold text-primary line-clamp-2">
-          {blog.title}
-        </h3>
-        <p className="mb-4 text-sm text-muted-foreground line-clamp-3 flex-grow">
-          {blog.excerpt}
-        </p>
-        <div className="mt-auto flex items-center justify-between gap-3 text-xs text-muted-foreground">
-          <Badge variant={blog.published ? "default" : "outline"}>
-            {blog.published ? "Published" : "Draft"}
-          </Badge>
-          <div className="flex flex-wrap items-center justify-end gap-x-3 gap-y-1">
-            <div className="flex items-center gap-1.5">
-              <Eye className="h-4 w-4" />
-              <span>{(blog.viewsCount ?? 0).toLocaleString()} views</span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <Calendar className="h-4 w-4" />
-              <span>{safeFormatDate(blog.createdAt, "PP")}</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+      </CardFooter>
+    </Card>
   );
 };
 
@@ -416,7 +415,7 @@ export default function BlogsClient() {
       </div>
 
       {loading ? (
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           {Array.from({ length: 6 }).map((_, i) => (
             <div
               key={i}
@@ -448,7 +447,7 @@ export default function BlogsClient() {
           )}
         </div>
       ) : (
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           {filteredBlogs.map((blog) => (
             <BlogCard
               key={blog.id}

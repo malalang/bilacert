@@ -113,7 +113,7 @@ export default function SubmissionDetails({
             </div>
           </CardHeader>
           <CardContent>
-            <div className="grid gap-6 md:grid-cols-2">
+            <div className="grid gap-4 md:grid-cols-2">
               <div className="space-y-6">
                 <div>
                   <h4 className="text-sm font-medium text-muted-foreground">

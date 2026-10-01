@@ -31,7 +31,7 @@ export default function PricingPlansForm({ form }: PricingPlansFormProps) {
         <CardTitle>Pricing Plans</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        <div className="grid grid-cols-1 gap-6">
+        <div className="grid grid-cols-1 gap-4">
           {pricingPlanFields.map((field, index) => (
             <Card key={field.id} className="bg-muted/30">
               <CardHeader>

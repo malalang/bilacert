@@ -22,7 +22,7 @@ export default function AnalysesHeader({
   return (
     <div className={`${gridClassName} ${className}`.trim()}>
       {items.map((item) => (
-        <Card key={item.title} className="border-0 shadow-md shadow-black/5">
+        <Card key={item.title} >
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">{item.title}</CardTitle>
             {item.icon}

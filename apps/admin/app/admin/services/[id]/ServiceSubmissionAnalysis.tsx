@@ -158,7 +158,7 @@ export default function ServiceSubmissionAnalysis({
         ))}
       </div>
 
-      <Card className="border-0 shadow-xl shadow-black/5">
+      <Card >
         <CardHeader>
           <CardTitle>Submissions Over Time</CardTitle>
         </CardHeader>
@@ -173,7 +173,7 @@ export default function ServiceSubmissionAnalysis({
         </CardContent>
       </Card>
 
-      <Card className="border-0 shadow-xl shadow-black/5">
+      <Card >
         <CardHeader>
           <CardTitle>Submission Records</CardTitle>
         </CardHeader>

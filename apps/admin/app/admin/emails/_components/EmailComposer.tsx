@@ -46,7 +46,7 @@ export default function EmailComposer({
   return (
     <form action={formAction}>
       {returnTo && <input type="hidden" name="returnTo" value={returnTo} />}
-      <Card className="border border-border/70 shadow-xl shadow-black/5">
+      <Card className="border border-border/70">
         <CardHeader>
           <CardTitle>New message</CardTitle>
           <CardDescription>

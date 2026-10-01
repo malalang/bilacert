@@ -30,7 +30,7 @@ function EmailStateLayout({
           Manage the Bilacert mailbox from the admin dashboard.
         </p>
       </div>
-      <Card className="border border-border/70 shadow-xl shadow-black/5">
+      <Card className="border border-border/70">
         <CardHeader>
           <div className="mb-3 flex h-11 w-11 items-center justify-center rounded-xl bg-primary/10 text-primary">
             {icon}

@@ -45,7 +45,7 @@ export default function DashboardLoading() {
           </CardContent>
         </Card>
       </div>
-      <div className="grid gap-8 md:grid-cols-2">
+      <div className="grid gap-4 md:grid-cols-2">
         <Card>
           <CardHeader>
             <Skeleton className="h-6 w-3/4" />

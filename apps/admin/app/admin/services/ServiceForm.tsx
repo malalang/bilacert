@@ -239,7 +239,7 @@ export default function ServiceForm({ service }: ServiceFormProps) {
   return (
     <Form {...form}>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
-        <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
           <div className="space-y-6 lg:col-span-2">
             <Card>
               <CardHeader>
@@ -361,7 +361,7 @@ export default function ServiceForm({ service }: ServiceFormProps) {
                 <CardTitle>Pricing Plans</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="grid grid-cols-1 gap-6">
+                <div className="grid grid-cols-1 gap-4">
                   {pricingPlanFields.map((field, index) => (
                     <Card key={field.id} className="bg-muted/30">
                       <CardHeader>

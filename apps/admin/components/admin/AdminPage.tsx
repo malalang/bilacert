@@ -70,7 +70,7 @@ export default function AdminPage<
   };
 
   const defaultLoading = () => (
-    <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+    <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
       {Array.from({ length: 6 }).map((_, i) => (
         <div
           key={i}
@@ -134,7 +134,7 @@ export default function AdminPage<
             defaultEmpty()
           )
         ) : (
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
             {data.map((item) => renderItem(item, handleEdit, handleDelete))}
           </div>
         )}

@@ -131,7 +131,7 @@ function TopServicesBySubmissions({
     .slice(0, 5);
 
   return (
-    <Card className="border-0 shadow-xl shadow-black/5">
+    <Card >
       <CardHeader className="flex flex-row items-start justify-between gap-4">
         <div>
           <CardTitle className="text-lg font-semibold">

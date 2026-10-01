@@ -226,8 +226,8 @@ export default function ServiceForm({ service }: ServiceFormProps) {
   return (
     <Form {...form}>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
-        <div className="grid gap-4 md:grid-cols-[1fr_250px] lg:grid-cols-3 lg:gap-8">
-          <div className="grid auto-rows-max items-start gap-4 lg:col-span-2 lg:gap-8">
+        <div className="grid gap-4 md:grid-cols-[1fr_250px] lg:grid-cols-3 gap-4">
+          <div className="grid auto-rows-max items-start gap-4 lg:col-span-2 gap-4">
             <Tabs defaultValue="core">
               <TabsList className="flex h-auto flex-wrap justify-start">
                 <TabsTrigger value="core">Core Details</TabsTrigger>
@@ -253,7 +253,7 @@ export default function ServiceForm({ service }: ServiceFormProps) {
               </TabsContent>
             </Tabs>
           </div>
-          <div className="grid auto-rows-max items-start gap-4 lg:gap-8">
+          <div className="grid auto-rows-max items-start gap-4 gap-4">
             <PublishingForm form={form} />
             <DetailsForm form={form} />
             <SeoForm form={form} />

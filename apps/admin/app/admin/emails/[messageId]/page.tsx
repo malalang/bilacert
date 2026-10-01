@@ -182,7 +182,7 @@ export default async function EmailMessagePage({
         </Alert>
       )}
 
-      <Card className="border border-border/70 shadow-xl shadow-black/5">
+      <Card className="border border-border/70">
         <CardHeader className="space-y-5">
           <div className="flex flex-wrap items-center gap-2">
             <Badge variant={message.isRead ? "outline" : "default"}>

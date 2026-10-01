@@ -689,7 +689,7 @@ export default function AnalysisClient() {
             <SubmissionsLineChart data={submissionsByDay} />
           </CardContent>
         </Card>
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
           <Card>
             <CardHeader>
               <CardTitle>Submission Status</CardTitle>
@@ -753,7 +753,7 @@ export default function AnalysisClient() {
             ),
           ]}
         />
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
           <Card className="lg:col-span-2">
             <CardHeader>
               <CardTitle>Content Breakdown</CardTitle>
