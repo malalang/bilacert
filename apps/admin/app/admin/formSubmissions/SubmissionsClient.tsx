@@ -297,30 +297,34 @@ export default function SubmissionsClient() {
 
       <AnalysesHeader
         items={[
-          {
-            title: "Pending",
-            value: getSubmissionStatusTotal(allSubmissions, "pending"),
-            description: "Awaiting first response",
-            icon: <Clock className="h-4 w-4 text-muted-foreground" />,
-          },
-          {
-            title: "Processing",
-            value: getSubmissionStatusTotal(allSubmissions, "in-progress"),
-            description: "Currently being handled",
-            icon: <Inbox className="h-4 w-4 text-muted-foreground" />,
-          },
-          {
-            title: "Rejected",
-            value: getSubmissionStatusTotal(allSubmissions, "rejected"),
-            description: "Declined or not approved",
-            icon: <XCircle className="h-4 w-4 text-muted-foreground" />,
-          },
-          {
-            title: "Archived",
-            value: getSubmissionStatusTotal(allSubmissions, "archived"),
-            description: "Stored for reference",
-            icon: <Archive className="h-4 w-4 text-muted-foreground" />,
-          },
+{
+      title: "Pending",
+      value: getSubmissionStatusTotal(allSubmissions, "pending"),
+      description: "Awaiting first response",
+      icon: <Clock className="h-4 w-4 text-muted-foreground" />,
+      href: "/admin/formSubmissions",
+    },
+    {
+      title: "Processing",
+      value: getSubmissionStatusTotal(allSubmissions, "in-progress"),
+      description: "Currently being handled",
+      icon: <Inbox className="h-4 w-4 text-muted-foreground" />,
+      href: "/admin/formSubmissions",
+    },
+    {
+      title: "Rejected",
+      value: getSubmissionStatusTotal(allSubmissions, "rejected"),
+      description: "Declined or not approved",
+      icon: <XCircle className="h-4 w-4 text-muted-foreground" />,
+      href: "/admin/formSubmissions",
+    },
+    {
+      title: "Archived",
+      value: getSubmissionStatusTotal(allSubmissions, "archived"),
+      description: "Stored for reference",
+      icon: <Archive className="h-4 w-4 text-muted-foreground" />,
+      href: "/admin/formSubmissions",
+    },
         ]}
       />
 

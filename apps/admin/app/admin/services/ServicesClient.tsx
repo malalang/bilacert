@@ -149,30 +149,34 @@ function ServicesAnalysis({
     <div className="space-y-6">
       <AnalysesHeader
         items={[
-          {
-            title: "Total Services",
-            value: services.length,
-            description: `${publishedServices.length.toLocaleString()} published`,
-            icon: <Package className="h-4 w-4 text-muted-foreground" />,
-          },
-          {
-            title: "Featured Services",
-            value: featuredServices.length,
-            description: "Highlighted on public pages",
-            icon: <Sparkles className="h-4 w-4 text-muted-foreground" />,
-          },
-          {
-            title: "Service Submissions",
-            value: submissions.length,
-            description: "Across service and contact flows",
-            icon: <BarChart3 className="h-4 w-4 text-muted-foreground" />,
-          },
-          {
-            title: "Draft Services",
-            value: draftServices,
-            description: "Not visible publicly yet",
-            icon: <Clock className="h-4 w-4 text-muted-foreground" />,
-          },
+{
+      title: "Total Services",
+      value: services.length,
+      description: `${publishedServices.length.toLocaleString()} published`,
+      icon: <Package className="h-4 w-4 text-muted-foreground" />,
+      href: "/admin/services",
+    },
+    {
+      title: "Featured Services",
+      value: featuredServices.length,
+      description: "Highlighted on public pages",
+      icon: <Sparkles className="h-4 w-4 text-muted-foreground" />,
+      href: "/admin/services",
+    },
+    {
+      title: "Service Submissions",
+      value: submissions.length,
+      description: "Across service and contact flows",
+      icon: <BarChart3 className="h-4 w-4 text-muted-foreground" />,
+      href: "/admin/formSubmissions",
+    },
+    {
+      title: "Draft Services",
+      value: draftServices,
+      description: "Not visible publicly yet",
+      icon: <Clock className="h-4 w-4 text-muted-foreground" />,
+      href: "/admin/services",
+    },
         ]}
       />
 

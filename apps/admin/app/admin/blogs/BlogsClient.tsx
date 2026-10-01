@@ -81,30 +81,34 @@ function BlogsAnalysis({ blogs }: { blogs: BlogType[] }) {
     <div className="space-y-4">
       <AnalysesHeader
         items={[
-          {
-            title: "Total Blogs",
-            value: blogs.length,
-            description: `${publishedBlogs.length.toLocaleString()} published`,
-            icon: <Newspaper className="h-4 w-4 text-muted-foreground" />,
-          },
-          {
-            title: "Published Blogs",
-            value: publishedBlogs.length,
-            description: "Visible publicly",
-            icon: <FileText className="h-4 w-4 text-muted-foreground" />,
-          },
-          {
-            title: "Blog Views",
-            value: totalViews,
-            description: "Across all posts",
-            icon: <Eye className="h-4 w-4 text-muted-foreground" />,
-          },
-          {
-            title: "Featured Blogs",
-            value: featuredBlogs.length,
-            description: "Promoted content",
-            icon: <Sparkles className="h-4 w-4 text-muted-foreground" />,
-          },
+{
+      title: "Total Blogs",
+      value: blogs.length,
+      description: `${publishedBlogs.length.toLocaleString()} published`,
+      icon: <Newspaper className="h-4 w-4 text-muted-foreground" />,
+      href: "/admin/blogs",
+    },
+    {
+      title: "Published Blogs",
+      value: publishedBlogs.length,
+      description: "Visible publicly",
+      icon: <FileText className="h-4 w-4 text-muted-foreground" />,
+      href: "/admin/blogs",
+    },
+    {
+      title: "Blog Views",
+      value: totalViews,
+      description: "Across all posts",
+      icon: <Eye className="h-4 w-4 text-muted-foreground" />,
+      href: "/admin/blogs",
+    },
+    {
+      title: "Featured Blogs",
+      value: featuredBlogs.length,
+      description: "Promoted content",
+      icon: <Sparkles className="h-4 w-4 text-muted-foreground" />,
+      href: "/admin/blogs",
+    },
         ]}
       />
 

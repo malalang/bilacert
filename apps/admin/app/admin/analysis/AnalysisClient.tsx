@@ -105,12 +105,14 @@ function metric(
   value: string | number,
   description: string,
   Icon: LucideIcon,
+  href: string,
 ) {
   return {
     title,
     value,
     description,
     icon: <Icon className="h-4 w-4 text-muted-foreground" />,
+    href,
   };
 }
 
@@ -541,24 +543,28 @@ export default function AnalysisClient() {
             totalServices,
             `${publishedServices.toLocaleString()} published`,
             Package,
+            "/admin/services",
           ),
           metric(
             "Total Blogs",
             totalBlogs,
             `${publishedContent.toLocaleString()} published`,
             Newspaper,
+            "/admin/blogs",
           ),
           metric(
             "Total Submissions",
             totalSubmissions,
             "Submission volume in selected range",
             FileText,
+            "/admin/formSubmissions",
           ),
           metric(
             "Pending Applications",
             pendingApplications,
             `${totalViews.toLocaleString()} total blog views`,
             Clock,
+            "/admin/formSubmissions",
           ),
         ]}
       />
@@ -612,24 +618,28 @@ export default function AnalysisClient() {
               totalServices,
               `${publishedServices.toLocaleString()} published`,
               Package,
+              "/admin/services",
             ),
             metric(
               "Featured Services",
               featuredServices,
               "Highlighted on public pages",
               Sparkles,
+              "/admin/services",
             ),
             metric(
               "Service Submissions",
               totalSubmissions,
               "Submission volume in selected range",
               BarChart3,
+              "/admin/formSubmissions",
             ),
             metric(
               "Draft Services",
               draftServices,
               "Not visible publicly yet",
               Clock,
+              "/admin/services",
             ),
           ]}
         />
@@ -660,24 +670,28 @@ export default function AnalysisClient() {
               pendingApplications,
               "Awaiting first response",
               Clock,
+              "/admin/formSubmissions",
             ),
             metric(
               "Processing",
               processingApplications,
               "Currently being handled",
               Inbox,
+              "/admin/formSubmissions",
             ),
             metric(
               "Rejected",
               rejectedApplications,
               "Declined or not approved",
               XCircle,
+              "/admin/formSubmissions",
             ),
             metric(
               "Archived",
               archivedApplications,
               "Stored for reference",
               Archive,
+              "/admin/formSubmissions",
             ),
           ]}
         />
@@ -732,24 +746,28 @@ export default function AnalysisClient() {
               totalBlogs,
               `${publishedContent.toLocaleString()} published`,
               Newspaper,
+              "/admin/blogs",
             ),
             metric(
               "Published Blogs",
               publishedContent,
               `${draftBlogs.toLocaleString()} drafts in range`,
               FileText,
+              "/admin/blogs",
             ),
             metric(
               "Blog Views",
               totalViews,
               "Views across posts in range",
               Eye,
+              "/admin/blogs",
             ),
             metric(
               "Featured Blogs",
               featuredBlogs,
               "Promoted content in range",
               Sparkles,
+              "/admin/blogs",
             ),
           ]}
         />
