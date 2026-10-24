@@ -194,23 +194,13 @@
 }
 
 @layer components {
-  .prose.overflow-wrap-anywhere,
-  .prose.break-words {
-    overflow-wrap: normal !important;
-    text-wrap: pretty;
-    word-break: normal !important;
-  }
-
-  .prose.overflow-wrap-anywhere p,
-  .prose.break-words p,
-  .prose.overflow-wrap-anywhere li,
-  .prose.break-words li {
-    overflow-wrap: normal !important;
-    text-wrap: pretty;
-    white-space: normal;
-    word-break: normal !important;
-  }
-
+  /*
+   * The former .prose.overflow-wrap-anywhere / .prose.break-words reverts
+   * (overflow-wrap/word-break normal !important) were removed 2026-10-24:
+   * no element in apps/admin composes either modifier (grep evidence), so
+   * they selected nothing; the wrap recipe survives scoped as
+   * .bilacert-article styles in app/blogs/BlogEditor.tsx.
+   */
   .prose.overflow-wrap-anywhere h1,
   .prose.break-words h1,
   .prose.overflow-wrap-anywhere h2,
@@ -242,9 +232,9 @@
   *,
   *::before,
   *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
+    animation-duration: 0.01ms;
+    animation-iteration-count: 1;
+    transition-duration: 0.01ms;
+    scroll-behavior: auto;
   }
 }
