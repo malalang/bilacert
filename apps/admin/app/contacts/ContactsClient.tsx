@@ -22,34 +22,34 @@ function ContactsAnalysis({ contacts }: { contacts: ContactType[] }) {
   return (
     <AnalysesHeader
       items={[
-{
-        title: "Total Contacts",
-        value: contacts.length,
-        description: "All captured contact messages",
-        icon: <MessageSquare className="h-4 w-4 text-muted-foreground" />,
-        href: "/contacts",
-      },
-      {
-        title: "Email Contacts",
-        value: totals.withEmail,
-        description: "Contacts with email addresses",
-        icon: <Mail className="h-4 w-4 text-muted-foreground" />,
-        href: "/contacts",
-      },
-      {
-        title: "Phone Contacts",
-        value: totals.withPhone,
-        description: "Contacts with phone numbers",
-        icon: <Phone className="h-4 w-4 text-muted-foreground" />,
-        href: "/contacts",
-      },
-      {
-        title: "Service Inquiries",
-        value: totals.serviceInquiries,
-        description: "Messages linked to services",
-        icon: <ClipboardList className="h-4 w-4 text-muted-foreground" />,
-        href: "/contacts",
-      },
+        {
+          title: "Total Contacts",
+          value: contacts.length,
+          description: "All captured contact messages",
+          icon: <MessageSquare className="h-4 w-4 text-muted-foreground" />,
+          href: "/contacts",
+        },
+        {
+          title: "Email Contacts",
+          value: totals.withEmail,
+          description: "Contacts with email addresses",
+          icon: <Mail className="h-4 w-4 text-muted-foreground" />,
+          href: "/contacts",
+        },
+        {
+          title: "Phone Contacts",
+          value: totals.withPhone,
+          description: "Contacts with phone numbers",
+          icon: <Phone className="h-4 w-4 text-muted-foreground" />,
+          href: "/contacts",
+        },
+        {
+          title: "Service Inquiries",
+          value: totals.serviceInquiries,
+          description: "Messages linked to services",
+          icon: <ClipboardList className="h-4 w-4 text-muted-foreground" />,
+          href: "/contacts",
+        },
       ]}
     />
   );

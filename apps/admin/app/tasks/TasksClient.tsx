@@ -69,13 +69,22 @@ import {
 } from "./actions";
 
 const STATUS_META: Record<TaskStatus, { label: string; className: string }> = {
-  pending: { label: "Pending", className: "bg-warning/10 text-warning-foreground" },
-  in_progress: { label: "In Progress", className: "bg-info/10 text-info-foreground" },
+  pending: {
+    label: "Pending",
+    className: "bg-warning/10 text-warning-foreground",
+  },
+  in_progress: {
+    label: "In Progress",
+    className: "bg-info/10 text-info-foreground",
+  },
   completed: {
     label: "Completed",
     className: "bg-primary/10 text-primary",
   },
-  cancelled: { label: "Cancelled", className: "bg-muted text-muted-foreground" },
+  cancelled: {
+    label: "Cancelled",
+    className: "bg-muted text-muted-foreground",
+  },
 };
 
 const PRIORITY_META: Record<

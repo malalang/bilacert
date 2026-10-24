@@ -181,7 +181,6 @@ function FilterableLineCard({
   const [visibleKeys, setVisibleKeys] = useState(keys);
   const keySignature = keys.join("|");
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: keySignature represents keys stability
   useEffect(() => {
     setVisibleKeys(keys);
   }, [keySignature]);

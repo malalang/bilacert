@@ -131,7 +131,7 @@ function TopServicesBySubmissions({
     .slice(0, 5);
 
   return (
-    <Card >
+    <Card>
       <CardHeader className="flex flex-row items-start justify-between gap-4">
         <div>
           <CardTitle className="text-lg font-semibold">
@@ -297,34 +297,34 @@ export default function SubmissionsClient() {
 
       <AnalysesHeader
         items={[
-{
-      title: "Pending",
-      value: getSubmissionStatusTotal(allSubmissions, "pending"),
-      description: "Awaiting first response",
-      icon: <Clock className="h-4 w-4 text-muted-foreground" />,
-      href: "/formSubmissions",
-    },
-    {
-      title: "Processing",
-      value: getSubmissionStatusTotal(allSubmissions, "in-progress"),
-      description: "Currently being handled",
-      icon: <Inbox className="h-4 w-4 text-muted-foreground" />,
-      href: "/formSubmissions",
-    },
-    {
-      title: "Rejected",
-      value: getSubmissionStatusTotal(allSubmissions, "rejected"),
-      description: "Declined or not approved",
-      icon: <XCircle className="h-4 w-4 text-muted-foreground" />,
-      href: "/formSubmissions",
-    },
-    {
-      title: "Archived",
-      value: getSubmissionStatusTotal(allSubmissions, "archived"),
-      description: "Stored for reference",
-      icon: <Archive className="h-4 w-4 text-muted-foreground" />,
-      href: "/formSubmissions",
-    },
+          {
+            title: "Pending",
+            value: getSubmissionStatusTotal(allSubmissions, "pending"),
+            description: "Awaiting first response",
+            icon: <Clock className="h-4 w-4 text-muted-foreground" />,
+            href: "/formSubmissions",
+          },
+          {
+            title: "Processing",
+            value: getSubmissionStatusTotal(allSubmissions, "in-progress"),
+            description: "Currently being handled",
+            icon: <Inbox className="h-4 w-4 text-muted-foreground" />,
+            href: "/formSubmissions",
+          },
+          {
+            title: "Rejected",
+            value: getSubmissionStatusTotal(allSubmissions, "rejected"),
+            description: "Declined or not approved",
+            icon: <XCircle className="h-4 w-4 text-muted-foreground" />,
+            href: "/formSubmissions",
+          },
+          {
+            title: "Archived",
+            value: getSubmissionStatusTotal(allSubmissions, "archived"),
+            description: "Stored for reference",
+            icon: <Archive className="h-4 w-4 text-muted-foreground" />,
+            href: "/formSubmissions",
+          },
         ]}
       />
 

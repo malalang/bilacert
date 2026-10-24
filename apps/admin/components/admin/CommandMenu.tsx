@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from "@bilacert/shared/cn";
 import { Search } from "lucide-react";
 import { useRouter } from "next/navigation";
 import * as React from "react";
@@ -10,7 +11,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { cn } from "@bilacert/shared/cn";
 import { adminNavItems } from "@/lib/admin-nav";
 
 const SHORTCUT_KEY = "k";
@@ -94,7 +94,9 @@ export function CommandMenu() {
   function onInputKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
     if (event.key === "ArrowDown") {
       event.preventDefault();
-      setActiveIndex((index) => (items.length ? (index + 1) % items.length : 0));
+      setActiveIndex((index) =>
+        items.length ? (index + 1) % items.length : 0,
+      );
       return;
     }
 
@@ -169,7 +171,8 @@ export function CommandMenu() {
 
         {isEmpty ? (
           <p className="px-4 py-10 text-center text-sm text-muted-foreground">
-            No sections match &ldquo;{query.trim()}&rdquo;. Try a different term.
+            No sections match &ldquo;{query.trim()}&rdquo;. Try a different
+            term.
           </p>
         ) : (
           <div

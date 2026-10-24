@@ -37,67 +37,67 @@ const renderTestimonial = (
     ? format(date, "PP")
     : "Date not available";
   return (
-    <Card key={testimonial.id} className="flex h-full flex-col transition-colors hover:border-primary/50">
-        <CardHeader className="flex-row items-start justify-between">
-          <div className="min-w-0">
-            <CardTitle className="truncate">
-              <Link
-                href={`/testimonials/${testimonial.id}`}
-                className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-card"
+    <Card
+      key={testimonial.id}
+      className="flex h-full flex-col transition-colors hover:border-primary/50"
+    >
+      <CardHeader className="flex-row items-start justify-between">
+        <div className="min-w-0">
+          <CardTitle className="truncate">
+            <Link
+              href={`/testimonials/${testimonial.id}`}
+              className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-card"
+            >
+              Testimonial
+            </Link>
+          </CardTitle>
+          <CardDescription>Added on {formattedDate}</CardDescription>
+        </div>
+        <div>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="h-8 w-8 shrink-0 p-0">
+                <span className="sr-only">
+                  Actions for testimonial from {formattedDate}
+                </span>
+                <MoreHorizontal className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>Actions</DropdownMenuLabel>
+              <DropdownMenuItem
+                onClick={(e) => {
+                  e.preventDefault();
+                  router.push(`/testimonials/${testimonial.id}`);
+                }}
               >
-                Testimonial
-              </Link>
-            </CardTitle>
-            <CardDescription>Added on {formattedDate}</CardDescription>
-          </div>
-          <div>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="ghost"
-                  className="h-8 w-8 shrink-0 p-0"
-                >
-                  <span className="sr-only">
-                    Actions for testimonial from {formattedDate}
-                  </span>
-                  <MoreHorizontal className="h-4 w-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                <DropdownMenuItem
-                  onClick={(e) => {
-                    e.preventDefault();
-                    router.push(`/testimonials/${testimonial.id}`);
-                  }}
-                >
-                  View
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={(e) => {
-                    e.preventDefault();
-                    onEdit(testimonial);
-                  }}
-                >
-                  Edit
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem
-                  className="text-destructive focus:bg-destructive/10 focus:text-destructive"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    onDelete(testimonial);
-                  }}
-                >
-                  Delete
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
-        </CardHeader>
-        <CardContent className="flex-grow p-0 overflow-hidden">
-          <TestimonialEmbed postUrl={testimonial.postUrl} />
-        </CardContent>
+                View
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={(e) => {
+                  e.preventDefault();
+                  onEdit(testimonial);
+                }}
+              >
+                Edit
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                className="text-destructive focus:bg-destructive/10 focus:text-destructive"
+                onClick={(e) => {
+                  e.preventDefault();
+                  onDelete(testimonial);
+                }}
+              >
+                Delete
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      </CardHeader>
+      <CardContent className="flex-grow p-0 overflow-hidden">
+        <TestimonialEmbed postUrl={testimonial.postUrl} />
+      </CardContent>
     </Card>
   );
 };

@@ -83,7 +83,7 @@ function ServiceBlogPerformance({
     .slice(0, 5);
 
   return (
-    <Card >
+    <Card>
       <CardHeader>
         <CardTitle className="text-lg font-semibold">
           Service Blog Performance

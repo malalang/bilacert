@@ -91,7 +91,10 @@ export default function AdminHeader() {
     <header className="sticky top-0 z-20 flex h-(--header-height) items-center gap-2 border-b bg-background px-4 sm:px-6">
       <div className="flex min-w-0 items-center gap-2">
         <SidebarTrigger className="-ml-1 size-11 sm:size-8" />
-        <Separator orientation="vertical" className="mr-2 hidden h-4 sm:block" />
+        <Separator
+          orientation="vertical"
+          className="mr-2 hidden h-4 sm:block"
+        />
 
         {visibleCrumbs.length > 0 ? (
           <Breadcrumb aria-label="Breadcrumb" className="min-w-0">
@@ -135,7 +138,9 @@ export default function AdminHeader() {
               >
                 <Avatar className="h-8 w-8 border">
                   {avatarUrl ? <AvatarImage src={avatarUrl} alt="" /> : null}
-                  <AvatarFallback>{getInitials(user.email || "")}</AvatarFallback>
+                  <AvatarFallback>
+                    {getInitials(user.email || "")}
+                  </AvatarFallback>
                 </Avatar>
                 <span className="hidden max-w-32 truncate text-sm font-medium md:inline">
                   {displayName}

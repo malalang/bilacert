@@ -149,38 +149,38 @@ function ServicesAnalysis({
     <div className="space-y-6">
       <AnalysesHeader
         items={[
-{
-      title: "Total Services",
-      value: services.length,
-      description: `${publishedServices.length.toLocaleString()} published`,
-      icon: <Package className="h-4 w-4 text-muted-foreground" />,
-      href: "/services",
-    },
-    {
-      title: "Featured Services",
-      value: featuredServices.length,
-      description: "Highlighted on public pages",
-      icon: <Sparkles className="h-4 w-4 text-muted-foreground" />,
-      href: "/services",
-    },
-    {
-      title: "Service Submissions",
-      value: submissions.length,
-      description: "Across service and contact flows",
-      icon: <BarChart3 className="h-4 w-4 text-muted-foreground" />,
-      href: "/formSubmissions",
-    },
-    {
-      title: "Draft Services",
-      value: draftServices,
-      description: "Not visible publicly yet",
-      icon: <Clock className="h-4 w-4 text-muted-foreground" />,
-      href: "/services",
-    },
+          {
+            title: "Total Services",
+            value: services.length,
+            description: `${publishedServices.length.toLocaleString()} published`,
+            icon: <Package className="h-4 w-4 text-muted-foreground" />,
+            href: "/services",
+          },
+          {
+            title: "Featured Services",
+            value: featuredServices.length,
+            description: "Highlighted on public pages",
+            icon: <Sparkles className="h-4 w-4 text-muted-foreground" />,
+            href: "/services",
+          },
+          {
+            title: "Service Submissions",
+            value: submissions.length,
+            description: "Across service and contact flows",
+            icon: <BarChart3 className="h-4 w-4 text-muted-foreground" />,
+            href: "/formSubmissions",
+          },
+          {
+            title: "Draft Services",
+            value: draftServices,
+            description: "Not visible publicly yet",
+            icon: <Clock className="h-4 w-4 text-muted-foreground" />,
+            href: "/services",
+          },
         ]}
       />
 
-      <Card >
+      <Card>
         <CardHeader>
           <CardTitle className="text-lg font-semibold">
             Service Submission Status
@@ -235,7 +235,10 @@ const ServiceCard = ({
   );
 
   return (
-    <Card key={service.id} className="group flex h-full flex-col overflow-hidden">
+    <Card
+      key={service.id}
+      className="group flex h-full flex-col overflow-hidden"
+    >
       <CardHeader className="p-0">
         <div className="relative h-48 w-full overflow-hidden bg-muted">
           <img
@@ -248,7 +251,9 @@ const ServiceCard = ({
             <Badge variant={service.published ? "default" : "secondary"}>
               {service.published ? "Published" : "Draft"}
             </Badge>
-            {service.featured ? <Badge variant="outline">Featured</Badge> : null}
+            {service.featured ? (
+              <Badge variant="outline">Featured</Badge>
+            ) : null}
           </div>
         </div>
       </CardHeader>
@@ -302,7 +307,9 @@ const ServiceCard = ({
 
       <CardFooter className="mt-auto justify-between border-t">
         <p className="font-semibold">
-          {service.pricing ? `R ${service.pricing.toLocaleString()}` : "Not Set"}
+          {service.pricing
+            ? `R ${service.pricing.toLocaleString()}`
+            : "Not Set"}
         </p>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>

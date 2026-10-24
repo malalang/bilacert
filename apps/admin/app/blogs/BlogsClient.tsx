@@ -81,39 +81,39 @@ function BlogsAnalysis({ blogs }: { blogs: BlogType[] }) {
     <div className="space-y-4">
       <AnalysesHeader
         items={[
-{
-      title: "Total Blogs",
-      value: blogs.length,
-      description: `${publishedBlogs.length.toLocaleString()} published`,
-      icon: <Newspaper className="h-4 w-4 text-muted-foreground" />,
-      href: "/blogs",
-    },
-    {
-      title: "Published Blogs",
-      value: publishedBlogs.length,
-      description: "Visible publicly",
-      icon: <FileText className="h-4 w-4 text-muted-foreground" />,
-      href: "/blogs",
-    },
-    {
-      title: "Blog Views",
-      value: totalViews,
-      description: "Across all posts",
-      icon: <Eye className="h-4 w-4 text-muted-foreground" />,
-      href: "/blogs",
-    },
-    {
-      title: "Featured Blogs",
-      value: featuredBlogs.length,
-      description: "Promoted content",
-      icon: <Sparkles className="h-4 w-4 text-muted-foreground" />,
-      href: "/blogs",
-    },
+          {
+            title: "Total Blogs",
+            value: blogs.length,
+            description: `${publishedBlogs.length.toLocaleString()} published`,
+            icon: <Newspaper className="h-4 w-4 text-muted-foreground" />,
+            href: "/blogs",
+          },
+          {
+            title: "Published Blogs",
+            value: publishedBlogs.length,
+            description: "Visible publicly",
+            icon: <FileText className="h-4 w-4 text-muted-foreground" />,
+            href: "/blogs",
+          },
+          {
+            title: "Blog Views",
+            value: totalViews,
+            description: "Across all posts",
+            icon: <Eye className="h-4 w-4 text-muted-foreground" />,
+            href: "/blogs",
+          },
+          {
+            title: "Featured Blogs",
+            value: featuredBlogs.length,
+            description: "Promoted content",
+            icon: <Sparkles className="h-4 w-4 text-muted-foreground" />,
+            href: "/blogs",
+          },
         ]}
       />
 
       <div className="grid gap-4 lg:grid-cols-[2fr_1fr]">
-        <Card >
+        <Card>
           <CardHeader>
             <CardTitle className="text-lg font-semibold">
               Blog Performance
@@ -164,7 +164,7 @@ function BlogsAnalysis({ blogs }: { blogs: BlogType[] }) {
           </CardContent>
         </Card>
 
-        <Card >
+        <Card>
           <CardHeader>
             <CardTitle className="text-lg font-semibold">
               Category Coverage
@@ -207,10 +207,7 @@ const BlogCard = ({
 }) => {
   const router = useRouter();
   return (
-    <Card
-      key={blog.id}
-      className="group flex flex-col overflow-hidden"
-    >
+    <Card key={blog.id} className="group flex flex-col overflow-hidden">
       <CardHeader className="p-0">
         <div className="relative h-48 w-full">
           <Image
