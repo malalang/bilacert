@@ -39,76 +39,6 @@ interface TaskTodoDbRow {
   updatedAt: string | null;
 }
 
-type TaskQueryClient = {
-  from: (table: string) => {
-    select: (query: string) => {
-      order: (
-        column: string,
-        options: { ascending: boolean },
-      ) => Promise<{
-        data: TaskDbRow[] | null;
-        error: { message: string } | null;
-      }>;
-    };
-  };
-};
-
-type SelectOrderClient<T> = {
-  from: (table: string) => {
-    select: (query: string) => {
-      order: (
-        column: string,
-        options: { ascending: boolean },
-      ) => Promise<{ data: T[] | null; error: { message: string } | null }>;
-    };
-  };
-};
-
-type SelectEqOrderClient<T> = {
-  from: (table: string) => {
-    select: (query: string) => {
-      eq: (
-        column: string,
-        value: boolean,
-      ) => {
-        order: (
-          column: string,
-          options: { ascending: boolean },
-        ) => Promise<{ data: T[] | null; error: { message: string } | null }>;
-      };
-    };
-  };
-};
-
-type SelectOrderLimitClient<T> = {
-  from: (table: string) => {
-    select: (query: string) => {
-      order: (
-        column: string,
-        options: { ascending: boolean },
-      ) => {
-        limit: (count: number) => Promise<{
-          data: T[] | null;
-          error: { message: string } | null;
-        }>;
-      };
-    };
-  };
-};
-
-interface AssignableUserDbRow {
-  id: string;
-  firstName: string | null;
-  lastName: string | null;
-  email: string | null;
-}
-
-interface SubmissionOptionDbRow {
-  id: string;
-  fullName: string | null;
-  email: string | null;
-}
-
 function mapTaskRow(row: TaskDbRow): Omit<TaskType, "todos"> {
   return {
     id: row.id,
@@ -145,8 +75,7 @@ function mapTaskTodoRow(row: TaskTodoDbRow): TaskTodoType {
 }
 
 export async function getTaskTodos(): Promise<TaskTodoType[]> {
-  const supabase =
-    (await createSupabaseServerClient()) as unknown as SelectOrderClient<TaskTodoDbRow>;
+  const supabase = await createSupabaseServerClient();
   const { data, error } = await supabase
     .from("task_todos")
     .select("id, taskId, title, done, createdAt, updatedAt")
@@ -157,8 +86,7 @@ export async function getTaskTodos(): Promise<TaskTodoType[]> {
 }
 
 export async function getTasks(): Promise<TaskType[]> {
-  const supabase =
-    (await createSupabaseServerClient()) as unknown as TaskQueryClient;
+  const supabase = await createSupabaseServerClient();
   const { data, error } = await supabase
     .from("tasks")
     .select(
@@ -187,8 +115,7 @@ export async function getTasks(): Promise<TaskType[]> {
 }
 
 export async function getAssignableUsers(): Promise<TaskOption[]> {
-  const supabase =
-    (await createSupabaseServerClient()) as unknown as SelectEqOrderClient<AssignableUserDbRow>;
+  const supabase = await createSupabaseServerClient();
   const { data, error } = await supabase
     .from("users")
     .select("id, firstName, lastName, email")
@@ -209,8 +136,7 @@ export async function getAssignableUsers(): Promise<TaskOption[]> {
 }
 
 export async function getSubmissionOptions(): Promise<TaskOption[]> {
-  const supabase =
-    (await createSupabaseServerClient()) as unknown as SelectOrderLimitClient<SubmissionOptionDbRow>;
+  const supabase = await createSupabaseServerClient();
   const { data, error } = await supabase
     .from("form_submissions")
     .select("id, fullName, email")
