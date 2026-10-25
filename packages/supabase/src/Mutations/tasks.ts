@@ -2,71 +2,39 @@
 
 import type {
   TaskInputType,
-  TaskStatus,
   TaskUpdateInputType,
 } from "@bilacert/contracts/task";
 import type {
   TaskTodoInputType,
-  TaskTodoType,
   TaskTodoUpdateInputType,
 } from "@bilacert/contracts/taskTodo";
 import { requireAdminUser } from "../auth";
+import type { Database } from "../supabaseType";
 
-interface TaskDbRow {
-  id: string;
-  title: string;
-  description: string | null;
-  status: TaskStatus;
-  priority: string;
-  category: string | null;
-  assignedTo: string | null;
-  dueAt: string | null;
-  serviceId: string | null;
-  submissionId: string | null;
-  createdAt: string | null;
-  updatedAt: string | null;
-  completedAt: string | null;
+type TaskInsert = Database["public"]["Tables"]["tasks"]["Insert"];
+type TaskUpdate = Database["public"]["Tables"]["tasks"]["Update"];
+type TaskRow = Database["public"]["Tables"]["tasks"]["Row"];
+
+type TaskTodoInsert = Database["public"]["Tables"]["task_todos"]["Insert"];
+type TaskTodoUpdate = Database["public"]["Tables"]["task_todos"]["Update"];
+type TaskTodoRow = Database["public"]["Tables"]["task_todos"]["Row"];
+
+function toDbInsert(data: TaskInputType): TaskInsert {
+  return {
+    title: data.title,
+    description: data.description,
+    status: data.status,
+    priority: data.priority,
+    category: data.category,
+    assignedTo: data.assignedTo,
+    dueAt: data.dueAt,
+    serviceId: data.serviceId,
+    submissionId: data.submissionId,
+  };
 }
 
-type MutationTaskClient = {
-  from: (table: string) => {
-    insert: (values: Record<string, unknown>) => {
-      select: () => {
-        single: () => Promise<{
-          data: TaskDbRow | null;
-          error: { message: string } | null;
-        }>;
-      };
-    };
-    update: (values: Record<string, unknown>) => {
-      eq: (
-        column: string,
-        value: string,
-      ) => {
-        select: () => {
-          single: () => Promise<{
-            data: TaskDbRow | null;
-            error: { message: string } | null;
-          }>;
-        };
-      };
-    };
-    delete: () => {
-      eq: (
-        column: string,
-        value: string,
-      ) => Promise<{
-        data: unknown;
-        error: { message: string } | null;
-      }>;
-    };
-  };
-};
-
-function toDbWrite(
-  data: Partial<TaskInputType> & { completedAt?: string | null },
-) {
-  const write: Record<string, unknown> = {};
+function toDbUpdate(data: TaskUpdateInputType): TaskUpdate {
+  const write: TaskUpdate = {};
   if (data.title !== undefined) write.title = data.title;
   if (data.description !== undefined) write.description = data.description;
   if (data.status !== undefined) write.status = data.status;
@@ -80,33 +48,38 @@ function toDbWrite(
   return write;
 }
 
-export async function createTask(data: TaskInputType) {
-  const supabase = (await requireAdminUser()) as unknown as MutationTaskClient;
+export async function createTask(data: TaskInputType): Promise<TaskRow> {
+  const supabase = await requireAdminUser();
   const { data: task, error } = await supabase
     .from("tasks")
-    .insert(toDbWrite(data))
+    .insert(toDbInsert(data))
     .select()
     .single();
 
   if (error) throw new Error(error.message);
+  if (!task) throw new Error("Task not created");
   return task;
 }
 
-export async function updateTask(id: string, data: TaskUpdateInputType) {
-  const supabase = (await requireAdminUser()) as unknown as MutationTaskClient;
+export async function updateTask(
+  id: string,
+  data: TaskUpdateInputType,
+): Promise<TaskRow> {
+  const supabase = await requireAdminUser();
   const { data: task, error } = await supabase
     .from("tasks")
-    .update({ ...toDbWrite(data), updatedAt: new Date().toISOString() })
+    .update({ ...toDbUpdate(data), updatedAt: new Date().toISOString() })
     .eq("id", id)
     .select()
     .single();
 
   if (error) throw new Error(error.message);
+  if (!task) throw new Error("Task not found");
   return task;
 }
 
-export async function deleteTask(id: string) {
-  const supabase = (await requireAdminUser()) as unknown as MutationTaskClient;
+export async function deleteTask(id: string): Promise<void> {
+  const supabase = await requireAdminUser();
   const { error } = await supabase.from("tasks").delete().eq("id", id);
 
   if (error) throw new Error(error.message);
@@ -115,47 +88,17 @@ export async function deleteTask(id: string) {
 // --- TASK TODO MUTATIONS ---
 // The applied remote `task_todos` table uses camelCase column names.
 
-interface TaskTodoMutationClient {
-  from: (table: string) => {
-    insert: (values: Record<string, unknown>) => {
-      select: () => {
-        single: () => Promise<{
-          data: TaskTodoType | null;
-          error: { message: string } | null;
-        }>;
-      };
-    };
-    update: (values: Record<string, unknown>) => {
-      eq: (
-        column: string,
-        value: string,
-      ) => {
-        select: () => {
-          single: () => Promise<{
-            data: TaskTodoType | null;
-            error: { message: string } | null;
-          }>;
-        };
-      };
-    };
-    delete: () => {
-      eq: (
-        column: string,
-        value: string,
-      ) => Promise<{ error: { message: string } | null }>;
-    };
-  };
-}
-
-export async function createTaskTodo(taskId: string, data: TaskTodoInputType) {
-  const supabase =
-    (await requireAdminUser()) as unknown as TaskTodoMutationClient;
+export async function createTaskTodo(
+  taskId: string,
+  data: TaskTodoInputType,
+): Promise<TaskTodoRow> {
+  const supabase = await requireAdminUser();
   const { data: todo, error } = await supabase
     .from("task_todos")
     .insert({
       taskId,
       title: data.title,
-      done: data.done,
+      done: data.done ?? false,
     })
     .select()
     .single();
@@ -168,10 +111,9 @@ export async function createTaskTodo(taskId: string, data: TaskTodoInputType) {
 export async function updateTaskTodo(
   id: string,
   data: TaskTodoUpdateInputType,
-) {
-  const supabase =
-    (await requireAdminUser()) as unknown as TaskTodoMutationClient;
-  const write: Record<string, unknown> = {
+): Promise<TaskTodoRow> {
+  const supabase = await requireAdminUser();
+  const write: TaskTodoUpdate = {
     updatedAt: new Date().toISOString(),
   };
   if (data.title !== undefined) write.title = data.title;
@@ -189,9 +131,8 @@ export async function updateTaskTodo(
   return todo;
 }
 
-export async function deleteTaskTodo(id: string) {
-  const supabase =
-    (await requireAdminUser()) as unknown as TaskTodoMutationClient;
+export async function deleteTaskTodo(id: string): Promise<void> {
+  const supabase = await requireAdminUser();
   const { error } = await supabase.from("task_todos").delete().eq("id", id);
 
   if (error) throw new Error(error.message);
