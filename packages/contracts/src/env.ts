@@ -31,5 +31,11 @@ export function getEnv(): Env {
     PEXELS_API_KEY: process.env.PEXELS_API_KEY,
   };
   const result = envSchema.safeParse(raw);
-  return result.success ? result.data : (raw as unknown as Env);
+  if (!result.success) {
+    const details = result.error.issues
+      .map((issue) => `${issue.path.join(".")}: ${issue.message}`)
+      .join("; ");
+    throw new Error(`Invalid environment configuration: ${details}`);
+  }
+  return result.data;
 }
