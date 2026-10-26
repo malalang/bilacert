@@ -20,7 +20,16 @@ export const metadata = {
   description: "Edit an existing regulatory service.",
 };
 
-async function getService(id: string): Promise<ServiceRowType | null> {
+/**
+ * "missing" (no such row → 404) and "error" (the load itself failed → error
+ * boundary, retryable) are different states and must not be conflated.
+ */
+type ServiceLoadResult =
+  | { kind: "ok"; service: ServiceRowType }
+  | { kind: "missing" }
+  | { kind: "error" };
+
+async function getService(id: string): Promise<ServiceLoadResult> {
   const supabase = await createSupabaseServerClient();
   const { data, error } = await supabase
     .from("services")
@@ -29,11 +38,17 @@ async function getService(id: string): Promise<ServiceRowType | null> {
     .single();
 
   if (error) {
-    console.error("Error fetching service:", error);
-    return null;
+    console.error("Error fetching service:", {
+      id,
+      code: error.code,
+      message: error.message,
+    });
+    return { kind: "error" };
   }
 
-  return data ? normalizeService(data) : null;
+  return data
+    ? { kind: "ok", service: normalizeService(data) }
+    : { kind: "missing" };
 }
 
 export const viewport: Viewport = {
@@ -52,12 +67,16 @@ export default async function EditServicePage({
   params: Promise<{ id: string }>;
 }) {
   const slug = (await params).id;
-  const service = await getService(slug);
+  const result = await getService(slug);
 
-  if (!service) {
+  if (result.kind === "missing") {
     notFound();
   }
+  if (result.kind === "error") {
+    throw new Error(`Failed to load service ${slug}`);
+  }
 
+  const service = result.service;
   return (
     <div className="mx-auto max-w-5xl space-y-6">
       <div className="flex items-center gap-4">

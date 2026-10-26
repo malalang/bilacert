@@ -5,7 +5,6 @@ import {
   isSupabaseConfigured,
 } from "@bilacert/supabase/client";
 import { Loader2 } from "lucide-react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import SupabaseNotConfigured from "@/components/admin/SupabaseNotConfigured";
@@ -15,7 +14,6 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -51,7 +49,7 @@ export default function LoginForm() {
       toast({
         variant: "destructive",
         title: "Login Failed",
-        description: error.message || "Please check your credentials.",
+        description: "Check your email address and password, then try again.",
       });
     } else {
       router.push("/");
@@ -80,8 +78,9 @@ export default function LoginForm() {
               <Input
                 id="email"
                 type="email"
-                placeholder="admin@example.com"
+                autoComplete="email"
                 required
+                placeholder="admin@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 disabled={isLoading}
@@ -92,6 +91,7 @@ export default function LoginForm() {
               <Input
                 id="password"
                 type="password"
+                autoComplete="current-password"
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -108,11 +108,6 @@ export default function LoginForm() {
             </Button>
           </form>
         </CardContent>
-        <CardFooter className="flex justify-center text-sm">
-          <Link href="#" className="text-primary hover:underline">
-            Forgot your password?
-          </Link>
-        </CardFooter>
       </Card>
     </div>
   );

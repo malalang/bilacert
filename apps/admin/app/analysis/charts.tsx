@@ -16,18 +16,15 @@ import {
   YAxis,
 } from "recharts";
 
-const COLORS = [
-  "#1f77b4",
-  "#ff7f0e",
-  "#2ca02c",
-  "#d62728",
-  "#9467bd",
-  "#8c564b",
-  "#e377c2",
-  "#7f7f7f",
-  "#bcbd22",
-  "#17becf",
-];
+/**
+ * Chart palette rides on the repository chart tokens (globals.css:
+ * --chart-1 … --chart-5) so every chart rebrands with the site and adapts to
+ * the dark scope. Never hardcode hex values here.
+ */
+const CHART_COLORS = Array.from(
+  { length: 5 },
+  (_, index) => `hsl(var(--chart-${index + 1}))`,
+);
 
 const truncateLabel = (value: string, maxLength = 24) => {
   if (!value) return "";
@@ -74,9 +71,13 @@ export const FilteredLineChart = ({
 }) => (
   <ResponsiveContainer width="100%" height={height}>
     <LineChart data={data}>
-      <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
-      <XAxis dataKey="date" stroke="#888" fontSize={12} />
-      <YAxis stroke="#888" fontSize={12} />
+      <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+      <XAxis
+        dataKey="date"
+        stroke="hsl(var(--muted-foreground))"
+        fontSize={12}
+      />
+      <YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} />
       <Tooltip content={<CustomTooltip />} />
       {showLegend && <Legend />}
       {keys.map((key, index) => (
@@ -85,7 +86,7 @@ export const FilteredLineChart = ({
           type="monotone"
           dataKey={key}
           name={seriesNameFormatter(key)}
-          stroke={COLORS[index % COLORS.length]}
+          stroke={CHART_COLORS[index % CHART_COLORS.length]}
           strokeWidth={2}
           dot={false}
         />
@@ -103,23 +104,27 @@ export const SubmissionsLineChart = ({
     <LineChart data={data}>
       <defs>
         <linearGradient id="colorSubmissions" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="5%" stopColor="#8884d8" stopOpacity={0.8} />
-          <stop offset="95%" stopColor="#8884d8" stopOpacity={0} />
+          <stop offset="5%" stopColor="hsl(var(--chart-1))" stopOpacity={0.8} />
+          <stop offset="95%" stopColor="hsl(var(--chart-1))" stopOpacity={0} />
         </linearGradient>
       </defs>
-      <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
-      <XAxis dataKey="date" stroke="#888" fontSize={12} />
-      <YAxis stroke="#888" fontSize={12} />
+      <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+      <XAxis
+        dataKey="date"
+        stroke="hsl(var(--muted-foreground))"
+        fontSize={12}
+      />
+      <YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} />
       <Tooltip content={<CustomTooltip />} />
       <Line
         type="monotone"
         dataKey="count"
         name="Submissions"
-        stroke="#8884d8"
+        stroke="hsl(var(--chart-1))"
         strokeWidth={2}
         fillOpacity={1}
         fill="url(#colorSubmissions)"
-        dot={{ r: 4, fill: "#8884d8" }}
+        dot={{ r: 4, fill: "hsl(var(--chart-1))" }}
       />
     </LineChart>
   </ResponsiveContainer>
@@ -132,20 +137,24 @@ export const SubmissionsBarChart = ({
 }) => (
   <ResponsiveContainer width="100%" height={300}>
     <BarChart data={data}>
-      <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
-      <XAxis dataKey="serviceName" stroke="#888" fontSize={12} />
-      <YAxis stroke="#888" fontSize={12} />
+      <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+      <XAxis
+        dataKey="serviceName"
+        stroke="hsl(var(--muted-foreground))"
+        fontSize={12}
+      />
+      <YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} />
       <Tooltip content={<CustomTooltip />} />
       <Bar
         dataKey="count"
         name="Submissions"
-        fill="#82ca9d"
+        fill="hsl(var(--chart-1))"
         radius={[4, 4, 0, 0]}
       >
         {data.map((_entry, index) => (
           <Cell
             key={`cell-${_entry.serviceName}`}
-            fill={COLORS[index % COLORS.length]}
+            fill={CHART_COLORS[index % CHART_COLORS.length]}
           />
         ))}
       </Bar>
@@ -160,21 +169,30 @@ export const ContentBarChart = ({
 }) => (
   <ResponsiveContainer width="100%" height={300}>
     <BarChart data={data} layout="vertical">
-      <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
-      <XAxis type="number" stroke="#888" fontSize={12} />
+      <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+      <XAxis
+        type="number"
+        stroke="hsl(var(--muted-foreground))"
+        fontSize={12}
+      />
       <YAxis
         dataKey="contentType"
         type="category"
         width={120}
-        stroke="#888"
+        stroke="hsl(var(--muted-foreground))"
         fontSize={12}
       />
       <Tooltip content={<CustomTooltip />} />
-      <Bar dataKey="count" name="Count" fill="#ffc658" radius={[0, 4, 4, 0]}>
+      <Bar
+        dataKey="count"
+        name="Count"
+        fill="hsl(var(--chart-4))"
+        radius={[0, 4, 4, 0]}
+      >
         {data.map((_entry, index) => (
           <Cell
             key={`cell-${_entry.contentType}`}
-            fill={COLORS[index % COLORS.length]}
+            fill={CHART_COLORS[index % CHART_COLORS.length]}
           />
         ))}
       </Bar>
@@ -189,23 +207,32 @@ export const BlogViewsChart = ({
 }) => (
   <ResponsiveContainer width="100%" height={400}>
     <BarChart data={data} layout="vertical">
-      <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
-      <XAxis type="number" stroke="#888" fontSize={12} />
+      <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+      <XAxis
+        type="number"
+        stroke="hsl(var(--muted-foreground))"
+        fontSize={12}
+      />
       <YAxis
         dataKey="title"
         type="category"
         width={110}
-        stroke="#888"
+        stroke="hsl(var(--muted-foreground))"
         fontSize={10}
         interval={0}
         tickFormatter={(value) => truncateLabel(String(value), 18)}
       />
       <Tooltip content={<CustomTooltip />} />
-      <Bar dataKey="views" name="Views" fill="#ff8042" radius={[0, 4, 4, 0]}>
+      <Bar
+        dataKey="views"
+        name="Views"
+        fill="hsl(var(--chart-2))"
+        radius={[0, 4, 4, 0]}
+      >
         {data.map((_entry, index) => (
           <Cell
             key={`cell-${_entry.title}`}
-            fill={COLORS[index % COLORS.length]}
+            fill={CHART_COLORS[index % CHART_COLORS.length]}
           />
         ))}
       </Bar>
@@ -232,7 +259,7 @@ export const SubmissionStatusPieChart = ({
         {data.map((_entry, index) => (
           <Cell
             key={`cell-${_entry.status}`}
-            fill={COLORS[index % COLORS.length]}
+            fill={CHART_COLORS[index % CHART_COLORS.length]}
           />
         ))}
       </Pie>
@@ -261,7 +288,7 @@ export const SubmissionsByServicePieChart = ({
         {data.map((_entry, index) => (
           <Cell
             key={`cell-${_entry.serviceName}`}
-            fill={COLORS[index % COLORS.length]}
+            fill={CHART_COLORS[index % CHART_COLORS.length]}
           />
         ))}
       </Pie>

@@ -93,7 +93,10 @@ const PRIORITY_META: Record<
 > = {
   low: { label: "Low", className: "bg-muted text-muted-foreground" },
   normal: { label: "Normal", className: "bg-muted text-foreground" },
-  high: { label: "High", className: "bg-orange-100 text-orange-700" },
+  high: {
+    label: "High",
+    className: "bg-warning/15 text-warning-foreground",
+  },
   urgent: { label: "Urgent", className: "bg-destructive/10 text-destructive" },
 };
 

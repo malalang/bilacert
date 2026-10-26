@@ -253,9 +253,9 @@ export default function BlogEditor({
               .bilacert-blog-editor .ql-toolbar {
                 border-top-left-radius: 12px;
                 border-top-right-radius: 12px;
-                border-color: #f1f5f9 !important;
-                background: #f8fafc;
-                border-bottom: 1px solid #f1f5f9;
+                border-color: hsl(var(--border)) !important;
+                background: hsl(var(--muted));
+                border-bottom: 1px solid hsl(var(--border));
               }
               .bilacert-blog-editor .ql-editor {
                 min-height: 400px;
@@ -290,7 +290,7 @@ export default function BlogEditor({
               </div>
             )}
             <div className="mb-10 border-b border-border pb-8">
-              <h1 className="text-2xl font-black text-foreground mb-4 tracking-tight leading-tight">
+              <h1 className="text-2xl font-bold text-foreground mb-4 tracking-tight leading-tight">
                 {title || "Untitled Post"}
               </h1>
               <div className="flex flex-wrap items-center gap-3 text-muted-foreground text-sm">

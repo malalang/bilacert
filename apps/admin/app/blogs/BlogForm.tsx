@@ -172,7 +172,7 @@ export default function BlogForm({ blog, blogId }: BlogFormProps) {
         toast({
           variant: "destructive",
           title: "Error saving blog post",
-          description: message,
+          description: "The blog post could not be saved. Please try again.",
         });
       }
     });
