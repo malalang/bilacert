@@ -1,6 +1,7 @@
 import { Analytics } from "@vercel/analytics/next";
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
+import { viewportThemeColor } from "@/lib/theme";
 import "./globals.css";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import Footer from "@/components/Footer";
@@ -89,10 +90,7 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 5,
   userScalable: true,
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
-    { media: "(prefers-color-scheme: dark)", color: "#1f2937" },
-  ],
+  themeColor: viewportThemeColor,
 };
 export default function RootLayout({
   children,

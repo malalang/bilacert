@@ -19,6 +19,7 @@ import { ServiceHero } from "@/components/service/ServiceHero";
 import { SuccessStory } from "@/components/service/SuccessStory";
 import { WhatIsSection } from "@/components/service/WhatIsSection";
 import { WhyChooseUs } from "@/components/service/WhyChooseUs";
+import { viewportThemeColor } from "@/lib/theme";
 import {
   getCachedServiceBySlug,
   getCachedServiceSlugs,
@@ -163,10 +164,7 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 5,
   userScalable: true,
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
-    { media: "(prefers-color-scheme: dark)", color: "#1f2937" },
-  ],
+  themeColor: viewportThemeColor,
 };
 export default async function ServiceDetailPage({ params }: Props) {
   const { serviceId } = await params;

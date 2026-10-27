@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import type { Metadata, Viewport } from "next";
 import HeroSection from "@/components/HeroSection";
+import { viewportThemeColor } from "@/lib/theme";
 
 export const metadata: Metadata = {
   title: "About Us",
@@ -39,10 +40,7 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 5,
   userScalable: true,
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
-    { media: "(prefers-color-scheme: dark)", color: "#1f2937" },
-  ],
+  themeColor: viewportThemeColor,
 };
 export default function AboutPage() {
   const values = [

@@ -64,7 +64,7 @@ export function PricingPlans({
                 {plan.description}
               </p>
               <div
-                className={`text-4xl font-extrabold mb-6 ${
+                className={`text-4xl font-bold mb-6 ${
                   plan.popular ? "text-accent-light" : "text-primary"
                 }`}
               >

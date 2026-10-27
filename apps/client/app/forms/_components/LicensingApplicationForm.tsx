@@ -80,7 +80,7 @@ export default function LicensingApplicationForm({
   if (submitted) {
     return (
       <div className="text-center">
-        <h3 className="text-2xl font-bold text-green-600 mb-4">
+        <h3 className="text-2xl font-bold text-success-foreground mb-4">
           Submission Successful!
         </h3>
         <p className="text-gray-700">
@@ -198,8 +198,10 @@ export default function LicensingApplicationForm({
       </div>
 
       {error && (
-        <div className="rounded-md bg-red-50 p-4">
-          <p className="text-sm font-medium text-red-800">{error}</p>
+        <div className="rounded-md bg-destructive p-4">
+          <p className="text-sm font-medium text-destructive-foreground">
+            {error}
+          </p>
         </div>
       )}
 

@@ -10,6 +10,7 @@ import {
 import type { Metadata, Viewport } from "next";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { viewportThemeColor } from "@/lib/theme";
 
 export const metadata: Metadata = {
   title: "South Africa Product Market Access & Compliance | BILACERT",
@@ -98,10 +99,7 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 5,
   userScalable: true,
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
-    { media: "(prefers-color-scheme: dark)", color: "#1f2937" },
-  ],
+  themeColor: viewportThemeColor,
 };
 export default function SouthAfricaMarketAccessPage() {
   return (

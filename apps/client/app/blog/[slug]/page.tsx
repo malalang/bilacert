@@ -8,6 +8,7 @@ import { RelatedPosts } from "@/components/blog/RelatedPosts";
 import { StickyShare } from "@/components/blog/StickyShare";
 import { ViewTracker } from "@/components/blog/view";
 import HeroSection from "@/components/HeroSection";
+import { viewportThemeColor } from "@/lib/theme";
 import {
   getCachedBlogBySlug,
   getCachedBlogPostsByCategory,
@@ -75,10 +76,7 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 5,
   userScalable: true,
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
-    { media: "(prefers-color-scheme: dark)", color: "#1f2937" },
-  ],
+  themeColor: viewportThemeColor,
 };
 export default async function BlogPostPage({ params }: Props) {
   const { slug } = await params;

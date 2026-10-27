@@ -34,6 +34,18 @@
   --color-text-dark: var(--text-dark);
   --color-text-gray: var(--text-gray);
   --color-text-light: var(--text-light);
+
+  /* Status pairs (fill + foreground) */
+  --color-success: #f0fdf4;
+  --color-success-foreground: #15803d;
+  --color-warning: #f59e0b;
+  --color-warning-foreground: #78350f;
+  --color-destructive: #fef2f2;
+  --color-destructive-foreground: #b91c1c;
+
+  /* WhatsApp brand surface */
+  --color-whatsapp: #22c55e;
+  --color-whatsapp-dark: #16a34a;
 }
 
 body {

@@ -4,6 +4,7 @@ import Link from "next/link";
 import ServiceCard from "@/components/cards/ServiceCard";
 import HeroSection from "@/components/HeroSection";
 import { Button } from "@/components/ui/button";
+import { viewportThemeColor } from "@/lib/theme";
 import { getCachedServices } from "../_lib/cached-public-data";
 
 export const metadata: Metadata = {
@@ -36,10 +37,7 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 5,
   userScalable: true,
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
-    { media: "(prefers-color-scheme: dark)", color: "#1f2937" },
-  ],
+  themeColor: viewportThemeColor,
 };
 export default async function ServicesPage() {
   const services = await getCachedServices();

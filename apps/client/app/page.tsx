@@ -7,6 +7,7 @@ import BlogCard from "@/components/cards/BlogCard";
 import ServiceCard from "@/components/cards/ServiceCard";
 import StructuredData from "@/components/StructuredData";
 import Testimonials from "@/components/Testimonials";
+import { viewportThemeColor } from "@/lib/theme";
 import {
   getCachedFeaturedServices,
   getCachedPublishedBlogs,
@@ -43,10 +44,7 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 5,
   userScalable: true,
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
-    { media: "(prefers-color-scheme: dark)", color: "#1f2937" },
-  ],
+  themeColor: viewportThemeColor,
 };
 export default async function HomePage() {
   const organizationData = {

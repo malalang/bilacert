@@ -68,19 +68,19 @@ export default function ContactMessageForm({
       </h2>
 
       {successMessage && (
-        <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
+        <div className="bg-success border border-success-foreground/25 rounded-lg p-4 mb-6">
           <div className="flex items-center">
-            <CheckCircle className="h-5 w-5 text-green-500 mr-2" />
-            <p className="text-green-700">{successMessage}</p>
+            <CheckCircle className="h-5 w-5 text-success-foreground mr-2" />
+            <p className="text-success-foreground">{successMessage}</p>
           </div>
         </div>
       )}
 
       {error && (
-        <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+        <div className="bg-destructive border border-destructive-foreground/25 rounded-lg p-4 mb-6">
           <div className="flex items-center">
-            <AlertCircle className="h-5 w-5 text-red-500 mr-2" />
-            <p className="text-red-700">{error}</p>
+            <AlertCircle className="h-5 w-5 text-destructive-foreground mr-2" />
+            <p className="text-destructive-foreground">{error}</p>
           </div>
         </div>
       )}

@@ -5,6 +5,7 @@ import Link from "next/link";
 import BlogCard from "@/components/cards/BlogCard";
 import HeroSection from "@/components/HeroSection";
 import { Badge } from "@/components/ui/badge";
+import { viewportThemeColor } from "@/lib/theme";
 import { getCachedPublishedBlogs } from "../_lib/cached-public-data";
 
 export const metadata: Metadata = {
@@ -39,10 +40,7 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 5,
   userScalable: true,
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
-    { media: "(prefers-color-scheme: dark)", color: "#1f2937" },
-  ],
+  themeColor: viewportThemeColor,
 };
 export default async function BlogPage() {
   const categories = [
@@ -157,7 +155,7 @@ export default async function BlogPage() {
                     href={`/blog/${featuredPost.slug}`}
                     className="block group"
                   >
-                    <h2 className="text-2xl md:text-4xl font-extrabold text-primary mb-6 leading-tight group-hover:text-accent transition-colors duration-200">
+                    <h2 className="text-2xl md:text-4xl font-bold text-primary mb-6 leading-tight group-hover:text-accent transition-colors duration-200">
                       {featuredPost.title}
                     </h2>
                   </Link>
@@ -201,7 +199,7 @@ export default async function BlogPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
             <div className="max-w-2xl">
-              <h2 className="text-3xl md:text-4xl font-extrabold text-primary mb-4">
+              <h2 className="text-3xl md:text-4xl font-bold text-primary mb-4">
                 Latest Articles
               </h2>
               <p className="text-lg text-gray-600">
@@ -248,7 +246,7 @@ export default async function BlogPage() {
           <Badge className="bg-accent/20 text-accent-light border-accent/30 mb-6 px-4 py-1 border shadow-sm">
             Newsletter
           </Badge>
-          <h2 className="text-3xl md:text-4xl font-extrabold mb-6 text-white leading-tight">
+          <h2 className="text-3xl md:text-4xl font-bold mb-6 text-white leading-tight">
             Stay Ahead of Regulatory Changes
           </h2>
           <p className="text-lg md:text-xl mb-10 text-gray-300 max-w-2xl mx-auto">

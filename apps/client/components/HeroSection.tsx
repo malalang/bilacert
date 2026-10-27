@@ -67,7 +67,7 @@ function PlainHeroSection({
             {eyebrow}
           </p>
         )}
-        <h1 className="mb-6 max-w-4xl text-3xl font-extrabold leading-tight tracking-tight text-primary md:text-5xl">
+        <h1 className="mb-6 max-w-4xl text-3xl font-bold leading-tight tracking-tight text-primary md:text-5xl">
           {title}
         </h1>
         {description && (

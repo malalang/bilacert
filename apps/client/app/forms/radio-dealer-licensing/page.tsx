@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import { viewportThemeColor } from "@/lib/theme";
 import LicensingApplicationForm from "../_components/LicensingApplicationForm";
 
 export const metadata: Metadata = {
@@ -21,10 +22,7 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 5,
   userScalable: true,
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
-    { media: "(prefers-color-scheme: dark)", color: "#1f2937" },
-  ],
+  themeColor: viewportThemeColor,
 };
 export default function RadioDealerLicensingPage() {
   return (
@@ -39,7 +37,7 @@ export default function RadioDealerLicensingPage() {
             height={100}
           />
         </Link>
-        <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+        <h2 className="mt-6 text-center text-3xl font-bold text-gray-900">
           Radio Dealer Licensing Application
         </h2>
         <p className="mt-2 text-center text-sm text-gray-600">

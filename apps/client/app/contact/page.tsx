@@ -2,6 +2,7 @@ import { Clock, Mail, Phone } from "lucide-react";
 import type { Metadata, Viewport } from "next";
 import HeroSection from "@/components/HeroSection";
 import { businessInfo } from "@/lib/business";
+import { viewportThemeColor } from "@/lib/theme";
 import ContactMessageForm from "./ContactMessageForm";
 
 export const metadata: Metadata = {
@@ -31,10 +32,7 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 5,
   userScalable: true,
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
-    { media: "(prefers-color-scheme: dark)", color: "#1f2937" },
-  ],
+  themeColor: viewportThemeColor,
 };
 export default function ContactPage() {
   const heroHighlights = [
@@ -136,7 +134,7 @@ export default function ContactPage() {
               href={businessInfo.whatsappHref}
               target="_blank"
               rel="noopener noreferrer"
-              className="bg-green-500 text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-green-600 transition-colors duration-200"
+              className="bg-whatsapp text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-whatsapp-dark transition-colors duration-200"
             >
               WhatsApp Us
             </a>

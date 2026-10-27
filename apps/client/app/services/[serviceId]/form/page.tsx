@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { notFound } from "next/navigation";
 import { getCachedServiceBySlug } from "@/app/_lib/cached-public-data";
+import { viewportThemeColor } from "@/lib/theme";
 import ServiceApplicationForm from "./ServiceApplicationForm";
 
 export async function generateMetadata({
@@ -37,10 +38,7 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 5,
   userScalable: true,
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
-    { media: "(prefers-color-scheme: dark)", color: "#1f2937" },
-  ],
+  themeColor: viewportThemeColor,
 };
 export default async function ServiceFormPage({
   params,
