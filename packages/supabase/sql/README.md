@@ -40,10 +40,10 @@ For future changes, prefer normal Supabase migrations under `supabase/migrations
 
 ## Generating database types
 
-Database types live in `packages/supabase/src/supabaseType.ts` and are generated from the **hosted** project (ref `zpgxnohxizcmuwbosap`) via `pnpm gen:types` at the repository root, which runs `scripts/gen-types.mjs`. Set `SUPABASE_PROJECT_ID` to the hosted project reference (validated as 20 characters) and authenticate the CLI once with `pnpm exec supabase login` (or `SUPABASE_ACCESS_TOKEN`):
+Database types live in `packages/supabase/src/supabaseType.ts` and are generated from the **hosted** project (ref `zpgxnohxizcmuwbosapx`) via `pnpm gen:types` at the repository root, which runs `scripts/gen-types.mjs`. Set `SUPABASE_PROJECT_ID` to the hosted project reference (validated as 20 characters) and authenticate the CLI once with `pnpm exec supabase login` (or `SUPABASE_ACCESS_TOKEN`):
 
 ```powershell
-$env:SUPABASE_PROJECT_ID = "zpgxnohxizcmuwbosap"
+$env:SUPABASE_PROJECT_ID = "zpgxnohxizcmuwbosapx"
 pnpm gen:types
 ```
 
