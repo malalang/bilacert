@@ -37,3 +37,14 @@ The live project also contains a `public.increment_views(text)` function whose c
 For a clean Supabase database, apply the files in numeric order after the normal Supabase-managed schemas (`auth`, `storage`, etc.) have been initialized. The storage file expects Supabase Storage to be available.
 
 For future changes, prefer normal Supabase migrations under `supabase/migrations` and keep this directory synchronized as a readable SQL source snapshot.
+
+## Generating database types
+
+Database types live in `packages/supabase/src/supabaseType.ts` and are generated from the **hosted** project (ref `zpgxnohxizcmuwbosap`) via `pnpm gen:types` at the repository root, which runs `scripts/gen-types.mjs`. Set `SUPABASE_PROJECT_ID` to the hosted project reference (validated as 20 characters) and authenticate the CLI once with `pnpm exec supabase login` (or `SUPABASE_ACCESS_TOKEN`):
+
+```powershell
+$env:SUPABASE_PROJECT_ID = "zpgxnohxizcmuwbosap"
+pnpm gen:types
+```
+
+The script replaces the generated file only after the CLI succeeds with non-empty output — a failed or timed-out run never truncates the existing types — and then formats the result with Biome so `pnpm lint` stays green after every regeneration. Never hand-write generated types.
