@@ -54,14 +54,15 @@ writeFileSync(outputFile, result.stdout);
 
 // The generator's inline-member punctuation varies by CLI version; keep the
 // regenerated file in the repository's Biome formatting so `pnpm lint` stays
-// green after every regeneration.
+// green after every regeneration. The path stays package-relative and
+// unquoted: a nested cmd spawn folds the quotes into the path (os error 123).
 const format = spawnSync(
   process.platform === "win32"
     ? (process.env.ComSpec ?? "cmd.exe")
     : "pnpm",
   process.platform === "win32"
-    ? ["/d", "/s", "/c", `pnpm exec biome format --write "${outputFile}"`]
-    : ["exec", "biome", "format", "--write", outputFile],
+    ? ["/d", "/s", "/c", "pnpm exec biome format --write src/supabaseType.ts"]
+    : ["exec", "biome", "format", "--write", "src/supabaseType.ts"],
   {
     encoding: "utf8",
     stdio: ["inherit", "inherit", "inherit"],
